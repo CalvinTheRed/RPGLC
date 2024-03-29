@@ -3,64 +3,6 @@
 namespace RPGLC.json.test {
     public class JsonObjectTest {
 
-        [Fact(DisplayName = "prints as string")]
-        public void PrintsAsString() {
-            JsonObject json = new(new Dictionary<string, object> {
-                { "object_key", new Dictionary<string, object> { { "nested_key", "value" } } },
-                { "array_key", new List<object> { "item_1", "item_2" } },
-                { "string_key", "value" },
-                { "int_key", 123 },
-                { "double_key", 123.456 },
-                { "bool_key", false },
-            });
-
-            string expected = """
-                {"array_key":["item_1","item_2"],"bool_key":false,"double_key":123.456,"int_key":123,"object_key":{"nested_key":"value"},"string_key":"value"}
-                """;
-            Assert.Equal(expected, json.ToString());
-        }
-
-        [Fact(DisplayName = "prints as string when empty")]
-        public void PrintsAsStringWhenEmpty() {
-            JsonObject json = new();
-            Assert.Equal("{}", json.ToString());
-        }
-
-        [Fact(DisplayName = "pretty prints")]
-        public void PrettyPrints() {
-            JsonObject json = new(new Dictionary<string, object> {
-                { "object_key", new Dictionary<string, object> { { "nested_key", "value" } } },
-                { "array_key", new List<object> { "item_1", "item_2" } },
-                { "string_key", "value" },
-                { "int_key", 123 },
-                { "double_key", 123.456 },
-                { "bool_key", false },
-            });
-
-            string expected = """
-                {
-                  "array_key": [
-                    "item_1",
-                    "item_2"
-                  ],
-                  "bool_key": false,
-                  "double_key": 123.456,
-                  "int_key": 123,
-                  "object_key": {
-                    "nested_key": "value"
-                  },
-                  "string_key": "value"
-                }
-                """;
-            Assert.Equal(expected, json.PrettyPrint());
-        }
-
-        [Fact(DisplayName = "pretty prints when empty")]
-        public void PrettyPrintsWhenEmpty() {
-            JsonObject json = new();
-            Assert.Equal("{ }", json.PrettyPrint());
-        }
-
         // =================================================================================================================
         // Put() and Get() tests
         // =================================================================================================================
@@ -77,7 +19,7 @@ namespace RPGLC.json.test {
 
             Assert.Equal(
                 """{"nested_key":"value"}""",
-                json.GetJsonObject("object_key").ToString()
+                json.GetJsonObject("object_key")?.ToString()
             );
         }
 
@@ -93,7 +35,7 @@ namespace RPGLC.json.test {
 
             Assert.Equal(
                 """["item_1","item_2"]""",
-                json.GetJsonArray("array_key").ToString()
+                json.GetJsonArray("array_key")?.ToString()
             );
         }
 
@@ -162,88 +104,72 @@ namespace RPGLC.json.test {
         public void RemovesJsonObject() {
             JsonObject json = new();
 
-            json.PutJsonObject("object_key", new JsonObject(new Dictionary<string, object> {
-                { "nested_key", "value" },
-            }));
+            json.PutJsonObject("key", new());
 
-            Assert.Equal(
-                """{"nested_key":"value"}""",
-                json.RemoveJsonObject("object_key").ToString()
-            );
-            Assert.Null(json.GetJsonObject("object_key"));
-            Assert.Null(json.RemoveJsonObject("object_key"));
+            string expected = "{}";
+            Assert.Equal(expected, json.RemoveJsonObject("key")?.ToString());
+            Assert.Null(json.GetJsonObject("key"));
+            Assert.Null(json.RemoveJsonObject("key"));
         }
 
         [Fact(DisplayName = "removes JsonArray")]
         public void RemovesJsonArray() {
             JsonObject json = new();
 
-            json.PutJsonArray("array_key", new JsonArray([
-                "item_1", "item_2",
-            ]));
+            json.PutJsonArray("key", new());
 
-            Assert.Equal(
-                """["item_1","item_2"]""",
-                json.RemoveJsonArray("array_key").ToString()
-            );
-            Assert.Null(json.GetJsonArray("array_key"));
-            Assert.Null(json.RemoveJsonArray("array_key"));
+            string expected = "[]";
+            Assert.Equal(expected, json.RemoveJsonArray("key")?.ToString());
+            Assert.Null(json.GetJsonArray("key"));
+            Assert.Null(json.RemoveJsonArray("key"));
         }
 
         [Fact(DisplayName = "removes string")]
         public void RemovesString() {
             JsonObject json = new();
 
-            json.PutString("string_key", "value");
+            json.PutString("key", "value");
 
-            Assert.Equal(
-                "value",
-                json.RemoveString("string_key")
-            );
-            Assert.Null(json.GetString("string_key"));
-            Assert.Null(json.RemoveString("string_key"));
+            string expected = "value";
+            Assert.Equal(expected, json.RemoveString("key"));
+            Assert.Null(json.GetString("key"));
+            Assert.Null(json.RemoveString("key"));
         }
 
         [Fact(DisplayName = "removes int")]
         public void RemovesInt() {
             JsonObject json = new();
 
-            json.PutInt("int_key", 123);
+            json.PutInt("key", 123);
 
-            Assert.Equal(
-                123,
-                json.RemoveInt("int_key")
-            );
-            Assert.Null(json.GetInt("int_key"));
-            Assert.Null(json.RemoveInt("int_key"));
+            int expected = 123;
+            Assert.Equal(expected, json.RemoveInt("key"));
+            Assert.Null(json.GetInt("key"));
+            Assert.Null(json.RemoveInt("key"));
         }
 
         [Fact(DisplayName = "removes double")]
         public void RemovesDouble() {
             JsonObject json = new();
 
-            json.PutDouble("double_key", 123.456);
+            json.PutDouble("key", 123.456);
 
-            Assert.Equal(
-                123.456,
-                json.RemoveDouble("double_key")
-            );
-            Assert.Null(json.GetDouble("double_key"));
-            Assert.Null(json.RemoveDouble("double_key"));
+            double expected = 123.456;
+            Assert.Equal(expected, json.RemoveDouble("key"));
+            Assert.Null(json.GetDouble("key"));
+            Assert.Null(json.RemoveDouble("key"));
         }
 
         [Fact(DisplayName = "removes bool")]
         public void RemovesBool() {
             JsonObject json = new();
 
-            json.PutBool("bool_key", false);
+            json.PutBool("key", false);
 
-            Assert.Equal(
-                false,
-                json.RemoveBool("bool_key")
-            );
-            Assert.Null(json.GetBool("bool_key"));
-            Assert.Null(json.RemoveBool("bool_key"));
+            bool expected = false;
+            Assert.Equal(expected, json.RemoveBool("key"));
+            Assert.Null(json.GetBool("key"));
+            Assert.Null(json.RemoveBool("key"));
         }
 
         // =================================================================================================================
@@ -466,9 +392,145 @@ namespace RPGLC.json.test {
         // Join() tests
         // =================================================================================================================
 
+        [Fact(DisplayName = "joins shallow")]
+        public void JoinsShallow() {
+            JsonObject json = new(new Dictionary<string, object> {
+                { "object_key_1", new Dictionary<string, object>() },
+                { "array_key_1", new List<object>() },
+                { "string_key_1", "value" },
+                { "int_key_1", 123 },
+                { "double_key_1", 123.456 },
+                { "bool_key_1", false },
+            });
+            json.Join(new Dictionary<string, object> {
+                { "object_key_2", new Dictionary<string, object>() },
+                { "array_key_2", new List<object>() },
+                { "string_key_2", "value" },
+                { "int_key_2", 123 },
+                { "double_key_2", 123.456 },
+                { "bool_key_2", false },
+            });
+
+            string expected = """
+                {
+                  "array_key_1": [ ],
+                  "array_key_2": [ ],
+                  "bool_key_1": false,
+                  "bool_key_2": false,
+                  "double_key_1": 123.456,
+                  "double_key_2": 123.456,
+                  "int_key_1": 123,
+                  "int_key_2": 123,
+                  "object_key_1": { },
+                  "object_key_2": { },
+                  "string_key_1": "value",
+                  "string_key_2": "value"
+                }
+                """;
+            Assert.Equal(expected, json.PrettyPrint());
+        }
+
+        [Fact(DisplayName = "joins deep")]
+        public void JoinsDeep() {
+            JsonObject json = new(new Dictionary<string, object> {
+                { "key", new Dictionary<string, object> {
+                    { "object_key_1", new Dictionary<string, object>() },
+                    { "array_key_1", new List<object>() },
+                    { "string_key_1", "value" },
+                    { "int_key_1", 123 },
+                    { "double_key_1", 123.456 },
+                    { "bool_key_1", false },
+                } },
+            });
+            json.Join(new Dictionary<string, object> {
+                { "key", new Dictionary<string, object> {
+                    { "object_key_2", new Dictionary<string, object>() },
+                    { "array_key_2", new List<object>() },
+                    { "string_key_2", "value" },
+                    { "int_key_2", 123 },
+                    { "double_key_2", 123.456 },
+                    { "bool_key_2", false },
+                } },
+            });
+
+            string expected = """
+                {
+                  "key": {
+                    "array_key_1": [ ],
+                    "array_key_2": [ ],
+                    "bool_key_1": false,
+                    "bool_key_2": false,
+                    "double_key_1": 123.456,
+                    "double_key_2": 123.456,
+                    "int_key_1": 123,
+                    "int_key_2": 123,
+                    "object_key_1": { },
+                    "object_key_2": { },
+                    "string_key_1": "value",
+                    "string_key_2": "value"
+                  }
+                }
+                """;
+            Assert.Equal(expected, json.PrettyPrint());
+        }
+
+        [Fact(DisplayName = "joins with collisions")]
+        public void JoinsWithCollisions() {
+            JsonObject json = new(new Dictionary<string, object> {
+                { "object_key", new Dictionary<string, object> {
+                    { "key1", "value 1" }
+                } },
+                { "array_key", new List<object> { 
+                    "old value"
+                } },
+                { "string_key", "value 1" },
+                { "int_key", 1234 },
+                { "double_key", 12.34 },
+                { "bool_key", false },
+            });
+            json.Join(new Dictionary<string, object> {
+                { "object_key", new Dictionary<string, object> {
+                    { "key2", "value 2" }
+                } },
+                { "array_key", new List<object> { 
+                    "new value"
+                } },
+                { "string_key", "value 2" },
+                { "int_key", 5678 },
+                { "double_key", 56.78 },
+                { "bool_key", true },
+            });
+
+            string expected = """
+                {
+                  "array_key": [
+                    "old value",
+                    "new value"
+                  ],
+                  "bool_key": true,
+                  "double_key": 56.78,
+                  "int_key": 5678,
+                  "object_key": {
+                    "key1": "value 1",
+                    "key2": "value 2"
+                  },
+                  "string_key": "value 2"
+                }
+                """;
+            Assert.Equal(expected, json.PrettyPrint());
+        }
+
         // =================================================================================================================
         // content-checking tests
         // =================================================================================================================
+
+        [Fact(DisplayName = "returns correct size")]
+        public void ReturnsCorrectSize() {
+            JsonObject json = new();
+            Assert.Equal(0, json.Count());
+            json.PutString("key", "value");
+            Assert.Equal(1, json.Count());
+        }
 
         [Fact(DisplayName = "identifies emptiness")]
         public void IdentifiesEmptiness() {
@@ -482,10 +544,62 @@ namespace RPGLC.json.test {
         // printing tests
         // =================================================================================================================
 
+        [Fact(DisplayName = "pretty prints")]
+        public void PrettyPrints() {
+            JsonObject json = new(new Dictionary<string, object> {
+                { "object_key", new Dictionary<string, object> { { "nested_key", "value" } } },
+                { "array_key", new List<object> { "item_1", "item_2" } },
+                { "string_key", "value" },
+                { "int_key", 123 },
+                { "double_key", 123.456 },
+                { "bool_key", false },
+            });
 
+            string expected = """
+                {
+                  "array_key": [
+                    "item_1",
+                    "item_2"
+                  ],
+                  "bool_key": false,
+                  "double_key": 123.456,
+                  "int_key": 123,
+                  "object_key": {
+                    "nested_key": "value"
+                  },
+                  "string_key": "value"
+                }
+                """;
+            Assert.Equal(expected, json.PrettyPrint());
+        }
 
+        [Fact(DisplayName = "pretty prints when empty")]
+        public void PrettyPrintsWhenEmpty() {
+            JsonObject json = new();
+            Assert.Equal("{ }", json.PrettyPrint());
+        }
 
+        [Fact(DisplayName = "prints as string")]
+        public void PrintsAsString() {
+            JsonObject json = new(new Dictionary<string, object> {
+                { "object_key", new Dictionary<string, object> { { "nested_key", "value" } } },
+                { "array_key", new List<object> { "item_1", "item_2" } },
+                { "string_key", "value" },
+                { "int_key", 123 },
+                { "double_key", 123.456 },
+                { "bool_key", false },
+            });
 
+            string expected = """
+                {"array_key":["item_1","item_2"],"bool_key":false,"double_key":123.456,"int_key":123,"object_key":{"nested_key":"value"},"string_key":"value"}
+                """;
+            Assert.Equal(expected, json.ToString());
+        }
 
+        [Fact(DisplayName = "prints as string when empty")]
+        public void PrintsAsStringWhenEmpty() {
+            JsonObject json = new();
+            Assert.Equal("{}", json.ToString());
+        }
     }
 }

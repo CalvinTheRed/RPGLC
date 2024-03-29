@@ -64,27 +64,39 @@ namespace rpglc.json {
         // =================================================================================================================
 
         public void AddJsonObject(JsonObject? jsonObject) {
-            this.data.Add(jsonObject.AsDict());
+            if (jsonObject != null) {
+                this.data.Add(jsonObject.AsDict());
+            }
         }
 
         public void AddJsonArray(JsonArray? jsonArray) {
-            this.data.Add(jsonArray.AsList());
+            if (jsonArray != null) {
+                this.data.Add(jsonArray.AsList());
+            }
         }
 
         public void AddString(string? s) {
-            this.data.Add(s);
+            if (s != null) {
+                this.data.Add(s);
+            }
         }
 
         public void AddInt(int? i) {
-            this.data.Add(i);
+            if (i != null) {
+                this.data.Add(i);
+            }
         }
 
         public void AddDouble(double? d) {
-            this.data.Add(d);
+            if (d != null) {
+                this.data.Add(d);
+            }
         }
 
         public void AddBool(bool? b) {
-            this.data.Add(b);
+            if (b != null) {
+                this.data.Add(b);
+            }
         }
 
         // =================================================================================================================

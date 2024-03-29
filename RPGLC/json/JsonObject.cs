@@ -27,9 +27,9 @@ namespace rpglc.json {
             foreach (string key in this.data.Keys) {
                 object value = this.data[key];
                 if (value is Dictionary<string, object>) {
-                    clone.PutJsonObject(key, this.GetJsonObject(key).DeepClone());
+                    clone.PutJsonObject(key, this.GetJsonObject(key)?.DeepClone());
                 } else if (value is List<object>) {
-                    clone.PutJsonArray(key, this.GetJsonArray(key).DeepClone());
+                    clone.PutJsonArray(key, this.GetJsonArray(key)?.DeepClone());
                 } else {
                     clone.data[key] = value;
                 }
@@ -70,37 +70,37 @@ namespace rpglc.json {
         // =================================================================================================================
 
         public void PutJsonObject(string key, JsonObject? jsonObject) {
-            if (key != null) {
+            if (jsonObject != null) {
                 this.data[key] = jsonObject.AsDict();
             }
         }
 
         public void PutJsonArray(string key, JsonArray? jsonArray) {
-            if (key != null) {
+            if (jsonArray != null) {
                 this.data[key] = jsonArray.AsList();
             }
         }
 
         public void PutString(string key, string? s) {
-            if (key != null) {
+            if (s != null) {
                 this.data[key] = s;
             }
         }
 
         public void PutInt(string key, int? i) {
-            if (key != null) {
+            if (i != null) {
                 this.data[key] = i;
             }
         }
 
         public void PutDouble(string key, double? d) {
-            if (key != null) {
+            if (d != null) {
                 this.data[key] = d;
             }
         }
 
         public void PutBool(string key, bool? b) {
-            if (key != null) {
+            if (b != null) {
                 this.data[key] = b;
             }
         }
@@ -288,7 +288,7 @@ namespace rpglc.json {
             foreach (string otherKey in otherClone.data.Keys) {
                 object otherValue = otherClone.data[otherKey];
                 if (otherValue is Dictionary<string, object> otherMap) {
-                    object thisValue = this.data[otherKey];
+                    object? thisValue = this.data.TryGetValue(otherKey, out object? value) ? value : null;
                     if (thisValue is Dictionary<string, object> thisMap) {
                         // nested join if a map is being joined to a map
                         JsonObject thisJsonObject = new();
@@ -300,7 +300,7 @@ namespace rpglc.json {
                         this.data.Add(otherKey, otherMap);
                     }
                 } else if (otherValue is List<object> otherList) {
-                    object thisValue = this.data[otherKey];
+                    object? thisValue = this.data.TryGetValue(otherKey, out object? value) ? value : null;
                     if (thisValue is List<object> thisList) {
                         // union if a list is being joined to a list
                         foreach (object item in otherList) {
@@ -310,11 +310,13 @@ namespace rpglc.json {
                         }
                     } else {
                         // override the key if this is not also a list
-                        this.data.Add(otherKey, otherList);
+                        //this.data.Add(otherKey, otherList);
+                        this.data[otherKey] = otherList;
                     }
                 } else {
                     // override any primitives being joined
-                    this.data.Add(otherKey, otherValue);
+                    //this.data.Add(otherKey, otherValue);
+                    this.data[otherKey] = otherValue;
                 }
             }
         }
