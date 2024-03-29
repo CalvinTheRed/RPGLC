@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace json {
+namespace rpglc.json {
     public class JsonArray {
 
         public List<object> data;
@@ -31,13 +31,65 @@ namespace json {
             return clone;
         }
 
+        // =================================================================================================================
+        // Get() methods
+        // =================================================================================================================
+
         public JsonObject? GetJsonObject(int index) {
             return (index < this.data.Count && this.data[index] is Dictionary<string, object> dict) ? new JsonObject(dict) : null;
         }
 
-        public void AddJsonObject(JsonObject jsonObject) {
+        public JsonArray? GetJsonArray(int index) {
+            return (index < this.data.Count && this.data[index] is List<object> list) ? new JsonArray(list) : null;
+        }
+
+        public string? GetString(int index) {
+            return (index < this.data.Count && this.data[index] is string s) ? s : null;
+        }
+
+        public int? GetInt(int index) {
+            return (index < this.data.Count && this.data[index] is int i) ? i : null;
+        }
+
+        public double? GetDouble(int index) {
+            return (index < this.data.Count && this.data[index] is double d) ? d : null;
+        }
+
+        public bool? GetBool(int index) {
+            return (index < this.data.Count && this.data[index] is bool b) ? b : null;
+        }
+
+        // =================================================================================================================
+        // Add() methods
+        // =================================================================================================================
+
+        public void AddJsonObject(JsonObject? jsonObject) {
             this.data.Add(jsonObject.AsDict());
         }
+
+        public void AddJsonArray(JsonArray? jsonArray) {
+            this.data.Add(jsonArray.AsList());
+        }
+
+        public void AddString(string? s) {
+            this.data.Add(s);
+        }
+
+        public void AddInt(int? i) {
+            this.data.Add(i);
+        }
+
+        public void AddDouble(double? d) {
+            this.data.Add(d);
+        }
+
+        public void AddBool(bool? b) {
+            this.data.Add(b);
+        }
+
+        // =================================================================================================================
+        // Remove() methods
+        // =================================================================================================================
 
         public JsonObject? RemoveJsonObject(int index) {
             if (index < this.data.Count && this.data[index] is Dictionary<string, object> dict) {
@@ -45,14 +97,6 @@ namespace json {
                 return new JsonObject(dict);
             }
             return null;
-        }
-
-        public JsonArray? GetJsonArray(int index) {
-            return (index < this.data.Count && this.data[index] is List<object> list) ? new JsonArray(list) : null;
-        }
-
-        public void AddJsonArray(JsonArray jsonArray) {
-            this.data.Add(jsonArray.AsList());
         }
 
         public JsonArray? RemoveJsonArray(int index) {
@@ -63,28 +107,12 @@ namespace json {
             return null;
         }
 
-        public string? GetString(int index) {
-            return (index < this.data.Count && this.data[index] is string s) ? s : null;
-        }
-
-        public void AddString(string s) {
-            this.data.Add(s);
-        }
-
         public string? RemoveString(int index) {
             if (index < this.data.Count && this.data[index] is string s) {
                 this.data.RemoveAt(index);
                 return s;
             }
             return null;
-        }
-
-        public int? GetInt(int index) {
-            return (index < this.data.Count && this.data[index] is int i) ? i : null;
-        }
-
-        public void AddInt(int i) {
-            this.data.Add(i);
         }
 
         public int? RemoveInt(int index) {
@@ -95,28 +123,12 @@ namespace json {
             return null;
         }
 
-        public double? GetDouble(int index) {
-            return (index < this.data.Count && this.data[index] is double d) ? d : null;
-        }
-
-        public void AddDouble(double d) {
-            this.data.Add(d);
-        }
-
         public double? RemoveDouble(int index) {
             if (index < this.data.Count && this.data[index] is double d) {
                 this.data.RemoveAt(index);
                 return d;
             }
             return null;
-        }
-
-        public bool? GetBool(int index) {
-            return (index < this.data.Count && this.data[index] is bool b) ? b : null;
-        }
-
-        public void AddBool(bool b) {
-            this.data.Add(b);
         }
 
         public bool? RemoveBool(int index) {
@@ -127,9 +139,34 @@ namespace json {
             return null;
         }
 
+        // =================================================================================================================
+        // content-checking methods
+        // =================================================================================================================
+
+        public int Count() {
+            return this.data.Count;
+        }
+
         public bool IsEmpty() {
             return this.data == null || this.data.Count == 0;
         }
+
+        public bool Contains(object item) {
+            return this.data.Contains(item);
+        }
+
+        public bool ContainsAny(List<object> other) {
+            foreach (object item in other) {
+                if (this.data.Contains(item)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // =================================================================================================================
+        // printing methods
+        // =================================================================================================================
 
         public string PrettyPrint() {
             return this.PrettyPrint(0);
@@ -197,15 +234,5 @@ namespace json {
             }
             return sb.ToString();
         }
-
-        public bool ContainsAny(List<object> other) {
-            foreach (object item in other) {
-                if (this.data.Contains(item)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 }
