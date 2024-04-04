@@ -296,11 +296,11 @@ public class JsonObject {
     // Join() methods
     // =================================================================================================================
 
-    public void Join(Dictionary<string, object> other) {
-        Join(new JsonObject(other));
+    public JsonObject Join(Dictionary<string, object> other) {
+        return this.Join(new JsonObject(other));
     }
 
-    public void Join(JsonObject other) {
+    public JsonObject Join(JsonObject other) {
         JsonObject otherClone = other.DeepClone();
         foreach (string otherKey in otherClone.data.Keys) {
             object otherValue = otherClone.data[otherKey];
@@ -334,6 +334,7 @@ public class JsonObject {
                 data[otherKey] = otherValue;
             }
         }
+        return this;
     }
 
     // =================================================================================================================

@@ -18,13 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="datapacks\std\class\" />
-    <Folder Include="datapacks\std\effect\" />
-    <Folder Include="datapacks\std\event\" />
-    <Folder Include="datapacks\std\item\" />
-    <Folder Include="datapacks\std\resource\" />
-    <Folder Include="datapacks\std\race\" />
-    <Folder Include="datapacks\std\object\" />
+    <Folder Include="datapacks\" />
   </ItemGroup>
 
 </Project>
