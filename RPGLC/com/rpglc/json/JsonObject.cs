@@ -58,68 +58,62 @@ public class JsonObject {
     // Get() methods
     // =================================================================================================================
 
-    public JsonObject? GetJsonObject(string key) {
-        return data.TryGetValue(key, out object? value) && value is Dictionary<string, object> dict ? new JsonObject(dict) : null;
+    public JsonObject GetJsonObject(string key) {
+        return new((Dictionary<string, object>) data[key]);
     }
 
-    public JsonArray? GetJsonArray(string key) {
-        return data.TryGetValue(key, out object? value) && value is List<object> list ? new JsonArray(list) : null;
+    public JsonArray GetJsonArray(string key) {
+        return new((List<object>) data[key]);
     }
 
-    public string? GetString(string key) {
-        return data.TryGetValue(key, out object? value) && value is string s ? s : null;
+    public string GetString(string key) {
+        return (string) data[key];
     }
 
-    public int? GetInt(string key) {
-        return data.TryGetValue(key, out object? value) && value is int i ? i : null;
+    public Int64 GetInt(string key) {
+        return (Int64) data[key];
     }
 
-    public double? GetDouble(string key) {
-        return data.TryGetValue(key, out object? value) && value is double d ? d : null;
+    public double GetDouble(string key) {
+        return (double) data[key];
     }
 
-    public bool? GetBool(string key) {
-        return data.TryGetValue(key, out object? value) && value is bool b ? b : null;
+    public bool GetBool(string key) {
+        return (bool) data[key];
     }
 
     // =================================================================================================================
     // Put() methods
     // =================================================================================================================
 
-    public void PutJsonObject(string key, JsonObject? jsonObject) {
-        if (jsonObject != null) {
-            data[key] = jsonObject.AsDict();
-        }
+    public JsonObject PutJsonObject(string key, JsonObject jsonObject) {
+        data[key] = jsonObject.AsDict();
+        return this;
     }
 
-    public void PutJsonArray(string key, JsonArray? jsonArray) {
-        if (jsonArray != null) {
-            data[key] = jsonArray.AsList();
-        }
+    public JsonObject PutJsonArray(string key, JsonArray jsonArray) {
+        data[key] = jsonArray.AsList();
+        return this;
     }
 
-    public void PutString(string key, string? s) {
-        if (s != null) {
-            data[key] = s;
-        }
+    public JsonObject PutString(string key, string s) {
+        data[key] = s;
+        return this;
     }
 
-    public void PutInt(string key, int? i) {
-        if (i != null) {
-            data[key] = i;
-        }
+    public JsonObject PutInt(string key, Int64 i) {
+        data[key] = i;
+        return this;
     }
 
-    public void PutDouble(string key, double? d) {
-        if (d != null) {
-            data[key] = d;
-        }
+    public JsonObject PutDouble(string key, double d) {
+        data[key] = d;
+        return this;
     }
 
-    public void PutBool(string key, bool? b) {
-        if (b != null) {
-            data[key] = b;
-        }
+    public JsonObject PutBool(string key, bool b) {
+        data[key] = b;
+        return this;
     }
 
     // =================================================================================================================
@@ -153,8 +147,8 @@ public class JsonObject {
         return null;
     }
 
-    public int? RemoveInt(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is int i) {
+    public Int64? RemoveInt(string key) {
+        if (key != null && data.TryGetValue(key, out object? value) && value is Int64 i) {
             if (data.Remove(key)) {
                 return i;
             }
@@ -184,28 +178,28 @@ public class JsonObject {
     // Seek() methods
     // =================================================================================================================
 
-    public JsonObject? SeekJsonObject(string path) {
-        return Seek(path) is Dictionary<string, object> dict ? new JsonObject(dict) : null;
+    public JsonObject SeekJsonObject(string path) {
+        return new((Dictionary<string, object>) Seek(path));
     }
 
-    public JsonArray? SeekJsonArray(string path) {
-        return Seek(path) is List<object> list ? new JsonArray(list) : null;
+    public JsonArray SeekJsonArray(string path) {
+        return new((List<object>) Seek(path));
     }
 
-    public string? SeekString(string path) {
-        return Seek(path) is string s ? s : null;
+    public string SeekString(string path) {
+        return (string) Seek(path);
     }
 
-    public int? SeekInt(string path) {
-        return Seek(path) is int i ? i : null;
+    public Int64 SeekInt(string path) {
+        return (Int64) Seek(path);
     }
 
-    public double? SeekDouble(string path) {
-        return Seek(path) is double d ? d : null;
+    public double SeekDouble(string path) {
+        return (double) Seek(path);
     }
 
-    public bool? SeekBool(string path) {
-        return Seek(path) is bool b ? b : null;
+    public bool SeekBool(string path) {
+        return (bool) Seek(path);
     }
 
     private object Seek(string path) { // TODO might break if path ends with index
@@ -232,7 +226,7 @@ public class JsonObject {
     // Insert() methods
     // =================================================================================================================
 
-    public void InsertJsonObject(string path, JsonObject jsonObject) {
+    public JsonObject InsertJsonObject(string path, JsonObject jsonObject) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..]; // this is faulty
@@ -240,9 +234,10 @@ public class JsonObject {
         } else {
             PutJsonObject(path, jsonObject);
         }
+        return this;
     }
 
-    public void InsertJsonArray(string path, JsonArray jsonArray) {
+    public JsonObject InsertJsonArray(string path, JsonArray jsonArray) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
@@ -250,9 +245,10 @@ public class JsonObject {
         } else {
             PutJsonArray(path, jsonArray);
         }
+        return this;
     }
 
-    public void InsertString(string path, string s) {
+    public JsonObject InsertString(string path, string s) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
@@ -260,9 +256,10 @@ public class JsonObject {
         } else {
             PutString(path, s);
         }
+        return this;
     }
 
-    public void InsertInt(string path, int i) {
+    public JsonObject InsertInt(string path, Int64 i) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
@@ -270,9 +267,10 @@ public class JsonObject {
         } else {
             PutInt(path, i);
         }
+        return this;
     }
 
-    public void InsertDouble(string path, double d) {
+    public JsonObject InsertDouble(string path, double d) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
@@ -280,9 +278,10 @@ public class JsonObject {
         } else {
             PutDouble(path, d);
         }
+        return this;
     }
 
-    public void InsertBool(string path, bool b) {
+    public JsonObject InsertBool(string path, bool b) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
@@ -290,6 +289,7 @@ public class JsonObject {
         } else {
             PutBool(path, b);
         }
+        return this;
     }
 
     // =================================================================================================================
@@ -425,4 +425,5 @@ public class JsonObject {
         }
         return sb.ToString();
     }
-}
+
+};

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using System.Text;
 
 namespace com.rpglc.json;
@@ -71,8 +70,8 @@ public class JsonArray {
         return index < data.Count && data[index] is string s ? s : null;
     }
 
-    public int? GetInt(int index) {
-        return index < data.Count && data[index] is int i ? i : null;
+    public Int64? GetInt(int index) {
+        return index < data.Count && data[index] is Int64 i ? i : null;
     }
 
     public double? GetDouble(int index) {
@@ -105,7 +104,7 @@ public class JsonArray {
         }
     }
 
-    public void AddInt(int? i) {
+    public void AddInt(Int64? i) {
         if (i != null) {
             data.Add(i);
         }
@@ -151,7 +150,7 @@ public class JsonArray {
         return null;
     }
 
-    public int? RemoveInt(int index) {
+    public Int64? RemoveInt(int index) {
         if (index < data.Count && data[index] is int i) {
             data.RemoveAt(index);
             return i;
@@ -270,4 +269,5 @@ public class JsonArray {
         }
         return sb.ToString();
     }
-}
+
+};
