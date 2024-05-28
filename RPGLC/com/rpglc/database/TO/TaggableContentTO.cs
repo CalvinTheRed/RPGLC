@@ -7,4 +7,5 @@ public class TaggableContentTO : DatabaseContentTO {
         base.ApplyToTemplate(template);
         template.PutJsonArray("tags", new json.JsonArray(this.tags));
     }
+
 };

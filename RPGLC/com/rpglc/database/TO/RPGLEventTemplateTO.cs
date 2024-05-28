@@ -16,4 +16,5 @@ public class RPGLEventTemplateTO : DatabaseContentTO {
         base.ApplyToTemplate(template);
         return template;
     }
+
 };

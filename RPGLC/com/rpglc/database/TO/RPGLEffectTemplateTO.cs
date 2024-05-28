@@ -10,4 +10,5 @@ public class RPGLEffectTemplateTO : DatabaseContentTO {
         base.ApplyToTemplate(template);
         return template;
     }
+
 };

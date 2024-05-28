@@ -18,4 +18,5 @@ public class RPGLResourceTemplateTO : TaggableContentTO {
         base.ApplyToTemplate(template);
         return template;
     }
+
 };

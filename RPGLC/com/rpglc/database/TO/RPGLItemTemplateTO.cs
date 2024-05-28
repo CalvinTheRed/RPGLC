@@ -20,4 +20,5 @@ public class RPGLItemTemplateTO : TaggableContentTO {
         base.ApplyToTemplate(template);
         return template;
     }
+
 };

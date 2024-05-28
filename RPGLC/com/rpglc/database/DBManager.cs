@@ -1,5 +1,4 @@
 ﻿using LiteDB;
-using System.Linq.Expressions;
 
 using com.rpglc.json;
 using com.rpglc.database.TO;
@@ -72,7 +71,7 @@ public class DBManager {
             areaOfEffect = data.GetJsonObject("area_of_effect").AsDict(),
             cost = data.GetJsonArray("cost").AsList(),
             subevents = data.GetJsonArray("subevents").AsList(),
-            // origin item not included in templates
+            // origin item is not included in templates
         });
     }
 
@@ -204,40 +203,6 @@ public class DBManager {
         return numDeleted;
     }
 
-
-
-
-
-    public static void InsertRPGLDummyType(JsonObject data) {
-        using DBConnection connection = new(dbDir, dbName);
-        connection.Collection<RPGLDummyType>("dummies").Insert(new RPGLDummyType() {
-            name = data.GetString("name"),
-            health = data.GetInt("health"),
-            userId = data.GetString("user_id"),
-            uuid = data.GetString("uuid"),
-        });
-    }
-
-    public static void DeleteRPGLDummyType(ObjectId id) {
-        using DBConnection conn = new(dbDir, dbName);
-        conn.Collection<RPGLDummyType>("dummies").Delete(id);
-    }
-
-    public static List<JsonObject> QueryDummies(Expression<Func<RPGLDummyType, bool>> expression) {
-        List<JsonObject> list = [];
-        using (DBConnection conn = new(dbDir, dbName)) {
-            conn.Collection<RPGLDummyType>("dummies").Query()
-                .Where(expression)
-                .ToList()
-                .ForEach(x => list.Add(new JsonObject()
-                    .PutString("name", x.name)
-                    .PutInt("health", x.health)
-                    .PutString("user_id", x.userId)
-                    .PutString("uuid", x._id.ToString())
-                ));
-        }
-        return list;
-    }
 };
 
 public class DBConnection : IDisposable {
@@ -260,13 +225,5 @@ public class DBConnection : IDisposable {
     public ILiteCollection<T> Collection<T>(string name) {
         return this.db.GetCollection<T>(name);
     }
-};
 
-public class RPGLDummyType {
-    public ObjectId _id { get; set; }
-
-    public string name { get; set; }
-    public long health { get; set; }
-    public string userId { get; set; }
-    public string uuid { get; set; }
 };

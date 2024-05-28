@@ -44,4 +44,5 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
         base.ApplyToTemplate(template);
         return template;
     }
+
 };
