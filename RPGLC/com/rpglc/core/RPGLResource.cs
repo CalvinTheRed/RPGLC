@@ -4,11 +4,11 @@ namespace com.rpglc.core;
 
 public class RPGLResource : TaggableContent {
 
-    public Int64 GetPotency() {
+    public long GetPotency() {
         return base.GetInt("potency");
     }
 
-    public RPGLResource SetPotency(Int64 potency) {
+    public RPGLResource SetPotency(long potency) {
         base.PutInt("potency", potency);
         return this;
     }

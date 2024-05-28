@@ -121,40 +121,40 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public Int64 GetHealthBase() {
+    public long GetHealthBase() {
         return base.GetInt("health_base");
     }
 
-    public RPGLObject SetHealthBase(Int64 healthBase) {
+    public RPGLObject SetHealthBase(long healthBase) {
         base.PutInt("health_base", healthBase);
         return this;
     }
 
-    public Int64 GetHealthCurrent() {
+    public long GetHealthCurrent() {
         return base.GetInt("health_current");
     }
 
-    public RPGLObject SetHealthCurrent(Int64 healthCurrent) {
+    public RPGLObject SetHealthCurrent(long healthCurrent) {
         base.PutInt("health_current", healthCurrent);
         return this;
     }
 
     // TODO temporary health may benefit from having a more involved data structure to track where it came from...
 
-    public Int64 GetHealthTemporary() {
+    public long GetHealthTemporary() {
         return base.GetInt("health_temporary");
     }
 
-    public RPGLObject SetHealthTemporary(Int64 healthTemporary) {
+    public RPGLObject SetHealthTemporary(long healthTemporary) {
         base.PutInt("health_temporary", healthTemporary);
         return this;
     }
 
-    public Int64 GetProficiencyBonus() {
+    public long GetProficiencyBonus() {
         return base.GetInt("proficiency_bonus");
     }
 
-    public RPGLObject SetProficiencyBonus(Int64 proficiencyBonus) {
+    public RPGLObject SetProficiencyBonus(long proficiencyBonus) {
         base.PutInt("proficiency_bonus", proficiencyBonus);
         return this;
     }

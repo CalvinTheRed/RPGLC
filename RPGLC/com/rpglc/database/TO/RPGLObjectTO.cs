@@ -14,8 +14,8 @@ public class RPGLObjectTO : TaggableContentTO {
     public string originObject { get; set; }
     public string proxyObject { get; set; }
     public string userId { get; set; }
-    public Int64 healthBase { get; set; }
-    public Int64 healthCurrent { get; set; }
-    public Int64 healthTemporary { get; set; }
-    public Int64 proficiencyBonus { get; set; }
+    public long healthBase { get; set; }
+    public long healthCurrent { get; set; }
+    public long healthTemporary { get; set; }
+    public long proficiencyBonus { get; set; }
 };

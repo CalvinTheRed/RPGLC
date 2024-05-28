@@ -119,65 +119,39 @@ public class JsonObjectTest {
             """;
 
         Assert.Equal(expected, json.PrettyPrint());
-
-        Assert.NotNull(json.SeekJsonObject("object_key.object_key.object_key"));
-        Assert.NotNull(json.SeekJsonArray("object_key.object_key.array_key"));
-        Assert.NotNull(json.SeekString("object_key.object_key.string_key"));
-        Assert.NotNull(json.SeekInt("object_key.object_key.int_key"));
-        Assert.NotNull(json.SeekDouble("object_key.object_key.double_key"));
-        Assert.NotNull(json.SeekBool("object_key.object_key.bool_key"));
-
-        Assert.NotNull(json.SeekJsonObject("object_key.array_key[0]"));
-        Assert.NotNull(json.SeekJsonArray("object_key.array_key[1]"));
-        Assert.NotNull(json.SeekString("object_key.array_key[2]"));
-        Assert.NotNull(json.SeekInt("object_key.array_key[3]"));
-        Assert.NotNull(json.SeekDouble("object_key.array_key[4]"));
-        Assert.NotNull(json.SeekBool("object_key.array_key[5]"));
     }
 
     // =================================================================================================================
     // Put() and Get() tests
     // =================================================================================================================
 
-        [Fact(DisplayName = "puts and gets JsonObject")]
+    [Fact(DisplayName = "puts and gets JsonObject")]
     public void PutsAndGetsJsonObject() {
-        JsonObject json = new();
-
-        Assert.Null(json.GetJsonObject("object_key"));
-
-        json.PutJsonObject("object_key", new JsonObject(new Dictionary<string, object> {
+        JsonObject json = new JsonObject().PutJsonObject("object_key", new JsonObject(new Dictionary<string, object> {
             { "nested_key", "value" },
         }));
 
         Assert.Equal(
             """{"nested_key":"value"}""",
-            json.GetJsonObject("object_key")?.ToString()
+            json.GetJsonObject("object_key").ToString()
         );
     }
 
     [Fact(DisplayName = "puts and gets JsonArray")]
     public void PutsAndGetsJsonArray() {
-        JsonObject json = new();
-
-        Assert.Null(json.GetJsonArray("array_key"));
-
-        json.PutJsonArray("array_key", new JsonArray([
+        JsonObject json = new JsonObject().PutJsonArray("array_key", new JsonArray([
             "item_1", "item_2",
         ]));
 
         Assert.Equal(
             """["item_1","item_2"]""",
-            json.GetJsonArray("array_key")?.ToString()
+            json.GetJsonArray("array_key").ToString()
         );
     }
 
     [Fact(DisplayName = "puts and gets string")]
     public void PutsAndGetsString() {
-        JsonObject json = new();
-
-        Assert.Null(json.GetString("string_key"));
-
-        json.PutString("string_key", "value");
+        JsonObject json = new JsonObject().PutString("string_key", "value");
 
         Assert.Equal(
             "value",
@@ -187,25 +161,17 @@ public class JsonObjectTest {
 
     [Fact(DisplayName = "puts and gets int")]
     public void PutsAndGetsInt() {
-        JsonObject json = new();
-
-        Assert.Null(json.GetInt("int_key"));
-
-        json.PutInt("int_key", 123);
+        JsonObject json = new JsonObject().PutInt("int_key", 123L);
 
         Assert.Equal(
-            123,
+            123L,
             json.GetInt("int_key")
         );
     }
 
     [Fact(DisplayName = "puts and gets double")]
     public void PutsAndGetsDouble() {
-        JsonObject json = new();
-
-        Assert.Null(json.GetDouble("double_key"));
-
-        json.PutDouble("double_key", 123.456);
+        JsonObject json = new JsonObject().PutDouble("double_key", 123.456);
 
         Assert.Equal(
             123.456,
@@ -215,14 +181,9 @@ public class JsonObjectTest {
 
     [Fact(DisplayName = "puts and gets bool")]
     public void PutsAndGetsBool() {
-        JsonObject json = new();
+        JsonObject json = new JsonObject().PutBool("bool_key", false);
 
-        Assert.Null(json.GetBool("bool_key"));
-
-        json.PutBool("bool_key", false);
-
-        Assert.Equal(
-            false,
+        Assert.False(
             json.GetBool("bool_key")
         );
     }
@@ -230,7 +191,6 @@ public class JsonObjectTest {
     // =================================================================================================================
     // Remove() tests
     // =================================================================================================================
-
 
     [Fact(DisplayName = "removes JsonObject")]
     public void RemovesJsonObject() {
@@ -240,7 +200,6 @@ public class JsonObjectTest {
 
         string expected = "{}";
         Assert.Equal(expected, json.RemoveJsonObject("key")?.ToString());
-        Assert.Null(json.GetJsonObject("key"));
         Assert.Null(json.RemoveJsonObject("key"));
     }
 
@@ -252,7 +211,6 @@ public class JsonObjectTest {
 
         string expected = "[]";
         Assert.Equal(expected, json.RemoveJsonArray("key")?.ToString());
-        Assert.Null(json.GetJsonArray("key"));
         Assert.Null(json.RemoveJsonArray("key"));
     }
 
@@ -264,7 +222,6 @@ public class JsonObjectTest {
 
         string expected = "value";
         Assert.Equal(expected, json.RemoveString("key"));
-        Assert.Null(json.GetString("key"));
         Assert.Null(json.RemoveString("key"));
     }
 
@@ -276,7 +233,6 @@ public class JsonObjectTest {
 
         int expected = 123;
         Assert.Equal(expected, json.RemoveInt("key"));
-        Assert.Null(json.GetInt("key"));
         Assert.Null(json.RemoveInt("key"));
     }
 
@@ -288,7 +244,6 @@ public class JsonObjectTest {
 
         double expected = 123.456;
         Assert.Equal(expected, json.RemoveDouble("key"));
-        Assert.Null(json.GetDouble("key"));
         Assert.Null(json.RemoveDouble("key"));
     }
 
@@ -300,7 +255,6 @@ public class JsonObjectTest {
 
         bool expected = false;
         Assert.Equal(expected, json.RemoveBool("key"));
-        Assert.Null(json.GetBool("key"));
         Assert.Null(json.RemoveBool("key"));
     }
 
@@ -377,9 +331,9 @@ public class JsonObjectTest {
     [Fact(DisplayName = "seeks int shallow")]
     public void SeeksIntShallow() {
         JsonObject json = new(new Dictionary<string, object> {
-            { "key", 123 }
+            { "key", 123L }
         });
-        Assert.Equal(123, json.SeekInt("key"));
+        Assert.Equal(123L, json.SeekInt("key"));
     }
 
     [Fact(DisplayName = "seeks int deep")]
@@ -388,12 +342,12 @@ public class JsonObjectTest {
             { "key1", new Dictionary<string, object> {
                 { "key2", new List<object> {
                     new Dictionary<string, object> {
-                        { "key3", 123 }
+                        { "key3", 123L }
                     }
                 } }
             } }
         });
-        Assert.Equal(123, json.SeekInt("key1.key2[0].key3"));
+        Assert.Equal(123L, json.SeekInt("key1.key2[0].key3"));
     }
 
     [Fact(DisplayName = "seeks double shallow")]

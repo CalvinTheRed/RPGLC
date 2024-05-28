@@ -70,8 +70,8 @@ public class JsonObject {
         return (string) data[key];
     }
 
-    public Int64 GetInt(string key) {
-        return (Int64) data[key];
+    public long GetInt(string key) {
+        return (long) data[key];
     }
 
     public double GetDouble(string key) {
@@ -101,7 +101,7 @@ public class JsonObject {
         return this;
     }
 
-    public JsonObject PutInt(string key, Int64 i) {
+    public JsonObject PutInt(string key, long i) {
         data[key] = i;
         return this;
     }
@@ -147,8 +147,8 @@ public class JsonObject {
         return null;
     }
 
-    public Int64? RemoveInt(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is Int64 i) {
+    public long? RemoveInt(string key) {
+        if (key != null && data.TryGetValue(key, out object? value) && value is long i) {
             if (data.Remove(key)) {
                 return i;
             }
@@ -190,8 +190,8 @@ public class JsonObject {
         return (string) Seek(path);
     }
 
-    public Int64 SeekInt(string path) {
-        return (Int64) Seek(path);
+    public long SeekInt(string path) {
+        return (long) Seek(path);
     }
 
     public double SeekDouble(string path) {
@@ -259,7 +259,7 @@ public class JsonObject {
         return this;
     }
 
-    public JsonObject InsertInt(string path, Int64 i) {
+    public JsonObject InsertInt(string path, long i) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];

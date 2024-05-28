@@ -266,7 +266,7 @@ public class RPGLDummyType {
     public ObjectId _id { get; set; }
 
     public string name { get; set; }
-    public Int64 health { get; set; }
+    public long health { get; set; }
     public string userId { get; set; }
     public string uuid { get; set; }
 };

@@ -4,20 +4,20 @@ namespace com.rpglc.core;
 
 public class RPGLItem : TaggableContent {
 
-    public Int64 GetWeight() {
+    public long GetWeight() {
         return base.GetInt("weight");
     }
 
-    public RPGLItem SetWeight(Int64 weight) {
+    public RPGLItem SetWeight(long weight) {
         base.PutInt("weight", weight);
         return this;
     }
 
-    public Int64 GetCost() {
+    public long GetCost() {
         return base.GetInt("cost");
     }
 
-    public RPGLItem SetCost(Int64 cost) {
+    public RPGLItem SetCost(long cost) {
         base.PutInt("cost", cost);
         return this;
     }

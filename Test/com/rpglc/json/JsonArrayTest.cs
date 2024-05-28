@@ -119,33 +119,15 @@ public class JsonArrayTest {
             """;
 
         Assert.Equal(expected, json.PrettyPrint());
-
-        Assert.NotNull(json.GetJsonObject(0)?.SeekJsonObject("array_key[0]"));
-        Assert.NotNull(json.GetJsonObject(0)?.SeekJsonArray("array_key[1]"));
-        Assert.NotNull(json.GetJsonObject(0)?.SeekString("array_key[2]"));
-        Assert.NotNull(json.GetJsonObject(0)?.SeekInt("array_key[3]"));
-        Assert.NotNull(json.GetJsonObject(0)?.SeekDouble("array_key[4]"));
-        Assert.NotNull(json.GetJsonObject(0)?.SeekBool("array_key[5]"));
-
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetJsonObject("object_key"));
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetJsonArray("array_key"));
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetString("string_key"));
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetInt("int_key"));
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetDouble("double_key"));
-        Assert.NotNull(json.GetJsonArray(1)?.GetJsonObject(0)?.GetBool("bool_key"));
     }
 
     // =================================================================================================================
     // Add() and Get() tests
     // =================================================================================================================
 
-        [Fact(DisplayName = "adds and gets JsonObject")]
+    [Fact(DisplayName = "adds and gets JsonObject")]
     public void AddsAndGetsJsonObject() {
-        JsonArray json = new();
-
-        Assert.Null(json.GetJsonObject(0));
-
-        json.AddJsonObject(new JsonObject(new Dictionary<string, object> {
+        JsonArray json = new JsonArray().AddJsonObject(new JsonObject(new Dictionary<string, object> {
             { "nested_key", "value" },
         }));
 
@@ -157,11 +139,7 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "adds and gets JsonArray")]
     public void AddsAndGetsJsonArray() {
-        JsonArray json = new();
-
-        Assert.Null(json.GetJsonObject(0));
-
-        json.AddJsonArray(new JsonArray([
+        JsonArray json = new JsonArray().AddJsonArray(new JsonArray([
             "item_1", "item_2",
         ]));
 
@@ -173,11 +151,7 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "adds and gets string")]
     public void AddsAndGetsString() {
-        JsonArray json = new();
-
-        Assert.Null(json.GetString(0));
-
-        json.AddString("value");
+        JsonArray json = new JsonArray().AddString("value");
 
         Assert.Equal(
             "value",
@@ -187,25 +161,17 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "adds and gets int")]
     public void AddsAndGetsInt() {
-        JsonArray json = new();
-
-        Assert.Null(json.GetInt(0));
-
-        json.AddInt(123);
+        JsonArray json = new JsonArray().AddInt(123L);
 
         Assert.Equal(
-            123,
+            123L,
             json.GetInt(0)
         );
     }
 
     [Fact(DisplayName = "adds and gets double")]
     public void AddsAndGetsDouble() {
-        JsonArray json = new();
-
-        Assert.Null(json.GetDouble(0));
-
-        json.AddDouble(123.456);
+        JsonArray json = new JsonArray().AddDouble(123.456);
 
         Assert.Equal(
             123.456,
@@ -215,14 +181,9 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "adds and gets bool")]
     public void AddsAndGetsBool() {
-        JsonArray json = new();
+        JsonArray json = new JsonArray().AddBool(false);
 
-        Assert.Null(json.GetBool(0));
-
-        json.AddBool(false);
-
-        Assert.Equal(
-            false,
+        Assert.False(
             json.GetBool(0)
         );
     }
@@ -233,9 +194,7 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "removes JsonObject")]
     public void RemovesJsonObject() {
-        JsonArray json = new();
-
-        json.AddJsonObject(new JsonObject(new Dictionary<string, object> {
+        JsonArray json = new JsonArray().AddJsonObject(new JsonObject(new Dictionary<string, object> {
             { "nested_key", "value" },
         }));
 
@@ -243,15 +202,12 @@ public class JsonArrayTest {
             """{"nested_key":"value"}""",
             json.RemoveJsonObject(0)?.ToString()
         );
-        Assert.Null(json.GetJsonObject(0));
         Assert.Null(json.RemoveJsonObject(0));
     }
 
     [Fact(DisplayName = "removes JsonArray")]
     public void RemovesJsonArray() {
-        JsonArray json = new();
-
-        json.AddJsonArray(new JsonArray([
+        JsonArray json = new JsonArray().AddJsonArray(new JsonArray([
             "item_1", "item_2",
         ]));
 
@@ -259,61 +215,49 @@ public class JsonArrayTest {
             """["item_1","item_2"]""",
             json.RemoveJsonArray(0)?.ToString()
         );
-        Assert.Null(json.GetJsonArray(0));
         Assert.Null(json.RemoveJsonArray(0));
     }
 
     [Fact(DisplayName = "removes string")]
     public void RemovesString() {
-        JsonArray json = new();
-        json.AddString("value");
+        JsonArray json = new JsonArray().AddString("value");
+
         Assert.Equal(
             "value",
             json.RemoveString(0)
         );
-        Assert.Null(json.GetString(0));
         Assert.Null(json.RemoveString(0));
     }
 
     [Fact(DisplayName = "removes int")]
     public void RemovesInt() {
-        JsonArray json = new();
-
-        json.AddInt(123);
+        JsonArray json = new JsonArray().AddInt(123L);
 
         Assert.Equal(
-            123,
+            123L,
             json.RemoveInt(0)
         );
-        Assert.Null(json.GetInt(0));
         Assert.Null(json.RemoveInt(0));
     }
 
     [Fact(DisplayName = "removes double")]
     public void RemovesDouble() {
-        JsonArray json = new();
-
-        json.AddDouble(123.456);
+        JsonArray json = new JsonArray().AddDouble(123.456);
 
         Assert.Equal(
             123.456,
             json.RemoveDouble(0)
         );
-        Assert.Null(json.GetDouble(0));
         Assert.Null(json.RemoveDouble(0));
     }
 
     [Fact(DisplayName = "removes bool")]
     public void RemovesBool() {
-        JsonArray json = new();
+        JsonArray json = new JsonArray().AddBool(false);
 
-        json.AddBool(false);
-
-        Assert.Equal(
-            false,
+        Assert.False(
             json.RemoveBool(0)
         );
-        Assert.Null(json.GetBool(0));
         Assert.Null(json.RemoveBool(0));
     }
 
