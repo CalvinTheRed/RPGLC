@@ -59,4 +59,5 @@ internal class JsonUtils {
         }
         return list;
     }
-}
+
+};

@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGLC", "RPGLC\RPGLC.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{F154030A-876F-4656-B461-9B9EEDB13183}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +21,6 @@ Global
 		{F154030A-876F-4656-B461-9B9EEDB13183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F154030A-876F-4656-B461-9B9EEDB13183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F154030A-876F-4656-B461-9B9EEDB13183}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A587BDF9-4A7A-41FA-B30E-D4E355BCCA63}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
