@@ -12,12 +12,12 @@ public class DatabaseContent : JsonObject {
         base.PutJsonObject("metadata", metadata);
     }
 
-    public string GetName(string name) {
-        return base.GetString("name");
+    public string GetDatapackId() {
+        return base.GetString("datapack_id");
     }
 
-    public void SetName(string name) {
-        base.PutString("name", name);
+    public void SetDatapackId(string datapackId) {
+        base.PutString("datapack_id", datapackId);
     }
 
     public string GetDescription() {
@@ -28,12 +28,12 @@ public class DatabaseContent : JsonObject {
         base.PutString("description", description);
     }
 
-    public string GetDatapackId() {
-        return base.GetString("datapack_id");
+    public string GetName(string name) {
+        return base.GetString("name");
     }
 
-    public void SetDatapackId(string datapackId) {
-        base.PutString("datapack_id", datapackId);
+    public void SetName(string name) {
+        base.PutString("name", name);
     }
 
 };

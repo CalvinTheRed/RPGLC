@@ -13,6 +13,15 @@ public class RPGLEffect : DatabaseContent {
         return this;
     }
 
+    public string GetOriginItem() {
+        return base.GetString("origin_item");
+    }
+
+    public RPGLEffect SetOriginItem(string originItem) {
+        base.PutString("origin_item", originItem);
+        return this;
+    }
+
     public string GetSource() {
         return base.GetString("source");
     }
@@ -28,15 +37,6 @@ public class RPGLEffect : DatabaseContent {
 
     public RPGLEffect SetTarget(string target) {
         base.PutString("target", target);
-        return this;
-    }
-
-    public string GetOriginItem() {
-        return base.GetString("origin_item");
-    }
-
-    public RPGLEffect SetOriginItem(string originItem) {
-        base.PutString("origin_item", originItem);
         return this;
     }
 

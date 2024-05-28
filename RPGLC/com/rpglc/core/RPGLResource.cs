@@ -4,24 +4,6 @@ namespace com.rpglc.core;
 
 public class RPGLResource : TaggableContent {
 
-    public long GetPotency() {
-        return base.GetInt("potency");
-    }
-
-    public RPGLResource SetPotency(long potency) {
-        base.PutInt("potency", potency);
-        return this;
-    }
-
-    public bool GetExhausted() {
-        return base.GetBool("exhausted");
-    }
-
-    public RPGLResource SetExhausted(bool exhausted) {
-        base.PutBool("exhausted", exhausted);
-        return this;
-    }
-
     public JsonArray GetRefreshCriterion() {
         return base.GetJsonArray("resource_criterion");
     }
@@ -37,6 +19,24 @@ public class RPGLResource : TaggableContent {
 
     public RPGLResource SetOriginItem(string originItem) {
         base.PutString("origin_item", originItem);
+        return this;
+    }
+
+    public long GetPotency() {
+        return base.GetInt("potency");
+    }
+
+    public RPGLResource SetPotency(long potency) {
+        base.PutInt("potency", potency);
+        return this;
+    }
+
+    public bool GetExhausted() {
+        return base.GetBool("exhausted");
+    }
+
+    public RPGLResource SetExhausted(bool exhausted) {
+        base.PutBool("exhausted", exhausted);
         return this;
     }
 

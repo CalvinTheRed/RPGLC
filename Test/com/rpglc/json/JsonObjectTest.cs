@@ -267,7 +267,7 @@ public class JsonObjectTest {
         JsonObject json = new(new Dictionary<string, object> {
             { "key", new Dictionary<string, object>() }
         });
-        Assert.Equal("{}", json.SeekJsonObject("key")?.ToString());
+        Assert.Equal("{}", json.SeekJsonObject("key").ToString());
     }
 
     [Fact(DisplayName = "seeks JsonObject deep")]
@@ -281,7 +281,7 @@ public class JsonObjectTest {
                 } }
             } }
         });
-        Assert.Equal("{}", json.SeekJsonObject("key1.key2[0].key3")?.ToString());
+        Assert.Equal("{}", json.SeekJsonObject("key1.key2[0].key3").ToString());
     }
 
     [Fact(DisplayName = "seeks JsonArray shallow")]
@@ -289,7 +289,7 @@ public class JsonObjectTest {
         JsonObject json = new(new Dictionary<string, object> {
             { "key", new List<object>() }
         });
-        Assert.Equal("[]", json.SeekJsonArray("key")?.ToString());
+        Assert.Equal("[]", json.SeekJsonArray("key").ToString());
     }
 
     [Fact(DisplayName = "seeks JsonArray deep")]
@@ -303,7 +303,7 @@ public class JsonObjectTest {
                 } }
             } }
         });
-        Assert.Equal("[]", json.SeekJsonArray("key1.key2[0].key3")?.ToString());
+        Assert.Equal("[]", json.SeekJsonArray("key1.key2[0].key3").ToString());
     }
 
     [Fact(DisplayName = "seeks string shallow")]

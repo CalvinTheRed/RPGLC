@@ -52,10 +52,10 @@ public class DBManager {
     public static void InsertRPGLEffectTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEffectTemplateTO>("effect_templates").Insert(new RPGLEffectTemplateTO() {
+            datapackId = data.GetString("datapack_id"),
+            description = data.GetString("description"),
             metadata = data.GetJsonObject("metadata").AsDict(),
             name = data.GetString("name"),
-            description = data.GetString("description"),
-            datapackId = data.GetString("datapack_id"),
 
             subeventFilters = data.GetJsonObject("subevent_filters").AsDict(),
         });
@@ -64,14 +64,14 @@ public class DBManager {
     public static void InsertRPGLEventTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEventTemplateTO>("event_templates").Insert(new RPGLEventTemplateTO() {
+            datapackId = data.GetString("datapack_id"),
+            description = data.GetString("description"),
             metadata = data.GetJsonObject("metadata").AsDict(),
             name = data.GetString("name"),
-            description = data.GetString("description"),
-            datapackId = data.GetString("datapack_id"),
 
             areaOfEffect = data.GetJsonObject("area_of_effect").AsDict(),
-            subevents = data.GetJsonArray("subevents").AsList(),
             cost = data.GetJsonArray("cost").AsList(),
+            subevents = data.GetJsonArray("subevents").AsList(),
             // origin item not included in templates
         });
     }
@@ -79,28 +79,28 @@ public class DBManager {
     public static void InsertRPGLItemTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLItemTemplateTO>("item_templates").Insert(new RPGLItemTemplateTO() {
+            datapackId = data.GetString("datapack_id"),
+            description = data.GetString("description"),
             metadata = data.GetJsonObject("metadata").AsDict(),
             name = data.GetString("name"),
-            description = data.GetString("description"),
-            datapackId = data.GetString("datapack_id"),
 
             tags = data.GetJsonArray("tags").AsList(),
 
-            weight = data.GetInt("weight"),
-            cost = data.GetInt("cost"),
             effects = data.GetJsonArray("effects").AsList(),
             events = data.GetJsonArray("events").AsList(),
             resources = data.GetJsonArray("resources").AsList(),
+            cost = data.GetInt("cost"),
+            weight = data.GetInt("weight"),
         });
     }
 
     public static void InsertRPGLObjectTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLObjectTemplateTO>("object_templates").Insert(new RPGLObjectTemplateTO() {
+            datapackId = data.GetString("datapack_id"),
+            description = data.GetString("description"),
             metadata = data.GetJsonObject("metadata").AsDict(),
             name = data.GetString("name"),
-            description = data.GetString("description"),
-            datapackId = data.GetString("datapack_id"),
 
             tags = data.GetJsonArray("tags").AsList(),
 
@@ -110,9 +110,9 @@ public class DBManager {
             effects = data.GetJsonArray("effects").AsList(),
             events = data.GetJsonArray("events").AsList(),
             inventory = data.GetJsonArray("inventory").AsList(),
+            // position is not included in template data
             races = data.GetJsonArray("races").AsList(),
             resources = data.GetJsonArray("resources").AsList(),
-            // position is not included in template data
             // rotation is not included in template data
             // origin object is not included in template data
             // proxy object is not included in template data
@@ -127,10 +127,10 @@ public class DBManager {
     public static void InsertRPGLResourceTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLResourceTemplateTO>("resource_templates").Insert(new RPGLResourceTemplateTO() {
+            datapackId = data.GetString("datapack_id"),
+            description = data.GetString("description"),
             metadata = data.GetJsonObject("metadata").AsDict(),
             name = data.GetString("name"),
-            description = data.GetString("description"),
-            datapackId = data.GetString("datapack_id"),
 
             tags = data.GetJsonArray("tags").AsList(),
 

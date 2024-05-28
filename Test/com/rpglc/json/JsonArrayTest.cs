@@ -133,7 +133,7 @@ public class JsonArrayTest {
 
         Assert.Equal(
             """{"nested_key":"value"}""",
-            json.GetJsonObject(0)?.ToString()
+            json.GetJsonObject(0).ToString()
         );
     }
 
@@ -145,7 +145,7 @@ public class JsonArrayTest {
 
         Assert.Equal(
             """["item_1","item_2"]""",
-            json.GetJsonArray(0)?.ToString()
+            json.GetJsonArray(0).ToString()
         );
     }
 

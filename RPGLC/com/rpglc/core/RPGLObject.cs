@@ -58,6 +58,15 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public JsonArray GetPosition() {
+        return base.GetJsonArray("position");
+    }
+
+    public RPGLObject SetPosition(JsonArray position) {
+        base.PutJsonArray("position", position);
+        return this;
+    }
+
     public JsonArray GetRaces() {
         return base.GetJsonArray("races");
     }
@@ -73,15 +82,6 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject SetResources(JsonArray resources) {
         base.PutJsonArray("resources", resources);
-        return this;
-    }
-
-    public JsonArray GetPosition() {
-        return base.GetJsonArray("position");
-    }
-
-    public RPGLObject SetPosition(JsonArray position) {
-        base.PutJsonArray("position", position);
         return this;
     }
 
