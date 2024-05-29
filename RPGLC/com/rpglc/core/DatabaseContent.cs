@@ -5,35 +5,39 @@ namespace com.rpglc.core;
 public class DatabaseContent : JsonObject {
 
     public JsonObject GetMetadata() {
-        return base.GetJsonObject("metadata");
+        return GetJsonObject("metadata");
     }
 
-    public void SetMetadata(JsonObject metadata) {
-        base.PutJsonObject("metadata", metadata);
+    public DatabaseContent SetMetadata(JsonObject metadata) {
+        PutJsonObject("metadata", metadata);
+        return this;
     }
 
     public string GetDatapackId() {
-        return base.GetString("datapack_id");
+        return GetString("datapack_id");
     }
 
-    public void SetDatapackId(string datapackId) {
-        base.PutString("datapack_id", datapackId);
+    public DatabaseContent SetDatapackId(string datapackId) {
+        PutString("datapack_id", datapackId);
+        return this;
     }
 
     public string GetDescription() {
-        return base.GetString("description");
+        return GetString("description");
     }
 
-    public void SetDescription(string description) {
-        base.PutString("description", description);
+    public DatabaseContent SetDescription(string description) {
+        PutString("description", description);
+        return this;
     }
 
-    public string GetName(string name) {
-        return base.GetString("name");
+    public string GetName() {
+        return GetString("name");
     }
 
-    public void SetName(string name) {
-        base.PutString("name", name);
+    public DatabaseContent SetName(string name) {
+        PutString("name", name);
+        return this;
     }
 
 };

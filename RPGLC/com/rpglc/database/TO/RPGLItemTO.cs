@@ -1,9 +1,26 @@
-﻿namespace com.rpglc.database.TO;
+﻿using com.rpglc.core;
 
-public class RPGLItemTO {
-    public List<object> effects { get; set; }
-    public List<object> events { get; set; }
-    public List<object> resources { get; set; }
-    public long cost { get; set; }
-    public long weight { get; set; }
+namespace com.rpglc.database.TO;
+
+public class RPGLItemTO : TaggableContentTO {
+    public List<object> Effects { get; set; }
+    public List<object> Events { get; set; }
+    public List<object> Resources { get; set; }
+    public long Cost { get; set; }
+    public long Weight { get; set; }
+
+    public RPGLItem ToRPGLItem() {
+        return (RPGLItem) new RPGLItem()
+            .SetEffects(new(Effects))
+            .SetEvents(new(Events))
+            .SetResources(new(Resources))
+            .SetCost(Cost)
+            .SetWeight(Weight)
+            .SetUuid(Uuid)
+            .SetMetadata(new(Metadata))
+            .SetDatapackId(DatapackId)
+            .SetDescription(Description)
+            .SetName(Name);
+    }
+
 };

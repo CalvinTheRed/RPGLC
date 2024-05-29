@@ -17,19 +17,19 @@ public class JsonArray {
     }
 
     public JsonArray LoadFromFile(string path) {
-        return this.LoadFromString(File.ReadAllText(path));
+        return LoadFromString(File.ReadAllText(path));
     }
 
     public JsonArray LoadFromString(string json) {
-        this.data = JsonConvert.DeserializeObject<List<object>>(json) ?? [];
+        data = JsonConvert.DeserializeObject<List<object>>(json) ?? [];
 
         // convert Newtonsoft data types to Collections data types
-        for (int i = 0; i < this.data.Count; i++) {
-            object value = this.data[i];
+        for (int i = 0; i < data.Count; i++) {
+            object value = data[i];
             if (value is JObject jObject) {
-                this.data[i] = JsonUtils.ConvertJObjectToDict(jObject);
+                data[i] = JsonUtils.ConvertJObjectToDict(jObject);
             } else if (value is JArray jArray) {
-                this.data[i] = JsonUtils.ConvertJArrayToList(jArray);
+                data[i] = JsonUtils.ConvertJArrayToList(jArray);
             }
         }
 
@@ -58,61 +58,73 @@ public class JsonArray {
     // Get() methods
     // =================================================================================================================
 
-    public JsonObject GetJsonObject(int index) {
-        return new((Dictionary<string, object>) data[index]);
+    public JsonObject? GetJsonObject(int index) {
+        return index < data.Count && data[index] is Dictionary<string, object> dict ? new JsonObject(dict) : null;
     }
 
-    public JsonArray GetJsonArray(int index) {
-        return new((List<object>) data[index]);
+    public JsonArray? GetJsonArray(int index) {
+        return index < data.Count && data[index] is List<object> list ? new JsonArray(list) : null;
     }
 
-    public string GetString(int index) {
-        return (string) data[index];
+    public string? GetString(int index) {
+        return index < data.Count && data[index] is string s ? s : null;
     }
 
-    public long GetInt(int index) {
-        return (long) data[index];
+    public long? GetInt(int index) {
+        return index < data.Count && data[index] is long i ? i : null;
     }
 
-    public double GetDouble(int index) {
-        return (double) data[index];
+    public double? GetDouble(int index) {
+        return index < data.Count && data[index] is double d ? d : null;
     }
 
-    public bool GetBool(int index) {
-        return (bool) data[index];
+    public bool? GetBool(int index) {
+        return index < data.Count && data[index] is bool b ? b : null;
     }
 
     // =================================================================================================================
     // Add() methods
     // =================================================================================================================
 
-    public JsonArray AddJsonObject(JsonObject jsonObject) {
-        data.Add(jsonObject.AsDict());
+    public JsonArray AddJsonObject(JsonObject? jsonObject) {
+        if (jsonObject != null) {
+            data.Add(jsonObject.AsDict());
+        }
         return this;
     }
 
-    public JsonArray AddJsonArray(JsonArray jsonArray) {
-        data.Add(jsonArray.AsList());
+    public JsonArray AddJsonArray(JsonArray? jsonArray) {
+        if (jsonArray != null) {
+            data.Add(jsonArray.AsList());
+        }
         return this;
     }
 
-    public JsonArray AddString(string s) {
-        data.Add(s);
+    public JsonArray AddString(string? s) {
+        if (s != null) {
+            data.Add(s);
+        }
         return this;
     }
 
-    public JsonArray AddInt(long i) {
-        data.Add(i);
+    public JsonArray AddInt(long? i) {
+        if (i != null) {
+            data.Add(i);
+        }
         return this;
     }
 
-    public JsonArray AddDouble(double d) {
-        data.Add(d);
+    public JsonArray AddDouble(double? d) {
+        if (d != null) {
+            data.Add(d);
+        }
         return this;
     }
 
-    public JsonArray AddBool(bool b) {
-        data.Add(b);
+    public JsonArray AddBool(bool? b) {
+        if (b != null) {
+            data.Add(b);
+        }
         return this;
     }
 

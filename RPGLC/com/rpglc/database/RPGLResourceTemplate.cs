@@ -5,20 +5,23 @@ namespace com.rpglc.database;
 
 public class RPGLResourceTemplate : RPGLTemplate {
 
-    public RPGLResourceTemplate() {
+    public RPGLResourceTemplate() : base() {
 
     }
 
     public RPGLResourceTemplate(JsonObject other) : this() {
-        base.Join(other);
+        Join(other);
     }
 
     public override RPGLResource NewInstance() {
         RPGLResource rpglResource = new();
-        this.Setup(rpglResource);
+        Setup(rpglResource);
 
-        // TODO save to the database
         return rpglResource;
+    }
+
+    public override RPGLResourceTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
     }
 
 };

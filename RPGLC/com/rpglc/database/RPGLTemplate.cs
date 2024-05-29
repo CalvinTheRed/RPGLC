@@ -10,11 +10,11 @@ public abstract class RPGLTemplate : JsonObject {
         other.Join(this);
     }
 
-    public JsonObject ApplyBonuses(JsonArray bonuses) {
-        JsonObject withBonuses = this.DeepClone();
+    public virtual JsonObject ApplyBonuses(JsonArray bonuses) {
+        JsonObject withBonuses = DeepClone();
         for (int i = 0; i < bonuses.Count(); i++) {
             JsonObject fieldBonus = bonuses.GetJsonObject(i);
-            String field = fieldBonus.GetString("field");
+            string field = fieldBonus.GetString("field");
             withBonuses.InsertInt(field, withBonuses.SeekInt(field) + fieldBonus.GetInt("bonus"));
         }
         return withBonuses;

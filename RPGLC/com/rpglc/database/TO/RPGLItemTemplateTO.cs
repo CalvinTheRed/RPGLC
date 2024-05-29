@@ -3,19 +3,19 @@
 namespace com.rpglc.database.TO;
 
 public class RPGLItemTemplateTO : TaggableContentTO {
-    public List<object> effects { get; set; }
-    public List<object> events { get; set; }
-    public List<object> resources { get; set; }
-    public long cost { get; set; }
-    public long weight { get; set; }
+    public List<object> Effects { get; set; }
+    public List<object> Events { get; set; }
+    public List<object> Resources { get; set; }
+    public long Cost { get; set; }
+    public long Weight { get; set; }
 
     public RPGLItemTemplate ToTemplate() {
         RPGLItemTemplate template = new();
-        template.PutJsonArray("effects", new JsonArray(this.effects)); 
-        template.PutJsonArray("events", new JsonArray(this.events));
-        template.PutJsonArray("resources", new JsonArray(this.resources));
-        template.PutInt("cost", this.cost);
-        template.PutInt("weight", this.weight);
+        template.PutJsonArray("effects", new JsonArray(Effects)); 
+        template.PutJsonArray("events", new JsonArray(Events));
+        template.PutJsonArray("resources", new JsonArray(Resources));
+        template.PutInt("cost", Cost);
+        template.PutInt("weight", Weight);
 
         base.ApplyToTemplate(template);
         return template;

@@ -5,24 +5,38 @@ namespace com.rpglc.database;
 
 public class RPGLEventTemplate : RPGLTemplate {
 
-    public RPGLEventTemplate() {
+    public RPGLEventTemplate() : base() {
 
     }
 
     public RPGLEventTemplate(JsonObject other) : this() {
-        base.Join(other);
+        Join(other);
     }
 
     public override RPGLEvent NewInstance() {
         RPGLEvent rpglEvent = new();
-        this.Setup(rpglEvent);
+        Setup(rpglEvent);
+        ProcessCost(rpglEvent);
 
         // events should not be saved to the database
         return rpglEvent;
     }
 
-    public override void Setup(JsonObject rpglEvent) {
-        base.Setup(rpglEvent);
+    public override RPGLEventTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
+    internal static void ProcessCost(RPGLEvent rpglEvent) {
+        JsonArray rawCost = rpglEvent.GetCost();
+        JsonArray processedCost = new();
+        for (int i = 0; i < rawCost.Count(); i++) {
+            JsonObject rawCostElement = rawCost.GetJsonObject(i);
+            long count = rawCostElement.RemoveInt("count") ?? 1L;
+            for (int j = 0; j < count; j++) {
+                processedCost.AddJsonObject(rawCostElement.DeepClone());
+            }
+        }
+        rpglEvent.SetCost(processedCost);
     }
 
 };
