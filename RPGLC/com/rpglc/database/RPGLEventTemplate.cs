@@ -22,7 +22,6 @@ public class RPGLEventTemplate : RPGLTemplate {
         Setup(rpglEvent);
         ProcessCost(rpglEvent);
 
-        // events should not be saved to the database
         return rpglEvent;
     }
 
