@@ -21,7 +21,7 @@ public class JsonObject {
     }
 
     public JsonObject LoadFromString(string json) {
-       data = JsonConvert.DeserializeObject<Dictionary<string, object>>(json) ?? [];
+        data = JsonConvert.DeserializeObject<Dictionary<string, object>>(json) ?? [];
 
         // convert Newtonsoft data types to Collections data types
         foreach ((string key, object value) in data) {

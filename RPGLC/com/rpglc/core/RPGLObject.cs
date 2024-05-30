@@ -151,7 +151,7 @@ public class RPGLObject : TaggableContent {
     }
 
     // =====================================================================
-    // 
+    // Inventory management helper methods.
     // =====================================================================
 
     public RPGLObject GiveItem(long uuid) {

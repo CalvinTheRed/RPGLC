@@ -33,6 +33,9 @@ public class JsonArray {
             }
         }
 
+        // convert any int values to longs
+        JsonUtils.PreferLong(this.AsList());
+
         return this;
     }
 

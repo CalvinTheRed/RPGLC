@@ -4,7 +4,7 @@ namespace com.rpglc.database;
 
 public abstract class RPGLTemplate : JsonObject {
 
-    public virtual void Setup(JsonObject other) {
+    public void Setup(JsonObject other) {
         other.Join(this);
     }
 

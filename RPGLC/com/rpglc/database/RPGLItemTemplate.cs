@@ -13,6 +13,10 @@ public class RPGLItemTemplate : RPGLTemplate {
         Join(other);
     }
 
+    public override RPGLItemTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
     public RPGLItem NewInstance(long uuid) {
         RPGLItem rpglItem = (RPGLItem) new RPGLItem().SetUuid(uuid);
         Setup(rpglItem);
@@ -20,10 +24,6 @@ public class RPGLItemTemplate : RPGLTemplate {
         ProcessResources(rpglItem);
 
         return rpglItem;
-    }
-
-    public override RPGLItemTemplate ApplyBonuses(JsonArray bonuses) {
-        return new(base.ApplyBonuses(bonuses));
     }
 
     internal static void ProcessEffects(RPGLItem rpglItem) {

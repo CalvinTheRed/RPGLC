@@ -13,6 +13,10 @@ public class RPGLObjectTemplate : RPGLTemplate {
         Join(other);
     }
 
+    public override RPGLObjectTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
     public RPGLObject NewInstance(long uuid) {
         RPGLObject rpglObject = (RPGLObject) new RPGLObject().SetUuid(uuid);
         Setup(rpglObject);
@@ -23,10 +27,6 @@ public class RPGLObjectTemplate : RPGLTemplate {
         // TODO process classes into data stored in the database
 
         return rpglObject;
-    }
-
-    public override RPGLObjectTemplate ApplyBonuses(JsonArray bonuses) {
-        return new(base.ApplyBonuses(bonuses));
     }
 
     internal static void ProcessEffects(RPGLObject rpglObject) {

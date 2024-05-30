@@ -13,15 +13,15 @@ public class RPGLEffectTemplate : RPGLTemplate {
         Join(other);
     }
 
+    public override RPGLEffectTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
     public RPGLEffect NewInstance(long uuid) {
         RPGLEffect rpglEffect = (RPGLEffect) new RPGLEffect().SetUuid(uuid);
         Setup(rpglEffect);
 
         return rpglEffect;
-    }
-
-    public override RPGLEffectTemplate ApplyBonuses(JsonArray bonuses) {
-        return new(base.ApplyBonuses(bonuses));
     }
 
 };

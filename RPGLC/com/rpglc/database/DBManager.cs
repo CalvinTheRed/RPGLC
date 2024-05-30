@@ -355,8 +355,6 @@ public class DBConnection : IDisposable {
             Directory.CreateDirectory(dbDir);
         }
         string dbPath = Path.Combine(dbDir, dbName);
-        if (!File.Exists(dbPath)) {
-        }
         this.db = new LiteDatabase(dbPath);
     }
 

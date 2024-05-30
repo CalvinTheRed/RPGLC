@@ -13,6 +13,10 @@ public class RPGLEventTemplate : RPGLTemplate {
         Join(other);
     }
 
+    public override RPGLEventTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
     public RPGLEvent NewInstance() {
         RPGLEvent rpglEvent = new();
         Setup(rpglEvent);
@@ -20,10 +24,6 @@ public class RPGLEventTemplate : RPGLTemplate {
 
         // events should not be saved to the database
         return rpglEvent;
-    }
-
-    public override RPGLEventTemplate ApplyBonuses(JsonArray bonuses) {
-        return new(base.ApplyBonuses(bonuses));
     }
 
     internal static void ProcessCost(RPGLEvent rpglEvent) {

@@ -13,15 +13,15 @@ public class RPGLResourceTemplate : RPGLTemplate {
         Join(other);
     }
 
+    public override RPGLResourceTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
+
     public RPGLResource NewInstance(long uuid) {
         RPGLResource rpglResource = (RPGLResource) new RPGLResource().SetUuid(uuid);
         Setup(rpglResource);
 
         return rpglResource;
-    }
-
-    public override RPGLResourceTemplate ApplyBonuses(JsonArray bonuses) {
-        return new(base.ApplyBonuses(bonuses));
     }
 
 };
