@@ -13,7 +13,7 @@ public class RPGLEventTemplate : RPGLTemplate {
         Join(other);
     }
 
-    public override RPGLEvent NewInstance() {
+    public RPGLEvent NewInstance() {
         RPGLEvent rpglEvent = new();
         Setup(rpglEvent);
         ProcessCost(rpglEvent);

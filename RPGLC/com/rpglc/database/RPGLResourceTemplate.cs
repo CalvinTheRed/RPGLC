@@ -13,8 +13,8 @@ public class RPGLResourceTemplate : RPGLTemplate {
         Join(other);
     }
 
-    public override RPGLResource NewInstance() {
-        RPGLResource rpglResource = new();
+    public RPGLResource NewInstance(long uuid) {
+        RPGLResource rpglResource = (RPGLResource) new RPGLResource().SetUuid(uuid);
         Setup(rpglResource);
 
         return rpglResource;

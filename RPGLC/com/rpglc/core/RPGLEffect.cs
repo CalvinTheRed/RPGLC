@@ -22,20 +22,20 @@ public class RPGLEffect : PersistentContent {
         return this;
     }
 
-    public long GetSource() {
-        return (long) GetInt("source");
+    public long? GetSource() {
+        return GetInt("source");
     }
 
-    public RPGLEffect SetSource(long source) {
+    public RPGLEffect SetSource(long? source) {
         PutInt("source", source);
         return this;
     }
 
-    public long GetTarget() {
-        return (long) GetInt("target");
+    public long? GetTarget() {
+        return GetInt("target");
     }
 
-    public RPGLEffect SetTarget(long target) {
+    public RPGLEffect SetTarget(long? target) {
         PutInt("target", target);
         return this;
     }

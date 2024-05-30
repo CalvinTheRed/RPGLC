@@ -32,6 +32,9 @@ public class JsonObject {
             }
         }
 
+        // convert any int values to longs
+        JsonUtils.PreferLong(this.AsDict());
+
         return this;
     }
 

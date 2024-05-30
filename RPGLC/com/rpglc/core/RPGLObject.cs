@@ -31,15 +31,6 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public JsonArray GetEffects() {
-        return GetJsonArray("effects");
-    }
-
-    public RPGLObject SetEffects(JsonArray effects) {
-        PutJsonArray("effects", effects);
-        return this;
-    }
-
     public JsonArray GetEvents() {
         return GetJsonArray("events");
     }
@@ -156,6 +147,22 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject SetProficiencyBonus(long proficiencyBonus) {
         PutInt("proficiency_bonus", proficiencyBonus);
+        return this;
+    }
+
+    // =====================================================================
+    // 
+    // =====================================================================
+
+    public RPGLObject GiveItem(long uuid) {
+        if (!GetInventory().Contains(uuid)) {
+            GetInventory().AddInt(uuid);
+        }
+        return this;
+    }
+
+    public RPGLObject TakeItem(long uuid) {
+        GetInventory().AsList().Remove(uuid);
         return this;
     }
 

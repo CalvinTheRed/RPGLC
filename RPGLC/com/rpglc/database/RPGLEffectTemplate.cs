@@ -13,8 +13,8 @@ public class RPGLEffectTemplate : RPGLTemplate {
         Join(other);
     }
 
-    public override RPGLEffect NewInstance() {
-        RPGLEffect rpglEffect = new();
+    public RPGLEffect NewInstance(long uuid) {
+        RPGLEffect rpglEffect = (RPGLEffect) new RPGLEffect().SetUuid(uuid);
         Setup(rpglEffect);
 
         return rpglEffect;

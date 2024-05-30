@@ -6,7 +6,6 @@ public class RPGLObjectTO : TaggableContentTO {
     public Dictionary<string, object> AbilityScores {  get; set; }
     public Dictionary<string, object> EquippedItems { get; set; }
     public List<object> Classes { get; set; }
-    public List<object> Effects { get; set; }
     public List<object> Events { get; set; }
     public List<object> Inventory { get; set; }
     public List<object> Position { get; set; }
@@ -26,7 +25,6 @@ public class RPGLObjectTO : TaggableContentTO {
             .SetAbilityScores(new(AbilityScores))
             .SetEquippedItems(new(EquippedItems))
             .SetClasses(new(Classes))
-            .SetClasses(new(Effects))
             .SetEvents(new(Events))
             .SetInventory(new(Inventory))
             .SetPosition(new(Position))

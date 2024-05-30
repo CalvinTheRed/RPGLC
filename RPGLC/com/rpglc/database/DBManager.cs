@@ -193,7 +193,6 @@ public class DBManager {
             AbilityScores = rpglObject.GetAbilityScores().AsDict(),
             EquippedItems = rpglObject.GetEquippedItems().AsDict(),
             Classes = rpglObject.GetClasses().AsList(),
-            Effects = rpglObject.GetEffects().AsList(),
             Events = rpglObject.GetEvents().AsList(),
             Inventory = rpglObject.GetInventory().AsList(),
             Position = rpglObject.GetPosition().AsList(),

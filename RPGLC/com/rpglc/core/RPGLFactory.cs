@@ -22,23 +22,26 @@ public static class RPGLFactory {
 
     public static RPGLEffect NewEffect(
             string datapackId,
-            long source,
-            long target,
+            long? source,
+            long? target,
             JsonArray bonuses
     ) {
-        RPGLEffect rpglEffect = (RPGLEffect) DBManager.QueryRPGLEffectTemplateByDatapackId(datapackId)
+        RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
-            .NewInstance()
+            .NewInstance(GenerateUuid<RPGLEffectTO>("effects"))
             .SetSource(source)
-            .SetTarget(target)
-            .SetUuid(GenerateUuid<RPGLEffectTO>("effects"));
+            .SetTarget(target);
 
         DBManager.InsertRPGLEffect(rpglEffect);
         return rpglEffect;
     }
 
-    public static RPGLEffect NewEffect(string datapackId, long source, long target) {
+    public static RPGLEffect NewEffect(string datapackId, long? source, long? target) {
         return NewEffect(datapackId, source, target, new());
+    }
+
+    public static RPGLEffect NewEffect(string datapackId) {
+        return NewEffect(datapackId, null, null);
     }
 
     public static RPGLEvent NewEvent(string datapackId, JsonArray bonuses) {
@@ -52,10 +55,9 @@ public static class RPGLFactory {
     }
 
     public static RPGLItem NewItem(string datapackId, JsonArray bonuses) {
-        RPGLItem rpglItem = (RPGLItem) DBManager.QueryRPGLItemTemplateByDatapackId(datapackId)
+        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
-            .NewInstance()
-            .SetUuid(GenerateUuid<RPGLItemTO>("items"));
+            .NewInstance(GenerateUuid<RPGLItemTO>("items"));
 
         DBManager.InsertRPGLItem(rpglItem);
         return rpglItem;
@@ -66,28 +68,27 @@ public static class RPGLFactory {
     }
 
     public static RPGLObject NewObject(
-            string datapackId, 
-            string userId, 
-            JsonArray position, 
-            JsonArray rotation, 
+            string datapackId,
+            string userId,
+            JsonArray position,
+            JsonArray rotation,
             JsonArray bonuses
     ) {
-        RPGLObject rpglObject = (RPGLObject) DBManager.QueryRPGLObjectTemplateByDatapackId(datapackId)
+        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
-            .NewInstance()
+            .NewInstance(GenerateUuid<RPGLObjectTO>("objects"))
             .SetUserId(userId)
             .SetPosition(position)
-            .SetRotation(rotation)
-            .SetUuid(GenerateUuid<RPGLObjectTO>("objects"));
+            .SetRotation(rotation);
 
         DBManager.InsertRPGLObject(rpglObject);
         return rpglObject;
     }
 
     public static RPGLObject NewObject(
-            string datapackId, 
-            string userId, 
-            JsonArray position, 
+            string datapackId,
+            string userId,
+            JsonArray position,
             JsonArray rotation
     ) {
         return NewObject(datapackId, userId, position, rotation, new());
@@ -107,10 +108,9 @@ public static class RPGLFactory {
     }
 
     public static RPGLResource NewResource(string datapackId, JsonArray bonuses) {
-        RPGLResource rpglResource = (RPGLResource) DBManager.QueryRPGLResourceTemplateByDatapackId(datapackId)
+        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
-            .NewInstance()
-            .SetUuid(GenerateUuid<RPGLResourceTO>("resources"));
+            .NewInstance(GenerateUuid<RPGLResourceTO>("resources"));
 
         DBManager.InsertRPGLResource(rpglResource);
         return rpglResource;
