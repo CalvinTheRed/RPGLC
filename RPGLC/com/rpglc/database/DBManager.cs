@@ -49,6 +49,36 @@ public class DBManager {
         }
     }
 
+    public static void InsertRPGLClass(JsonObject data) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLClassTO>("classes").Insert(new RPGLClassTO() {
+            DatapackId = data.GetString("datapack_id"),
+            Description = data.GetString("description"),
+            Metadata = data.GetJsonObject("metadata").AsDict(),
+            Name = data.GetString("name"),
+
+            StartingFeatures = data.GetJsonObject("starting_features")?.AsDict(),
+            Features = data.GetJsonObject("features").AsDict(),
+            NestedClasses = data.GetJsonObject("nested_classes").AsDict(),
+            AbilityScoreIncreaseLevels = data.GetJsonArray("ability_score_increase_levels")?.AsList(),
+            MulticlassRequirements = data.GetJsonArray("multiclass_requirements")?.AsList(),
+            SubclassLevel = data.GetInt("subclass_level"),
+        });
+    }
+
+    public static void InsertRPGLRace(JsonObject data) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLRaceTO>("races").Insert(new RPGLRaceTO() {
+            DatapackId = data.GetString("datapack_id"),
+            Description = data.GetString("description"),
+            Metadata = data.GetJsonObject("metadata").AsDict(),
+            Name = data.GetString("name"),
+
+            AbilityScoreBonuses = data.GetJsonObject("ability_score_bonuses").AsDict(),
+            Features = data.GetJsonObject("features").AsDict(),
+        });
+    }
+
     public static void InsertRPGLEffectTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEffectTemplateTO>("effect_templates").Insert(new RPGLEffectTemplateTO() {
@@ -226,6 +256,28 @@ public class DBManager {
             Potency = rpglResource.GetPotency(),
             Exhausted = false, // new RPGLResource should never be exhausted
         });
+    }
+
+    public static RPGLClass QueryRPGLClassByDatapackId(string datapackId) {
+        RPGLClass rpglClass;
+        using (DBConnection connection = new(dbDir, dbName)) {
+            rpglClass = connection.Collection<RPGLClassTO>("classes")
+                .FindOne(x => x.DatapackId == datapackId)
+                .ToRPGLClass();
+        }
+        SwapArraysForLists(rpglClass.AsDict());
+        return rpglClass;
+    }
+
+    public static RPGLRace QueryRPGLRaceByDatapackId(string datapackId) {
+        RPGLRace rpglRace;
+        using (DBConnection connection = new(dbDir, dbName)) {
+            rpglRace = connection.Collection<RPGLRaceTO>("races")
+                .FindOne(x => x.DatapackId == datapackId)
+                .ToRPGLRace();
+        }
+        SwapArraysForLists(rpglRace.AsDict());
+        return rpglRace;
     }
 
     public static RPGLEffectTemplate QueryRPGLEffectTemplateByDatapackId(string datapackId) {

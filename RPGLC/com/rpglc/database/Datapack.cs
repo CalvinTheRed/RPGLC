@@ -7,12 +7,58 @@ internal class Datapack {
 
     public Datapack(string path) {
         datapackNamespace = Path.GetFileName(Path.GetDirectoryName(path));
-        
+
+        LoadClasses(Path.Combine(path, "classes"));
+        LoadRaces(Path.Combine(path, "races"));
         LoadEffectTemplates(Path.Combine(path, "effects"));
         LoadEventTemplates(Path.Combine(path, "events"));
         LoadItemTemplates(Path.Combine(path, "items"));
         LoadObjectTemplates(Path.Combine(path, "objects"));
         LoadResourceTemplates(Path.Combine(path, "resources"));
+    }
+
+    private void LoadClasses(string path) {
+        LoadClasses("", path);
+    }
+
+    internal void LoadClasses(string classNameBase, string path) {
+        // resurse over nested directories
+        foreach (string dirPath in Directory.GetDirectories(path)) {
+            LoadClasses($"{classNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
+        }
+
+        // load files
+        foreach (string filePath in Directory.GetFiles(path)) {
+            string filePathName = Path.GetFileName(filePath);
+            filePathName = filePathName[..filePathName.IndexOf('.')];
+
+            JsonObject classJson = new JsonObject().LoadFromFile($"{filePath}")
+                .PutString("datapack_id", $"{datapackNamespace}:{classNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+
+            DBManager.InsertRPGLClass(classJson);
+        }
+    }
+
+    private void LoadRaces(string path) {
+        LoadRaces("", path);
+    }
+
+    internal void LoadRaces(string raceNameBase, string path) {
+        // resurse over nested directories
+        foreach (string dirPath in Directory.GetDirectories(path)) {
+            LoadRaces($"{raceNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
+        }
+
+        // load files
+        foreach (string filePath in Directory.GetFiles(path)) {
+            string filePathName = Path.GetFileName(filePath);
+            filePathName = filePathName[..filePathName.IndexOf('.')];
+
+            JsonObject raceJson = new JsonObject().LoadFromFile($"{filePath}")
+                .PutString("datapack_id", $"{datapackNamespace}:{raceNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+
+            DBManager.InsertRPGLRace(raceJson);
+        }
     }
 
     private void LoadEffectTemplates(string path) {
