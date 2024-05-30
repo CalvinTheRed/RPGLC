@@ -60,4 +60,28 @@ internal class JsonUtils {
         return list;
     }
 
+    public static void PreferLong(Dictionary<string, object> data) {
+        foreach (string key in data.Keys) {
+            if (data[key] is Dictionary<string, object> dict) {
+                PreferLong(dict);
+            } else if (data[key] is List<object> list) {
+                PreferLong(list);
+            } else if (data[key] is int i) {
+                data[key] = (long) i;
+            }
+        }
+    }
+
+    public static void PreferLong(List<object> data) {
+        for (int index = 0; index < data.Count; index++) {
+            if (data[index] is Dictionary<string, object> dict) {
+                PreferLong(dict);
+            } else if (data[index] is List<object> list) {
+                PreferLong(list);
+            } else if (data[index] is int i) {
+                data[index] = (long) i;
+            }
+        }
+    }
+
 };

@@ -2,12 +2,13 @@
 
 public class PersistentContent : DatabaseContent {
 
-    public string GetUuid() {
-        return base.GetString("uuid");
+    public long GetUuid() {
+        return (long) GetInt("uuid");
     }
 
-    public void SetUuid(string uuid) {
-        base.PutString("uuid", uuid);
+    public PersistentContent SetUuid(long uuid) {
+        PutInt("uuid", uuid);
+        return this;
     }
 
 };

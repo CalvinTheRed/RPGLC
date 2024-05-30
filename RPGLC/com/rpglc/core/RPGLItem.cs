@@ -5,47 +5,47 @@ namespace com.rpglc.core;
 public class RPGLItem : TaggableContent {
 
     public JsonArray GetEffects() {
-        return base.GetJsonArray("effects");
+        return GetJsonArray("effects");
     }
 
     public RPGLItem SetEffects(JsonArray effects) {
-        base.PutJsonArray("effects", effects);
+        PutJsonArray("effects", effects);
         return this;
     }
 
     public JsonArray GetEvents() {
-        return base.GetJsonArray("events");
+        return GetJsonArray("events");
     }
 
     public RPGLItem SetEvents(JsonArray events) {
-        base.PutJsonArray("events", events);
+        PutJsonArray("events", events);
         return this;
     }
 
     public JsonArray GetResources() {
-        return base.GetJsonArray("resources");
+        return GetJsonArray("resources");
     }
 
     public RPGLItem SetResources(JsonArray resources) {
-        base.PutJsonArray("resources", resources);
+        PutJsonArray("resources", resources);
         return this;
     }
 
     public long GetCost() {
-        return base.GetInt("cost");
+        return (long) GetInt("cost");
     }
 
     public RPGLItem SetCost(long cost) {
-        base.PutInt("cost", cost);
+        PutInt("cost", cost);
         return this;
     }
 
     public long GetWeight() {
-        return base.GetInt("weight");
+        return (long) GetInt("weight");
     }
 
     public RPGLItem SetWeight(long weight) {
-        base.PutInt("weight", weight);
+        PutInt("weight", weight);
         return this;
     }
 

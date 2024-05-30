@@ -5,27 +5,30 @@ namespace com.rpglc.core;
 public class TaggableContent : PersistentContent {
 
     public JsonArray GetTags() {
-        return base.GetJsonArray("tags");
+        return GetJsonArray("tags");
     }
 
-    public void SetTags(JsonArray tags) {
-        base.PutJsonArray("tags", tags);
+    public TaggableContent SetTags(JsonArray tags) {
+        PutJsonArray("tags", tags);
+        return this;
     }
 
-    public void AddTag(string tag) {
-        this.GetTags().AddString(tag);
+    public TaggableContent AddTag(string tag) {
+        GetTags().AddString(tag);
+        return this;
     }
 
-    public void RemoveTag(string tag) {
-        this.GetTags().AsList().Remove(tag);
+    public TaggableContent RemoveTag(string tag) {
+        GetTags().AsList().Remove(tag);
+        return this;
     }
 
     public bool HasTag(string tag) {
-        return this.GetTags().Contains(tag);
+        return GetTags().Contains(tag);
     }
 
     public bool HasAnyTag(List<object> tags) {
-        return this.GetTags().ContainsAny(tags);
+        return GetTags().ContainsAny(tags);
     }
 
 };

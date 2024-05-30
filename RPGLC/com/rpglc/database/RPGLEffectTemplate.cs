@@ -5,19 +5,22 @@ namespace com.rpglc.database;
 
 public class RPGLEffectTemplate : RPGLTemplate {
 
-    public RPGLEffectTemplate() {
+    public RPGLEffectTemplate() : base() {
 
     }
 
     public RPGLEffectTemplate(JsonObject other) : this() {
-        base.Join(other);
+        Join(other);
     }
 
-    public override RPGLEffect NewInstance() {
-        RPGLEffect rpglEffect = new();
-        this.Setup(rpglEffect);
+    public override RPGLEffectTemplate ApplyBonuses(JsonArray bonuses) {
+        return new(base.ApplyBonuses(bonuses));
+    }
 
-        // TODO save to the database
+    public RPGLEffect NewInstance(long uuid) {
+        RPGLEffect rpglEffect = (RPGLEffect) new RPGLEffect().SetUuid(uuid);
+        Setup(rpglEffect);
+
         return rpglEffect;
     }
 

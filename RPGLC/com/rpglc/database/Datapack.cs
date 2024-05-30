@@ -6,7 +6,7 @@ internal class Datapack {
     private readonly string datapackNamespace;
 
     public Datapack(string path) {
-        this.datapackNamespace = Path.GetFileName(Path.GetDirectoryName(path));
+        datapackNamespace = Path.GetFileName(Path.GetDirectoryName(path));
         
         LoadEffectTemplates(Path.Combine(path, "effects"));
         LoadEventTemplates(Path.Combine(path, "events"));
@@ -16,13 +16,13 @@ internal class Datapack {
     }
 
     private void LoadEffectTemplates(string path) {
-        this.LoadEffectTemplates("", path);
+        LoadEffectTemplates("", path);
     }
 
     internal void LoadEffectTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
-            this.LoadEffectTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
+            LoadEffectTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
         }
 
         // load files
@@ -31,14 +31,14 @@ internal class Datapack {
             filePathName = filePathName[..filePathName.IndexOf('.')];
 
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
-                .PutString("datapack_id", $"{this.datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+                .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
             DBManager.InsertRPGLEffectTemplate(templateJson);
         }
     }
 
     private void LoadEventTemplates(string path) {
-        this.LoadEventTemplates("", path);
+        LoadEventTemplates("", path);
     }
 
     internal void LoadEventTemplates(string templateNameBase, string path) {
@@ -53,14 +53,14 @@ internal class Datapack {
             filePathName = filePathName[..filePathName.IndexOf('.')];
 
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
-                .PutString("datapack_id", $"{this.datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+                .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
             DBManager.InsertRPGLEventTemplate(templateJson);
         }
     }
 
     private void LoadItemTemplates(string path) {
-        this.LoadItemTemplates("", path);
+        LoadItemTemplates("", path);
     }
 
     internal void LoadItemTemplates(string templateNameBase, string path) {
@@ -75,14 +75,14 @@ internal class Datapack {
             filePathName = filePathName[..filePathName.IndexOf('.')];
 
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
-                .PutString("datapack_id", $"{this.datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+                .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
             DBManager.InsertRPGLItemTemplate(templateJson);
         }
     }
 
     private void LoadObjectTemplates(string path) {
-        this.LoadObjectTemplates("", path);
+        LoadObjectTemplates("", path);
     }
 
     internal void LoadObjectTemplates(string templateNameBase, string path) {
@@ -97,14 +97,14 @@ internal class Datapack {
             filePathName = filePathName[..filePathName.IndexOf('.')];
 
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
-                .PutString("datapack_id", $"{this.datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+                .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
             DBManager.InsertRPGLObjectTemplate(templateJson);
         }
     }
 
     private void LoadResourceTemplates(string path) {
-        this.LoadResourceTemplates("", path);
+        LoadResourceTemplates("", path);
     }
 
     internal void LoadResourceTemplates(string templateNameBase, string path) {
@@ -119,7 +119,7 @@ internal class Datapack {
             filePathName = filePathName[..filePathName.IndexOf('.')];
 
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
-                .PutString("datapack_id", $"{this.datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
+                .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
             DBManager.InsertRPGLResourceTemplate(templateJson);
         }
