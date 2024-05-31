@@ -1,4 +1,5 @@
 ﻿using com.rpglc.json;
+using RPGLC.com.rpglc.core;
 
 namespace com.rpglc.core;
 
@@ -56,6 +57,59 @@ public class RPGLClass : DatabaseContent {
     public RPGLClass SetSubclassLevel(long? subclassLevel) {
         PutInt("subevent_level", subclassLevel);
         return this;
+    }
+
+    // =====================================================================
+    // RPGLObject class/level management helper methods.
+    // =====================================================================
+
+    public void LevelUpRPGLObject(RPGLObject rpglObject, JsonObject choices) {
+        long level = IncrementRPGLObjectLevel(rpglObject);
+        JsonObject features = GetFeatures().GetJsonObject($"{level}");
+        if (features != null) {
+            JsonObject gainedFeatures = features.GetJsonObject("gain") ?? new();
+            FeatureManager.GrantGainedEffects(rpglObject, gainedFeatures, choices);
+            FeatureManager.GrantGainedEvents(rpglObject, gainedFeatures);
+            FeatureManager.GrantGainedResources(rpglObject, gainedFeatures);
+            JsonObject lostFeatures = features.GetJsonObject("lose") ?? new();
+            FeatureManager.RevokeLostEffects(rpglObject, lostFeatures);
+            FeatureManager.RevokeLostEvents(rpglObject, lostFeatures);
+            FeatureManager.RevokeLostResources(rpglObject, lostFeatures);
+        }
+    }
+
+    internal long IncrementRPGLObjectLevel(RPGLObject rpglObject) {
+        // TODO check for meeting multiclassing requirements
+        long level = rpglObject.GetLevel(GetDatapackId()) + 1;
+        if (level == 1) {
+            _ = rpglObject.GetClasses().AddJsonObject(new JsonObject()
+                .PutString("name", GetName())
+                .PutString("id", GetDatapackId())
+                .PutInt("level", level)
+                .PutJsonObject("additional_nested_classes", new())
+            );
+        } else {
+            JsonArray classes = rpglObject.GetClasses();
+            for (int i = 0; i < classes.Count(); i++) {
+                JsonObject classData = classes.GetJsonObject(i);
+                if (GetDatapackId() == classData.GetString("id")) {
+                    classData.PutInt("level", level);
+                    break;
+                }
+            }
+        }
+        return level;
+    }
+
+    // =====================================================================
+    // Feature management methods.
+    // =====================================================================
+
+    public void GrantStartingFeatures(RPGLObject rpglObject, JsonObject choices) {
+        FeatureManager.GrantGainedEffects(rpglObject, GetStartingFeatures(), choices);
+        FeatureManager.GrantGainedEvents(rpglObject, GetStartingFeatures());
+        FeatureManager.GrantGainedResources(rpglObject, GetStartingFeatures());
+        LevelUpRPGLObject(rpglObject, choices);
     }
 
 };

@@ -3,6 +3,8 @@
 using com.rpglc.json;
 using com.rpglc.database.TO;
 using com.rpglc.core;
+using System.Linq.Expressions;
+using System;
 
 namespace com.rpglc.database;
 
@@ -49,6 +51,10 @@ public class DBManager {
         }
     }
 
+    // =====================================================================
+    // Class/Race insertions
+    // =====================================================================
+
     public static void InsertRPGLClass(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLClassTO>("classes").Insert(new RPGLClassTO() {
@@ -78,6 +84,10 @@ public class DBManager {
             Features = data.GetJsonObject("features").AsDict(),
         });
     }
+
+    // =====================================================================
+    // Template insertions
+    // =====================================================================
 
     public static void InsertRPGLEffectTemplate(JsonObject data) {
         using DBConnection connection = new(dbDir, dbName);
@@ -171,6 +181,10 @@ public class DBManager {
         });
     }
 
+    // =====================================================================
+    // Template instance insertions
+    // =====================================================================
+
     public static void InsertRPGLEffect(RPGLEffect rpglEffect) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEffectTO>("effects").Insert(new RPGLEffectTO() {
@@ -258,6 +272,10 @@ public class DBManager {
         });
     }
 
+    // =====================================================================
+    // Class/Race queries
+    // =====================================================================
+
     public static RPGLClass QueryRPGLClassByDatapackId(string datapackId) {
         RPGLClass rpglClass;
         using (DBConnection connection = new(dbDir, dbName)) {
@@ -279,6 +297,10 @@ public class DBManager {
         SwapArraysForLists(rpglRace.AsDict());
         return rpglRace;
     }
+
+    // =====================================================================
+    // Template queries
+    // =====================================================================
 
     public static RPGLEffectTemplate QueryRPGLEffectTemplateByDatapackId(string datapackId) {
         RPGLEffectTemplate template;
@@ -335,49 +357,333 @@ public class DBManager {
         return template;
     }
 
-    public static RPGLEffect QueryRPGLEffectByUuid(long uuid) {
-        RPGLEffect rpglEffect;
+    // =====================================================================
+    // Template instance queries
+    // =====================================================================
+
+    public static RPGLEffect? QueryRPGLEffect(Expression<Func<RPGLEffectTO, bool>> predicate) {
+        RPGLEffect? rpglEffect;
         using (DBConnection connection = new(dbDir, dbName)) {
             rpglEffect = connection.Collection<RPGLEffectTO>("effects")
-                .FindOne(x => x.Uuid == uuid)
+                .FindOne(predicate)
                 .ToRPGLEffect();
         }
-        SwapArraysForLists(rpglEffect.AsDict());
-        return rpglEffect;
+        if (rpglEffect is null) {
+            return null;
+        } else {
+            SwapArraysForLists(rpglEffect.AsDict());
+            return rpglEffect;
+        }
     }
 
-    public static RPGLItem QueryRPGLItemByUuid(long uuid) {
+    public static List<RPGLEffect> QueryRPGLEffects(Expression<Func<RPGLEffectTO, bool>> predicate) {
+        List<RPGLEffect> effects = [];
+        using (DBConnection connection = new(dbDir, dbName)) {
+            connection.Collection<RPGLEffectTO>("effects")
+                .Query()
+                .Where(predicate)
+                .ToList()
+                .ForEach(x => {
+                    RPGLEffect rpglEffect = x.ToRPGLEffect();
+                    SwapArraysForLists(rpglEffect.AsDict());
+                    effects.Add(rpglEffect);
+                });
+        }
+        return effects;
+    }
+
+    public static RPGLItem? QueryRPGLItem(Expression<Func<RPGLItemTO, bool>> predicate) {
+        RPGLItem? rpglItem;
+        using (DBConnection connection = new(dbDir, dbName)) {
+            rpglItem = connection.Collection<RPGLItemTO>("items")
+                .FindOne(predicate)
+                .ToRPGLItem();
+        }
+        if (rpglItem is null) {
+            return null;
+        } else {
+            SwapArraysForLists(rpglItem.AsDict());
+            return rpglItem;
+        }
+    }
+
+    public static List<RPGLItem> QueryRPGLItems(Expression<Func<RPGLItemTO, bool>> predicate) {
+        List<RPGLItem> items = [];
+        using (DBConnection connection = new(dbDir, dbName)) {
+            connection.Collection<RPGLItemTO>("items")
+                .Query()
+                .Where(predicate)
+                .ToList()
+                .ForEach(x => {
+                    RPGLItem rpglItem = x.ToRPGLItem();
+                    SwapArraysForLists(rpglItem.AsDict());
+                    items.Add(rpglItem);
+                });
+        }
+        return items;
+    }
+
+    public static RPGLObject? QueryRPGLObject(Expression<Func<RPGLObjectTO, bool>> predicate) {
+        RPGLObject? rpglObject;
+        using (DBConnection connection = new(dbDir, dbName)) {
+            rpglObject = connection.Collection<RPGLObjectTO>("objects")
+                .FindOne(predicate)
+                .ToRPGLObject();
+        }
+        if (rpglObject is null) {
+            return null;
+        } else {
+            SwapArraysForLists(rpglObject.AsDict());
+            return rpglObject;
+        }
+    }
+
+    public static List<RPGLObject> QueryRPGLObjects(Expression<Func<RPGLObjectTO, bool>> predicate) {
+        List<RPGLObject> objects = [];
+        using (DBConnection connection = new(dbDir, dbName)) {
+            connection.Collection<RPGLObjectTO>("objects")
+                .Query()
+                .Where(predicate)
+                .ToList()
+                .ForEach(x => {
+                    RPGLObject rpglObject = x.ToRPGLObject();
+                    SwapArraysForLists(rpglObject.AsDict());
+                    objects.Add(rpglObject);
+                });
+        }
+        return objects;
+    }
+
+    public static RPGLResource? QueryRPGLResource(Expression<Func<RPGLResourceTO, bool>> predicate) {
+        RPGLResource? rpglResource;
+        using (DBConnection connection = new(dbDir, dbName)) {
+            rpglResource = connection.Collection<RPGLResourceTO>("resources")
+                .FindOne(predicate)
+                ?.ToRPGLResource();
+        }
+        if (rpglResource is null) {
+            return null;
+        } else {
+            SwapArraysForLists(rpglResource.AsDict());
+            return rpglResource;
+        }
+    }
+
+    public static List<RPGLResource> QueryRPGLResources(Expression<Func<RPGLResourceTO, bool>> predicate) {
+        List<RPGLResource> resources = [];
+        using (DBConnection connection = new(dbDir, dbName)) {
+            connection.Collection<RPGLResourceTO>("resources")
+                .Query()
+                .Where(predicate)
+                .ToList()
+                .ForEach(x => {
+                    RPGLResource rpglResource = x.ToRPGLResource();
+                    SwapArraysForLists(rpglResource.AsDict());
+                    resources.Add(rpglResource);
+                });
+        }
+        return resources;
+    }
+
+    // =====================================================================
+    // Template instance deletions
+    // =====================================================================
+
+    public static void DeleteRPGLEffect(RPGLEffect rpglEffect) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLEffectTO>("effects").Delete(rpglEffect.GetId());
+    }
+
+    public static void DeleteRPGLEffectByUuid(long uuid) {
+        using DBConnection connection = new(dbDir, dbName);
+        ILiteCollection<RPGLEffectTO> collection = connection.Collection<RPGLEffectTO>("effects");
+        RPGLEffectTO effectTO = collection.FindOne(x => x.Uuid == uuid);
+        collection.Delete(effectTO._id);
+    }
+
+    public static void DeleteRPGLItem(RPGLItem rpglItem) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLItemTO>("items").Delete(rpglItem.GetId());
+
+        // delete contained effects
+        JsonArray effectsBySlot = rpglItem.GetEffects();
+        for (int i = 0; i < effectsBySlot.Count(); i++) {
+            JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
+            JsonArray effectUuidList = effectsForSlot.GetJsonArray("resources");
+            for (int j = 0; j < effectUuidList.Count(); j++) {
+                DeleteRPGLEffectByUuid((long) effectUuidList.GetInt(j));
+            }
+        }
+
+        // delete contained resources
+        JsonArray resourcesBySlot = rpglItem.GetResources();
+        for (int i = 0; i < resourcesBySlot.Count(); i++) {
+            JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
+            JsonArray resourceUuidList = resourcesForSlot.GetJsonArray("resources");
+            for (int j = 0; j < resourceUuidList.Count(); j++) {
+                DeleteRPGLResourceByUuid((long) resourceUuidList.GetInt(j));
+            }
+        }
+    }
+
+    public static void DeleteRPGLItemByUuid(long uuid) {
         RPGLItem rpglItem;
         using (DBConnection connection = new(dbDir, dbName)) {
             rpglItem = connection.Collection<RPGLItemTO>("items")
                 .FindOne(x => x.Uuid == uuid)
                 .ToRPGLItem();
         }
-        SwapArraysForLists(rpglItem.AsDict());
-        return rpglItem;
+        DeleteRPGLItem(rpglItem);
     }
 
-    public static RPGLObject QueryRPGLObjectByUuid(long uuid) {
+    public static void DeleteRPGLObject(RPGLObject rpglObject) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLObjectTO>("objects").Delete(rpglObject.GetId());
+
+        // TODO drop items in the world as loot?
+        // delete contained items (must occur before deleting effects or resources)
+        JsonArray itemUuidList = rpglObject.GetInventory();
+        for (int i = 0; i < itemUuidList.Count(); i++) {
+            DeleteRPGLItemByUuid((long) itemUuidList.GetInt(i));
+        }
+
+        // delete effects targeting object
+        List<RPGLEffect> effects = QueryRPGLEffects(x => x.Target == rpglObject.GetUuid());
+        foreach (RPGLEffect rpglEffect in effects) {
+            DeleteRPGLEffect(rpglEffect);
+        }
+
+        // delete contained resources
+        JsonArray resourceUuidList = rpglObject.GetResources();
+        for (int i = 0; i < resourceUuidList.Count(); i++) {
+            DeleteRPGLResourceByUuid((long) resourceUuidList.GetInt(i));
+        }
+    }
+
+    public static void DeleteRPGLObjectByUuid(long uuid) {
         RPGLObject rpglObject;
         using (DBConnection connection = new(dbDir, dbName)) {
             rpglObject = connection.Collection<RPGLObjectTO>("objects")
                 .FindOne(x => x.Uuid == uuid)
                 .ToRPGLObject();
         }
-        SwapArraysForLists(rpglObject.AsDict());
-        return rpglObject;
+        DeleteRPGLObject(rpglObject);
     }
 
-    public static RPGLResource QueryRPGLResourceByUuid(long uuid) {
-        RPGLResource rpglResource;
-        using (DBConnection connection = new(dbDir, dbName)) {
-            rpglResource  = connection.Collection<RPGLResourceTO>("resources")
-                .FindOne(x => x.Uuid == uuid)
-                .ToRPGLResource();
-        }
-        SwapArraysForLists(rpglResource.AsDict());
-        return rpglResource;
+    public static void DeleteRPGLResource(RPGLResource rpglResource) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLResourceTO>("resources").Delete(rpglResource.GetId());
     }
+
+    public static void DeleteRPGLResourceByUuid(long uuid) {
+        using DBConnection connection = new(dbDir, dbName);
+        ILiteCollection<RPGLResourceTO> collection = connection.Collection<RPGLResourceTO>("resources");
+        RPGLResourceTO resourceTO = collection.FindOne(x => x.Uuid == uuid);
+        collection.Delete(resourceTO._id);
+    }
+
+    // =====================================================================
+    // Template instance updates
+    // =====================================================================
+
+    public static void UpdateRPGLEffect(RPGLEffect rpglEffect) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLEffectTO>("effects").Update(new RPGLEffectTO() {
+            _id = rpglEffect.GetId(),
+
+            DatapackId = rpglEffect.GetDatapackId(),
+            Description = rpglEffect.GetDescription(),
+            Metadata = rpglEffect.GetMetadata().AsDict(),
+            Name = rpglEffect.GetName(),
+
+            Uuid = rpglEffect.GetUuid(),
+
+            SubeventFilters = rpglEffect.GetSubeventFilters().AsDict(),
+            OriginItem = rpglEffect.GetOriginItem(),
+            Source = rpglEffect.GetSource(),
+            Target = rpglEffect.GetTarget(),
+        });
+    }
+
+    public static void UpdateRPGLItem(RPGLItem rpglItem) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLItemTO>("items").Update(new RPGLItemTO() {
+            _id = rpglItem.GetId(),
+
+            DatapackId = rpglItem.GetDatapackId(),
+            Description = rpglItem.GetDescription(),
+            Metadata = rpglItem.GetMetadata().AsDict(),
+            Name = rpglItem.GetName(),
+
+            Tags = rpglItem.GetTags().AsList(),
+
+            Uuid = rpglItem.GetUuid(),
+
+            Effects = rpglItem.GetEffects().AsList(),
+            Events = rpglItem.GetEvents().AsList(),
+            Resources = rpglItem.GetResources().AsList(),
+            Cost = rpglItem.GetCost(),
+            Weight = rpglItem.GetWeight(),
+        });
+    }
+
+    public static void UpdateRPGLObject(RPGLObject rpglObject) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLObjectTO>("objects").Update(new RPGLObjectTO() {
+            _id = rpglObject.GetId(),
+
+            DatapackId = rpglObject.GetDatapackId(),
+            Description = rpglObject.GetDescription(),
+            Metadata = rpglObject.GetMetadata().AsDict(),
+            Name = rpglObject.GetName(),
+
+            Tags = rpglObject.GetTags().AsList(),
+
+            Uuid = rpglObject.GetUuid(),
+
+            AbilityScores = rpglObject.GetAbilityScores().AsDict(),
+            EquippedItems = rpglObject.GetEquippedItems().AsDict(),
+            Classes = rpglObject.GetClasses().AsList(),
+            Events = rpglObject.GetEvents().AsList(),
+            Inventory = rpglObject.GetInventory().AsList(),
+            Position = rpglObject.GetPosition().AsList(),
+            Races = rpglObject.GetRaces().AsList(),
+            Resources = rpglObject.GetResources().AsList(),
+            Rotation = rpglObject.GetRotation().AsList(),
+            OriginObject = rpglObject.GetOriginObject(),
+            ProxyObject = rpglObject.GetProxyObject(),
+            UserId = rpglObject.GetUserId(),
+            HealthBase = rpglObject.GetHealthBase(),
+            HealthCurrent = rpglObject.GetHealthCurrent(),
+            HealthTemporary = rpglObject.GetHealthTemporary(),
+            ProficiencyBonus = rpglObject.GetProficiencyBonus(),
+        });
+    }
+
+    public static void UpdateRPGLResource(RPGLResource rpglResource) {
+        using DBConnection connection = new(dbDir, dbName);
+        connection.Collection<RPGLResourceTO>("resources").Update(new RPGLResourceTO() {
+            _id = rpglResource.GetId(),
+
+            DatapackId = rpglResource.GetDatapackId(),
+            Description = rpglResource.GetDescription(),
+            Metadata = rpglResource.GetMetadata().AsDict(),
+            Name = rpglResource.GetName(),
+
+            Tags = rpglResource.GetTags().AsList(),
+
+            Uuid = rpglResource.GetUuid(),
+
+            RefreshCriterion = rpglResource.GetRefreshCriterion().AsList(),
+            OriginItem = rpglResource.GetOriginItem(),
+            Potency = rpglResource.GetPotency(),
+            Exhausted = false, // new RPGLResource should never be exhausted
+        });
+    }
+
+    // =====================================================================
+    // Utility operations
+    // =====================================================================
 
     public static bool IsUuidAvailable<T>(string collectionName, long uuid) where T : PersistentContentTO {
         bool isUuidAvailable = true;

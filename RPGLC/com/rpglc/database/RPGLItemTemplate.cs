@@ -27,30 +27,30 @@ public class RPGLItemTemplate : RPGLTemplate {
     }
 
     internal static void ProcessEffects(RPGLItem rpglItem) {
-        JsonArray effectList = rpglItem.GetEffects();
-        for (int i = 0; i < effectList.Count(); i++) {
-            JsonObject effectListItem = effectList.GetJsonObject(i);
-            JsonArray effectDatapackIdList = effectListItem.GetJsonArray("effects");
+        JsonArray effectsBySlot = rpglItem.GetEffects();
+        for (int i = 0; i < effectsBySlot.Count(); i++) {
+            JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
+            JsonArray effectDatapackIdList = effectsForSlot.GetJsonArray("effects");
             JsonArray effectUuidList = new();
             for (int j = 0; j < effectDatapackIdList.Count(); j++) {
                 effectUuidList.AddInt(RPGLFactory.NewEffect(effectDatapackIdList.GetString(j)).GetUuid());
             }
-            effectListItem.PutJsonArray("effects", effectUuidList);
+            effectsForSlot.PutJsonArray("effects", effectUuidList);
         }
     }
 
     internal static void ProcessResources(RPGLItem rpglItem) {
-        JsonArray resourceList = rpglItem.GetEffects();
-        for (int i = 0; i < resourceList.Count(); i++) {
-            JsonObject resourceListItem = resourceList.GetJsonObject(i);
-            JsonArray resourceDatapackIdList = resourceListItem.GetJsonArray("resources");
+        JsonArray resourcesBySlot = rpglItem.GetResources();
+        for (int i = 0; i < resourcesBySlot.Count(); i++) {
+            JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
+            JsonArray resourceDatapackIdList = resourcesForSlot.GetJsonArray("resources");
             JsonArray resourceUuidList = new();
             for (int j = 0; j < resourceDatapackIdList.Count(); j++) {
                 string resourceDatapackId = resourceDatapackIdList.GetString(j);
                 RPGLResource rpglResource = RPGLFactory.NewResource(resourceDatapackId);
                 resourceUuidList.AddInt(rpglResource.GetUuid());
             }
-            resourceListItem.PutJsonArray("resources", resourceUuidList);
+            resourcesForSlot.PutJsonArray("resources", resourceUuidList);
         }
     }
 

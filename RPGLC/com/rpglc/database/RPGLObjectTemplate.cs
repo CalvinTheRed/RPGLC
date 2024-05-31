@@ -24,7 +24,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         ProcessInventory(rpglObject);
         ProcessEquippedItems(rpglObject);
         ProcessResources(rpglObject);
-        // TODO process classes into data stored in the database
+        ProcessClasses(rpglObject);
 
         return rpglObject;
     }
@@ -73,6 +73,34 @@ public class RPGLObjectTemplate : RPGLTemplate {
             }
         }
         rpglObject.SetResources(resourceUuidList);
+    }
+
+    internal static void ProcessClasses(RPGLObject rpglObject) {
+        JsonArray classList = rpglObject.GetClasses();
+        rpglObject.SetClasses(new());
+        // set classes and nested classes
+        for (int i = 0; i < classList.Count(); i++) {
+            JsonObject classData = classList.GetJsonObject(i);
+            string classDatapackId = classData.GetString("id");
+            long level = (long) classData.GetInt("level");
+            JsonObject choices = classData.GetJsonObject("choices");
+            for (int j = 0; j < level; j++) {
+                rpglObject.LevelUp(classDatapackId, choices);
+            }
+            // re-assign additional nested classes
+            JsonObject additionalNestedClassList = classData.GetJsonObject("additional_nested_classes") ?? new();
+            foreach (string key in additionalNestedClassList.AsDict().Keys) {
+                JsonObject additionalNestedClassData = additionalNestedClassList.GetJsonObject(key);
+                rpglObject.AddAdditionalNestedClass(
+                    classDatapackId,
+                    key,
+                    additionalNestedClassData.GetInt("scale") ?? 1L,
+                    additionalNestedClassData.GetBool("round_up") ?? false
+                );
+            }
+            // update nested classes
+            rpglObject.LevelUpNestedClasses(classDatapackId, choices);
+        }
     }
 
 };

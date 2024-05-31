@@ -33,6 +33,7 @@ public static class RPGLFactory {
             .SetTarget(target);
 
         DBManager.InsertRPGLEffect(rpglEffect);
+        rpglEffect.SetId(DBManager.QueryRPGLEffect(x => x.Uuid == rpglEffect.GetUuid()).GetId());
         return rpglEffect;
     }
 
@@ -60,6 +61,7 @@ public static class RPGLFactory {
             .NewInstance(GenerateUuid<RPGLItemTO>("items"));
 
         DBManager.InsertRPGLItem(rpglItem);
+        rpglItem.SetId(DBManager.QueryRPGLItem(x => x.Uuid == rpglItem.GetUuid()).GetId());
         return rpglItem;
     }
 
@@ -82,6 +84,7 @@ public static class RPGLFactory {
             .SetRotation(rotation);
 
         DBManager.InsertRPGLObject(rpglObject);
+        rpglObject.SetId(DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetUuid()).GetId());
         return rpglObject;
     }
 
@@ -113,6 +116,7 @@ public static class RPGLFactory {
             .NewInstance(GenerateUuid<RPGLResourceTO>("resources"));
 
         DBManager.InsertRPGLResource(rpglResource);
+        rpglResource.SetId(DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid()).GetId());
         return rpglResource;
     }
 
