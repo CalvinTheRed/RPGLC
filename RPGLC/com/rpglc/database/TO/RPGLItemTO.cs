@@ -20,7 +20,8 @@ public class RPGLItemTO : TaggableContentTO {
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)
             .SetDescription(Description)
-            .SetName(Name);
+            .SetName(Name)
+            .SetId(_id);
     }
 
 };

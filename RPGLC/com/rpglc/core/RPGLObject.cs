@@ -1,4 +1,5 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.database;
+using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -163,6 +164,151 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject TakeItem(long uuid) {
         GetInventory().AsList().Remove(uuid);
+        return this;
+    }
+
+    // =====================================================================
+    // Class/Level management helper methods.
+    // =====================================================================
+
+    public void LevelUpNestedClasses(string classDatapackId, JsonObject choices) {
+        foreach (string nestedClassDatapackId in GetNestedClassIds(classDatapackId)) {
+            RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(nestedClassDatapackId);
+            long intendedLevel = CalculateLevelForNestedClass(nestedClassDatapackId);
+            long currentLevel = GetLevel(nestedClassDatapackId);
+            while (currentLevel < intendedLevel) {
+                rpglClass.LevelUpRPGLObject(this, choices);
+                currentLevel = this.GetLevel(nestedClassDatapackId);
+            }
+        }
+    }
+
+    internal List<string> GetNestedClassIds(string classDatapackId) {
+        RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
+        JsonObject nestedClassList = rpglClass.GetNestedClasses();
+        List<string> nestedClassDatapackIds = new(nestedClassList.AsDict().Keys);
+        JsonArray classList = GetClasses();
+        for (int i = 0; i < classList.Count(); i++) {
+            JsonObject classData = classList.GetJsonObject(i);
+            if (classData.GetString("id") == classDatapackId) {
+                nestedClassDatapackIds.AddRange(classData.GetJsonObject("additional_nested_classes").AsDict().Keys);
+                break;
+            }
+        }
+        return nestedClassDatapackIds;
+    }
+
+    internal long CalculateLevelForNestedClass(string nestedClassDatapackId) {
+        long nestedClassLevel = 0;
+        JsonArray classList = GetClasses();
+        for (int i = 0; i < classList.Count(); i++) {
+            JsonObject classData = classList.GetJsonObject(i);
+            RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classData.GetString("id"));
+            JsonObject nestedClassList = rpglClass.GetNestedClasses();
+            JsonObject additionalNestedClasses = classData.GetJsonObject("additional_nested_classes");
+            JsonObject? nestedClassData = null;
+            if (nestedClassList.AsDict().ContainsKey(nestedClassDatapackId)) {
+                nestedClassData = nestedClassList.GetJsonObject(nestedClassDatapackId);
+            } else if (additionalNestedClasses.AsDict().ContainsKey(nestedClassDatapackId)) {
+                nestedClassData = additionalNestedClasses.GetJsonObject(nestedClassDatapackId);
+            }
+            if (nestedClassData is not null) {
+                long classLevel = (long) classData.GetInt("level");
+                long scale = (long) nestedClassData.GetInt("scale");
+                bool roundUp = (bool) nestedClassData.GetBool("round_up");
+                if (roundUp) {
+                    nestedClassLevel += (long) Math.Ceiling(classLevel / (double) scale);
+                } else {
+                    nestedClassLevel += (long) (classLevel / (double) scale);
+                }
+            }
+        }
+        return nestedClassLevel;
+    }
+
+    public long GetLevel(string classDatapackId) {
+        JsonArray classList = GetClasses();
+        for (int i = 0; i < classList.Count(); i++) {
+            JsonObject classData = classList.GetJsonObject(i);
+            if (classData.GetString("id") == classDatapackId) {
+                return (long) classData.GetInt("level");
+            }
+        }
+        return 0L;
+    }
+
+    public long GetLevel() {
+        JsonArray classes = GetClasses();
+        List<string> classDatapackIds = [];
+        List<string> nestedClassDatapackIds = [];
+        for (int i = 0; i < classes.Count(); i++) {
+            JsonObject classData = classes.GetJsonObject(i);
+            string classDatapackId = classData.GetString("id");
+            classDatapackIds.Add(classDatapackId);
+            foreach (string key in DBManager.QueryRPGLClassByDatapackId(classDatapackId).GetNestedClasses().AsDict().Keys) {
+                nestedClassDatapackIds.Add(key);
+            }
+            foreach (string key in classData.GetJsonObject("additional_nested_classes").AsDict().Keys) {
+                nestedClassDatapackIds.Add(key);
+            }
+        }
+        classDatapackIds.RemoveAll(nestedClassDatapackIds.Contains);
+        long level = 0L;
+        foreach (string classDatapackId in classDatapackIds) {
+            level += GetLevel(classDatapackId);
+        }
+        return level;
+    }
+
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices) {
+        RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
+        if (GetLevel() == 0) {
+            rpglClass.GrantStartingFeatures(this, choices);
+        } else {
+            rpglClass.LevelUpRPGLObject(this, choices);
+        }
+        LevelUpNestedClasses(classDatapackId, choices);
+        LevelUpRaces(choices, GetLevel());
+        return this;
+    }
+
+    internal void LevelUpRaces(JsonObject choices, long level) {
+        JsonArray races = GetRaces();
+        for (int i = 0; i < races.Count(); i++) {
+            string raceDatapackId = races.GetString(i);
+            RPGLRace rpglRace = DBManager.QueryRPGLRaceByDatapackId(raceDatapackId);
+            rpglRace.LevelUpRPGLObject(this, choices, level);
+        }
+    }
+
+    public void AddAdditionalNestedClass(
+            string classDatapackId,
+            string additionalNestedClassDatapackId,
+            long scale,
+            bool roundUp
+    ) {
+        JsonArray classes = GetClasses();
+        for (int i = 0; i < classes.Count(); i++) {
+            JsonObject classData = classes.GetJsonObject(i);
+            if (classData.GetString("id") == classDatapackId) {
+                classData.GetJsonObject("additional_nested_classes").PutJsonObject(
+                    additionalNestedClassDatapackId,
+                    new JsonObject()
+                        .PutInt("scale", scale)
+                        .PutBool("round_up", roundUp)
+                );
+            }
+        }
+    }
+
+    // =====================================================================
+    // Resource management helper methods.
+    // =====================================================================
+
+    public RPGLObject AddResource(RPGLResource rpglResource) {
+        if (!GetResources().Contains(rpglResource.GetUuid())) {
+            GetResources().AddInt(rpglResource.GetUuid());
+        }
         return this;
     }
 
