@@ -103,4 +103,4 @@ public static class FeatureManager {
         }
     }
 
-}
+};
