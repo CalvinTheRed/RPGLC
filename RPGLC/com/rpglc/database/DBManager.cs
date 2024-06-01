@@ -4,17 +4,27 @@ using com.rpglc.json;
 using com.rpglc.database.TO;
 using com.rpglc.core;
 using System.Linq.Expressions;
-using System;
 
 namespace com.rpglc.database;
 
 public class DBManager {
-    private static string dbDir;
-    private static string dbName;
+    private static string? dbDir;
+    private static string? dbName;
+
+    public static string? GetDatabase() {
+        if (IsDatabaseSet()) {
+            return Path.Combine(dbDir, dbName);
+        }
+        return null;
+    }
 
     public static void SetDatabase(string dbDir, string dbName) {
         DBManager.dbDir = dbDir;
         DBManager.dbName = dbName;
+    }
+
+    public static bool IsDatabaseSet() {
+        return dbDir is not null && dbName is not null;
     }
 
     public static void LoadDatapacks(string path) {
