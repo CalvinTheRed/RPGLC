@@ -3,8 +3,7 @@ using com.rpglc.testutils;
 
 namespace com.rpglc.database;
 
-[SetupDatabase]
-[Collection("Serial")]
+[OpenDatabaseConnection]
 public class RPGLEffectTemplateTest {
 
     [DefaultMock]
