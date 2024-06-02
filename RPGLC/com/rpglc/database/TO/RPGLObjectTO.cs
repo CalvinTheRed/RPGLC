@@ -38,6 +38,7 @@ public class RPGLObjectTO : TaggableContentTO {
             .SetHealthCurrent(HealthCurrent)
             .SetHealthTemporary(HealthTemporary)
             .SetProficiencyBonus(ProficiencyBonus)
+            .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)

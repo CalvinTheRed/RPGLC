@@ -10,11 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="com\rpglc\core\**" />
     <Compile Remove="com\rpglc\math\**" />
-    <EmbeddedResource Remove="com\rpglc\core\**" />
     <EmbeddedResource Remove="com\rpglc\math\**" />
-    <None Remove="com\rpglc\core\**" />
     <None Remove="com\rpglc\math\**" />
   </ItemGroup>
 
