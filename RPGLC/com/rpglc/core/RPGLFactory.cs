@@ -13,9 +13,8 @@ public static class RPGLFactory {
         bool uuidIsAvailable = true;
         do {
             uuid = RPGLRandom.GetRandom().Next();
-            if (!DBManager.IsUuidAvailable<T>(collectionName, uuid)) {
-                uuidIsAvailable = false;
-            }
+            bool? uuidAvailable = DBManager.IsUuidAvailable<T>(collectionName, uuid);
+            uuidIsAvailable = uuidAvailable is not null && (bool) uuidAvailable;
         } while (!uuidIsAvailable);
         return uuid;
     }

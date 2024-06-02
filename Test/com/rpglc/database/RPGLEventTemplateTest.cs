@@ -4,6 +4,8 @@ using com.rpglc.testutils;
 namespace com.rpglc.database;
 
 [OpenDatabaseConnection]
+[CloseDatabaseConnection]
+[Collection("Serial")]
 public class RPGLEventTemplateTest {
 
     [DefaultMock]

@@ -29,10 +29,11 @@ public class DBManager {
 
     public static void DisconnectFromDatabase() {
         connection?.Dispose();
+        connection = null;
     }
 
     public static bool IsDatabaseConnected() {
-        return dbDir is not null && dbName is not null;
+        return connection is not null;
     }
 
     public static void LoadDatapacks(string path) {

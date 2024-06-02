@@ -10,7 +10,7 @@ public class OpenDatabaseConnection : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        if (DBManager.IsDatabaseConnected()) {
+        if (!DBManager.IsDatabaseConnected()) {
             DBManager.ConnectToDatabase(Path.Join("C:", "Temp"), "DELETEME.db");
         }
     }
