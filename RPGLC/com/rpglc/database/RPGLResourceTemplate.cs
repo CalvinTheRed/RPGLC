@@ -17,7 +17,7 @@ public class RPGLResourceTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLResource NewInstance(long uuid) {
+    public RPGLResource NewInstance(string uuid) {
         RPGLResource rpglResource = (RPGLResource) new RPGLResource().SetUuid(uuid);
         Setup(rpglResource);
 

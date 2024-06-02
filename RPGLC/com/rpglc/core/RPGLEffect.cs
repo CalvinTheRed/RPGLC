@@ -13,30 +13,30 @@ public class RPGLEffect : PersistentContent {
         return this;
     }
 
-    public long? GetOriginItem() {
-        return GetInt("origin_item");
+    public string? GetOriginItem() {
+        return GetString("origin_item");
     }
 
-    public RPGLEffect SetOriginItem(long? originItem) {
-        PutInt("origin_item", originItem);
+    public RPGLEffect SetOriginItem(string? originItem) {
+        PutString("origin_item", originItem);
         return this;
     }
 
-    public long? GetSource() {
-        return GetInt("source");
+    public string GetSource() {
+        return GetString("source");
     }
 
-    public RPGLEffect SetSource(long? source) {
-        PutInt("source", source);
+    public RPGLEffect SetSource(string? source) {
+        PutString("source", source);
         return this;
     }
 
-    public long? GetTarget() {
-        return GetInt("target");
+    public string GetTarget() {
+        return GetString("target");
     }
 
-    public RPGLEffect SetTarget(long? target) {
-        PutInt("target", target);
+    public RPGLEffect SetTarget(string? target) {
+        PutString("target", target);
         return this;
     }
 

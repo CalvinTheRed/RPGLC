@@ -4,7 +4,7 @@ namespace com.rpglc.database.TO;
 
 public class RPGLResourceTO : TaggableContentTO {
     public List<object> RefreshCriterion { get; set; }
-    public long? OriginItem { get; set; }
+    public string? OriginItem { get; set; }
     public long Potency { get; set; }
     public bool Exhausted { get; set; }
 

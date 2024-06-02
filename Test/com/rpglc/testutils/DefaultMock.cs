@@ -5,8 +5,7 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils;
 
-public class DefaultMock : BeforeAfterTestAttribute
-{
+public class DefaultMock : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest)
     {

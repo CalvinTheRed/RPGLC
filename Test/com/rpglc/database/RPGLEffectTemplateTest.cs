@@ -12,7 +12,7 @@ public class RPGLEffectTemplateTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
-        long effectUuid = 123L;
+        string effectUuid = "uuid";
         RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId("test:dummy")
             .NewInstance(effectUuid);
 

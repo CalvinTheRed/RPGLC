@@ -86,21 +86,21 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public long? GetOriginObject() {
-        return GetInt("origin_object");
+    public string? GetOriginObject() {
+        return GetString("origin_object");
     }
 
-    public RPGLObject SetOriginObject(long? originObject) {
-        PutInt("origin_object", originObject);
+    public RPGLObject SetOriginObject(string? originObject) {
+        PutString("origin_object", originObject);
         return this;
     }
 
-    public long? GetProxyObject() {
-        return GetInt("proxy_object");
+    public string? GetProxyObject() {
+        return GetString("proxy_object");
     }
 
-    public RPGLObject SetProxyObject(long? proxyObject) {
-        PutInt("proxy_object", proxyObject);
+    public RPGLObject SetProxyObject(string? proxyObject) {
+        PutString("proxy_object", proxyObject);
         return this;
     }
 
@@ -155,14 +155,14 @@ public class RPGLObject : TaggableContent {
     // Inventory management helper methods.
     // =====================================================================
 
-    public RPGLObject GiveItem(long uuid) {
+    public RPGLObject GiveItem(string uuid) {
         if (!GetInventory().Contains(uuid)) {
-            GetInventory().AddInt(uuid);
+            GetInventory().AddString(uuid);
         }
         return this;
     }
 
-    public RPGLObject TakeItem(long uuid) {
+    public RPGLObject TakeItem(string uuid) {
         GetInventory().AsList().Remove(uuid);
         return this;
     }
@@ -307,7 +307,7 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject AddResource(RPGLResource rpglResource) {
         if (!GetResources().Contains(rpglResource.GetUuid())) {
-            GetResources().AddInt(rpglResource.GetUuid());
+            GetResources().AddString(rpglResource.GetUuid());
         }
         return this;
     }

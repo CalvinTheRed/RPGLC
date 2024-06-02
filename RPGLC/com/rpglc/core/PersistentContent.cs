@@ -2,12 +2,12 @@
 
 public class PersistentContent : DatabaseContent {
 
-    public long GetUuid() {
-        return (long) GetInt("uuid");
+    public string GetUuid() {
+        return GetString("uuid");
     }
 
-    public PersistentContent SetUuid(long uuid) {
-        PutInt("uuid", uuid);
+    public PersistentContent SetUuid(string uuid) {
+        PutString("uuid", uuid);
         return this;
     }
 

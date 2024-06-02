@@ -17,7 +17,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLObject NewInstance(long uuid) {
+    public RPGLObject NewInstance(string uuid) {
         RPGLObject rpglObject = (RPGLObject) new RPGLObject().SetUuid(uuid);
         Setup(rpglObject);
         ProcessEffects(rpglObject);
@@ -44,7 +44,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonArray itemDatapackIdList = rpglObject.GetInventory();
         JsonArray itemUuidList = new();
         for (int i = 0; i < itemDatapackIdList.Count(); i++) {
-            itemUuidList.AddInt(RPGLFactory.NewItem(itemDatapackIdList.GetString(i)).GetUuid());
+            itemUuidList.AddString(RPGLFactory.NewItem(itemDatapackIdList.GetString(i)).GetUuid());
         }
         rpglObject.SetInventory(itemUuidList);
     }
@@ -54,7 +54,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonObject itemUuidDict = new();
         foreach (string key in itemDatapackIdDict.AsDict().Keys) {
             RPGLItem rpglItem = RPGLFactory.NewItem(itemDatapackIdDict.GetString(key));
-            itemUuidDict.PutInt(key, rpglItem.GetUuid());
+            itemUuidDict.PutString(key, rpglItem.GetUuid());
             rpglObject.GiveItem(rpglItem.GetUuid());
         }
         rpglObject.SetEquippedItems(itemUuidDict);
@@ -67,7 +67,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
             JsonObject resourceInstructions = resourceList.GetJsonObject(i);
             long count = resourceInstructions.GetInt("count") ?? 1L;
             for (int j = 0; j < count; j++) {
-                resourceUuidList.AddInt(
+                resourceUuidList.AddString(
                     RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
                 );
             }

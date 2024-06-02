@@ -485,7 +485,7 @@ public class DBManager {
         connection?.Collection<RPGLEffectTO>("effects").Delete(rpglEffect.GetId());
     }
 
-    public static void DeleteRPGLEffectByUuid(long uuid) {
+    public static void DeleteRPGLEffectByUuid(string uuid) {
         if (connection is not null) {
             ILiteCollection<RPGLEffectTO> collection = connection.Collection<RPGLEffectTO>("effects");
             RPGLEffectTO effectTO = collection.FindOne(x => x.Uuid == uuid);
@@ -503,7 +503,7 @@ public class DBManager {
                 JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
                 JsonArray effectUuidList = effectsForSlot.GetJsonArray("resources");
                 for (int j = 0; j < effectUuidList.Count(); j++) {
-                    DeleteRPGLEffectByUuid((long) effectUuidList.GetInt(j));
+                    DeleteRPGLEffectByUuid(effectUuidList.GetString(j));
                 }
             }
 
@@ -513,13 +513,13 @@ public class DBManager {
                 JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
                 JsonArray resourceUuidList = resourcesForSlot.GetJsonArray("resources");
                 for (int j = 0; j < resourceUuidList.Count(); j++) {
-                    DeleteRPGLResourceByUuid((long) resourceUuidList.GetInt(j));
+                    DeleteRPGLResourceByUuid(resourceUuidList.GetString(j));
                 }
             }
         }
     }
 
-    public static void DeleteRPGLItemByUuid(long uuid) {
+    public static void DeleteRPGLItemByUuid(string uuid) {
         if (connection is not null) {
             RPGLItem rpglItem= connection.Collection<RPGLItemTO>("items")
                 .FindOne(x => x.Uuid == uuid)
@@ -536,7 +536,7 @@ public class DBManager {
             // delete contained items (must occur before deleting effects or resources)
             JsonArray itemUuidList = rpglObject.GetInventory();
             for (int i = 0; i < itemUuidList.Count(); i++) {
-                DeleteRPGLItemByUuid((long) itemUuidList.GetInt(i));
+                DeleteRPGLItemByUuid(itemUuidList.GetString(i));
             }
 
             // delete effects targeting object
@@ -548,12 +548,12 @@ public class DBManager {
             // delete contained resources
             JsonArray resourceUuidList = rpglObject.GetResources();
             for (int i = 0; i < resourceUuidList.Count(); i++) {
-                DeleteRPGLResourceByUuid((long) resourceUuidList.GetInt(i));
+                DeleteRPGLResourceByUuid(resourceUuidList.GetString(i));
             }
         }
     }
 
-    public static void DeleteRPGLObjectByUuid(long uuid) {
+    public static void DeleteRPGLObjectByUuid(string uuid) {
         if (connection is not null) {
             RPGLObject rpglObject = connection.Collection<RPGLObjectTO>("objects")
                 .FindOne(x => x.Uuid == uuid)
@@ -566,7 +566,7 @@ public class DBManager {
         connection?.Collection<RPGLResourceTO>("resources").Delete(rpglResource.GetId());
     }
 
-    public static void DeleteRPGLResourceByUuid(long uuid) {
+    public static void DeleteRPGLResourceByUuid(string uuid) {
         if (connection is not null) {
             ILiteCollection<RPGLResourceTO> collection = connection.Collection<RPGLResourceTO>("resources");
             RPGLResourceTO resourceTO = collection.FindOne(x => x.Uuid == uuid);
@@ -673,7 +673,7 @@ public class DBManager {
     // Utility operations
     // =====================================================================
 
-    public static bool? IsUuidAvailable<T>(string collectionName, long uuid) where T : PersistentContentTO {
+    public static bool? IsUuidAvailable<T>(string collectionName, string uuid) where T : PersistentContentTO {
         if (connection is not null) {
             if (connection.Collection<T>(collectionName).FindOne(x => x.Uuid == uuid) is not null) {
                 return true;

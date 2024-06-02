@@ -17,7 +17,7 @@ public class RPGLItemTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLItem NewInstance(long uuid) {
+    public RPGLItem NewInstance(string uuid) {
         RPGLItem rpglItem = (RPGLItem) new RPGLItem().SetUuid(uuid);
         Setup(rpglItem);
         ProcessEffects(rpglItem);
@@ -33,7 +33,7 @@ public class RPGLItemTemplate : RPGLTemplate {
             JsonArray effectDatapackIdList = effectsForSlot.GetJsonArray("effects");
             JsonArray effectUuidList = new();
             for (int j = 0; j < effectDatapackIdList.Count(); j++) {
-                effectUuidList.AddInt(RPGLFactory.NewEffect(effectDatapackIdList.GetString(j)).GetUuid());
+                effectUuidList.AddString(RPGLFactory.NewEffect(effectDatapackIdList.GetString(j)).GetUuid());
             }
             effectsForSlot.PutJsonArray("effects", effectUuidList);
         }
@@ -48,7 +48,7 @@ public class RPGLItemTemplate : RPGLTemplate {
             for (int j = 0; j < resourceDatapackIdList.Count(); j++) {
                 string resourceDatapackId = resourceDatapackIdList.GetString(j);
                 RPGLResource rpglResource = RPGLFactory.NewResource(resourceDatapackId);
-                resourceUuidList.AddInt(rpglResource.GetUuid());
+                resourceUuidList.AddString(rpglResource.GetUuid());
             }
             resourcesForSlot.PutJsonArray("resources", resourceUuidList);
         }
