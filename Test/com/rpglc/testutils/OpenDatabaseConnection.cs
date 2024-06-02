@@ -11,7 +11,7 @@ public class OpenDatabaseConnection : BeforeAfterTestAttribute {
         base.Before(methodUnderTest);
 
         if (!DBManager.IsDatabaseConnected()) {
-            DBManager.ConnectToDatabase(Path.Join("C:", "Temp"), "DELETEME.db");
+            DBManager.SetDatabase(Path.Join("C:", "Temp"), "DELETEME.db");
         }
     }
 
