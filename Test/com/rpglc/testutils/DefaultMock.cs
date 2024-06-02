@@ -77,7 +77,9 @@ public class DefaultMock : BeforeAfterTestAttribute {
             """));
         DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
             {
-                "metadata": { },
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
                 "name": "Dummy Object",
                 "description": "This object has no features.",
                 "datapack_id": "test:dummy",
