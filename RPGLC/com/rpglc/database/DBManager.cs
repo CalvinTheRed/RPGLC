@@ -63,9 +63,9 @@ public class DBManager {
             Metadata = data.GetJsonObject("metadata").AsDict(),
             Name = data.GetString("name"),
 
+            NestedClasses = data.GetJsonObject("nested_classes")?.AsDict(),
             StartingFeatures = data.GetJsonObject("starting_features")?.AsDict(),
             Features = data.GetJsonObject("features").AsDict(),
-            NestedClasses = data.GetJsonObject("nested_classes").AsDict(),
             AbilityScoreIncreaseLevels = data.GetJsonArray("ability_score_increase_levels")?.AsList(),
             MulticlassRequirements = data.GetJsonArray("multiclass_requirements")?.AsList(),
             SubclassLevel = data.GetInt("subclass_level"),
@@ -276,26 +276,32 @@ public class DBManager {
     // Class/Race queries
     // =====================================================================
 
-    public static RPGLClass QueryRPGLClassByDatapackId(string datapackId) {
-        RPGLClass rpglClass;
+    public static RPGLClass? QueryRPGLClassByDatapackId(string datapackId) {
+        RPGLClass? rpglClass = null;
         using (DBConnection connection = new(dbDir, dbName)) {
             rpglClass = connection.Collection<RPGLClassTO>("classes")
                 .FindOne(x => x.DatapackId == datapackId)
                 .ToRPGLClass();
         }
-        SwapArraysForLists(rpglClass.AsDict());
-        return rpglClass;
+        if (rpglClass is not null) {
+            SwapArraysForLists(rpglClass.AsDict());
+            return rpglClass;
+        }
+        return null;
     }
 
-    public static RPGLRace QueryRPGLRaceByDatapackId(string datapackId) {
-        RPGLRace rpglRace;
+    public static RPGLRace? QueryRPGLRaceByDatapackId(string datapackId) {
+        RPGLRace? rpglRace;
         using (DBConnection connection = new(dbDir, dbName)) {
             rpglRace = connection.Collection<RPGLRaceTO>("races")
                 .FindOne(x => x.DatapackId == datapackId)
                 .ToRPGLRace();
         }
-        SwapArraysForLists(rpglRace.AsDict());
-        return rpglRace;
+        if (rpglRace is not null) {
+            SwapArraysForLists(rpglRace.AsDict());
+            return rpglRace;
+        }
+        return null;
     }
 
     // =====================================================================

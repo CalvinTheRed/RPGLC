@@ -5,6 +5,14 @@ namespace com.rpglc.core;
 
 public static class RPGLFactory {
 
+    public static RPGLClass? GetClass(string classDatapackId) {
+        return DBManager.QueryRPGLClassByDatapackId(classDatapackId);
+    }
+
+    public static RPGLRace? GetRace(string raceDatapackId) {
+        return DBManager.QueryRPGLRaceByDatapackId(raceDatapackId);
+    }
+
     public static RPGLEffect NewEffect(
             string datapackId,
             string? source,

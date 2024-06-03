@@ -9,10 +9,10 @@ public static class FeatureManager {
     public static void GrantGainedEffects(RPGLObject rpglObject, JsonObject gainedFeatures, JsonObject choices) {
         JsonArray gainedEffects = gainedFeatures.GetJsonArray("effects") ?? new();
         for (int i = 0; i < gainedEffects.Count(); i++) {
-            var effectElement = gainedEffects.AsList()[i];
-            if (effectElement is string effectDatapackId) {
+            var data = gainedEffects.AsList()[i];
+            if (data is string effectDatapackId) {
                 GrantGainedEffectFromString(rpglObject, effectDatapackId);
-            } else if (effectElement is Dictionary<string, object> dict) {
+            } else if (data is Dictionary<string, object> dict) {
                 GrantGainedEffectsFromObject(rpglObject, choices, new(dict));
             }
         }
@@ -90,7 +90,7 @@ public static class FeatureManager {
     public static void RevokeLostResources(RPGLObject rpglObject, JsonObject lostFeatures) {
         JsonArray lostResources = lostFeatures.GetJsonArray("resources") ?? new();
         for (int i = 0; i < lostResources.Count(); i++) {
-            object data = lostResources.AsList()[i];
+            var data = lostResources.AsList()[i];
             if (data is string resourceDatapackId) {
                 RevokeLostResourceFromString(rpglObject, resourceDatapackId);
             } else if (data is Dictionary<string, object> dict) {

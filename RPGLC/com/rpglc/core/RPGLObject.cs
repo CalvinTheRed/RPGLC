@@ -264,9 +264,8 @@ public class RPGLObject : TaggableContent {
         RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
         if (GetLevel() == 0) {
             rpglClass.GrantStartingFeatures(this, choices);
-        } else {
-            rpglClass.LevelUpRPGLObject(this, choices);
         }
+        rpglClass.LevelUpRPGLObject(this, choices);
         LevelUpNestedClasses(classDatapackId, choices);
         LevelUpRaces(choices, GetLevel());
         return this;
