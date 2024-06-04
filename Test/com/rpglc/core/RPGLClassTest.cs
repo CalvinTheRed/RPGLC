@@ -1,7 +1,7 @@
-﻿using com.rpglc.core.mocks;
-using com.rpglc.database;
+﻿using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils;
+using com.rpglc.testutils.mocks;
 
 namespace com.rpglc.core;
 

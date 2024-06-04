@@ -1,15 +1,17 @@
 ﻿using com.rpglc.database;
-using com.rpglc.testutils;
+using com.rpglc.json;
 using System.Reflection;
 
-namespace com.rpglc.core.mocks;
+namespace com.rpglc.testutils.mocks;
 
-public class ExtraClassesMock : DefaultMock {
+public class ExtraClassesMock : DefaultMock
+{
 
-    public override void Before(MethodInfo methodUnderTest) {
+    public override void Before(MethodInfo methodUnderTest)
+    {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLClass(new json.JsonObject().LoadFromString("""
+        DBManager.InsertRPGLClass(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -44,7 +46,7 @@ public class ExtraClassesMock : DefaultMock {
                 "features": { }
             }
             """));
-        DBManager.InsertRPGLClass(new json.JsonObject().LoadFromString("""
+        DBManager.InsertRPGLClass(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -83,7 +85,6 @@ public class ExtraClassesMock : DefaultMock {
                 }
             }
             """));
-        
     }
 
 }

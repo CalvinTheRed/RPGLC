@@ -1,8 +1,7 @@
-﻿using com.rpglc.core;
-using com.rpglc.database;
+﻿using com.rpglc.database;
 using com.rpglc.json;
 
-namespace RPGLC.com.rpglc.core;
+namespace com.rpglc.core;
 
 public static class FeatureManager {
 

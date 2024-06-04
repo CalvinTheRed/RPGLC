@@ -1,6 +1,5 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
-using RPGLC.com.rpglc.core;
 
 namespace com.rpglc.core;
 

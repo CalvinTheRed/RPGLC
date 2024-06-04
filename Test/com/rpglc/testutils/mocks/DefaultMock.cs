@@ -3,9 +3,10 @@ using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace com.rpglc.testutils;
+namespace com.rpglc.testutils.mocks;
 
-public class DefaultMock : BeforeAfterTestAttribute {
+public class DefaultMock : BeforeAfterTestAttribute
+{
 
     public override void Before(MethodInfo methodUnderTest)
     {
