@@ -6,7 +6,7 @@ namespace com.rpglc.core;
 public class RPGLClass : DatabaseContent {
 
     public JsonObject? GetNestedClasses() {
-        return GetJsonObject("nested_classes");
+        return GetJsonObject("nested_classes") ?? new();
     }
 
     public RPGLClass SetNestedClasses(JsonObject? nestedClasses) {
@@ -109,7 +109,6 @@ public class RPGLClass : DatabaseContent {
         FeatureManager.GrantGainedEffects(rpglObject, GetStartingFeatures(), choices);
         FeatureManager.GrantGainedEvents(rpglObject, GetStartingFeatures());
         FeatureManager.GrantGainedResources(rpglObject, GetStartingFeatures());
-        DBManager.UpdateRPGLObject(rpglObject);
     }
 
 };

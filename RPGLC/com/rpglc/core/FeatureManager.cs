@@ -36,7 +36,6 @@ public static class FeatureManager {
     public static void GrantGainedEvents(RPGLObject rpglObject, JsonObject gainedFeatures) {
         JsonArray gainedEvents = gainedFeatures.GetJsonArray("events") ?? new();
         rpglObject.GetEvents().AsList().AddRange(gainedEvents.AsList());
-        DBManager.UpdateRPGLObject(rpglObject);
     }
 
     public static void GrantGainedResources(RPGLObject rpglObject, JsonObject gainedFeatures) {
@@ -49,11 +48,10 @@ public static class FeatureManager {
                 GrantGainedResourcesFromObject(rpglObject, new(dict));
             }
         }
-        DBManager.UpdateRPGLObject(rpglObject);
     }
 
     private static void GrantGainedResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
-        rpglObject.AddResource(RPGLFactory.NewResource(resourceDatapackId));
+        rpglObject.GiveResource(RPGLFactory.NewResource(resourceDatapackId));
     }
 
     private static void GrantGainedResourcesFromObject(RPGLObject rpglObject, JsonObject gainedResources) {
@@ -83,7 +81,6 @@ public static class FeatureManager {
     public static void RevokeLostEvents(RPGLObject rpglObject, JsonObject lostFeatures) {
         JsonArray lostEvents = lostFeatures.GetJsonArray("events") ?? new();
         rpglObject.GetEvents().AsList().RemoveAll(lostEvents.Contains);
-        DBManager.UpdateRPGLObject(rpglObject);
     }
 
     public static void RevokeLostResources(RPGLObject rpglObject, JsonObject lostFeatures) {

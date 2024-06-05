@@ -104,7 +104,6 @@ public class FeatureManagerTest {
             rpglObject,
             features.GetJsonObject("gain")
         );
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.NotNull(rpglObject);
         JsonArray events = rpglObject.GetEvents();
         Assert.Equal(2, events.Count());

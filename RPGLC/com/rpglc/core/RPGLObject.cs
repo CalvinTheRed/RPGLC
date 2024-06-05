@@ -1,4 +1,5 @@
 ﻿using com.rpglc.database;
+using com.rpglc.database.TO;
 using com.rpglc.json;
 
 namespace com.rpglc.core;
@@ -218,7 +219,10 @@ public class RPGLObject : TaggableContent {
             JsonObject classData = classes.GetJsonObject(i);
             string classDatapackId = classData.GetString("id");
             classDatapackIds.Add(classDatapackId);
-            foreach (string key in DBManager.QueryRPGLClassByDatapackId(classDatapackId).GetNestedClasses().AsDict().Keys) {
+            RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
+            JsonObject nestedClasses = rpglClass.GetNestedClasses();
+            var keyCollection = nestedClasses.AsDict().Keys;
+            foreach (string key in keyCollection) {
                 nestedClassDatapackIds.Add(key);
             }
             foreach (string key in classData.GetJsonObject("additional_nested_classes").AsDict().Keys) {
@@ -276,7 +280,7 @@ public class RPGLObject : TaggableContent {
         return nestedClassDatapackIds;
     }
 
-    private void LevelUpNestedClasses(string classDatapackId, JsonObject choices) {
+    public void LevelUpNestedClasses(string classDatapackId, JsonObject choices) {
         foreach (string nestedClassDatapackId in GetNestedClassIds(classDatapackId)) {
             RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(nestedClassDatapackId);
             long intendedLevel = CalculateLevelForNestedClass(nestedClassDatapackId);
@@ -297,7 +301,7 @@ public class RPGLObject : TaggableContent {
         }
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices) {
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, bool updateDatabase = true) {
         RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
         if (GetLevel() == 0) {
             rpglClass.GrantStartingFeatures(this, choices);
@@ -305,7 +309,9 @@ public class RPGLObject : TaggableContent {
         rpglClass.LevelUpRPGLObject(this, choices);
         LevelUpNestedClasses(classDatapackId, choices);
         LevelUpRaces(choices, GetLevel());
-        DBManager.UpdateRPGLObject(this);
+        if (updateDatabase) {
+            DBManager.UpdateRPGLObject(this);
+        }
         return this;
     }
 
@@ -333,9 +339,18 @@ public class RPGLObject : TaggableContent {
     // Resource management helper methods.
     // =====================================================================
 
-    public RPGLObject AddResource(RPGLResource rpglResource) {
+    public RPGLObject GiveResource(RPGLResource rpglResource) {
         if (!GetResources().Contains(rpglResource.GetUuid())) {
             GetResources().AddString(rpglResource.GetUuid());
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public RPGLObject TakeResource(long resourceUuid) {
+        if (GetResources().Contains(resourceUuid)) {
+            GetResources().AsList().Remove(resourceUuid);
+            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }

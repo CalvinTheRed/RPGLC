@@ -85,11 +85,14 @@ public class RPGLObjectTemplate : RPGLTemplate {
             string classDatapackId = classData.GetString("id");
             long level = (long) classData.GetInt("level");
             JsonObject choices = classData.GetJsonObject("choices");
+            for (int j = 0; j < level; j++) {
+                rpglObject.LevelUp(classDatapackId, choices, false);
+            }
 
             // re-assign additional nested classes
-            JsonObject additionalNestedClassList = classData.GetJsonObject("additional_nested_classes") ?? new();
-            foreach (string key in additionalNestedClassList.AsDict().Keys) {
-                JsonObject additionalNestedClassData = additionalNestedClassList.GetJsonObject(key);
+            JsonObject additionalNestedClasses = classData.GetJsonObject("additional_nested_classes") ?? new();
+            foreach (string key in additionalNestedClasses.AsDict().Keys) {
+                JsonObject additionalNestedClassData = additionalNestedClasses.GetJsonObject(key);
                 rpglObject.AddAdditionalNestedClass(
                     classDatapackId,
                     key,
@@ -98,10 +101,8 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 );
             }
 
-            // level up
-            for (int j = 0; j < level; j++) {
-                rpglObject.LevelUp(classDatapackId, choices);
-            }
+            // update nested classes
+            rpglObject.LevelUpNestedClasses(classDatapackId, choices);
         }
     }
 
