@@ -1,11 +1,11 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
 using System.Reflection;
+using Xunit.Sdk;
 
 namespace com.rpglc.testutils.mocks;
 
-public class ExtraRacesMock : DefaultMock
-{
+public class ExtraRacesMock : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest)
     {
@@ -44,6 +44,64 @@ public class ExtraRacesMock : DefaultMock
                                     "resource": "test:dummy",
                                     "count": 1
                                 }
+                            ]
+                        }
+                    }
+                }
+            }
+            """));
+        DBManager.InsertRPGLRace(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "Race With Resource Per Level",
+                "description": "A race which grants a dummy resource for its first 5 levels.",
+                "datapack_id": "test:race_with_resource_per_level",
+                "ability_score_bonuses": { },
+                "features": {
+                    "1": {
+                        "gain": {
+                            "effects": [ ],
+                            "events": [ ],
+                            "resources": [
+                                "test:dummy"
+                            ]
+                        }
+                    },
+                    "2": {
+                        "gain": {
+                            "effects": [ ],
+                            "events": [ ],
+                            "resources": [
+                                "test:dummy"
+                            ]
+                        }
+                    },
+                    "3": {
+                        "gain": {
+                            "effects": [ ],
+                            "events": [ ],
+                            "resources": [
+                                "test:dummy"
+                            ]
+                        }
+                    },
+                    "4": {
+                        "gain": {
+                            "effects": [ ],
+                            "events": [ ],
+                            "resources": [
+                                "test:dummy"
+                            ]
+                        }
+                    },
+                    "5": {
+                        "gain": {
+                            "effects": [ ],
+                            "events": [ ],
+                            "resources": [
+                                "test:dummy"
                             ]
                         }
                     }

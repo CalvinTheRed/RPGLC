@@ -10,6 +10,7 @@ namespace Test.com.rpglc.core;
 [Collection("Serial")]
 public class RPGLRaceTest {
 
+    [DefaultMock]
     [ExtraRacesMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "levels up RPGLObject")]

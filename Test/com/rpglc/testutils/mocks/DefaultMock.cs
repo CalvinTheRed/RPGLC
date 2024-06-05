@@ -5,8 +5,7 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils.mocks;
 
-public class DefaultMock : BeforeAfterTestAttribute
-{
+public class DefaultMock : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest)
     {
@@ -31,6 +30,7 @@ public class DefaultMock : BeforeAfterTestAttribute
                 },
                 "name": "Dummy Race",
                 "description": "This race has no features.",
+                "datapack_id": "test:dummy",
                 "ability_score_bonuses": { },
                 "features": { }
             }

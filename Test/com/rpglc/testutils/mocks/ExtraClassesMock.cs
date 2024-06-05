@@ -1,11 +1,11 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
 using System.Reflection;
+using Xunit.Sdk;
 
 namespace com.rpglc.testutils.mocks;
 
-public class ExtraClassesMock : DefaultMock
-{
+public class ExtraClassesMock : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest)
     {

@@ -55,11 +55,14 @@ public class RPGLObjectTest {
         Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
     }
 
+    [DefaultMock]
     [ExtraClassesMock]
+    [ExtraRacesMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "levels up")]
     public void LevelsUp() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        rpglObject.GetRaces().AddString("test:race_with_resource_per_level");
         
         rpglObject.LevelUp("test:class_with_nested_class", new());
         rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
@@ -83,6 +86,8 @@ public class RPGLObjectTest {
         Assert.Equal(2, rpglObject.GetLevel("test:class_with_nested_class"));
         Assert.Equal(2, rpglObject.GetLevel("test:nested_class"));
         Assert.Equal(1, rpglObject.GetLevel("test:additional_nested_class"));
+
+        Assert.Equal(2, rpglObject.GetResources().Count());
     }
 
 };

@@ -9,6 +9,7 @@ namespace com.rpglc.core;
 [Collection("Serial")]
 public class RPGLClassTest {
 
+    [DefaultMock]
     [ExtraClassesMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "grants starting features")]
@@ -45,6 +46,7 @@ public class RPGLClassTest {
         );
     }
 
+    [DefaultMock]
     [ExtraClassesMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "levels up RPGLObject")]
