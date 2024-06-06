@@ -126,7 +126,7 @@ public class DBManager {
 
             Tags = data.GetJsonArray("tags").AsList(),
 
-            Effects = data.GetJsonArray("effects").AsList(),
+            Effects = data.GetJsonObject("effects").AsDict(),
             Events = data.GetJsonArray("events").AsList(),
             Resources = data.GetJsonArray("resources").AsList(),
             Cost = (long) data.GetInt("cost"),
@@ -214,7 +214,7 @@ public class DBManager {
 
             Uuid = rpglItem.GetUuid(),
 
-            Effects = rpglItem.GetEffects().AsList(),
+            Effects = rpglItem.GetEffects().AsDict(),
             Events = rpglItem.GetEvents().AsList(),
             Resources = rpglItem.GetResources().AsList(),
             Cost = rpglItem.GetCost(),
@@ -512,13 +512,9 @@ public class DBManager {
         connection.Collection<RPGLItemTO>("items").Delete(rpglItem.GetId());
 
         // delete contained effects
-        JsonArray effectsBySlot = rpglItem.GetEffects();
-        for (int i = 0; i < effectsBySlot.Count(); i++) {
-            JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
-            JsonArray effectUuidList = effectsForSlot.GetJsonArray("resources");
-            for (int j = 0; j < effectUuidList.Count(); j++) {
-                DeleteRPGLEffectByUuid(effectUuidList.GetString(j));
-            }
+        JsonObject effects = rpglItem.GetEffects();
+        foreach (string uuid in effects.AsDict().Keys) {
+            DeleteRPGLEffectByUuid(uuid);
         }
 
         // delete contained resources
@@ -625,7 +621,7 @@ public class DBManager {
 
             Uuid = rpglItem.GetUuid(),
 
-            Effects = rpglItem.GetEffects().AsList(),
+            Effects = rpglItem.GetEffects().AsDict(),
             Events = rpglItem.GetEvents().AsList(),
             Resources = rpglItem.GetResources().AsList(),
             Cost = rpglItem.GetCost(),

@@ -26,17 +26,14 @@ public class RPGLItemTemplate : RPGLTemplate {
         return rpglItem;
     }
 
-    internal static void ProcessEffects(RPGLItem rpglItem) {
-        JsonArray effectsBySlot = rpglItem.GetEffects();
-        for (int i = 0; i < effectsBySlot.Count(); i++) {
-            JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
-            JsonArray effectDatapackIdList = effectsForSlot.GetJsonArray("effects");
-            JsonArray effectUuidList = new();
-            for (int j = 0; j < effectDatapackIdList.Count(); j++) {
-                effectUuidList.AddString(RPGLFactory.NewEffect(effectDatapackIdList.GetString(j)).GetUuid());
-            }
-            effectsForSlot.PutJsonArray("effects", effectUuidList);
+    private static void ProcessEffects(RPGLItem rpglItem) {
+        JsonObject effects = rpglItem.GetEffects();
+        JsonObject processedEffects = new();
+        foreach (string effectDatapackId in effects.AsDict().Keys) {
+            RPGLEffect rpglEffect = RPGLFactory.NewEffect(effectDatapackId);
+            processedEffects.PutJsonArray(rpglEffect.GetUuid(), effects.GetJsonArray(effectDatapackId));
         }
+        rpglItem.SetEffects(processedEffects);
     }
 
     internal static void ProcessResources(RPGLItem rpglItem) {

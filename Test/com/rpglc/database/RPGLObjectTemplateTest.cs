@@ -47,7 +47,7 @@ public class RPGLObjectTemplateTest {
         Assert.Equal(2L, rpglObject.GetProficiencyBonus());
     }
 
-    [DefaultMock]
+    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
@@ -61,7 +61,7 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
     }
 
-    [DefaultMock]
+    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "populates inventory and equips items")]
     public void PopulatesInventoryAndEquipsItems() {
@@ -83,7 +83,7 @@ public class RPGLObjectTemplateTest {
         Assert.True(inventory.Contains(equippedItems.GetString("offhand")));
     }
 
-    [DefaultMock]
+    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
@@ -98,13 +98,13 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId());
     }
 
-    [ExtraClassesMock]
+    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {
         string objectUuid = "uuid";
         RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:object_with_nested_class_and_additional_nested_class"
+            "test:complex_object"
         ).NewInstance(objectUuid);
 
         Assert.Equal(

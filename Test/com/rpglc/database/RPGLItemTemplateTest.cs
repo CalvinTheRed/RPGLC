@@ -1,4 +1,5 @@
 ﻿using com.rpglc.core;
+using com.rpglc.json;
 using com.rpglc.testutils;
 using com.rpglc.testutils.mocks;
 
@@ -12,9 +13,9 @@ public class RPGLItemTemplateTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
-        string effectUuid = "uuid";
+        string itemUuid = "uuid";
         RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:dummy")
-            .NewInstance(effectUuid);
+            .NewInstance(itemUuid);
 
         Assert.Equal(
             """{"author":"Calvin Withun"}""",
@@ -23,13 +24,44 @@ public class RPGLItemTemplateTest {
         Assert.Equal("Dummy Item", rpglItem.GetName());
         Assert.Equal("This item has no features.", rpglItem.GetDescription());
         Assert.Equal("test:dummy", rpglItem.GetDatapackId());
-        Assert.Equal(effectUuid, rpglItem.GetUuid());
+        Assert.Equal(itemUuid, rpglItem.GetUuid());
         Assert.Equal("""[]""", rpglItem.GetTags().ToString());
         Assert.Equal(1L, rpglItem.GetWeight());
         Assert.Equal(1L, rpglItem.GetCost());
-        Assert.Equal("""[]""", rpglItem.GetEffects().ToString());
+        Assert.Equal("""{}""", rpglItem.GetEffects().ToString());
         Assert.Equal("""[]""", rpglItem.GetEvents().ToString());
         Assert.Equal("""[]""", rpglItem.GetResources().ToString());
+    }
+
+    [DefaultMock, ExtraItemsMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "assigns effects")]
+    public void AssignsEffects() {
+        string itemUuid = "uuid";
+        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:complex_item")
+            .NewInstance(itemUuid);
+
+        JsonObject effects = rpglItem.GetEffects();
+        Assert.Equal(1, effects.Count());
+        string effectUuid = effects.AsDict().Keys.ElementAt(0);
+        RPGLEffect rpglEffect = DBManager.QueryRPGLEffect(x => x.Uuid == effectUuid);
+        Assert.NotNull(rpglEffect);
+        Assert.Equal($"""
+            {'{'}
+              "{rpglEffect.GetUuid()}": [
+                [
+                  "mainhand",
+                  "offhand"
+                ],
+                [
+                  "mainhand"
+                ],
+                [
+                  "offhand"
+                ]
+              ]
+            {'}'}
+            """, effects.PrettyPrint());
     }
 
 };

@@ -127,48 +127,6 @@ public class ExtraClassesMock : BeforeAfterTestAttribute {
             }
             """));
 
-        DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
-            {
-                "metadata": {
-                    "author": "Calvin Withun"
-                },
-                "name": "Object with Nested Class and Additional Nested Class",
-                "description": "This object has a nested class and an additional nested class.",
-                "datapack_id": "test:object_with_nested_class_and_additional_nested_class",
-                "tags": [ ],
-                "ability_scores": {
-                    "str": 10,
-                    "dex": 10,
-                    "con": 10,
-                    "int": 10,
-                    "wis": 10,
-                    "cha": 10
-                },
-                "health_base": 1000,
-                "health_current": 1000,
-                "health_temporary": 0,
-                "equipped_items": { },
-                "inventory": [ ],
-                "classes": [
-                    {
-                        "additional_nested_classes": {
-                            "test:additional_nested_class": {
-                                "scale": 2,
-                                "round_up": false
-                            }
-                        },
-                        "id": "test:class_with_nested_class",
-                        "level": 1,
-                        "choices": { }
-                    }
-                ],
-                "races": [ ],
-                "effects": [ ],
-                "events": [ ],
-                "resources": [ ],
-                "proficiency_bonus": 2
-            }
-            """));
     }
 
 }
