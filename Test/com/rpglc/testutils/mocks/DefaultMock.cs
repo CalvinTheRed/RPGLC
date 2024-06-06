@@ -106,6 +106,45 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "proficiency_bonus": 2
             }
             """));
+        DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "Complex Object",
+                "description": "This object has numerous dummy features.",
+                "datapack_id": "test:complex_object",
+                "tags": [ ],
+                "ability_scores": {
+                    "str": 10,
+                    "dex": 10,
+                    "con": 10,
+                    "int": 10,
+                    "wis": 10,
+                    "cha": 10
+                },
+                "health_base": 1000,
+                "health_current": 1000,
+                "health_temporary": 0,
+                "equipped_items": {
+                    "mainhand": "test:dummy",
+                    "offhand": "test:dummy"
+                },
+                "inventory": [
+                    "test:dummy"
+                ],
+                "classes": [ ],
+                "races": [ ],
+                "effects": [
+                    "test:dummy"
+                ],
+                "events": [ ],
+                "resources": [
+                    "test:dummy"
+                ],
+                "proficiency_bonus": 2
+            }
+            """));
         DBManager.InsertRPGLResourceTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {

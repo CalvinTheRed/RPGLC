@@ -55,7 +55,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         foreach (string key in itemDatapackIdDict.AsDict().Keys) {
             RPGLItem rpglItem = RPGLFactory.NewItem(itemDatapackIdDict.GetString(key));
             itemUuidDict.PutString(key, rpglItem.GetUuid());
-            rpglObject.GiveItem(rpglItem.GetUuid());
+            rpglObject.SetInventory(rpglObject.GetInventory().AddString(rpglItem.GetUuid()));
         }
         rpglObject.SetEquippedItems(itemUuidDict);
     }
@@ -64,12 +64,19 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonArray resourceList = rpglObject.GetResources();
         JsonArray resourceUuidList = new();
         for (int i = 0; i < resourceList.Count(); i++) {
-            JsonObject resourceInstructions = resourceList.GetJsonObject(i);
-            long count = resourceInstructions.GetInt("count") ?? 1L;
-            for (int j = 0; j < count; j++) {
+            var data = resourceList.AsList()[i];
+            if (data is string resourceDatapackId) {
                 resourceUuidList.AddString(
-                    RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
+                    RPGLFactory.NewResource(resourceDatapackId).GetUuid()
                 );
+            } else if (data is Dictionary<string, object> dict) {
+                JsonObject resourceInstructions = resourceList.GetJsonObject(i);
+                long count = resourceInstructions.GetInt("count") ?? 1L;
+                for (int j = 0; j < count; j++) {
+                    resourceUuidList.AddString(
+                        RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
+                    );
+                }
             }
         }
         rpglObject.SetResources(resourceUuidList);
