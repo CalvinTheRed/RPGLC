@@ -364,4 +364,5 @@ public class JsonArrayTest {
         JsonArray json = new();
         Assert.Equal("[]", json.ToString());
     }
-}
+
+};
