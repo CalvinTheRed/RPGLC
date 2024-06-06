@@ -301,21 +301,43 @@ public class RPGLObject : TaggableContent {
         }
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, bool updateDatabase = true) {
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, JsonObject additionalNestedClasses, bool updateDatabase = true) {
         RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
+
+        // level up
         if (GetLevel() == 0) {
             rpglClass.GrantStartingFeatures(this, choices);
         }
         rpglClass.LevelUpRPGLObject(this, choices);
+        
+        // update nested classes
+        foreach (string key in additionalNestedClasses.AsDict().Keys) {
+            JsonObject additionalNestedClassData = additionalNestedClasses.GetJsonObject(key);
+            AddAdditionalNestedClass(
+                classDatapackId,
+                key,
+                additionalNestedClassData.GetInt("scale") ?? 1L,
+                additionalNestedClassData.GetBool("round_up") ?? false
+            );
+        }
         LevelUpNestedClasses(classDatapackId, choices);
+
+        // update race features
         LevelUpRaces(choices, GetLevel());
+
+        // update database
         if (updateDatabase) {
             DBManager.UpdateRPGLObject(this);
         }
+
         return this;
     }
 
-    public void AddAdditionalNestedClass(
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, bool updateDatabase = true) {
+        return LevelUp(classDatapackId, choices, new(), updateDatabase);
+    }
+
+    private void AddAdditionalNestedClass(
             string classDatapackId,
             string additionalNestedClassDatapackId,
             long scale,

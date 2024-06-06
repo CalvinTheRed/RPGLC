@@ -1,4 +1,5 @@
 ﻿using com.rpglc.database;
+using com.rpglc.json;
 using com.rpglc.testutils;
 using com.rpglc.testutils.mocks;
 
@@ -70,17 +71,14 @@ public class RPGLObjectTest {
         Assert.Equal(1, rpglObject.GetLevel("test:class_with_nested_class"));
         Assert.Equal(1, rpglObject.GetLevel("test:nested_class"));
 
-        rpglObject.AddAdditionalNestedClass(
-            "test:class_with_nested_class",
-            "test:additional_nested_class",
-            2L,
-            false
-        );
-        // ^ this method is meant to be called immediately before a level-up,
-        // and will not retro-fit any features or update the database on its own.
-        Assert.Equal(0, rpglObject.GetLevel("test:additional_nested_class"));
-
-        rpglObject.LevelUp("test:class_with_nested_class", new());
+        rpglObject.LevelUp("test:class_with_nested_class", new(), new JsonObject().LoadFromString("""
+            {
+                "test:additional_nested_class": {
+                    "scale": 2,
+                    "round_up": false
+                }
+            }
+            """));
         rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(2, rpglObject.GetLevel());
         Assert.Equal(2, rpglObject.GetLevel("test:class_with_nested_class"));

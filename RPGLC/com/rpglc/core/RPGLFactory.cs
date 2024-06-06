@@ -15,9 +15,9 @@ public static class RPGLFactory {
 
     public static RPGLEffect NewEffect(
             string datapackId,
-            string? source,
-            string? target,
-            JsonArray bonuses
+            JsonArray bonuses,
+            string? source = null,
+            string? target = null
     ) {
         RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
@@ -30,12 +30,8 @@ public static class RPGLFactory {
         return rpglEffect;
     }
 
-    public static RPGLEffect NewEffect(string datapackId, string? source, string? target) {
-        return NewEffect(datapackId, source, target, new());
-    }
-
-    public static RPGLEffect NewEffect(string datapackId) {
-        return NewEffect(datapackId, null, null, new());
+    public static RPGLEffect NewEffect(string datapackId, string? source = null, string? target = null) {
+        return NewEffect(datapackId, new(), source, target);
     }
 
     public static RPGLEvent NewEvent(string datapackId, JsonArray bonuses) {
