@@ -17,7 +17,7 @@ public class RPGLEffectTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLEffect NewInstance(long uuid) {
+    public RPGLEffect NewInstance(string uuid) {
         RPGLEffect rpglEffect = (RPGLEffect) new RPGLEffect().SetUuid(uuid);
         Setup(rpglEffect);
 

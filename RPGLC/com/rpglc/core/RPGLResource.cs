@@ -13,12 +13,12 @@ public class RPGLResource : TaggableContent {
         return this;
     }
 
-    public long? GetOriginItem() {
-        return GetInt("origin_item");
+    public string? GetOriginItem() {
+        return GetString("origin_item");
     }
 
-    public RPGLResource SetOriginItem(long? originItem) {
-        PutInt("origin_item", originItem);
+    public RPGLResource SetOriginItem(string? originItem) {
+        PutString("origin_item", originItem);
         return this;
     }
 

@@ -17,7 +17,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLObject NewInstance(long uuid) {
+    public RPGLObject NewInstance(string uuid) {
         RPGLObject rpglObject = (RPGLObject) new RPGLObject().SetUuid(uuid);
         Setup(rpglObject);
         ProcessEffects(rpglObject);
@@ -44,7 +44,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonArray itemDatapackIdList = rpglObject.GetInventory();
         JsonArray itemUuidList = new();
         for (int i = 0; i < itemDatapackIdList.Count(); i++) {
-            itemUuidList.AddInt(RPGLFactory.NewItem(itemDatapackIdList.GetString(i)).GetUuid());
+            itemUuidList.AddString(RPGLFactory.NewItem(itemDatapackIdList.GetString(i)).GetUuid());
         }
         rpglObject.SetInventory(itemUuidList);
     }
@@ -54,8 +54,8 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonObject itemUuidDict = new();
         foreach (string key in itemDatapackIdDict.AsDict().Keys) {
             RPGLItem rpglItem = RPGLFactory.NewItem(itemDatapackIdDict.GetString(key));
-            itemUuidDict.PutInt(key, rpglItem.GetUuid());
-            rpglObject.GiveItem(rpglItem.GetUuid());
+            itemUuidDict.PutString(key, rpglItem.GetUuid());
+            rpglObject.SetInventory(rpglObject.GetInventory().AddString(rpglItem.GetUuid()));
         }
         rpglObject.SetEquippedItems(itemUuidDict);
     }
@@ -64,12 +64,19 @@ public class RPGLObjectTemplate : RPGLTemplate {
         JsonArray resourceList = rpglObject.GetResources();
         JsonArray resourceUuidList = new();
         for (int i = 0; i < resourceList.Count(); i++) {
-            JsonObject resourceInstructions = resourceList.GetJsonObject(i);
-            long count = resourceInstructions.GetInt("count") ?? 1L;
-            for (int j = 0; j < count; j++) {
-                resourceUuidList.AddInt(
-                    RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
+            var data = resourceList.AsList()[i];
+            if (data is string resourceDatapackId) {
+                resourceUuidList.AddString(
+                    RPGLFactory.NewResource(resourceDatapackId).GetUuid()
                 );
+            } else if (data is Dictionary<string, object> dict) {
+                JsonObject resourceInstructions = resourceList.GetJsonObject(i);
+                long count = resourceInstructions.GetInt("count") ?? 1L;
+                for (int j = 0; j < count; j++) {
+                    resourceUuidList.AddString(
+                        RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
+                    );
+                }
             }
         }
         rpglObject.SetResources(resourceUuidList);
@@ -78,6 +85,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
     internal static void ProcessClasses(RPGLObject rpglObject) {
         JsonArray classList = rpglObject.GetClasses();
         rpglObject.SetClasses(new());
+
         // set classes and nested classes
         for (int i = 0; i < classList.Count(); i++) {
             JsonObject classData = classList.GetJsonObject(i);
@@ -85,21 +93,13 @@ public class RPGLObjectTemplate : RPGLTemplate {
             long level = (long) classData.GetInt("level");
             JsonObject choices = classData.GetJsonObject("choices");
             for (int j = 0; j < level; j++) {
-                rpglObject.LevelUp(classDatapackId, choices);
-            }
-            // re-assign additional nested classes
-            JsonObject additionalNestedClassList = classData.GetJsonObject("additional_nested_classes") ?? new();
-            foreach (string key in additionalNestedClassList.AsDict().Keys) {
-                JsonObject additionalNestedClassData = additionalNestedClassList.GetJsonObject(key);
-                rpglObject.AddAdditionalNestedClass(
+                rpglObject.LevelUp(
                     classDatapackId,
-                    key,
-                    additionalNestedClassData.GetInt("scale") ?? 1L,
-                    additionalNestedClassData.GetBool("round_up") ?? false
+                    choices,
+                    classData.RemoveJsonObject("additional_nested_classes") ?? new(),
+                    false
                 );
             }
-            // update nested classes
-            rpglObject.LevelUpNestedClasses(classDatapackId, choices);
         }
     }
 

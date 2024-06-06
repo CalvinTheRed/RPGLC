@@ -1,0 +1,91 @@
+﻿using com.rpglc.database;
+using com.rpglc.json;
+using com.rpglc.testutils;
+using com.rpglc.testutils.mocks;
+
+namespace com.rpglc.core;
+
+[AssignDatabase]
+[Collection("Serial")]
+public class RPGLObjectTest {
+
+    [DefaultMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "manipulates item in inventory")]
+    public void GivesAndTakesItems() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
+
+        // give item
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(1, rpglObject.GetInventory().Count());
+        Assert.Equal(rpglItem.GetUuid(), rpglObject.GetInventory().GetString(0));
+
+        // give item again
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(1, rpglObject.GetInventory().Count());
+        Assert.Equal(rpglItem.GetUuid(), rpglObject.GetInventory().GetString(0));
+
+        // equip item
+        rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(1, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+        Assert.Equal(
+            rpglItem.GetUuid(),
+            rpglObject.GetEquippedItems().GetString("mainhand")
+        );
+
+        // unequip item
+        rpglObject.UnequipItem("mainhand");
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+
+        // take item
+        rpglObject.TakeItem(rpglItem.GetUuid());
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(0, rpglObject.GetInventory().Count());
+
+        // give, equip, and take item
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
+        rpglObject.TakeItem(rpglItem.GetUuid());
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(0, rpglObject.GetInventory().Count());
+        Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+    }
+
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraRacesMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "levels up")]
+    public void LevelsUp() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        rpglObject.GetRaces().AddString("test:race_with_resource_per_level");
+        
+        rpglObject.LevelUp("test:class_with_nested_class", new());
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(1, rpglObject.GetLevel());
+        Assert.Equal(1, rpglObject.GetLevel("test:class_with_nested_class"));
+        Assert.Equal(1, rpglObject.GetLevel("test:nested_class"));
+
+        rpglObject.LevelUp("test:class_with_nested_class", new(), new JsonObject().LoadFromString("""
+            {
+                "test:additional_nested_class": {
+                    "scale": 2,
+                    "round_up": false
+                }
+            }
+            """));
+        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
+        Assert.Equal(2, rpglObject.GetLevel());
+        Assert.Equal(2, rpglObject.GetLevel("test:class_with_nested_class"));
+        Assert.Equal(2, rpglObject.GetLevel("test:nested_class"));
+        Assert.Equal(1, rpglObject.GetLevel("test:additional_nested_class"));
+
+        Assert.Equal(2, rpglObject.GetResources().Count());
+    }
+
+};

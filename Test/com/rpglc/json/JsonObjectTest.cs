@@ -687,4 +687,5 @@ public class JsonObjectTest {
         JsonObject json = new();
         Assert.Equal("{}", json.ToString());
     }
-}
+
+};

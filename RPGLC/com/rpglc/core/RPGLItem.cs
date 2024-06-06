@@ -4,12 +4,21 @@ namespace com.rpglc.core;
 
 public class RPGLItem : TaggableContent {
 
-    public JsonArray GetEffects() {
-        return GetJsonArray("effects");
+    public JsonObject GetEffects() {
+        return GetJsonObject("effects");
     }
 
-    public RPGLItem SetEffects(JsonArray effects) {
-        PutJsonArray("effects", effects);
+    public RPGLItem SetEffects(JsonObject effects) {
+        PutJsonObject("effects", effects);
+        return this;
+    }
+
+    public JsonObject GetResources() {
+        return GetJsonObject("resources");
+    }
+
+    public RPGLItem SetResources(JsonObject resources) {
+        PutJsonObject("resources", resources);
         return this;
     }
 
@@ -19,15 +28,6 @@ public class RPGLItem : TaggableContent {
 
     public RPGLItem SetEvents(JsonArray events) {
         PutJsonArray("events", events);
-        return this;
-    }
-
-    public JsonArray GetResources() {
-        return GetJsonArray("resources");
-    }
-
-    public RPGLItem SetResources(JsonArray resources) {
-        PutJsonArray("resources", resources);
         return this;
     }
 

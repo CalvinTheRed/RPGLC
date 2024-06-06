@@ -13,9 +13,9 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
     public List<object> Races { get; set; }
     public List<object> Resources { get; set; }
     public List<object> Rotation { get; set; }
+    public string? OriginObject { get; set; }
+    public string? ProxyObject { get; set; }
     public string UserId { get; set; }
-    public long? OriginObject { get; set; }
-    public long? ProxyObject { get; set; }
     public long HealthBase { get; set; }
     public long HealthCurrent { get; set; }
     public long HealthTemporary { get; set; }
@@ -33,9 +33,9 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
         template.PutJsonArray("races", new JsonArray(Races));
         template.PutJsonArray("resources", new JsonArray(Resources));
         template.PutJsonArray("rotation", new JsonArray(Rotation));
+        template.PutString("origin_object", OriginObject);
+        template.PutString("proxy_object", ProxyObject);
         template.PutString("user_id", UserId);
-        template.PutInt("origin_object", OriginObject);
-        template.PutInt("proxy_object", ProxyObject);
         template.PutInt("health_base", HealthBase);
         template.PutInt("health_current", HealthCurrent);
         template.PutInt("health_temporary", HealthTemporary);

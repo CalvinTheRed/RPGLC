@@ -1,68 +1,73 @@
-﻿using com.rpglc.core;
-using com.rpglc.database;
+﻿using com.rpglc.database;
 using com.rpglc.json;
 
-namespace RPGLC.com.rpglc.core;
+namespace com.rpglc.core;
 
 public static class FeatureManager {
 
     public static void GrantGainedEffects(RPGLObject rpglObject, JsonObject gainedFeatures, JsonObject choices) {
-        JsonArray effects = gainedFeatures.GetJsonArray("effects") ?? new();
-        for (int i = 0; i < effects.Count(); i++) {
-            var effectElement = effects.AsList()[i];
-            if (effectElement is string effectDatapackId) {
-                _ = RPGLFactory.NewEffect(
-                    effectDatapackId,
-                    rpglObject.GetUuid(),
-                    rpglObject.GetUuid()
-                );
-            } else if (effectElement is Dictionary<string, object>) {
-                JsonObject effectsAlternatives = effects.GetJsonObject(i);
-                string name = effectsAlternatives.GetString("name");
-                long count = effectsAlternatives.GetInt("count") ?? 1L;
-                JsonArray options = effectsAlternatives.GetJsonArray("options");
-                JsonArray choiceIndices = new();
-                foreach (string key in choices.AsDict().Keys) {
-                    if (name == key) {
-                        choiceIndices = choices.GetJsonArray(key);
-                        break;
-                    }
-                }
-                for (int j = 0; j < count; j++) {
-                    _ = RPGLFactory.NewEffect(
-                        options.GetString((int) choiceIndices.GetInt(j)),
-                        rpglObject.GetUuid(),
-                        rpglObject.GetUuid()
-                    );
-                }
+        JsonArray gainedEffects = gainedFeatures.GetJsonArray("effects") ?? new();
+        for (int i = 0; i < gainedEffects.Count(); i++) {
+            var data = gainedEffects.AsList()[i];
+            if (data is string effectDatapackId) {
+                GrantGainedEffectFromString(rpglObject, effectDatapackId);
+            } else if (data is Dictionary<string, object> dict) {
+                GrantGainedEffectsFromObject(rpglObject, choices, new(dict));
             }
         }
     }
 
+    private static void GrantGainedEffectFromString(RPGLObject rpglObject, string effectDatapackId) {
+        _ = RPGLFactory.NewEffect(effectDatapackId,rpglObject.GetUuid(),rpglObject.GetUuid());
+    }
+
+    private static void GrantGainedEffectsFromObject(RPGLObject rpglObject, JsonObject choices, JsonObject gainedEffects) {
+        string decisionName = gainedEffects.GetString("name");
+        long numDecisions = gainedEffects.GetInt("count") ?? 1L;
+        JsonArray options = gainedEffects.GetJsonArray("options");
+        for (int i = 0; i < numDecisions; i++) {
+            GrantGainedEffectFromString(
+                rpglObject,
+                options.GetString((int) choices.GetJsonArray(decisionName).GetInt(i))
+            );
+        }
+    }
+
     public static void GrantGainedEvents(RPGLObject rpglObject, JsonObject gainedFeatures) {
-        JsonArray events = gainedFeatures.GetJsonArray("events") ?? new();
-        rpglObject.GetEvents().AsList().AddRange(events.AsList());
+        JsonArray gainedEvents = gainedFeatures.GetJsonArray("events") ?? new();
+        rpglObject.GetEvents().AsList().AddRange(gainedEvents.AsList());
     }
 
     public static void GrantGainedResources(RPGLObject rpglObject, JsonObject gainedFeatures) {
-        JsonArray resources = gainedFeatures.GetJsonArray("resources") ?? new();
-        for (int i = 0; i < resources.Count(); i++) {
-            JsonObject resourceData = resources.GetJsonObject(i);
-            long count = resourceData.GetInt("count") ?? 1L;
-            for (int j = 0; j < count; j++) {
-                RPGLResource rpglResource = RPGLFactory.NewResource(resourceData.GetString("resource"));
-                rpglObject.AddResource(rpglResource);
+        JsonArray gainedResources = gainedFeatures.GetJsonArray("resources") ?? new();
+        for (int i = 0; i < gainedResources.Count(); i++) {
+            var data = gainedResources.AsList()[i];
+            if (data is string resourceDatapackId) {
+                GrantGainedResourceFromString(rpglObject, resourceDatapackId);
+            } else if (data is Dictionary<string, object> dict) {
+                GrantGainedResourcesFromObject(rpglObject, new(dict));
             }
+        }
+    }
+
+    private static void GrantGainedResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
+        rpglObject.GiveResource(RPGLFactory.NewResource(resourceDatapackId));
+    }
+
+    private static void GrantGainedResourcesFromObject(RPGLObject rpglObject, JsonObject gainedResources) {
+        long count = gainedResources.GetInt("count") ?? 1L;
+        for (int i = 0; i < count; i++) {
+            GrantGainedResourceFromString(rpglObject, gainedResources.GetString("resource"));
         }
     }
 
     public static void RevokeLostEffects(RPGLObject rpglObject, JsonObject lostFeatures) {
         JsonArray lostEffects = lostFeatures.GetJsonArray("effects") ?? new();
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x =>
-            x.Target == rpglObject.GetUuid()
-        );
         for (int i = 0; i < lostEffects.Count(); i++) {
             string lostEffectDatapackId = lostEffects.GetString(i);
+            List<RPGLEffect> effects = DBManager.QueryRPGLEffects(
+                x => x.Target == rpglObject.GetUuid()
+            );
             for (int j = 0; j < effects.Count; j++) {
                 RPGLEffect effect = effects[j];
                 if (lostEffectDatapackId == effect.GetDatapackId()) {
@@ -80,26 +85,33 @@ public static class FeatureManager {
 
     public static void RevokeLostResources(RPGLObject rpglObject, JsonObject lostFeatures) {
         JsonArray lostResources = lostFeatures.GetJsonArray("resources") ?? new();
-        JsonArray resourceUuidList = rpglObject.GetResources();
         for (int i = 0; i < lostResources.Count(); i++) {
-            // TODO make this work with counts similar to gaining?
-            string lostResourceDatapackId = lostResources.GetString(i);
-            List<RPGLResource> resources = DBManager.QueryRPGLResources(x =>
-                x.DatapackId == lostResourceDatapackId
-                // TODO can this query be such that only resources with a uuid contained in resourceUuidList are returned?
-            );
-            RPGLResource? rpglResource = null;
-            foreach (RPGLResource _ in resources) {
-                if (resourceUuidList.Contains(_.GetUuid())) {
-                    rpglResource = _;
-                    break;
-                }
+            var data = lostResources.AsList()[i];
+            if (data is string resourceDatapackId) {
+                RevokeLostResourceFromString(rpglObject, resourceDatapackId);
+            } else if (data is Dictionary<string, object> dict) {
+                RevokeLostResourcesFromObject(rpglObject, new(dict));
             }
-            if (rpglResource is not null) {
+        }
+    }
+
+    private static void RevokeLostResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
+        List<RPGLResource> resources = DBManager.QueryRPGLResources(
+            x => x.DatapackId == resourceDatapackId
+        );
+        foreach (RPGLResource rpglResource in resources) {
+            if (rpglObject.GetResources().Contains(rpglResource.GetUuid())) {
+                rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
+                DBManager.UpdateRPGLObject(rpglObject);
                 DBManager.DeleteRPGLResource(rpglResource);
-            } else {
                 break;
             }
+        }
+    }
+
+    private static void RevokeLostResourcesFromObject(RPGLObject rpglObject, JsonObject lostResources) {
+        for (int i = 0; i < lostResources.GetInt("count"); i++) {
+            RevokeLostResourceFromString(rpglObject, lostResources.GetString("resource"));
         }
     }
 

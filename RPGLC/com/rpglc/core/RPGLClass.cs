@@ -1,9 +1,18 @@
-﻿using com.rpglc.json;
-using RPGLC.com.rpglc.core;
+﻿using com.rpglc.database;
+using com.rpglc.json;
 
 namespace com.rpglc.core;
 
 public class RPGLClass : DatabaseContent {
+
+    public JsonObject? GetNestedClasses() {
+        return GetJsonObject("nested_classes") ?? new();
+    }
+
+    public RPGLClass SetNestedClasses(JsonObject? nestedClasses) {
+        PutJsonObject("nested_classes", nestedClasses);
+        return this;
+    }
 
     public JsonObject? GetStartingFeatures() {
         return GetJsonObject("starting_features");
@@ -20,15 +29,6 @@ public class RPGLClass : DatabaseContent {
 
     public RPGLClass SetFeatures(JsonObject features) {
         PutJsonObject("features", features);
-        return this;
-    }
-
-    public JsonObject GetNestedClasses() {
-        return GetJsonObject("nested_classes");
-    }
-
-    public RPGLClass SetNestedClasses(JsonObject nestedClasses) {
-        PutJsonObject("nested_classes", nestedClasses);
         return this;
     }
 
@@ -66,7 +66,7 @@ public class RPGLClass : DatabaseContent {
     public void LevelUpRPGLObject(RPGLObject rpglObject, JsonObject choices) {
         long level = IncrementRPGLObjectLevel(rpglObject);
         JsonObject features = GetFeatures().GetJsonObject($"{level}");
-        if (features != null) {
+        if (features is not null) {
             JsonObject gainedFeatures = features.GetJsonObject("gain") ?? new();
             FeatureManager.GrantGainedEffects(rpglObject, gainedFeatures, choices);
             FeatureManager.GrantGainedEvents(rpglObject, gainedFeatures);
@@ -109,7 +109,6 @@ public class RPGLClass : DatabaseContent {
         FeatureManager.GrantGainedEffects(rpglObject, GetStartingFeatures(), choices);
         FeatureManager.GrantGainedEvents(rpglObject, GetStartingFeatures());
         FeatureManager.GrantGainedResources(rpglObject, GetStartingFeatures());
-        LevelUpRPGLObject(rpglObject, choices);
     }
 
 };

@@ -31,12 +31,12 @@ public class RPGLEvent : DatabaseContent {
         return this;
     }
 
-    public long? GetOriginItem() {
-        return GetInt("origin_item");
+    public string? GetOriginItem() {
+        return GetString("origin_item");
     }
 
-    public RPGLEvent SetOriginItem(long? originItem) {
-        PutInt("origin_item", originItem);
+    public RPGLEvent SetOriginItem(string? originItem) {
+        PutString("origin_item", originItem);
         return this;
     }
 

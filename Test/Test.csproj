@@ -31,10 +31,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="com\rpglc\database\" />
-    <Folder Include="com\rpglc\core\" />
-    <Folder Include="com\rpglc\math\" />
-  </ItemGroup>
-
 </Project>

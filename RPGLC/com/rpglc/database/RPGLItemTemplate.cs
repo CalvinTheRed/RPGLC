@@ -17,7 +17,7 @@ public class RPGLItemTemplate : RPGLTemplate {
         return new(base.ApplyBonuses(bonuses));
     }
 
-    public RPGLItem NewInstance(long uuid) {
+    public RPGLItem NewInstance(string uuid) {
         RPGLItem rpglItem = (RPGLItem) new RPGLItem().SetUuid(uuid);
         Setup(rpglItem);
         ProcessEffects(rpglItem);
@@ -26,32 +26,28 @@ public class RPGLItemTemplate : RPGLTemplate {
         return rpglItem;
     }
 
-    internal static void ProcessEffects(RPGLItem rpglItem) {
-        JsonArray effectsBySlot = rpglItem.GetEffects();
-        for (int i = 0; i < effectsBySlot.Count(); i++) {
-            JsonObject effectsForSlot = effectsBySlot.GetJsonObject(i);
-            JsonArray effectDatapackIdList = effectsForSlot.GetJsonArray("effects");
-            JsonArray effectUuidList = new();
-            for (int j = 0; j < effectDatapackIdList.Count(); j++) {
-                effectUuidList.AddInt(RPGLFactory.NewEffect(effectDatapackIdList.GetString(j)).GetUuid());
-            }
-            effectsForSlot.PutJsonArray("effects", effectUuidList);
+    private static void ProcessEffects(RPGLItem rpglItem) {
+        JsonObject effects = rpglItem.GetEffects();
+        JsonObject processedEffects = new();
+        foreach (string effectDatapackId in effects.AsDict().Keys) {
+            RPGLEffect rpglEffect = RPGLFactory.NewEffect(effectDatapackId);
+            processedEffects.PutJsonArray(rpglEffect.GetUuid(), effects.GetJsonArray(effectDatapackId));
         }
+        rpglItem.SetEffects(processedEffects);
     }
 
     internal static void ProcessResources(RPGLItem rpglItem) {
-        JsonArray resourcesBySlot = rpglItem.GetResources();
-        for (int i = 0; i < resourcesBySlot.Count(); i++) {
-            JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
-            JsonArray resourceDatapackIdList = resourcesForSlot.GetJsonArray("resources");
-            JsonArray resourceUuidList = new();
-            for (int j = 0; j < resourceDatapackIdList.Count(); j++) {
-                string resourceDatapackId = resourceDatapackIdList.GetString(j);
+        JsonObject resources = rpglItem.GetResources();
+        JsonObject processedResources = new();
+        foreach (string resourceDatapackId in resources.AsDict().Keys) {
+            JsonObject resourceData = resources.GetJsonObject(resourceDatapackId);
+            long count = resourceData.RemoveInt("count") ?? 1L;
+            for (int i = 0; i < count; i++) {
                 RPGLResource rpglResource = RPGLFactory.NewResource(resourceDatapackId);
-                resourceUuidList.AddInt(rpglResource.GetUuid());
+                processedResources.PutJsonArray(rpglResource.GetUuid(), resourceData.GetJsonArray("slots"));
             }
-            resourcesForSlot.PutJsonArray("resources", resourceUuidList);
         }
+        rpglItem.SetResources(processedResources);
     }
 
 };
