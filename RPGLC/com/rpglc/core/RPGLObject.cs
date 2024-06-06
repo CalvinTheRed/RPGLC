@@ -292,7 +292,7 @@ public class RPGLObject : TaggableContent {
         }
     }
 
-    internal void LevelUpRaces(JsonObject choices, long level) {
+    private void LevelUpRaces(JsonObject choices, long level) {
         JsonArray races = GetRaces();
         for (int i = 0; i < races.Count(); i++) {
             string raceDatapackId = races.GetString(i);
