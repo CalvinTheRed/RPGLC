@@ -7,8 +7,7 @@ namespace com.rpglc.testutils.mocks;
 
 public class DefaultMock : BeforeAfterTestAttribute {
 
-    public override void Before(MethodInfo methodUnderTest)
-    {
+    public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
         DBManager.InsertRPGLClass(new JsonObject().LoadFromString("""

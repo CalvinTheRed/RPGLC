@@ -27,4 +27,41 @@ public class RPGLEventTemplateTest {
         Assert.Equal("""[]""", rpglEvent.GetSubevents().ToString());
     }
 
+    [ExtraEventsMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "assigns cost")]
+    public void AssignsCost() {
+        RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:event_with_cost")
+            .NewInstance();
+
+        Assert.Equal(
+            """
+            [
+              {
+                "minimum_potency": 2,
+                "resource_tags": [
+                  "tag"
+                ],
+                "scale": [ ]
+              },
+              {
+                "minimum_potency": 2,
+                "resource_tags": [
+                  "tag"
+                ],
+                "scale": [ ]
+              },
+              {
+                "minimum_potency": 2,
+                "resource_tags": [
+                  "tag"
+                ],
+                "scale": [ ]
+              }
+            ]
+            """,
+            rpglEvent.GetCost().PrettyPrint()
+        );
+    }
+
 };
