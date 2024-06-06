@@ -301,7 +301,7 @@ public class RPGLObject : TaggableContent {
         }
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, JsonObject additionalNestedClasses, bool updateDatabase = true) {
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, JsonObject additionalNestedClasses) {
         RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
 
         // level up
@@ -325,16 +325,12 @@ public class RPGLObject : TaggableContent {
         // update race features
         LevelUpRaces(choices, GetLevel());
 
-        // update database
-        if (updateDatabase) {
-            DBManager.UpdateRPGLObject(this);
-        }
-
+        DBManager.UpdateRPGLObject(this);
         return this;
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, bool updateDatabase = true) {
-        return LevelUp(classDatapackId, choices, new(), updateDatabase);
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices) {
+        return LevelUp(classDatapackId, choices, new());
     }
 
     private void AddAdditionalNestedClass(

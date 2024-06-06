@@ -102,10 +102,7 @@ public class RPGLObjectTemplateTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {
-        string objectUuid = "uuid";
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:complex_object"
-        ).NewInstance(objectUuid);
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
 
         Assert.Equal(
             """

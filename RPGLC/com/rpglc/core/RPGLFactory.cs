@@ -74,6 +74,7 @@ public static class RPGLFactory {
 
         DBManager.InsertRPGLObject(rpglObject);
         rpglObject.SetId(DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetUuid()).GetId());
+        RPGLObjectTemplate.ProcessClasses(rpglObject);
         return rpglObject;
     }
 

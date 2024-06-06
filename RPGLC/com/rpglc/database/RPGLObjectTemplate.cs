@@ -24,7 +24,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         ProcessInventory(rpglObject);
         ProcessEquippedItems(rpglObject);
         ProcessResources(rpglObject);
-        ProcessClasses(rpglObject);
+        //ProcessClasses(rpglObject);
 
         return rpglObject;
     }
@@ -82,7 +82,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetResources(resourceUuidList);
     }
 
-    internal static void ProcessClasses(RPGLObject rpglObject) {
+    public static void ProcessClasses(RPGLObject rpglObject) {
         JsonArray classList = rpglObject.GetClasses();
         rpglObject.SetClasses(new());
 
@@ -96,8 +96,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 rpglObject.LevelUp(
                     classDatapackId,
                     choices,
-                    classData.RemoveJsonObject("additional_nested_classes") ?? new(),
-                    false
+                    classData.RemoveJsonObject("additional_nested_classes") ?? new()
                 );
             }
         }
