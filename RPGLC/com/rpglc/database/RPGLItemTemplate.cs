@@ -37,18 +37,17 @@ public class RPGLItemTemplate : RPGLTemplate {
     }
 
     internal static void ProcessResources(RPGLItem rpglItem) {
-        JsonArray resourcesBySlot = rpglItem.GetResources();
-        for (int i = 0; i < resourcesBySlot.Count(); i++) {
-            JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
-            JsonArray resourceDatapackIdList = resourcesForSlot.GetJsonArray("resources");
-            JsonArray resourceUuidList = new();
-            for (int j = 0; j < resourceDatapackIdList.Count(); j++) {
-                string resourceDatapackId = resourceDatapackIdList.GetString(j);
+        JsonObject resources = rpglItem.GetResources();
+        JsonObject processedResources = new();
+        foreach (string resourceDatapackId in resources.AsDict().Keys) {
+            JsonObject resourceData = resources.GetJsonObject(resourceDatapackId);
+            long count = resourceData.RemoveInt("count") ?? 1L;
+            for (int i = 0; i < count; i++) {
                 RPGLResource rpglResource = RPGLFactory.NewResource(resourceDatapackId);
-                resourceUuidList.AddString(rpglResource.GetUuid());
+                processedResources.PutJsonArray(rpglResource.GetUuid(), resourceData.GetJsonArray("slots"));
             }
-            resourcesForSlot.PutJsonArray("resources", resourceUuidList);
         }
+        rpglItem.SetResources(processedResources);
     }
 
 };

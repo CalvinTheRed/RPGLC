@@ -30,7 +30,7 @@ public class RPGLItemTemplateTest {
         Assert.Equal(1L, rpglItem.GetCost());
         Assert.Equal("""{}""", rpglItem.GetEffects().ToString());
         Assert.Equal("""[]""", rpglItem.GetEvents().ToString());
-        Assert.Equal("""[]""", rpglItem.GetResources().ToString());
+        Assert.Equal("""{}""", rpglItem.GetResources().ToString());
     }
 
     [DefaultMock, ExtraItemsMock]
@@ -62,6 +62,37 @@ public class RPGLItemTemplateTest {
               ]
             {'}'}
             """, effects.PrettyPrint());
+    }
+
+    [DefaultMock, ExtraItemsMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "assigns resources")]
+    public void AssignsResources() {
+        string itemUuid = "uuid";
+        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:complex_item")
+            .NewInstance(itemUuid);
+
+        JsonObject resources = rpglItem.GetResources();
+        Assert.Equal(1, resources.Count());
+        string resourceUuid = resources.AsDict().Keys.ElementAt(0);
+        RPGLResource rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid);
+        Assert.NotNull(rpglResource);
+        Assert.Equal($"""
+            {'{'}
+              "{rpglResource.GetUuid()}": [
+                [
+                  "mainhand",
+                  "offhand"
+                ],
+                [
+                  "mainhand"
+                ],
+                [
+                  "offhand"
+                ]
+              ]
+            {'}'}
+            """, resources.PrettyPrint());
     }
 
 };

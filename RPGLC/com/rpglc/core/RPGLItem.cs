@@ -13,21 +13,21 @@ public class RPGLItem : TaggableContent {
         return this;
     }
 
+    public JsonObject GetResources() {
+        return GetJsonObject("resources");
+    }
+
+    public RPGLItem SetResources(JsonObject resources) {
+        PutJsonObject("resources", resources);
+        return this;
+    }
+
     public JsonArray GetEvents() {
         return GetJsonArray("events");
     }
 
     public RPGLItem SetEvents(JsonArray events) {
         PutJsonArray("events", events);
-        return this;
-    }
-
-    public JsonArray GetResources() {
-        return GetJsonArray("resources");
-    }
-
-    public RPGLItem SetResources(JsonArray resources) {
-        PutJsonArray("resources", resources);
         return this;
     }
 

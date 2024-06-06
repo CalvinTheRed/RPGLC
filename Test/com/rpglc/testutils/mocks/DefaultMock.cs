@@ -72,7 +72,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "cost": 1,
                 "effects": { },
                 "events": [ ],
-                "resources": [ ]
+                "resources": { }
             }
             """));
         DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""

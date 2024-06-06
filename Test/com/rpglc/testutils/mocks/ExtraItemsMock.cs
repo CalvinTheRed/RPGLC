@@ -29,7 +29,16 @@ public class ExtraItemsMock : BeforeAfterTestAttribute {
                     ]
                 },
                 "events": [ ],
-                "resources": [ ]
+                "resources": {
+                    "test:dummy": {
+                        "count": 1,
+                        "slots": [
+                            [ "mainhand", "offhand" ],
+                            [ "mainhand" ],
+                            [ "offhand" ]
+                        ]
+                    }
+                }
             }
             """));
 

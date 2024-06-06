@@ -127,8 +127,8 @@ public class DBManager {
             Tags = data.GetJsonArray("tags").AsList(),
 
             Effects = data.GetJsonObject("effects").AsDict(),
+            Resources = data.GetJsonObject("resources").AsDict(),
             Events = data.GetJsonArray("events").AsList(),
-            Resources = data.GetJsonArray("resources").AsList(),
             Cost = (long) data.GetInt("cost"),
             Weight = (long) data.GetInt("weight"),
         });
@@ -215,8 +215,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Resources = rpglItem.GetResources().AsDict(),
             Events = rpglItem.GetEvents().AsList(),
-            Resources = rpglItem.GetResources().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });
@@ -518,13 +518,9 @@ public class DBManager {
         }
 
         // delete contained resources
-        JsonArray resourcesBySlot = rpglItem.GetResources();
-        for (int i = 0; i < resourcesBySlot.Count(); i++) {
-            JsonObject resourcesForSlot = resourcesBySlot.GetJsonObject(i);
-            JsonArray resourceUuidList = resourcesForSlot.GetJsonArray("resources");
-            for (int j = 0; j < resourceUuidList.Count(); j++) {
-                DeleteRPGLResourceByUuid(resourceUuidList.GetString(j));
-            }
+        JsonObject resources = rpglItem.GetResources();
+        foreach (string uuid in resources.AsDict().Keys) {
+            DeleteRPGLResourceByUuid(uuid);
         }
     }
 
@@ -622,8 +618,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Resources = rpglItem.GetResources().AsDict(),
             Events = rpglItem.GetEvents().AsList(),
-            Resources = rpglItem.GetResources().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });
