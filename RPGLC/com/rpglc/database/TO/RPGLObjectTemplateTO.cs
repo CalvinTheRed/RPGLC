@@ -14,12 +14,12 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
     public List<object> Resources { get; set; }
     public List<object> Rotation { get; set; }
     public string? OriginObject { get; set; }
-    public string? ProxyObject { get; set; }
     public string UserId { get; set; }
     public long HealthBase { get; set; }
     public long HealthCurrent { get; set; }
     public long HealthTemporary { get; set; }
     public long ProficiencyBonus { get; set; }
+    public bool? Proxy { get; set; }
 
     public RPGLObjectTemplate ToTemplate() {
         RPGLObjectTemplate template = new();
@@ -34,12 +34,12 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
         template.PutJsonArray("resources", new JsonArray(Resources));
         template.PutJsonArray("rotation", new JsonArray(Rotation));
         template.PutString("origin_object", OriginObject);
-        template.PutString("proxy_object", ProxyObject);
         template.PutString("user_id", UserId);
         template.PutInt("health_base", HealthBase);
         template.PutInt("health_current", HealthCurrent);
         template.PutInt("health_temporary", HealthTemporary);
         template.PutInt("proficiency_bonus", ProficiencyBonus);
+        template.PutBool("proxy", Proxy);
 
         base.ApplyToTemplate(template);
         return template;

@@ -10,7 +10,6 @@ namespace com.rpglc.database;
 public class DBManager {
     private static string? dbDir;
     private static string? dbName;
-    private static DBConnection? connection;
 
     public static void SetDatabase(string dbDir, string dbName) {
         DBManager.dbDir = dbDir;
@@ -96,6 +95,8 @@ public class DBManager {
             Description = data.GetString("description"),
             Metadata = data.GetJsonObject("metadata").AsDict(),
             Name = data.GetString("name"),
+
+            Tags = data.GetJsonArray("tags").AsList(),
 
             SubeventFilters = data.GetJsonObject("subevent_filters").AsDict(),
         });
@@ -193,6 +194,8 @@ public class DBManager {
             Metadata = rpglEffect.GetMetadata().AsDict(),
             Name = rpglEffect.GetName(),
 
+            Tags = rpglEffect.GetTags().AsList(),
+
             Uuid = rpglEffect.GetUuid(),
 
             SubeventFilters = rpglEffect.GetSubeventFilters().AsDict(),
@@ -244,12 +247,12 @@ public class DBManager {
             Resources = rpglObject.GetResources().AsList(),
             Rotation = rpglObject.GetRotation().AsList(),
             OriginObject = rpglObject.GetOriginObject(),
-            ProxyObject = rpglObject.GetProxyObject(),
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
             HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
+            Proxy = rpglObject.GetProxy(),
         });
     }
 
@@ -594,6 +597,8 @@ public class DBManager {
             Metadata = rpglEffect.GetMetadata().AsDict(),
             Name = rpglEffect.GetName(),
 
+            Tags = rpglEffect.GetTags().AsList(),
+
             Uuid = rpglEffect.GetUuid(),
 
             SubeventFilters = rpglEffect.GetSubeventFilters().AsDict(),
@@ -649,12 +654,12 @@ public class DBManager {
             Resources = rpglObject.GetResources().AsList(),
             Rotation = rpglObject.GetRotation().AsList(),
             OriginObject = rpglObject.GetOriginObject(),
-            ProxyObject = rpglObject.GetProxyObject(),
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
             HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
+            Proxy = rpglObject.GetProxy(),
         });
     }
 

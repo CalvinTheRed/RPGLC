@@ -208,6 +208,15 @@ public class JsonArray {
         return false;
     }
 
+    public bool ContainsAll(List<object> other) {
+        foreach (object item in other) {
+            if (!data.Contains(item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // =================================================================================================================
     // printing methods
     // =================================================================================================================

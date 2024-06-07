@@ -39,7 +39,7 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("""[]""", rpglObject.GetResources().ToString());
         Assert.Equal("""[]""", rpglObject.GetRotation().ToString());
         Assert.Null(rpglObject.GetOriginObject());
-        Assert.Null(rpglObject.GetProxyObject());
+        Assert.Null(rpglObject.GetProxy());
         Assert.Null(rpglObject.GetUserId());
         Assert.Equal(1000L, rpglObject.GetHealthBase());
         Assert.Equal(1000L, rpglObject.GetHealthCurrent());

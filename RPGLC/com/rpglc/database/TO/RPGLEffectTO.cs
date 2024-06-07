@@ -2,7 +2,7 @@
 
 namespace com.rpglc.database.TO;
 
-public class RPGLEffectTO : PersistentContentTO {
+public class RPGLEffectTO : TaggableContentTO {
     public Dictionary<string, object> SubeventFilters { get; set; }
     public string? OriginItem { get; set; }
     public string? Source { get; set; }
@@ -14,6 +14,7 @@ public class RPGLEffectTO : PersistentContentTO {
             .SetOriginItem(OriginItem)
             .SetSource(Source)
             .SetTarget(Target)
+            .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)

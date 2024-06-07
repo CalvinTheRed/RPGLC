@@ -43,6 +43,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "name": "Dummy Effect",
                 "description": "This effect has no features.",
                 "datapack_id": "test:dummy",
+                "tags": [ ],
                 "subevent_filters": { }
             }
             """));

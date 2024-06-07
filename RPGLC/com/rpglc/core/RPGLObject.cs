@@ -1,6 +1,6 @@
 ﻿using com.rpglc.database;
-using com.rpglc.database.TO;
 using com.rpglc.json;
+using com.rpglc.subevent;
 
 namespace com.rpglc.core;
 
@@ -96,12 +96,12 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public string? GetProxyObject() {
-        return GetString("proxy_object");
+    public bool? GetProxy() {
+        return GetBool("proxy");
     }
 
-    public RPGLObject SetProxyObject(string? proxyObject) {
-        PutString("proxy_object", proxyObject);
+    public RPGLObject SetProxy(bool? proxy) {
+        PutBool("proxy", proxy);
         return this;
     }
 
@@ -371,6 +371,133 @@ public class RPGLObject : TaggableContent {
             DBManager.UpdateRPGLObject(this);
         }
         return this;
+    }
+
+    // =====================================================================
+    // RPGLEvent management helper methods.
+    // =====================================================================
+
+    public void InvokeEvent(
+        JsonArray originPoint,
+        List<RPGLObject> targets,
+        RPGLEvent rpglEvent,
+        List<RPGLResource> resources,
+        RPGLContext context
+    ) {
+        if (rpglEvent.ResourcesMatchCost(resources)) {
+            foreach (RPGLResource rpglResource in resources) {
+                rpglResource.Exhaust();
+            }
+            rpglEvent.Scale(resources);
+
+            RPGLObject source;
+            if (rpglEvent.GetString("source") is not null) {
+                // events with a source pre-assigned via AddEvent take priority
+                source = DBManager.QueryRPGLObject(x => x.Uuid == rpglEvent.GetString("source"));
+            } else if (GetProxy() ?? false) {
+                // proxy objects set their origin object as the source for any events they invoke
+                source = DBManager.QueryRPGLObject(x => x.Uuid == GetOriginObject());
+            } else {
+                // ordinary event invocation sets the calling object as the source
+                source = this;
+            }
+
+            JsonArray subeventJsonArray = rpglEvent.GetSubevents();
+            for (int i = 0; i < subeventJsonArray.Count(); i++) {
+                JsonObject subeventJson = subeventJsonArray.GetJsonObject(i);
+                Subevent subevent = Subevent.Subevents[subeventJson.GetString("subevent")]
+                    .Clone(subeventJson)
+                    .SetSource(source)
+                    .SetOriginItem(rpglEvent.GetOriginItem())
+                    .Prepare(context, originPoint);
+                foreach (RPGLObject target in targets) {
+                    subevent.Clone().SetTarget(target).Invoke(context, originPoint);
+                }
+            }
+        }
+    }
+
+    public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
+        bool wasSubeventProcessed = false;
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        foreach (RPGLEffect rpglEffect in effects) {
+            wasSubeventProcessed |= rpglEffect.ProcessSubevent(subevent, context, originPoint);
+        }
+        foreach (RPGLResource rpglResource in GetResourceObjects()) {
+            rpglResource.ProcessSubevent(subevent, this);
+        }
+        return wasSubeventProcessed;
+    }
+
+    // =====================================================================
+    // RPGLEffect management helper methods.
+    // =====================================================================
+
+    public RPGLObject AddEffect(RPGLEffect rpglEffect) {
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(
+            x => x.Target == GetUuid()
+        );
+        bool hasEffect = false;
+        foreach (RPGLEffect activeEffect in effects) {
+            if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
+                hasEffect = true;
+                break;
+            }
+        }
+        if (!hasEffect) {
+            rpglEffect.SetTarget(GetUuid());
+            DBManager.UpdateRPGLEffect(rpglEffect);
+        }
+        return this;
+    }
+
+    public RPGLObject RemoveEffect(string effectUuid) {
+        RPGLEffect? rpglEffect = DBManager.QueryRPGLEffect(
+            x => x.Uuid == effectUuid && x.Target == GetUuid()
+        );
+        if (rpglEffect is not null) {
+            if (rpglEffect.GetOriginItem() is not null) {
+                // effect coming from an item should persist
+                rpglEffect.SetTarget(null);
+                DBManager.UpdateRPGLEffect(rpglEffect);
+            } else {
+                // effects not coming from item should not persist
+                DBManager.DeleteRPGLEffect(rpglEffect);
+            }
+        }
+        return this;
+    }
+
+    // =====================================================================
+    // RPGLEffect management helper methods.
+    // =====================================================================
+
+    public RPGLObject AddResource(RPGLResource rpglResource) {
+        if (!GetResources().Contains(rpglResource.GetUuid())) {
+            GetResources().AddString(rpglResource.GetUuid());
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public RPGLObject RemoveResource(RPGLResource rpglResource) {
+        if (GetResources().Contains(rpglResource.GetUuid())) {
+            GetResources().AsList().Remove(rpglResource.GetUuid());
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public List<RPGLResource> GetResourceObjects() {
+        List<RPGLResource> resources = [];
+        JsonArray resourceUuids = GetResources();
+        for (int i = 0; i < resourceUuids.Count(); i++) {
+            resources.Add(DBManager.QueryRPGLResource(
+                x => x.Uuid == resourceUuids.GetString(i))
+            );
+        }
+        // TODO add resources from equipped items... later
+        return resources;
     }
 
 };
