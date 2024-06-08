@@ -8,9 +8,20 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class AllTest {
 
+    [Fact(DisplayName = "condition mismatch")]
+    public void ConditionMismatch() {
+        bool result = new All().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+            {
+                "condition": "not-a-condition"
+            }
+            """), new DummyContext(), new());
+
+        Assert.False(result);
+    }
+
     [Fact(DisplayName = "all true")]
     public void AllTrue() {
-        bool result = new All().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new All().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "all",
                 "conditions": [
@@ -29,7 +40,7 @@ public class AllTest {
 
     [Fact(DisplayName = "some true")]
     public void SomeTrue() {
-        bool result = new All().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new All().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "any",
                 "conditions": [
@@ -48,7 +59,7 @@ public class AllTest {
 
     [Fact(DisplayName = "none true")]
     public void NoneTrue() {
-        bool result = new All().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new All().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "any",
                 "conditions": [
@@ -67,7 +78,7 @@ public class AllTest {
 
     [Fact(DisplayName = "no nested conditions")]
     public void NoNestedConditions() {
-        bool result = new All().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new All().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "all",
                 "conditions": [ ]

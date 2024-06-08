@@ -8,9 +8,20 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class InvertTest {
 
+    [Fact(DisplayName = "condition mismatch")]
+    public void ConditionMismatch() {
+        bool result = new Invert().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+            {
+                "condition": "not-a-condition"
+            }
+            """), new DummyContext(), new());
+
+        Assert.False(result);
+    }
+
     [Fact(DisplayName = "inverts true")]
     public void InvertsTrue() {
-        bool result = new Invert().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new Invert().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "invert",
                 "invert": {
@@ -24,7 +35,7 @@ public class InvertTest {
 
     [Fact(DisplayName = "inverts false")]
     public void InvertsFalse() {
-        bool result = new Invert().Run(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        bool result = new Invert().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
             {
                 "condition": "invert",
                 "invert": {
