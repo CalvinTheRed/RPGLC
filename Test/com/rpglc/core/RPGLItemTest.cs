@@ -41,6 +41,37 @@ public class RPGLItemTest {
     [DefaultMock]
     [ExtraItemsMock]
     [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "gives events for slots")]
+    public void GivesEventsForSlots() {
+        List<RPGLEvent> events;
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:complex_item");
+
+        events = rpglItem.GetEventsForSlots(["mainhand"]);
+        Assert.Equal(1, events.Count);
+        Assert.Equal("test:dummy", events[0].GetDatapackId());
+
+        events = rpglItem.GetEventsForSlots(["offhand"]);
+        Assert.Equal(1, events.Count);
+        Assert.Equal("test:dummy", events[0].GetDatapackId());
+
+        events = rpglItem.GetEventsForSlots(["mainhand", "offhand"]);
+        Assert.Equal(1, events.Count);
+        Assert.Equal("test:dummy", events[0].GetDatapackId());
+
+        events = rpglItem.GetEventsForSlots(["offhand", "mainhand"]);
+        Assert.Equal(1, events.Count);
+        Assert.Equal("test:dummy", events[0].GetDatapackId());
+
+        events = rpglItem.GetEventsForSlots(["not-a-slot"]);
+        Assert.Equal(0, events.Count);
+
+        events = rpglItem.GetEventsForSlots(["mainhand", "not-a-slot"]);
+        Assert.Equal(0, events.Count);
+    }
+
+    [DefaultMock]
+    [ExtraItemsMock]
+    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "gives resources for slots")]
     public void GivesResourcesForSlots() {
         List<RPGLResource> resources;

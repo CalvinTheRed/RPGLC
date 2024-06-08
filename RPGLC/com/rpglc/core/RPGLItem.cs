@@ -77,6 +77,29 @@ public class RPGLItem : TaggableContent {
         return grantedEffects;
     }
 
+    public List<RPGLEvent> GetEventsForSlots(List<string> slots) {
+        List<RPGLEvent> grantedEvents = [];
+        JsonObject events = GetEvents();
+        foreach (string eventDatapackId in events.AsDict().Keys) {
+            JsonArray possibleSlotCombinations = events.GetJsonArray(eventDatapackId);
+            for (int i = 0; i < possibleSlotCombinations.Count(); i++) {
+                JsonArray slotCombination = possibleSlotCombinations.GetJsonArray(i);
+                bool slotCombinationMatch = true;
+                foreach (string slot in slots) {
+                    slotCombinationMatch &= slotCombination.Contains(slot);
+                }
+                for (int j = 0; j < slotCombination.Count(); j++) {
+                    slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
+                }
+                if (slotCombinationMatch) {
+                    grantedEvents.Add(DBManager.QueryRPGLEventTemplateByDatapackId(eventDatapackId).NewInstance());
+                    break;
+                }
+            }
+        }
+        return grantedEvents;
+    }
+
     public List<RPGLResource> GetResourcesForSlots(List<string> slots) {
         List<RPGLResource> grantedResources = [];
         JsonObject resources = GetResources();
