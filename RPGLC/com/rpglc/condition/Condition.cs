@@ -67,7 +67,7 @@ public abstract class Condition(string conditionId) {
         JsonArray originPoint
     );
 
-    public static bool CompareValues(double value, double target, string comparison) {
+    public static bool CompareValues(double value, string comparison, double target) {
         return comparison switch {
             "=" => value == target,
             "!=" => value != target,
