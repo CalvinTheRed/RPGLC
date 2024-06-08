@@ -5,6 +5,7 @@ using com.rpglc.testutils;
 namespace com.rpglc.condition;
 
 [InitializeConditions]
+[Collection("Serial")]
 public class AnyTest {
 
     [Fact(DisplayName = "all true")]
