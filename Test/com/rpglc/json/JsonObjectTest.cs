@@ -626,6 +626,74 @@ public class JsonObjectTest {
         Assert.False(json.IsEmpty());
     }
 
+    [Fact(DisplayName = "checks equality")]
+    public void ChecksEquality() {
+        JsonObject json1 = new JsonObject().LoadFromString("""
+            {
+                "object_key": {
+                    "key": "value"
+                },
+                "array_key": [
+                    "value"
+                ],
+                "string_key": "value",
+                "int_key": 123,
+                "double_key": 123.456,
+                "bool_key": false
+            }
+            """);
+        JsonObject json2 = new JsonObject().LoadFromString("""
+            {
+                "object_key": {
+                    "key": "value"
+                },
+                "array_key": [
+                    "value"
+                ],
+                "string_key": "value",
+                "int_key": 123,
+                "double_key": 123.456,
+                "bool_key": false
+            }
+            """);
+
+        Assert.Equal(json1, json2);
+    }
+
+    [Fact(DisplayName = "checks inequality")]
+    public void ChecksInequality() {
+        JsonObject json1 = new JsonObject().LoadFromString("""
+            {
+                "object_key": {
+                    "key": "valu"
+                },
+                "array_key": [
+                    "valu"
+                ],
+                "string_key": "valu",
+                "int_key": 12,
+                "double_key": 123.45,
+                "bool_key": true
+            }
+            """);
+        JsonObject json2 = new JsonObject().LoadFromString("""
+            {
+                "object_key": {
+                    "key": "value"
+                },
+                "array_key": [
+                    "value"
+                ],
+                "string_key": "value",
+                "int_key": 123,
+                "double_key": 123.456,
+                "bool_key": false
+            }
+            """);
+
+        Assert.NotEqual(json1, json2);
+    }
+
     // =================================================================================================================
     // printing tests
     // =================================================================================================================

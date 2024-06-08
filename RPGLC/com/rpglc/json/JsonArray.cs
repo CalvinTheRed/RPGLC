@@ -217,6 +217,12 @@ public class JsonArray {
         return true;
     }
 
+    public override bool Equals(object? obj) {
+        return obj is not null
+            && obj is JsonArray jsonArray
+            && jsonArray.ToString() == ToString();
+    }
+
     // =================================================================================================================
     // printing methods
     // =================================================================================================================
