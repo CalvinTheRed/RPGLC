@@ -322,7 +322,7 @@ public class JsonArrayTest {
             ]
             """);
 
-        Assert.Equal(json1, json2);
+        Assert.True(json1.Equals(json2));
     }
 
     [Fact(DisplayName = "checks inequality")]

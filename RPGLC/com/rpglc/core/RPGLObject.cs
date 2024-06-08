@@ -1,6 +1,7 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using System.Resources;
 
 namespace com.rpglc.core;
 
@@ -365,10 +366,17 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public RPGLObject TakeResource(long resourceUuid) {
+    public RPGLObject TakeResource(string resourceUuid) {
         if (GetResources().Contains(resourceUuid)) {
             GetResources().AsList().Remove(resourceUuid);
             DBManager.UpdateRPGLObject(this);
+
+            RPGLResource rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid);
+            if (rpglResource.GetOriginItem() is null) {
+                // delete resource if it is not supplied by an item
+                DBManager.DeleteRPGLResource(rpglResource);
+            }
+            
         }
         return this;
     }
@@ -381,7 +389,25 @@ public class RPGLObject : TaggableContent {
                 x => x.Uuid == resourceUuids.GetString(i))
             );
         }
-        // TODO add resources from equipped items... later
+
+        // add resources granted by items equipped appropriately
+        JsonObject equippedItems = GetEquippedItems();
+        Dictionary<string, List<string>> slotsForEquippedItems = [];
+        foreach (string slot in equippedItems.AsDict().Keys) {
+            string itemUuid = equippedItems.GetString(slot);
+            if (slotsForEquippedItems.ContainsKey(itemUuid)) {
+                // add slot to item's list
+                slotsForEquippedItems[itemUuid].Add(slot);
+            } else {
+                // create new list for item
+                slotsForEquippedItems[itemUuid] = [slot];
+            }
+        }
+        foreach (string itemUuid in slotsForEquippedItems.Keys) {
+            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
+        }
+
         return resources;
     }
 
@@ -478,6 +504,30 @@ public class RPGLObject : TaggableContent {
             }
         }
         return this;
+    }
+
+    public List<RPGLEffect> GetEffectObjects() {
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+
+        // add effects granted by items equipped appropriately
+        JsonObject equippedItems = GetEquippedItems();
+        Dictionary<string, List<string>> slotsForEquippedItems = [];
+        foreach (string slot in equippedItems.AsDict().Keys) {
+            string itemUuid = equippedItems.GetString(slot);
+            if (slotsForEquippedItems.ContainsKey(itemUuid)) {
+                // add slot to item's list
+                slotsForEquippedItems[itemUuid].Add(slot);
+            } else {
+                // create new list for item
+                slotsForEquippedItems[itemUuid] = [slot];
+            }
+        }
+        foreach (string itemUuid in slotsForEquippedItems.Keys) {
+            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            effects.AddRange(rpglItem.GetEffectsForSlots(slotsForEquippedItems[itemUuid]));
+        }
+
+        return effects;
     }
 
 };
