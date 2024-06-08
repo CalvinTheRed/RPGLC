@@ -1,5 +1,4 @@
 ﻿using com.rpglc.database;
-using com.rpglc.database.TO;
 using com.rpglc.json;
 
 namespace com.rpglc.core;
@@ -15,21 +14,21 @@ public class RPGLItem : TaggableContent {
         return this;
     }
 
+    public JsonObject GetEvents() {
+        return GetJsonObject("events");
+    }
+
+    public RPGLItem SetEvents(JsonObject events) {
+        PutJsonObject("events", events);
+        return this;
+    }
+
     public JsonObject GetResources() {
         return GetJsonObject("resources");
     }
 
     public RPGLItem SetResources(JsonObject resources) {
         PutJsonObject("resources", resources);
-        return this;
-    }
-
-    public JsonArray GetEvents() {
-        return GetJsonArray("events");
-    }
-
-    public RPGLItem SetEvents(JsonArray events) {
-        PutJsonArray("events", events);
         return this;
     }
 

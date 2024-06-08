@@ -128,8 +128,8 @@ public class DBManager {
             Tags = data.GetJsonArray("tags").AsList(),
 
             Effects = data.GetJsonObject("effects").AsDict(),
+            Events = data.GetJsonObject("events").AsDict(),
             Resources = data.GetJsonObject("resources").AsDict(),
-            Events = data.GetJsonArray("events").AsList(),
             Cost = (long) data.GetInt("cost"),
             Weight = (long) data.GetInt("weight"),
         });
@@ -218,8 +218,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Events = rpglItem.GetEvents().AsDict(),
             Resources = rpglItem.GetResources().AsDict(),
-            Events = rpglItem.GetEvents().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });
@@ -623,8 +623,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Events = rpglItem.GetEvents().AsDict(),
             Resources = rpglItem.GetResources().AsDict(),
-            Events = rpglItem.GetEvents().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });

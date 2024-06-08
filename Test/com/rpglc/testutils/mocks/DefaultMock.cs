@@ -72,7 +72,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "weight": 1,
                 "cost": 1,
                 "effects": { },
-                "events": [ ],
+                "events": { },
                 "resources": { }
             }
             """));
