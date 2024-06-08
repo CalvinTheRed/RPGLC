@@ -373,6 +373,18 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public List<RPGLResource> GetResourceObjects() {
+        List<RPGLResource> resources = [];
+        JsonArray resourceUuids = GetResources();
+        for (int i = 0; i < resourceUuids.Count(); i++) {
+            resources.Add(DBManager.QueryRPGLResource(
+                x => x.Uuid == resourceUuids.GetString(i))
+            );
+        }
+        // TODO add resources from equipped items... later
+        return resources;
+    }
+
     // =====================================================================
     // RPGLEvent management helper methods.
     // =====================================================================
@@ -466,38 +478,6 @@ public class RPGLObject : TaggableContent {
             }
         }
         return this;
-    }
-
-    // =====================================================================
-    // RPGLEffect management helper methods.
-    // =====================================================================
-
-    public RPGLObject AddResource(RPGLResource rpglResource) {
-        if (!GetResources().Contains(rpglResource.GetUuid())) {
-            GetResources().AddString(rpglResource.GetUuid());
-            DBManager.UpdateRPGLObject(this);
-        }
-        return this;
-    }
-
-    public RPGLObject RemoveResource(RPGLResource rpglResource) {
-        if (GetResources().Contains(rpglResource.GetUuid())) {
-            GetResources().AsList().Remove(rpglResource.GetUuid());
-            DBManager.UpdateRPGLObject(this);
-        }
-        return this;
-    }
-
-    public List<RPGLResource> GetResourceObjects() {
-        List<RPGLResource> resources = [];
-        JsonArray resourceUuids = GetResources();
-        for (int i = 0; i < resourceUuids.Count(); i++) {
-            resources.Add(DBManager.QueryRPGLResource(
-                x => x.Uuid == resourceUuids.GetString(i))
-            );
-        }
-        // TODO add resources from equipped items... later
-        return resources;
     }
 
 };

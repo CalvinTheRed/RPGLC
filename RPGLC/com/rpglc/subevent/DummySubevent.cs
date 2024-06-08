@@ -32,7 +32,7 @@ public class DummySubevent : Subevent {
     }
 
     public override DummySubevent Prepare(RPGLContext context, JsonArray originPoint) {
-        return (DummySubevent) base.Prepare(context, originPoint);
+        return this;
     }
 
     public override DummySubevent Run(RPGLContext context, JsonArray originPoint) {

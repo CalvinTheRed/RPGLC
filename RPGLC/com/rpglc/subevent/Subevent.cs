@@ -25,6 +25,9 @@ public abstract class Subevent {
     public Subevent(string subeventId) {
         this.subeventId = subeventId;
         json.PutString("subevent", subeventId);
+        if (!json.AsDict().ContainsKey("tags")) {
+            json.PutJsonArray("tags", new());
+        }
         AddTag(subeventId);
     }
 
@@ -49,12 +52,7 @@ public abstract class Subevent {
 
     public abstract Subevent Clone(JsonObject jsonData);
 
-    public virtual Subevent Prepare(RPGLContext context, JsonArray originPoint) {
-        if (!json.AsDict().ContainsKey("tags")) {
-            json.PutJsonArray("tags", new());
-        }
-        return this;
-    }
+    public abstract Subevent Prepare(RPGLContext context, JsonArray originPoint);
 
     public virtual Subevent? Invoke(RPGLContext context, JsonArray originPoint) {
         if (VerifySubevent(subeventId)) {

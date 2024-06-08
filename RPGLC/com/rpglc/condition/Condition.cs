@@ -17,6 +17,10 @@ public abstract class Condition(string conditionId) {
     public static void Initialize(bool includeTestingConditions = false) {
         Conditions.Clear();
 
+        Conditions.Add("any", new Any());
+        Conditions.Add("all", new All());
+        Conditions.Add("invert", new Invert());
+
         if (includeTestingConditions) {
             Conditions.Add("false", new False());
             Conditions.Add("true", new True());
