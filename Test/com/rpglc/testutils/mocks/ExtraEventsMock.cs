@@ -24,12 +24,18 @@ public class ExtraEventsMock : BeforeAfterTestAttribute {
                         "resource_tags": [ "dummy" ],
                         "count": 1,
                         "minimum_potency": 1,
-                        "scale": [ ]
+                        "scale": [
+                            {
+                                "field": "subevents[0].scalable_field",
+                                "magnitude": 2
+                            }
+                        ]
                     }
                 ],
                 "subevents": [
                     {
-                        "subevent": "dummy_subevent"
+                        "subevent": "dummy_subevent",
+                        "scalable_field": 0
                     }
                 ]
             }

@@ -42,7 +42,12 @@ public class RPGLEventTemplateTest {
                 "resource_tags": [
                   "dummy"
                 ],
-                "scale": [ ]
+                "scale": [
+                  {
+                    "field": "subevents[0].scalable_field",
+                    "magnitude": 2
+                  }
+                ]
               }
             ]
             """,
