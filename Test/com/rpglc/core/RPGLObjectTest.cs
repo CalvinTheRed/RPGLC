@@ -1,5 +1,6 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.subevent;
 using com.rpglc.testutils;
 using com.rpglc.testutils.mocks;
 
@@ -144,6 +145,31 @@ public class RPGLObjectTest {
         Assert.Equal(1, effects.Count());
         rpglEffect = effects[0];
         Assert.Equal("test:dummy", rpglEffect.GetDatapackId());
+    }
+
+    [DefaultMock]
+    [ExtraEventsMock]
+    [ExtraResourcesMock]
+    [ClearDatabaseAfterTest]
+    [InitializeSubevents]
+    [Fact(DisplayName = "invokes event")]
+    public void InvokesEvent() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
+        rpglObject.GiveResource(rpglResource);
+
+        rpglObject.InvokeEvent(
+            RPGLFactory.NewEvent("test:complex_event"),
+            new(),
+            [ rpglResource ],
+            [ rpglObject ],
+            context
+        );
+
+        Assert.Equal(1, DummySubevent.Counter);
     }
 
 };

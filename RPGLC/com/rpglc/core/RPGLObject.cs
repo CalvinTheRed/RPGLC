@@ -415,11 +415,29 @@ public class RPGLObject : TaggableContent {
     // RPGLEvent management helper methods.
     // =====================================================================
 
+    public RPGLObject AddEvent(string eventDatapackId) {
+        JsonArray events = GetEvents();
+        if (!events.Contains(eventDatapackId)) {
+            events.AddString(eventDatapackId);
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public RPGLObject RemoveEvent(string eventDatapackId) {
+        JsonArray events = GetEvents();
+        if (events.Contains(eventDatapackId)) {
+            events.AsList().Remove(eventDatapackId);
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
     public void InvokeEvent(
-        JsonArray originPoint,
-        List<RPGLObject> targets,
         RPGLEvent rpglEvent,
+        JsonArray originPoint,
         List<RPGLResource> resources,
+        List<RPGLObject> targets,
         RPGLContext context
     ) {
         if (rpglEvent.ResourcesMatchCost(resources)) {
