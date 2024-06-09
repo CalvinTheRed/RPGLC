@@ -548,4 +548,25 @@ public class RPGLObject : TaggableContent {
         return effects;
     }
 
+    public long GetEffectiveProficiencyBonus(RPGLContext context) {
+        return GetProficiencyBonus(); // TODO update this later
+    }
+
+    public long GetAbilityScoreFromAbilityName(string ability, RPGLContext context) {
+        return (long) GetAbilityScores().GetInt(ability); // TODO update this later
+    }
+
+    public long GetAbilityModifierFromAbilityName(string ability, RPGLContext context) {
+        return GetAbilityModifierFromAbilityScore(GetAbilityScoreFromAbilityName(ability, context));
+    }
+
+    public long GetAbilityModifierFromAbilityScore(long score) {
+        if (score < 10) {
+            // integer division rounds toward zero, so abilityScore must be
+            // adjusted to calculate the correct values for negative modifiers
+            score--;
+        }
+        return (score - 10L) / 2L;
+    }
+
 };
