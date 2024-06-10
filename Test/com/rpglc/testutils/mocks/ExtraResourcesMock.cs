@@ -7,6 +7,7 @@ namespace com.rpglc.testutils.mocks;
 public class ExtraResourcesMock : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest) {
+        base.Before(methodUnderTest);
 
         DBManager.InsertRPGLResourceTemplate(new json.JsonObject().LoadFromString("""
             {

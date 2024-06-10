@@ -7,6 +7,7 @@ namespace com.rpglc.testutils;
 public class DieTestingMode : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest) {
+        base.Before(methodUnderTest);
         Die.SetTesting(true);
     }
 

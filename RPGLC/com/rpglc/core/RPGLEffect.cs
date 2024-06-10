@@ -65,7 +65,7 @@ public class RPGLEffect : TaggableContent {
         return false;
     }
 
-    private bool EvaluateConditions(Subevent subevent, JsonArray conditions, RPGLContext context, JsonArray originPoint) {
+    public bool EvaluateConditions(Subevent subevent, JsonArray conditions, RPGLContext context, JsonArray originPoint) {
         bool conditionsMet = true;
         for (int i = 0; i < conditions.Count(); i++) {
             JsonObject conditionJson = conditions.GetJsonObject(i);
@@ -75,7 +75,7 @@ public class RPGLEffect : TaggableContent {
         return conditionsMet;
     }
 
-    private void ExecuteFunctions(Subevent subevent, JsonArray functions, RPGLContext context, JsonArray originPoint) {
+    public void ExecuteFunctions(Subevent subevent, JsonArray functions, RPGLContext context, JsonArray originPoint) {
         for (int i = 0; i < functions.Count(); i++) {
             JsonObject functionJson = functions.GetJsonObject(i);
             Function.Functions[functionJson.GetString("function")]
