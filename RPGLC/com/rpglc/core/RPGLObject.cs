@@ -490,9 +490,7 @@ public class RPGLObject : TaggableContent {
     // =====================================================================
 
     public RPGLObject AddEffect(RPGLEffect rpglEffect) {
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(
-            x => x.Target == GetUuid()
-        );
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
         bool hasEffect = false;
         foreach (RPGLEffect activeEffect in effects) {
             if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {

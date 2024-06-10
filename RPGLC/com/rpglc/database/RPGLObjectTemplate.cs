@@ -24,7 +24,6 @@ public class RPGLObjectTemplate : RPGLTemplate {
         ProcessInventory(rpglObject);
         ProcessEquippedItems(rpglObject);
         ProcessResources(rpglObject);
-        //ProcessClasses(rpglObject);
 
         return rpglObject;
     }
