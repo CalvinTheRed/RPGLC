@@ -24,6 +24,24 @@ public class RPGLResource : TaggableContent {
         return this;
     }
 
+    public long GetAvailableUses() {
+        return (long) GetInt("available_uses");
+    }
+
+    public RPGLResource SetAvailableUses(long availableUses) {
+        PutInt("available_uses", availableUses);
+        return this;
+    }
+
+    public long GetMaximumUses() {
+        return (long) GetInt("maximum_uses");
+    }
+
+    public RPGLResource SetMaximumUses(long maximumUses) {
+        PutInt("maximum_uses", maximumUses);
+        return this;
+    }
+
     public long GetPotency() {
         return (long) GetInt("potency");
     }
@@ -33,19 +51,10 @@ public class RPGLResource : TaggableContent {
         return this;
     }
 
-    public bool GetExhausted() {
-        return (bool) GetBool("exhausted");
-    }
-
-    public RPGLResource SetExhausted(bool exhausted) {
-        PutBool("exhausted", exhausted);
-        return this;
-    }
-
 
 
     public void ProcessSubevent(Subevent subevent, RPGLObject owner) {
-        if (GetExhausted()) {
+        if (GetAvailableUses() < GetMaximumUses()) {
             JsonArray refreshCriterion = GetRefreshCriterion();
             for (int i = 0; i < refreshCriterion.Count(); i++) {
                 if (CheckCriterion(subevent, refreshCriterion.GetJsonObject(i), owner)) {
@@ -82,14 +91,18 @@ public class RPGLResource : TaggableContent {
     }
 
     public RPGLResource Exhaust() {
-        SetExhausted(true);
-        DBManager.UpdateRPGLResource(this);
+        if (GetAvailableUses() > 0) {
+            SetAvailableUses(GetAvailableUses() - 1);
+            DBManager.UpdateRPGLResource(this);
+        }
         return this;
     }
 
     public RPGLResource Refresh() {
-        SetExhausted(false);
-        DBManager.UpdateRPGLResource(this);
+        if (GetAvailableUses() < GetMaximumUses()) {
+            SetAvailableUses(GetAvailableUses() + 1);
+            DBManager.UpdateRPGLResource(this);
+        }
         return this;
     }
 

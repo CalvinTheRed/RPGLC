@@ -27,8 +27,9 @@ public class RPGLResourceTemplateTest {
         Assert.Equal("""[]""", rpglResource.GetTags().ToString());
         Assert.Equal("""[]""", rpglResource.GetRefreshCriterion().ToString());
         Assert.Null(rpglResource.GetOriginItem());
+        Assert.Equal(1L, rpglResource.GetAvailableUses());
+        Assert.Equal(1L, rpglResource.GetMaximumUses());
         Assert.Equal(1L, rpglResource.GetPotency());
-        Assert.False(rpglResource.GetExhausted());
     }
 
 };

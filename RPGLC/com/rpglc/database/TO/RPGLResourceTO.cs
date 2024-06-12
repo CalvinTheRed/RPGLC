@@ -5,15 +5,18 @@ namespace com.rpglc.database.TO;
 public class RPGLResourceTO : TaggableContentTO {
     public List<object> RefreshCriterion { get; set; }
     public string? OriginItem { get; set; }
+    public long AvailableUses { get; set; }
+    public long MaximumUses { get; set; }
     public long Potency { get; set; }
-    public bool Exhausted { get; set; }
+    
 
     public RPGLResource ToRPGLResource() {
         return (RPGLResource) new RPGLResource()
             .SetRefreshCriterion(new(RefreshCriterion))
             .SetOriginItem(OriginItem)
+            .SetAvailableUses(AvailableUses)
+            .SetMaximumUses(MaximumUses)
             .SetPotency(Potency)
-            .SetExhausted(Exhausted)
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)

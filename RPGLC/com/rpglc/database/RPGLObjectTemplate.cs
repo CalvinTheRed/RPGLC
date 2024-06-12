@@ -28,7 +28,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         return rpglObject;
     }
 
-    internal static void ProcessEffects(RPGLObject rpglObject) {
+    private static void ProcessEffects(RPGLObject rpglObject) {
         JsonArray effectList = rpglObject.RemoveJsonArray("effects");
         for (int i = 0; i < effectList.Count(); i++) {
             RPGLFactory.NewEffect(
@@ -39,7 +39,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         }
     }
 
-    internal static void ProcessInventory(RPGLObject rpglObject) {
+    private static void ProcessInventory(RPGLObject rpglObject) {
         JsonArray itemDatapackIdList = rpglObject.GetInventory();
         JsonArray itemUuidList = new();
         for (int i = 0; i < itemDatapackIdList.Count(); i++) {
@@ -48,7 +48,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetInventory(itemUuidList);
     }
 
-    internal static void ProcessEquippedItems(RPGLObject rpglObject) {
+    private static void ProcessEquippedItems(RPGLObject rpglObject) {
         JsonObject itemDatapackIdDict = rpglObject.GetEquippedItems();
         JsonObject itemUuidDict = new();
         foreach (string key in itemDatapackIdDict.AsDict().Keys) {
@@ -59,7 +59,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetEquippedItems(itemUuidDict);
     }
 
-    internal static void ProcessResources(RPGLObject rpglObject) {
+    private static void ProcessResources(RPGLObject rpglObject) {
         JsonArray resourceList = rpglObject.GetResources();
         JsonArray resourceUuidList = new();
         for (int i = 0; i < resourceList.Count(); i++) {

@@ -1,7 +1,6 @@
 ﻿using com.rpglc.json;
-using com.rpglc.math;
 
-namespace Test.com.rpglc.math;
+namespace com.rpglc.math;
 
 public class DieTest {
 

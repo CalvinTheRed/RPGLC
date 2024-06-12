@@ -270,8 +270,9 @@ public class DBManager {
 
             RefreshCriterion = rpglResource.GetRefreshCriterion().AsList(),
             OriginItem = rpglResource.GetOriginItem(),
+            AvailableUses = rpglResource.GetAvailableUses(),
+            MaximumUses = rpglResource.GetMaximumUses(),
             Potency = rpglResource.GetPotency(),
-            Exhausted = false, // new RPGLResource should never be exhausted
         });
     }
 
@@ -679,8 +680,9 @@ public class DBManager {
 
             RefreshCriterion = rpglResource.GetRefreshCriterion().AsList(),
             OriginItem = rpglResource.GetOriginItem(),
+            AvailableUses = rpglResource.GetAvailableUses(),
+            MaximumUses = rpglResource.GetMaximumUses(),
             Potency = rpglResource.GetPotency(),
-            Exhausted = false, // new RPGLResource should never be exhausted
         });
     }
 
