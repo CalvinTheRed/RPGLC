@@ -32,4 +32,27 @@ public class RPGLResourceTemplateTest {
         Assert.Equal(1L, rpglResource.GetPotency());
     }
 
+    [ExtraResourcesMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "unpacks dice")]
+    public void UnpacksDice() {
+        string effectUuid = "uuid";
+        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId("test:complex_resource")
+            .NewInstance(effectUuid);
+
+        Assert.Equal("""
+            {
+              "bonus": 4,
+              "dice": [
+                {
+                  "determined": [
+                    1
+                  ],
+                  "size": 6
+                }
+              ]
+            }
+            """, rpglResource.SeekJsonObject("refresh_criterion[0].tries").PrettyPrint());
+    }
+
 };

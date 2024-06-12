@@ -23,7 +23,7 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
                 "refresh_criterion": [
                     {
                         "subevent": "dummy_subevent",
-                        "tags": [ ],
+                        "tags": [ "recharge_resource" ],
                         "frequency": {
                             "bonus": 1,
                             "dice": [ ]
