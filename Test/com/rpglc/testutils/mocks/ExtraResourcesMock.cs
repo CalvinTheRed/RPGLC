@@ -23,9 +23,9 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
                 "refresh_criterion": [
                     {
                         "subevent": "dummy_subevent",
-                        "tags": [ "recharge_resource" ],
+                        "tags": [ "refresh_resource" ],
                         "frequency": {
-                            "bonus": 1,
+                            "bonus": 2,
                             "dice": [ ]
                         },
                         "tries": {
@@ -34,10 +34,7 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
                                 { "count": 1, "size": 6, "determined": [ 1 ] }
                             ]
                         },
-                        "chance": {
-                            "numerator": 1,
-                            "denominator": 1
-                        }
+                        "chance": 1
                     }
                 ]
             }

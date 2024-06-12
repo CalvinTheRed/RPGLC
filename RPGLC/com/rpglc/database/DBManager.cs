@@ -177,8 +177,8 @@ public class DBManager {
 
             RefreshCriterion = data.GetJsonArray("refresh_criterion").AsList(),
             // origin item is not included in template data
+            MaximumUses = data.GetInt("maximum_uses"),
             Potency = (long) data.GetInt("potency"),
-            // exhausted is not included in template data
         });
     }
 

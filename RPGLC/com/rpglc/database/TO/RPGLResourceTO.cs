@@ -17,6 +17,7 @@ public class RPGLResourceTO : TaggableContentTO {
             .SetAvailableUses(AvailableUses)
             .SetMaximumUses(MaximumUses)
             .SetPotency(Potency)
+            .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)

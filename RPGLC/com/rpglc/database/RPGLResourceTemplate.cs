@@ -55,12 +55,9 @@ public class RPGLResourceTemplate : RPGLTemplate {
                 );
             }
 
-            // default tries
-            if (!criterion.AsDict().ContainsKey("chance")) {
-                criterion.PutJsonObject("tries", new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
-                );
+            // default actor
+            if (!criterion.AsDict().ContainsKey("actor")) {
+                criterion.PutString("actor", "source");
             }
 
             // unpack dice

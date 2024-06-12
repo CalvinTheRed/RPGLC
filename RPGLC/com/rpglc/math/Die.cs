@@ -40,4 +40,9 @@ public static class Die {
         }
         return unpackedDice;
     }
+
+    public static double Random() {
+        return R.NextDouble();
+    }
+
 };

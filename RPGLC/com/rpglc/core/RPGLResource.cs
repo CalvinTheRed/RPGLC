@@ -1,5 +1,6 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.math;
 using com.rpglc.subevent;
 
 namespace com.rpglc.core;
@@ -77,15 +78,9 @@ public class RPGLResource : TaggableContent {
         }
         if (subevent.GetSubeventId() == criterion.GetString("subevent")
             && subevent.GetTags().ContainsAll(criterion.GetJsonArray("tags").AsList())
-            && new Random().NextDouble() * 100.0 <= criterion.GetInt("chance")
             && (anyActor || owner.GetUuid() == actor.GetUuid())
         ) {
-            long completed = (long) criterion.GetInt("completed") + 1L;
-            criterion.PutInt("completed", completed);
-            if (completed > criterion.GetInt("required")) {
-                Refresh();
-                return true;
-            }
+            return AttemptRefresh(criterion);
         }
         return false;
     }
@@ -98,12 +93,49 @@ public class RPGLResource : TaggableContent {
         return this;
     }
 
-    public RPGLResource Refresh() {
+    public bool AttemptRefresh(JsonObject criterion) {
+        // should be a function of frequency, tries, and chance, not a guaranteed refresh of 1
         if (GetAvailableUses() < GetMaximumUses()) {
-            SetAvailableUses(GetAvailableUses() + 1);
+            bool refreshed = false;
+            // ensure countdown is active
+            if (!criterion.AsDict().ContainsKey("frequency_countdown")) {
+                long countdownInitialValue = (long) criterion.SeekInt("frequency.bonus");
+                JsonArray dice = criterion.SeekJsonArray("frequency.dice");
+                for (int i = 0; i < dice.Count(); i++) {
+                    countdownInitialValue += Die.Roll(dice.GetJsonObject(i));
+                }
+                criterion.PutInt("frequency_countdown", countdownInitialValue);
+            }
+
+            // update countdown
+            long updatedCountdown = (long) criterion.RemoveInt("frequency_countdown") - 1L;
+            if (updatedCountdown > 0) {
+                // decrement countdown
+                criterion.PutInt("frequency_countdown", updatedCountdown);
+            } else {
+                // determine how many tries to make
+                JsonObject triesJson = criterion.GetJsonObject("tries");
+                long tries = (long) triesJson.GetInt("bonus");
+                JsonArray dice = triesJson.GetJsonArray("dice");
+                for (int i = 0; i < dice.Count(); i++) {
+                    tries += Die.Roll(dice.GetJsonObject(i));
+                }
+                for (int i = 0; i < tries; i++) {
+                    // chance of each try succeeding at refreshing a use
+                    if (GetAvailableUses() < GetMaximumUses() 
+                        && Die.Random() <= (criterion.GetDouble("chance") ?? 1.0)
+                    ) {
+                        SetAvailableUses(GetAvailableUses() + 1L);
+                        refreshed = true;
+                    }
+                }
+
+                // TODO should the countdowns be removed from other criteria at this point?
+            }
             DBManager.UpdateRPGLResource(this);
+            return refreshed;
         }
-        return this;
+        return false;
     }
 
 };
