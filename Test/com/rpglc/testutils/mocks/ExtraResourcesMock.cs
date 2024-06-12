@@ -19,7 +19,27 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
                 "datapack_id": "test:complex_resource",
                 "tags": [ "dummy" ],
                 "potency": 2,
-                "refresh_criterion": [ ]
+                "maximum_uses": 10,
+                "refresh_criterion": [
+                    {
+                        "subevent": "dummy_subevent",
+                        "tags": [ ],
+                        "frequency": {
+                            "bonus": 1,
+                            "dice": [ ]
+                        },
+                        "tries": {
+                            "bonus": 4,
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 1 ] }
+                            ]
+                        },
+                        "chance": {
+                            "numerator": 1,
+                            "denominator": 1
+                        }
+                    }
+                ]
             }
             """));
 

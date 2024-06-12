@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.math;
 
 namespace com.rpglc.database;
 
@@ -37,24 +38,40 @@ public class RPGLResourceTemplate : RPGLTemplate {
         JsonArray refreshCriterion = rpglResource.GetRefreshCriterion();
         for (int i = 0; i < refreshCriterion.Count(); i++) {
             JsonObject criterion = refreshCriterion.GetJsonObject(i);
+
+            // default frequency
             if (!criterion.AsDict().ContainsKey("frequency")) {
                 criterion.PutJsonObject("frequency", new JsonObject()
                     .PutInt("bonus", 1L)
                     .PutJsonArray("dice", new())
                 );
             }
+
+            // default or unpack tries
             if (!criterion.AsDict().ContainsKey("tries")) {
                 criterion.PutJsonObject("tries", new JsonObject()
                     .PutInt("bonus", 1L)
                     .PutJsonArray("dice", new())
                 );
             }
+
+            // default tries
             if (!criterion.AsDict().ContainsKey("chance")) {
                 criterion.PutJsonObject("tries", new JsonObject()
                     .PutInt("numerator", 1L)
                     .PutInt("denominator", 1L)
                 );
             }
+
+            // unpack dice
+            criterion.InsertJsonArray(
+                "frequency.dice",
+                Die.Unpack(criterion.SeekJsonArray("frequency.dice"))
+            );
+            criterion.InsertJsonArray(
+                "tries.dice",
+                Die.Unpack(criterion.SeekJsonArray("tries.dice"))
+            );
         }
     }
 
