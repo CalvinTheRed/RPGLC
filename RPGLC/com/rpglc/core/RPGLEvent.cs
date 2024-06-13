@@ -88,17 +88,36 @@ public class RPGLEvent : DatabaseContent {
 
     public void Scale(List<RPGLResource> resources) {
         JsonArray cost = GetCost();
-        for (int i = 0; i < cost.Count(); i++) {
-            JsonObject costData = cost.GetJsonObject(i);
-            RPGLResource providedResource = resources[i];
-            long potencyDifference = providedResource.GetPotency() - (long) costData.GetInt("minimum_potency");
-            if (potencyDifference > 0) {
-                JsonArray scaling = costData.GetJsonArray("scale");
-                for (int j = 0; j < scaling.Count(); j++) {
-                    JsonObject scalingData = scaling.GetJsonObject(j);
-                    long magnitude = (long) scalingData.GetInt("magnitude");
-                    string field = scalingData.GetString("field");
-                    InsertInt(field, SeekInt(field) + (potencyDifference * magnitude));
+        foreach (RPGLResource rpglResource in resources) {
+            long availableResourceUses = rpglResource.GetAvailableUses();
+            if (availableResourceUses > 0) {
+                for (int i = 0; i < cost.Count(); i++) {
+                    JsonObject costJson = cost.GetJsonObject(i);
+                    if (rpglResource.GetTags().ContainsAll(costJson.GetJsonArray("resource_tags").AsList())
+                        && rpglResource.GetPotency() >= costJson.GetInt("minimum_potency")
+                        && costJson.GetInt("count") > 0
+                    ) {
+                        // while the resource has uses and the cost count is greater than 0, scale once and update counters
+                        long costCount = (long) costJson.GetInt("count");
+                        while (availableResourceUses > 0 && costCount > 0) {
+                            availableResourceUses--;
+                            costCount--;
+                            long potencyDifference = rpglResource.GetPotency() - (long) costJson.GetInt("minimum_potency");
+                            if (potencyDifference > 0) {
+                                JsonArray scaling = costJson.GetJsonArray("scale");
+                                for (int j = 0; j < scaling.Count(); j++) {
+                                    JsonObject scalingData = scaling.GetJsonObject(j);
+                                    long magnitude = (long) scalingData.GetInt("magnitude");
+                                    string field = scalingData.GetString("field");
+                                    InsertInt(field, SeekInt(field) + (potencyDifference * magnitude));
+                                }
+                            }
+                        }
+                        // short-circuit if resource is fully depleted
+                        if (availableResourceUses == 0) {
+                            continue;
+                        }
+                    }
                 }
             }
         }

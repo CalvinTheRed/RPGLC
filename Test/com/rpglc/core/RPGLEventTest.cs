@@ -1,4 +1,5 @@
 ﻿using com.rpglc.database;
+using com.rpglc.json;
 using com.rpglc.testutils;
 using com.rpglc.testutils.mocks;
 
@@ -54,6 +55,38 @@ public class RPGLEventTest {
     }
 
     [DefaultMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "sufficient resources mixed order")]
+    public void SufficientResourcesMixedOrder() {
+        RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:dummy")
+            .SetCost(new JsonArray().LoadFromString("""
+                [
+                    {
+                        "resource_tags": [ "resource_1" ],
+                        "count": 1,
+                        "minimum_potency": 0,
+                        "scale": [ ]
+                    },
+                    {
+                        "resource_tags": [ "resource_2" ],
+                        "count": 1,
+                        "minimum_potency": 0,
+                        "scale": [ ]
+                    }
+                ]
+                """));
+
+        RPGLResource rpglResource1 = (RPGLResource) RPGLFactory.NewResource("test:dummy")
+            .SetTags(new JsonArray().AddString("resource_1"));
+        RPGLResource rpglResource2 = (RPGLResource) RPGLFactory.NewResource("test:dummy")
+            .SetTags(new JsonArray().AddString("resource_2"));
+
+        DBManager.UpdateRPGLResource(rpglResource1);
+        DBManager.UpdateRPGLResource(rpglResource2);
+        Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource2, rpglResource1]));
+    }
+
+    [DefaultMock]
     [ExtraEventsMock]
     [ExtraResourcesMock]
     [ClearDatabaseAfterTest]
@@ -63,6 +96,52 @@ public class RPGLEventTest {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglEvent.Scale([rpglResource]);
         Assert.Equal(0 + 2, rpglEvent.SeekInt("subevents[0].scalable_field"));
+    }
+
+    [DefaultMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "scales mixed order")]
+    public void ScalesMixedOrder() {
+        RPGLEvent rpglEvent = (RPGLEvent) RPGLFactory.NewEvent("test:dummy")
+            .SetCost(new JsonArray().LoadFromString("""
+                [
+                    {
+                        "resource_tags": [ "resource_1" ],
+                        "count": 1,
+                        "minimum_potency": 0,
+                        "scale": [
+                            {
+                                "field": "scalable_field",
+                                "magnitude": 1
+                            }
+                        ]
+                    },
+                    {
+                        "resource_tags": [ "resource_2" ],
+                        "count": 1,
+                        "minimum_potency": 0,
+                        "scale": [
+                            {
+                                "field": "scalable_field",
+                                "magnitude": 1
+                            }
+                        ]
+                    }
+                ]
+                """))
+            .PutInt("scalable_field", 0L);
+
+        RPGLResource rpglResource1 = (RPGLResource) RPGLFactory.NewResource("test:dummy")
+            .SetPotency(2L)
+            .SetTags(new JsonArray().AddString("resource_1"));
+        RPGLResource rpglResource2 = (RPGLResource) RPGLFactory.NewResource("test:dummy")
+            .SetPotency(2L)
+            .SetTags(new JsonArray().AddString("resource_2"));
+
+        DBManager.UpdateRPGLResource(rpglResource1);
+        DBManager.UpdateRPGLResource(rpglResource2);
+        rpglEvent.Scale([rpglResource2, rpglResource1]);
+        Assert.Equal(0 + 2 + 2, rpglEvent.GetInt("scalable_field"));
     }
 
 };
