@@ -440,7 +440,7 @@ public class RPGLObject : TaggableContent {
         List<RPGLObject> targets,
         RPGLContext context
     ) {
-        if (rpglEvent.ResourcesMatchCost(resources)) {
+        if (rpglEvent.ResourcesSatisfyCost(resources)) {
             foreach (RPGLResource rpglResource in resources) {
                 rpglResource.Exhaust();
             }

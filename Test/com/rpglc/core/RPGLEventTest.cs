@@ -14,7 +14,7 @@ public class RPGLEventTest {
     [Fact(DisplayName = "too few resources")]
     public void TooFewResources() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
-        Assert.False(rpglEvent.ResourcesMatchCost([]));
+        Assert.False(rpglEvent.ResourcesSatisfyCost([]));
     }
 
     [DefaultMock]
@@ -24,7 +24,7 @@ public class RPGLEventTest {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:dummy");
         RPGLResource rpglResource = RPGLFactory.NewResource("test:dummy");
         DBManager.UpdateRPGLResource(rpglResource);
-        Assert.False(rpglEvent.ResourcesMatchCost([rpglResource]));
+        Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource]));
     }
 
     [DefaultMock]
@@ -37,7 +37,7 @@ public class RPGLEventTest {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.SetPotency(0L);
         DBManager.UpdateRPGLResource(rpglResource);
-        Assert.False(rpglEvent.ResourcesMatchCost([ rpglResource ]));
+        Assert.False(rpglEvent.ResourcesSatisfyCost([ rpglResource ]));
     }
 
     [DefaultMock]
@@ -50,7 +50,7 @@ public class RPGLEventTest {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.SetPotency(1L);
         DBManager.UpdateRPGLResource(rpglResource);
-        Assert.True(rpglEvent.ResourcesMatchCost([rpglResource]));
+        Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource]));
     }
 
     [DefaultMock]

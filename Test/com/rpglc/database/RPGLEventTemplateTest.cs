@@ -38,6 +38,7 @@ public class RPGLEventTemplateTest {
             """
             [
               {
+                "count": 1,
                 "minimum_potency": 1,
                 "resource_tags": [
                   "dummy"

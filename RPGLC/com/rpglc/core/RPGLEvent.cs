@@ -49,23 +49,41 @@ public class RPGLEvent : DatabaseContent {
         return this;
     }
 
-    public bool ResourcesMatchCost(List<RPGLResource> resources) {
-        JsonArray cost = GetCost();
-        if (cost.Count() == resources.Count) {
-            bool resourcesSatisfied = true;
-            for (int i = 0; i < cost.Count(); i++) {
-                JsonObject costData = cost.GetJsonObject(i);
-                RPGLResource rpglResource = resources[i];
-                if (!rpglResource.GetTags().ContainsAny(costData.GetJsonArray("resource_tags").AsList())
-                    || rpglResource.GetPotency() < costData.GetInt("minimum_potency")
-                ) {
-                    resourcesSatisfied = false;
-                    break;
+    public bool ResourcesSatisfyCost(List<RPGLResource> resources) {
+        JsonArray cost = GetCost().DeepClone();
+        foreach (RPGLResource rpglResource in resources) {
+            long availableResourceUses = rpglResource.GetAvailableUses();
+            if (availableResourceUses > 0) {
+                for (int i = 0; i < cost.Count(); i++) {
+                    JsonObject costJson = cost.GetJsonObject(i);
+                    if (rpglResource.GetTags().ContainsAll(costJson.GetJsonArray("resource_tags").AsList())
+                        && rpglResource.GetPotency() >= costJson.GetInt("minimum_potency")
+                        && costJson.GetInt("count") > 0
+                    ) {
+                        long costCount = (long) costJson.GetInt("count");
+                        if (availableResourceUses <= costCount) {
+                            // resource would be depleted; update costJson and move to next rpglResource
+                            costJson.PutInt("count", costCount - availableResourceUses);
+                            break;
+                        } else {
+                            // resource would not be depleted; update costJson and availableResourceUses and move to next costJson
+                            availableResourceUses -= costCount;
+                            costJson.PutInt("count", 0L);
+                        }
+                    }
                 }
+            } else {
+                return false;
             }
-            return resourcesSatisfied;
         }
-        return false;
+        // return false if any cost was not fully satisfied, else true
+        for (int i = 0; i < cost.Count(); i++) {
+            JsonObject costJson = cost.GetJsonObject(i);
+            if (costJson.GetInt("count") != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void Scale(List<RPGLResource> resources) {

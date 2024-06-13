@@ -26,16 +26,13 @@ public class RPGLEventTemplate : RPGLTemplate {
     }
 
     internal static void ProcessCost(RPGLEvent rpglEvent) {
-        JsonArray rawCost = rpglEvent.GetCost();
-        JsonArray processedCost = new();
-        for (int i = 0; i < rawCost.Count(); i++) {
-            JsonObject rawCostElement = rawCost.GetJsonObject(i);
-            long count = rawCostElement.RemoveInt("count") ?? 1L;
-            for (int j = 0; j < count; j++) {
-                processedCost.AddJsonObject(rawCostElement.DeepClone());
+        JsonArray cost = rpglEvent.GetCost();
+        for (int i = 0; i <cost.Count(); i++) {
+            JsonObject costJson = cost.GetJsonObject(i);
+            if (!costJson.AsDict().ContainsKey("count")) {
+                costJson.PutInt("count", 1L);
             }
         }
-        rpglEvent.SetCost(processedCost);
     }
 
 };
