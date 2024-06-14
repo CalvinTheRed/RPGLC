@@ -52,7 +52,9 @@ public class RPGLResource : TaggableContent {
         return this;
     }
 
-
+    // =====================================================================
+    // Utility methods.
+    // =====================================================================
 
     public void ProcessSubevent(Subevent subevent, RPGLObject owner) {
         if (GetAvailableUses() < GetMaximumUses()) {
@@ -66,7 +68,7 @@ public class RPGLResource : TaggableContent {
     }
 
     private bool CheckCriterion(Subevent subevent, JsonObject criterion, RPGLObject owner) {
-        string actorAlias = criterion.GetString("actor"); // TODO could this have a better field name?
+        string actorAlias = criterion.GetString("actor");
         RPGLObject? actor = null;
         bool anyActor = false;
         if (actorAlias == "source") { 

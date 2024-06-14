@@ -15,7 +15,7 @@ public class RPGLItemTemplateTO : TaggableContentTO {
         template.PutInt("cost", Cost);
         template.PutInt("weight", Weight);
 
-        base.ApplyToTemplate(template);
+        ApplyToTemplate(template);
         return template;
     }
 

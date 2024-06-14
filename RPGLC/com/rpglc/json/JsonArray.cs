@@ -231,7 +231,7 @@ public class JsonArray {
         return PrettyPrint(0);
     }
 
-    internal string PrettyPrint(int indent) {
+    private string PrettyPrint(int indent) {
         StringBuilder sb = new();
         if (IsEmpty()) {
             sb.Append("[ ]");

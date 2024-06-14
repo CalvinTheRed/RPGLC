@@ -7,7 +7,7 @@ public class RPGLEffectTemplateTO : TaggableContentTO {
         RPGLEffectTemplate template = new();
         template.PutJsonObject("subevent_filters", new json.JsonObject(SubeventFilters));
 
-        base.ApplyToTemplate(template);
+        ApplyToTemplate(template);
         return template;
     }
 

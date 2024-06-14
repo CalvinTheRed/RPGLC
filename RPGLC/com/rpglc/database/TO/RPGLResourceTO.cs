@@ -25,4 +25,5 @@ public class RPGLResourceTO : TaggableContentTO {
             .SetName(Name)
             .SetId(_id);
     }
+
 };

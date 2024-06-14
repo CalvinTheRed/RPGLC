@@ -39,7 +39,7 @@ public abstract class Subevent {
         GetTags().AddString(tag);
     }
 
-    internal bool VerifySubevent(string expected) {
+    private bool VerifySubevent(string expected) {
         return expected == json.GetString("subevent");
     }
 

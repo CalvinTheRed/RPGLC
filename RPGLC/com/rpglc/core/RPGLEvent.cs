@@ -124,7 +124,7 @@ public class RPGLEvent : DatabaseContent {
         }
     }
 
-    public bool SpendResources(List<RPGLResource> resources) {
+    public void SpendResources(List<RPGLResource> resources) {
         JsonArray cost = GetCost().DeepClone();
         foreach (RPGLResource rpglResource in resources) {
             long availableResourceUses = rpglResource.GetAvailableUses();
@@ -137,32 +137,22 @@ public class RPGLEvent : DatabaseContent {
                     ) {
                         long costCount = (long) costJson.GetInt("count");
                         if (availableResourceUses <= costCount) {
-                            // resource would be depleted; update costJson and move to next rpglResource
+                            // deplete resource uses and update costCount, then proceed to next resource
                             costJson.PutInt("count", costCount - availableResourceUses);
                             rpglResource.SetAvailableUses(0L);
                             DBManager.UpdateRPGLResource(rpglResource);
                             break;
                         } else {
-                            // resource would not be depleted; update costJson and availableResourceUses and move to next costJson
+                            // update costCount and resource use count and then proceed to next costJson
+                            costJson.PutInt("count", 0L);
                             availableResourceUses -= costCount;
                             rpglResource.SetAvailableUses(availableResourceUses);
                             DBManager.UpdateRPGLResource(rpglResource);
-                            costJson.PutInt("count", 0L);
                         }
                     }
                 }
-            } else {
-                return false;
             }
         }
-        // return false if any cost was not fully satisfied, else true
-        for (int i = 0; i < cost.Count(); i++) {
-            JsonObject costJson = cost.GetJsonObject(i);
-            if (costJson.GetInt("count") != 0) {
-                return false;
-            }
-        }
-        return true;
     }
 
 };

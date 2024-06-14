@@ -3,6 +3,7 @@ using com.rpglc.json;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
+
 public abstract class Function(string functionId) {
 
     public static readonly Dictionary<string, Function> Functions = [];

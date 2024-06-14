@@ -1,7 +1,6 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using System.Resources;
 
 namespace com.rpglc.core;
 
@@ -335,10 +334,10 @@ public class RPGLObject : TaggableContent {
     }
 
     private void AddAdditionalNestedClass(
-            string classDatapackId,
-            string additionalNestedClassDatapackId,
-            long scale,
-            bool roundUp
+        string classDatapackId,
+        string additionalNestedClassDatapackId,
+        long scale,
+        bool roundUp
     ) {
         JsonArray classes = GetClasses();
         for (int i = 0; i < classes.Count(); i++) {
@@ -556,7 +555,7 @@ public class RPGLObject : TaggableContent {
         return GetAbilityModifierFromAbilityScore(GetAbilityScoreFromAbilityName(ability, context));
     }
 
-    public long GetAbilityModifierFromAbilityScore(long score) {
+    public static long GetAbilityModifierFromAbilityScore(long score) {
         if (score < 10) {
             // integer division rounds toward zero, so abilityScore must be
             // adjusted to calculate the correct values for negative modifiers

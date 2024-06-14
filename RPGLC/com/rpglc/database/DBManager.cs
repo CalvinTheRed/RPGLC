@@ -175,6 +175,7 @@ public class DBManager {
 
             Tags = data.GetJsonArray("tags").AsList(),
 
+            // available uses is not included in template data
             RefreshCriterion = data.GetJsonArray("refresh_criterion").AsList(),
             // origin item is not included in template data
             MaximumUses = data.GetInt("maximum_uses"),
@@ -687,7 +688,7 @@ public class DBManager {
     }
 
     // =====================================================================
-    // Utility operations
+    // Utility methods.
     // =====================================================================
 
     public static bool IsUuidAvailable<T>(string collectionName, string uuid) where T : PersistentContentTO {

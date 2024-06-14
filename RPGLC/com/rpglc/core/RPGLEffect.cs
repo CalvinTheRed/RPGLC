@@ -44,7 +44,9 @@ public class RPGLEffect : TaggableContent {
         return this;
     }
 
-
+    // =====================================================================
+    // Utility methods.
+    // =====================================================================
 
     public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
         JsonObject subeventFilters = GetSubeventFilters();

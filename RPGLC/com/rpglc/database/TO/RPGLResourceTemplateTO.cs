@@ -16,7 +16,7 @@ public class RPGLResourceTemplateTO : TaggableContentTO {
         template.PutInt("maximum_uses", MaximumUses);
         template.PutInt("potency", Potency);
         
-        base.ApplyToTemplate(template);
+        ApplyToTemplate(template);
         return template;
     }
 

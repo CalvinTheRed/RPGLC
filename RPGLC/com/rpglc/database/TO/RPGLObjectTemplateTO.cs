@@ -41,7 +41,7 @@ public class RPGLObjectTemplateTO : TaggableContentTO {
         template.PutInt("proficiency_bonus", ProficiencyBonus);
         template.PutBool("proxy", Proxy);
 
-        base.ApplyToTemplate(template);
+        ApplyToTemplate(template);
         return template;
     }
 

@@ -25,7 +25,7 @@ public class RPGLEventTemplate : RPGLTemplate {
         return rpglEvent;
     }
 
-    internal static void ProcessCost(RPGLEvent rpglEvent) {
+    private static void ProcessCost(RPGLEvent rpglEvent) {
         JsonArray cost = rpglEvent.GetCost();
         for (int i = 0; i <cost.Count(); i++) {
             JsonObject costJson = cost.GetJsonObject(i);

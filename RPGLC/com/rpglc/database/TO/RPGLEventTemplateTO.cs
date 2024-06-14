@@ -13,7 +13,7 @@ public class RPGLEventTemplateTO : DatabaseContentTO {
         template.PutJsonArray("subevents", new json.JsonArray(Subevents));
         template.PutString("origin_item", OriginItem);
         
-        base.ApplyToTemplate(template);
+        ApplyToTemplate(template);
         return template;
     }
 
