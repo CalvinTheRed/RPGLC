@@ -31,32 +31,24 @@ public class RPGLEventTemplateTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns cost")]
     public void AssignsCost() {
-        RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:event_with_cost")
+        RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:complex_event")
             .NewInstance();
 
         Assert.Equal(
             """
             [
               {
-                "minimum_potency": 2,
+                "count": 1,
+                "minimum_potency": 1,
                 "resource_tags": [
-                  "tag"
+                  "dummy"
                 ],
-                "scale": [ ]
-              },
-              {
-                "minimum_potency": 2,
-                "resource_tags": [
-                  "tag"
-                ],
-                "scale": [ ]
-              },
-              {
-                "minimum_potency": 2,
-                "resource_tags": [
-                  "tag"
-                ],
-                "scale": [ ]
+                "scale": [
+                  {
+                    "field": "subevents[0].scalable_field",
+                    "magnitude": 2
+                  }
+                ]
               }
             ]
             """,

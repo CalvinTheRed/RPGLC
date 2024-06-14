@@ -29,7 +29,7 @@ public class RPGLItemTemplateTest {
         Assert.Equal(1L, rpglItem.GetWeight());
         Assert.Equal(1L, rpglItem.GetCost());
         Assert.Equal("""{}""", rpglItem.GetEffects().ToString());
-        Assert.Equal("""[]""", rpglItem.GetEvents().ToString());
+        Assert.Equal("""{}""", rpglItem.GetEvents().ToString());
         Assert.Equal("""{}""", rpglItem.GetResources().ToString());
     }
 

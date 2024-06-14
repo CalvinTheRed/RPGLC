@@ -2,7 +2,7 @@
 
 namespace com.rpglc.json;
 
-internal class JsonUtils {
+public class JsonUtils {
     public const string indent = "  ";
 
     public static Dictionary<string, object> ConvertJObjectToDict(JObject arg) {

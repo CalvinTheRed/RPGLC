@@ -20,12 +20,12 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
                 "datapack_id": "test:complex_object",
                 "tags": [ ],
                 "ability_scores": {
-                    "str": 10,
-                    "dex": 10,
-                    "con": 10,
-                    "int": 10,
-                    "wis": 10,
-                    "cha": 10
+                    "str": 13,
+                    "dex": 12,
+                    "con": 11,
+                    "int": 9,
+                    "wis": 8,
+                    "cha": 7
                 },
                 "health_base": 1000,
                 "health_current": 1000,

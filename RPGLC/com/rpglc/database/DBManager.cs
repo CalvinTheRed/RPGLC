@@ -10,7 +10,6 @@ namespace com.rpglc.database;
 public class DBManager {
     private static string? dbDir;
     private static string? dbName;
-    private static DBConnection? connection;
 
     public static void SetDatabase(string dbDir, string dbName) {
         DBManager.dbDir = dbDir;
@@ -97,6 +96,8 @@ public class DBManager {
             Metadata = data.GetJsonObject("metadata").AsDict(),
             Name = data.GetString("name"),
 
+            Tags = data.GetJsonArray("tags").AsList(),
+
             SubeventFilters = data.GetJsonObject("subevent_filters").AsDict(),
         });
     }
@@ -127,8 +128,8 @@ public class DBManager {
             Tags = data.GetJsonArray("tags").AsList(),
 
             Effects = data.GetJsonObject("effects").AsDict(),
+            Events = data.GetJsonObject("events").AsDict(),
             Resources = data.GetJsonObject("resources").AsDict(),
-            Events = data.GetJsonArray("events").AsList(),
             Cost = (long) data.GetInt("cost"),
             Weight = (long) data.GetInt("weight"),
         });
@@ -174,10 +175,11 @@ public class DBManager {
 
             Tags = data.GetJsonArray("tags").AsList(),
 
+            // available uses is not included in template data
             RefreshCriterion = data.GetJsonArray("refresh_criterion").AsList(),
             // origin item is not included in template data
+            MaximumUses = data.GetInt("maximum_uses"),
             Potency = (long) data.GetInt("potency"),
-            // exhausted is not included in template data
         });
     }
 
@@ -192,6 +194,8 @@ public class DBManager {
             Description = rpglEffect.GetDescription(),
             Metadata = rpglEffect.GetMetadata().AsDict(),
             Name = rpglEffect.GetName(),
+
+            Tags = rpglEffect.GetTags().AsList(),
 
             Uuid = rpglEffect.GetUuid(),
 
@@ -215,8 +219,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Events = rpglItem.GetEvents().AsDict(),
             Resources = rpglItem.GetResources().AsDict(),
-            Events = rpglItem.GetEvents().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });
@@ -244,12 +248,12 @@ public class DBManager {
             Resources = rpglObject.GetResources().AsList(),
             Rotation = rpglObject.GetRotation().AsList(),
             OriginObject = rpglObject.GetOriginObject(),
-            ProxyObject = rpglObject.GetProxyObject(),
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
             HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
+            Proxy = rpglObject.GetProxy(),
         });
     }
 
@@ -267,8 +271,9 @@ public class DBManager {
 
             RefreshCriterion = rpglResource.GetRefreshCriterion().AsList(),
             OriginItem = rpglResource.GetOriginItem(),
+            AvailableUses = rpglResource.GetAvailableUses(),
+            MaximumUses = rpglResource.GetMaximumUses(),
             Potency = rpglResource.GetPotency(),
-            Exhausted = false, // new RPGLResource should never be exhausted
         });
     }
 
@@ -594,6 +599,8 @@ public class DBManager {
             Metadata = rpglEffect.GetMetadata().AsDict(),
             Name = rpglEffect.GetName(),
 
+            Tags = rpglEffect.GetTags().AsList(),
+
             Uuid = rpglEffect.GetUuid(),
 
             SubeventFilters = rpglEffect.GetSubeventFilters().AsDict(),
@@ -618,8 +625,8 @@ public class DBManager {
             Uuid = rpglItem.GetUuid(),
 
             Effects = rpglItem.GetEffects().AsDict(),
+            Events = rpglItem.GetEvents().AsDict(),
             Resources = rpglItem.GetResources().AsDict(),
-            Events = rpglItem.GetEvents().AsList(),
             Cost = rpglItem.GetCost(),
             Weight = rpglItem.GetWeight(),
         });
@@ -649,12 +656,12 @@ public class DBManager {
             Resources = rpglObject.GetResources().AsList(),
             Rotation = rpglObject.GetRotation().AsList(),
             OriginObject = rpglObject.GetOriginObject(),
-            ProxyObject = rpglObject.GetProxyObject(),
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
             HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
+            Proxy = rpglObject.GetProxy(),
         });
     }
 
@@ -674,13 +681,14 @@ public class DBManager {
 
             RefreshCriterion = rpglResource.GetRefreshCriterion().AsList(),
             OriginItem = rpglResource.GetOriginItem(),
+            AvailableUses = rpglResource.GetAvailableUses(),
+            MaximumUses = rpglResource.GetMaximumUses(),
             Potency = rpglResource.GetPotency(),
-            Exhausted = false, // new RPGLResource should never be exhausted
         });
     }
 
     // =====================================================================
-    // Utility operations
+    // Utility methods.
     // =====================================================================
 
     public static bool IsUuidAvailable<T>(string collectionName, string uuid) where T : PersistentContentTO {

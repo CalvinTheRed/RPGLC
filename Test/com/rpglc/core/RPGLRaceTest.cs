@@ -1,10 +1,9 @@
-﻿using com.rpglc.core;
-using com.rpglc.database;
+﻿using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils;
 using com.rpglc.testutils.mocks;
 
-namespace Test.com.rpglc.core;
+namespace com.rpglc.core;
 
 [AssignDatabase]
 [Collection("Serial")]

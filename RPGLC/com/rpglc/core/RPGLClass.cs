@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -78,7 +77,7 @@ public class RPGLClass : DatabaseContent {
         }
     }
 
-    internal long IncrementRPGLObjectLevel(RPGLObject rpglObject) {
+    private long IncrementRPGLObjectLevel(RPGLObject rpglObject) {
         // TODO check for meeting multiclassing requirements
         long level = rpglObject.GetLevel(GetDatapackId()) + 1;
         if (level == 1) {

@@ -2,7 +2,7 @@
 
 namespace com.rpglc.database;
 
-internal class Datapack {
+public class Datapack {
     private readonly string datapackNamespace;
 
     public Datapack(string path) {
@@ -21,7 +21,7 @@ internal class Datapack {
         LoadClasses("", path);
     }
 
-    internal void LoadClasses(string classNameBase, string path) {
+    private void LoadClasses(string classNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             LoadClasses($"{classNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -43,7 +43,7 @@ internal class Datapack {
         LoadRaces("", path);
     }
 
-    internal void LoadRaces(string raceNameBase, string path) {
+    private void LoadRaces(string raceNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             LoadRaces($"{raceNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -65,7 +65,7 @@ internal class Datapack {
         LoadEffectTemplates("", path);
     }
 
-    internal void LoadEffectTemplates(string templateNameBase, string path) {
+    private void LoadEffectTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             LoadEffectTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -87,7 +87,7 @@ internal class Datapack {
         LoadEventTemplates("", path);
     }
 
-    internal void LoadEventTemplates(string templateNameBase, string path) {
+    private void LoadEventTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             this.LoadEventTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -109,7 +109,7 @@ internal class Datapack {
         LoadItemTemplates("", path);
     }
 
-    internal void LoadItemTemplates(string templateNameBase, string path) {
+    private void LoadItemTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             this.LoadItemTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -131,7 +131,7 @@ internal class Datapack {
         LoadObjectTemplates("", path);
     }
 
-    internal void LoadObjectTemplates(string templateNameBase, string path) {
+    private void LoadObjectTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             this.LoadObjectTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);
@@ -153,7 +153,7 @@ internal class Datapack {
         LoadResourceTemplates("", path);
     }
 
-    internal void LoadResourceTemplates(string templateNameBase, string path) {
+    private void LoadResourceTemplates(string templateNameBase, string path) {
         // resurse over nested directories
         foreach (string dirPath in Directory.GetDirectories(path)) {
             this.LoadResourceTemplates($"{templateNameBase}{new DirectoryInfo(dirPath).Name}{Path.DirectorySeparatorChar}", dirPath);

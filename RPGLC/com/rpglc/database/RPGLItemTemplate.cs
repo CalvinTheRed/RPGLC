@@ -36,7 +36,7 @@ public class RPGLItemTemplate : RPGLTemplate {
         rpglItem.SetEffects(processedEffects);
     }
 
-    internal static void ProcessResources(RPGLItem rpglItem) {
+    private static void ProcessResources(RPGLItem rpglItem) {
         JsonObject resources = rpglItem.GetResources();
         JsonObject processedResources = new();
         foreach (string resourceDatapackId in resources.AsDict().Keys) {

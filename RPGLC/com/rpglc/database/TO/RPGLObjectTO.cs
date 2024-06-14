@@ -13,12 +13,12 @@ public class RPGLObjectTO : TaggableContentTO {
     public List<object> Resources { get; set; }
     public List<object> Rotation { get; set; }
     public string? OriginObject { get; set; }
-    public string? ProxyObject { get; set; }
     public string UserId { get; set; }
     public long HealthBase { get; set; }
     public long HealthCurrent { get; set; }
     public long HealthTemporary { get; set; }
     public long ProficiencyBonus { get; set; }
+    public bool? Proxy { get; set; }
 
     public RPGLObject ToRPGLObject() {
         return (RPGLObject) new RPGLObject()
@@ -32,12 +32,12 @@ public class RPGLObjectTO : TaggableContentTO {
             .SetResources(new(Resources))
             .SetRotation(new(Rotation))
             .SetOriginObject(OriginObject)
-            .SetProxyObject(ProxyObject)
             .SetUserId(UserId)
             .SetHealthBase(HealthBase)
             .SetHealthCurrent(HealthCurrent)
             .SetHealthTemporary(HealthTemporary)
             .SetProficiencyBonus(ProficiencyBonus)
+            .SetProxy(Proxy)
             .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))

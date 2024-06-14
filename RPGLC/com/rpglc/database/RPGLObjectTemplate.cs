@@ -24,12 +24,11 @@ public class RPGLObjectTemplate : RPGLTemplate {
         ProcessInventory(rpglObject);
         ProcessEquippedItems(rpglObject);
         ProcessResources(rpglObject);
-        ProcessClasses(rpglObject);
 
         return rpglObject;
     }
 
-    internal static void ProcessEffects(RPGLObject rpglObject) {
+    private static void ProcessEffects(RPGLObject rpglObject) {
         JsonArray effectList = rpglObject.RemoveJsonArray("effects");
         for (int i = 0; i < effectList.Count(); i++) {
             RPGLFactory.NewEffect(
@@ -40,7 +39,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         }
     }
 
-    internal static void ProcessInventory(RPGLObject rpglObject) {
+    private static void ProcessInventory(RPGLObject rpglObject) {
         JsonArray itemDatapackIdList = rpglObject.GetInventory();
         JsonArray itemUuidList = new();
         for (int i = 0; i < itemDatapackIdList.Count(); i++) {
@@ -49,7 +48,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetInventory(itemUuidList);
     }
 
-    internal static void ProcessEquippedItems(RPGLObject rpglObject) {
+    private static void ProcessEquippedItems(RPGLObject rpglObject) {
         JsonObject itemDatapackIdDict = rpglObject.GetEquippedItems();
         JsonObject itemUuidDict = new();
         foreach (string key in itemDatapackIdDict.AsDict().Keys) {
@@ -60,7 +59,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetEquippedItems(itemUuidDict);
     }
 
-    internal static void ProcessResources(RPGLObject rpglObject) {
+    private static void ProcessResources(RPGLObject rpglObject) {
         JsonArray resourceList = rpglObject.GetResources();
         JsonArray resourceUuidList = new();
         for (int i = 0; i < resourceList.Count(); i++) {
@@ -82,7 +81,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetResources(resourceUuidList);
     }
 
-    internal static void ProcessClasses(RPGLObject rpglObject) {
+    public static void ProcessClasses(RPGLObject rpglObject) {
         JsonArray classList = rpglObject.GetClasses();
         rpglObject.SetClasses(new());
 
@@ -96,8 +95,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 rpglObject.LevelUp(
                     classDatapackId,
                     choices,
-                    classData.RemoveJsonObject("additional_nested_classes") ?? new(),
-                    false
+                    classData.RemoveJsonObject("additional_nested_classes") ?? new()
                 );
             }
         }

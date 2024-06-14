@@ -15,19 +15,29 @@ public class ExtraEventsMock : BeforeAfterTestAttribute {
                 "metadata": {
                     "author": "Calvin Withun"
                 },
-                "name": "Event With Cost",
-                "description": "This event has a cost that can be referenced during testing.",
-                "datapack_id": "test:event_with_cost",
+                "name": "Complex Event",
+                "description": "This event has features that can be referenced during testing.",
+                "datapack_id": "test:complex_event",
                 "area_of_effect": { },
                 "cost": [
                     {
-                        "resource_tags": [ "tag" ],
-                        "count": 3,
-                        "minimum_potency": 2,
-                        "scale": [ ]
+                        "resource_tags": [ "dummy" ],
+                        "count": 1,
+                        "minimum_potency": 1,
+                        "scale": [
+                            {
+                                "field": "subevents[0].scalable_field",
+                                "magnitude": 2
+                            }
+                        ]
                     }
                 ],
-                "subevents": [ ]
+                "subevents": [
+                    {
+                        "subevent": "dummy_subevent",
+                        "scalable_field": 0
+                    }
+                ]
             }
             """));
     }

@@ -299,6 +299,58 @@ public class JsonArrayTest {
         Assert.True(json.ContainsAny(list));
     }
 
+    [Fact(DisplayName = "checks equality")]
+    public void ChecksEquality() {
+        JsonArray json1 = new JsonArray().LoadFromString("""
+            [
+                { "key": "value" },
+                [ "value" ],
+                "value",
+                123,
+                123.456,
+                false
+            ]
+            """);
+        JsonArray json2 = new JsonArray().LoadFromString("""
+            [
+                { "key": "value" },
+                [ "value" ],
+                "value",
+                123,
+                123.456,
+                false
+            ]
+            """);
+
+        Assert.True(json1.Equals(json2));
+    }
+
+    [Fact(DisplayName = "checks inequality")]
+    public void ChecksInequality() {
+        JsonArray json1 = new JsonArray().LoadFromString("""
+            [
+                { "key": "value" },
+                [ "value" ],
+                "value",
+                123,
+                123.456,
+                false
+            ]
+            """);
+        JsonArray json2 = new JsonArray().LoadFromString("""
+            [
+                { "key": "valu" },
+                [ "valu" ],
+                "valu",
+                12,
+                123.45,
+                true
+            ]
+            """);
+
+        Assert.NotEqual(json1, json2);
+    }
+
     // =================================================================================================================
     // printing tests
     // =================================================================================================================

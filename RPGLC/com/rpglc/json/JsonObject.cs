@@ -364,6 +364,12 @@ public class JsonObject {
         return data == null || data.Count == 0;
     }
 
+    public override bool Equals(object? obj) {
+        return obj is not null 
+            && obj is JsonObject jsonObject 
+            && jsonObject.ToString() == ToString();
+    }
+
     // =================================================================================================================
     // printing methods
     // =================================================================================================================

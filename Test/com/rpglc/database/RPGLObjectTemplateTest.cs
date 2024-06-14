@@ -39,7 +39,7 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("""[]""", rpglObject.GetResources().ToString());
         Assert.Equal("""[]""", rpglObject.GetRotation().ToString());
         Assert.Null(rpglObject.GetOriginObject());
-        Assert.Null(rpglObject.GetProxyObject());
+        Assert.Null(rpglObject.GetProxy());
         Assert.Null(rpglObject.GetUserId());
         Assert.Equal(1000L, rpglObject.GetHealthBase());
         Assert.Equal(1000L, rpglObject.GetHealthCurrent());
@@ -102,10 +102,7 @@ public class RPGLObjectTemplateTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {
-        string objectUuid = "uuid";
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:complex_object"
-        ).NewInstance(objectUuid);
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
 
         Assert.Equal(
             """

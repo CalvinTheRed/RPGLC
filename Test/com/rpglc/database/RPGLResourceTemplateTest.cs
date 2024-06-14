@@ -27,8 +27,32 @@ public class RPGLResourceTemplateTest {
         Assert.Equal("""[]""", rpglResource.GetTags().ToString());
         Assert.Equal("""[]""", rpglResource.GetRefreshCriterion().ToString());
         Assert.Null(rpglResource.GetOriginItem());
+        Assert.Equal(1L, rpglResource.GetAvailableUses());
+        Assert.Equal(1L, rpglResource.GetMaximumUses());
         Assert.Equal(1L, rpglResource.GetPotency());
-        Assert.False(rpglResource.GetExhausted());
+    }
+
+    [ExtraResourcesMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "unpacks dice")]
+    public void UnpacksDice() {
+        string effectUuid = "uuid";
+        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId("test:complex_resource")
+            .NewInstance(effectUuid);
+
+        Assert.Equal("""
+            {
+              "bonus": 4,
+              "dice": [
+                {
+                  "determined": [
+                    1
+                  ],
+                  "size": 6
+                }
+              ]
+            }
+            """, rpglResource.SeekJsonObject("refresh_criterion[0].tries").PrettyPrint());
     }
 
 };

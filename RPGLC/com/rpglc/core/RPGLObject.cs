@@ -1,6 +1,6 @@
 ﻿using com.rpglc.database;
-using com.rpglc.database.TO;
 using com.rpglc.json;
+using com.rpglc.subevent;
 
 namespace com.rpglc.core;
 
@@ -96,12 +96,12 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public string? GetProxyObject() {
-        return GetString("proxy_object");
+    public bool? GetProxy() {
+        return GetBool("proxy");
     }
 
-    public RPGLObject SetProxyObject(string? proxyObject) {
-        PutString("proxy_object", proxyObject);
+    public RPGLObject SetProxy(bool? proxy) {
+        PutBool("proxy", proxy);
         return this;
     }
 
@@ -301,7 +301,7 @@ public class RPGLObject : TaggableContent {
         }
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, JsonObject additionalNestedClasses, bool updateDatabase = true) {
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, JsonObject additionalNestedClasses) {
         RPGLClass rpglClass = DBManager.QueryRPGLClassByDatapackId(classDatapackId);
 
         // level up
@@ -325,23 +325,19 @@ public class RPGLObject : TaggableContent {
         // update race features
         LevelUpRaces(choices, GetLevel());
 
-        // update database
-        if (updateDatabase) {
-            DBManager.UpdateRPGLObject(this);
-        }
-
+        DBManager.UpdateRPGLObject(this);
         return this;
     }
 
-    public RPGLObject LevelUp(string classDatapackId, JsonObject choices, bool updateDatabase = true) {
-        return LevelUp(classDatapackId, choices, new(), updateDatabase);
+    public RPGLObject LevelUp(string classDatapackId, JsonObject choices) {
+        return LevelUp(classDatapackId, choices, new());
     }
 
     private void AddAdditionalNestedClass(
-            string classDatapackId,
-            string additionalNestedClassDatapackId,
-            long scale,
-            bool roundUp
+        string classDatapackId,
+        string additionalNestedClassDatapackId,
+        long scale,
+        bool roundUp
     ) {
         JsonArray classes = GetClasses();
         for (int i = 0; i < classes.Count(); i++) {
@@ -369,12 +365,203 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
-    public RPGLObject TakeResource(long resourceUuid) {
+    public RPGLObject TakeResource(string resourceUuid) {
         if (GetResources().Contains(resourceUuid)) {
             GetResources().AsList().Remove(resourceUuid);
             DBManager.UpdateRPGLObject(this);
+
+            RPGLResource rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid);
+            if (rpglResource.GetOriginItem() is null) {
+                // delete resource if it is not supplied by an item
+                DBManager.DeleteRPGLResource(rpglResource);
+            }
+            
         }
         return this;
+    }
+
+    public List<RPGLResource> GetResourceObjects() {
+        List<RPGLResource> resources = [];
+        JsonArray resourceUuids = GetResources();
+        for (int i = 0; i < resourceUuids.Count(); i++) {
+            resources.Add(DBManager.QueryRPGLResource(
+                x => x.Uuid == resourceUuids.GetString(i))
+            );
+        }
+
+        // add resources granted by items equipped appropriately
+        JsonObject equippedItems = GetEquippedItems();
+        Dictionary<string, List<string>> slotsForEquippedItems = [];
+        foreach (string slot in equippedItems.AsDict().Keys) {
+            string itemUuid = equippedItems.GetString(slot);
+            if (slotsForEquippedItems.ContainsKey(itemUuid)) {
+                // add slot to item's list
+                slotsForEquippedItems[itemUuid].Add(slot);
+            } else {
+                // create new list for item
+                slotsForEquippedItems[itemUuid] = [slot];
+            }
+        }
+        foreach (string itemUuid in slotsForEquippedItems.Keys) {
+            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
+        }
+
+        return resources;
+    }
+
+    // =====================================================================
+    // RPGLEvent management helper methods.
+    // =====================================================================
+
+    public RPGLObject AddEvent(string eventDatapackId) {
+        JsonArray events = GetEvents();
+        if (!events.Contains(eventDatapackId)) {
+            events.AddString(eventDatapackId);
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public RPGLObject RemoveEvent(string eventDatapackId) {
+        JsonArray events = GetEvents();
+        if (events.Contains(eventDatapackId)) {
+            events.AsList().Remove(eventDatapackId);
+            DBManager.UpdateRPGLObject(this);
+        }
+        return this;
+    }
+
+    public void InvokeEvent(
+        RPGLEvent rpglEvent,
+        JsonArray originPoint,
+        List<RPGLResource> resources,
+        List<RPGLObject> targets,
+        RPGLContext context
+    ) {
+        if (rpglEvent.ResourcesSatisfyCost(resources)) {
+            rpglEvent.Scale(resources);
+            rpglEvent.SpendResources(resources);
+
+            RPGLObject source;
+            if (rpglEvent.GetString("source") is not null) {
+                // events with a source pre-assigned via AddEvent take priority
+                source = DBManager.QueryRPGLObject(x => x.Uuid == rpglEvent.GetString("source"));
+            } else if (GetProxy() ?? false) {
+                // proxy objects set their origin object as the source for any events they invoke
+                source = DBManager.QueryRPGLObject(x => x.Uuid == GetOriginObject());
+            } else {
+                // ordinary event invocation sets the calling object as the source
+                source = this;
+            }
+
+            JsonArray subeventJsonArray = rpglEvent.GetSubevents();
+            for (int i = 0; i < subeventJsonArray.Count(); i++) {
+                JsonObject subeventJson = subeventJsonArray.GetJsonObject(i);
+                Subevent subevent = Subevent.Subevents[subeventJson.GetString("subevent")]
+                    .Clone(subeventJson)
+                    .SetSource(source)
+                    .SetOriginItem(rpglEvent.GetOriginItem())
+                    .Prepare(context, originPoint);
+                foreach (RPGLObject target in targets) {
+                    subevent.Clone().SetTarget(target).Invoke(context, originPoint);
+                }
+            }
+        }
+    }
+
+    public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
+        bool wasSubeventProcessed = false;
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        foreach (RPGLEffect rpglEffect in effects) {
+            wasSubeventProcessed |= rpglEffect.ProcessSubevent(subevent, context, originPoint);
+        }
+        foreach (RPGLResource rpglResource in GetResourceObjects()) {
+            rpglResource.ProcessSubevent(subevent, this);
+        }
+        return wasSubeventProcessed;
+    }
+
+    // =====================================================================
+    // RPGLEffect management helper methods.
+    // =====================================================================
+
+    public RPGLObject AddEffect(RPGLEffect rpglEffect) {
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        bool hasEffect = false;
+        foreach (RPGLEffect activeEffect in effects) {
+            if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
+                hasEffect = true;
+                break;
+            }
+        }
+        if (!hasEffect) {
+            rpglEffect.SetTarget(GetUuid());
+            DBManager.UpdateRPGLEffect(rpglEffect);
+        }
+        return this;
+    }
+
+    public RPGLObject RemoveEffect(string effectUuid) {
+        RPGLEffect? rpglEffect = DBManager.QueryRPGLEffect(
+            x => x.Uuid == effectUuid && x.Target == GetUuid()
+        );
+        if (rpglEffect is not null) {
+            if (rpglEffect.GetOriginItem() is not null) {
+                // effect coming from an item should persist
+                rpglEffect.SetTarget(null);
+                DBManager.UpdateRPGLEffect(rpglEffect);
+            } else {
+                // effects not coming from item should not persist
+                DBManager.DeleteRPGLEffect(rpglEffect);
+            }
+        }
+        return this;
+    }
+
+    public List<RPGLEffect> GetEffectObjects() {
+        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+
+        // add effects granted by items equipped appropriately
+        JsonObject equippedItems = GetEquippedItems();
+        Dictionary<string, List<string>> slotsForEquippedItems = [];
+        foreach (string slot in equippedItems.AsDict().Keys) {
+            string itemUuid = equippedItems.GetString(slot);
+            if (slotsForEquippedItems.ContainsKey(itemUuid)) {
+                // add slot to item's list
+                slotsForEquippedItems[itemUuid].Add(slot);
+            } else {
+                // create new list for item
+                slotsForEquippedItems[itemUuid] = [slot];
+            }
+        }
+        foreach (string itemUuid in slotsForEquippedItems.Keys) {
+            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            effects.AddRange(rpglItem.GetEffectsForSlots(slotsForEquippedItems[itemUuid]));
+        }
+
+        return effects;
+    }
+
+    public long GetEffectiveProficiencyBonus(RPGLContext context) {
+        return GetProficiencyBonus(); // TODO update this later
+    }
+
+    public long GetAbilityScoreFromAbilityName(string ability, RPGLContext context) {
+        return (long) GetAbilityScores().GetInt(ability); // TODO update this later
+    }
+
+    public long GetAbilityModifierFromAbilityName(string ability, RPGLContext context) {
+        return GetAbilityModifierFromAbilityScore(GetAbilityScoreFromAbilityName(ability, context));
+    }
+
+    public static long GetAbilityModifierFromAbilityScore(long score) {
+        if (score < 10) {
+            // integer division rounds toward zero, so abilityScore must be
+            // adjusted to calculate the correct values for negative modifiers
+            score--;
+        }
+        return (score - 10L) / 2L;
     }
 
 };

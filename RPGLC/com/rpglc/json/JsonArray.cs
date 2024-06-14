@@ -208,6 +208,21 @@ public class JsonArray {
         return false;
     }
 
+    public bool ContainsAll(List<object> other) {
+        foreach (object item in other) {
+            if (!data.Contains(item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is not null
+            && obj is JsonArray jsonArray
+            && jsonArray.ToString() == ToString();
+    }
+
     // =================================================================================================================
     // printing methods
     // =================================================================================================================
@@ -216,7 +231,7 @@ public class JsonArray {
         return PrettyPrint(0);
     }
 
-    internal string PrettyPrint(int indent) {
+    private string PrettyPrint(int indent) {
         StringBuilder sb = new();
         if (IsEmpty()) {
             sb.Append("[ ]");
