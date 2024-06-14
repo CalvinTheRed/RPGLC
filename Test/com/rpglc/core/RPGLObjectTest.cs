@@ -170,6 +170,9 @@ public class RPGLObjectTest {
         );
 
         Assert.Equal(1, DummySubevent.Counter);
+
+        rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid());
+        Assert.Equal(9, rpglResource.GetAvailableUses());
     }
 
 };

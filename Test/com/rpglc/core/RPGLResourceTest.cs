@@ -17,8 +17,8 @@ public class RPGLResourceTest {
     [ClearDatabaseAfterTest]
     [Fact(DisplayName = "refreshes")]
     public void Refreshes() {
-        RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource")
-            .SetAvailableUses(0L);
+        RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
+        rpglResource.Exhaust(rpglResource.GetAvailableUses());
         DBManager.UpdateRPGLResource(rpglResource);
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
             .GiveResource(rpglResource);

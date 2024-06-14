@@ -441,10 +441,8 @@ public class RPGLObject : TaggableContent {
         RPGLContext context
     ) {
         if (rpglEvent.ResourcesSatisfyCost(resources)) {
-            foreach (RPGLResource rpglResource in resources) {
-                rpglResource.Exhaust();
-            }
             rpglEvent.Scale(resources);
+            rpglEvent.SpendResources(resources);
 
             RPGLObject source;
             if (rpglEvent.GetString("source") is not null) {

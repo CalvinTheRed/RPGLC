@@ -1,4 +1,5 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.database;
+using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -121,6 +122,47 @@ public class RPGLEvent : DatabaseContent {
                 }
             }
         }
+    }
+
+    public bool SpendResources(List<RPGLResource> resources) {
+        JsonArray cost = GetCost().DeepClone();
+        foreach (RPGLResource rpglResource in resources) {
+            long availableResourceUses = rpglResource.GetAvailableUses();
+            if (availableResourceUses > 0) {
+                for (int i = 0; i < cost.Count(); i++) {
+                    JsonObject costJson = cost.GetJsonObject(i);
+                    if (rpglResource.GetTags().ContainsAll(costJson.GetJsonArray("resource_tags").AsList())
+                        && rpglResource.GetPotency() >= costJson.GetInt("minimum_potency")
+                        && costJson.GetInt("count") > 0
+                    ) {
+                        long costCount = (long) costJson.GetInt("count");
+                        if (availableResourceUses <= costCount) {
+                            // resource would be depleted; update costJson and move to next rpglResource
+                            costJson.PutInt("count", costCount - availableResourceUses);
+                            rpglResource.SetAvailableUses(0L);
+                            DBManager.UpdateRPGLResource(rpglResource);
+                            break;
+                        } else {
+                            // resource would not be depleted; update costJson and availableResourceUses and move to next costJson
+                            availableResourceUses -= costCount;
+                            rpglResource.SetAvailableUses(availableResourceUses);
+                            DBManager.UpdateRPGLResource(rpglResource);
+                            costJson.PutInt("count", 0L);
+                        }
+                    }
+                }
+            } else {
+                return false;
+            }
+        }
+        // return false if any cost was not fully satisfied, else true
+        for (int i = 0; i < cost.Count(); i++) {
+            JsonObject costJson = cost.GetJsonObject(i);
+            if (costJson.GetInt("count") != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 };

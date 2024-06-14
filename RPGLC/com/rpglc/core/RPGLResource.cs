@@ -85,28 +85,32 @@ public class RPGLResource : TaggableContent {
         return false;
     }
 
-    public RPGLResource Exhaust() {
-        if (GetAvailableUses() > 0) {
-            SetAvailableUses(GetAvailableUses() - 1);
+    public RPGLResource Exhaust(long uses) {
+        if (GetAvailableUses() >= uses) {
+            SetAvailableUses(GetAvailableUses() - uses);
+
+            // ensure countdowns are active
+            JsonArray refreshCriterion = GetRefreshCriterion();
+            for (int i = 0; i < refreshCriterion.Count(); i++) {
+                JsonObject criterion = refreshCriterion.GetJsonObject(i);
+                if (!criterion.AsDict().ContainsKey("frequency_countdown")) {
+                    long countdownInitialValue = (long) criterion.SeekInt("frequency.bonus");
+                    JsonArray dice = criterion.SeekJsonArray("frequency.dice");
+                    for (int j = 0; j < dice.Count(); i++) {
+                        countdownInitialValue += Die.Roll(dice.GetJsonObject(j));
+                    }
+                    criterion.PutInt("frequency_countdown", countdownInitialValue);
+                }
+            }
+
             DBManager.UpdateRPGLResource(this);
         }
         return this;
     }
 
     public bool AttemptRefresh(JsonObject criterion) {
-        // should be a function of frequency, tries, and chance, not a guaranteed refresh of 1
         if (GetAvailableUses() < GetMaximumUses()) {
             bool refreshed = false;
-            // ensure countdown is active
-            if (!criterion.AsDict().ContainsKey("frequency_countdown")) {
-                long countdownInitialValue = (long) criterion.SeekInt("frequency.bonus");
-                JsonArray dice = criterion.SeekJsonArray("frequency.dice");
-                for (int i = 0; i < dice.Count(); i++) {
-                    countdownInitialValue += Die.Roll(dice.GetJsonObject(i));
-                }
-                criterion.PutInt("frequency_countdown", countdownInitialValue);
-            }
-
             // update countdown
             long updatedCountdown = (long) criterion.RemoveInt("frequency_countdown") - 1L;
             if (updatedCountdown > 0) {
