@@ -33,20 +33,20 @@ public class RPGLItem : TaggableContent {
     }
 
     public long GetCost() {
-        return (long) GetInt("cost");
+        return (long) GetLong("cost");
     }
 
     public RPGLItem SetCost(long cost) {
-        PutInt("cost", cost);
+        PutLong("cost", cost);
         return this;
     }
 
     public long GetWeight() {
-        return (long) GetInt("weight");
+        return (long) GetLong("weight");
     }
 
     public RPGLItem SetWeight(long weight) {
-        PutInt("weight", weight);
+        PutLong("weight", weight);
         return this;
     }
 

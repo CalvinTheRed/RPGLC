@@ -30,7 +30,7 @@ public class RPGLEventTemplate : RPGLTemplate {
         for (int i = 0; i <cost.Count(); i++) {
             JsonObject costJson = cost.GetJsonObject(i);
             if (!costJson.AsDict().ContainsKey("count")) {
-                costJson.PutInt("count", 1L);
+                costJson.PutLong("count", 1L);
             }
         }
     }

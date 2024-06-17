@@ -12,8 +12,8 @@ public class RPGLItemTemplateTO : TaggableContentTO {
         template.PutJsonObject("effects", new(Effects));
         template.PutJsonObject("events", new(Events));
         template.PutJsonObject("resources", new(Resources));
-        template.PutInt("cost", Cost);
-        template.PutInt("weight", Weight);
+        template.PutLong("cost", Cost);
+        template.PutLong("weight", Weight);
 
         ApplyToTemplate(template);
         return template;

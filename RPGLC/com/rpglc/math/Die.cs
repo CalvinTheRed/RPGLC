@@ -19,8 +19,8 @@ public static class Die {
     }
 
     public static long Roll(JsonObject die) {
-        long roll = Roll((long) die.GetInt("size"), die.GetJsonArray("determined"));
-        die.PutInt("roll", roll);
+        long roll = Roll((long) die.GetLong("size"), die.GetJsonArray("determined"));
+        die.PutLong("roll", roll);
         return roll;
     }
 
@@ -33,7 +33,7 @@ public static class Die {
         for (int i = 0; i < dice.Count(); i++) {
             JsonObject die = dice.GetJsonObject(i);
             JsonObject unpackedDie = die.DeepClone();
-            long count = unpackedDie.RemoveInt("count") ?? 1L;
+            long count = unpackedDie.RemoveLong("count") ?? 1L;
             for (int j = 0; j < count; j++) {
                 unpackedDice.AddJsonObject(unpackedDie.DeepClone());
             }

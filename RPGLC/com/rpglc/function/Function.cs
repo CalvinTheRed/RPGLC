@@ -13,6 +13,9 @@ public abstract class Function(string functionId) {
     public static void Initialize(bool includeTestingFunctions = false) {
         Functions.Clear();
 
+        Functions.Add("add_bonus", new AddBonus());
+        Functions.Add("add_damage", new AddDamage());
+
         if (includeTestingFunctions) {
             Functions.Add("dummy_function", new DummyFunction());
         }
@@ -22,12 +25,12 @@ public abstract class Function(string functionId) {
         return functionId == functionJson.GetString("function");
     }
 
-    public void Execute(RPGLEffect rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
+    public void Execute(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (VerifyFunction(functionJson)) {
             Run(rpglEffect, subevent, functionJson, context, originPoint);
         }
     }
 
-    public abstract void Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint);
+    public abstract void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint);
 
 };

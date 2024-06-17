@@ -4,9 +4,9 @@ using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
-public abstract class Calculation(string subeventId) : Subevent(subeventId) {
+public abstract class CalculationSubevent(string subeventId) : Subevent(subeventId) {
     
-    public override Calculation Prepare(RPGLContext context, JsonArray originPoint) {
+    public override CalculationSubevent Prepare(RPGLContext context, JsonArray originPoint) {
         return this
             .PrepareBase(context)
             .PrepareBonuses(context)
@@ -18,15 +18,15 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
     }
 
     public long GetBase() {
-        return (long) json.GetJsonObject("base").GetInt("value");
+        return (long) json.GetJsonObject("base").GetLong("value");
     }
 
-    public Calculation SetBase(long baseValue) {
+    public CalculationSubevent SetBase(long baseValue) {
         JsonObject baseJson = json.GetJsonObject("base");
         if (baseJson is null) {
-            json.PutJsonObject("base", new JsonObject().PutInt("value", baseValue));
+            json.PutJsonObject("base", new JsonObject().PutLong("value", baseValue));
         } else {
-            baseJson.PutInt("value", baseValue);
+            baseJson.PutLong("value", baseValue);
         }
         return this;
     }
@@ -35,7 +35,7 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         return json.GetJsonArray("bonuses");
     }
 
-    public Calculation AddBonus(JsonObject bonusJson) {
+    public CalculationSubevent AddBonus(JsonObject bonusJson) {
         GetBonuses().AddJsonObject(bonusJson);
         return this;
     }
@@ -45,11 +45,11 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         JsonArray bonuses = GetBonuses();
         for (int i = 0; i < bonuses.Count(); i++) {
             JsonObject bonusJson = bonuses.GetJsonObject(i);
-            long bonusValue = (long) bonusJson.GetInt("bonus");
+            long bonusValue = (long) bonusJson.GetLong("bonus");
             JsonArray dice = bonusJson.GetJsonArray("dice");
             for (int j = 0; j < dice.Count(); j++) {
                 JsonObject die = dice.GetJsonObject(j);
-                bonusValue += die.GetInt("roll") ?? Die.Roll(die);
+                bonusValue += die.GetLong("roll") ?? Die.Roll(die);
             }
             totalBonus += Scale(bonusValue, bonusJson.GetJsonObject("scale"));
         }
@@ -59,22 +59,22 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
     public long GetMinimum() {
         JsonObject? minimumJson = json.GetJsonObject("minimum");
         if (minimumJson is null) {
-            json.PutJsonObject("minimum", new JsonObject().PutInt("value", 0L));
+            json.PutJsonObject("minimum", new JsonObject().PutLong("value", 0L));
             return 0L;
         } else {
-            return minimumJson.GetInt("value") ?? 0L;
+            return minimumJson.GetLong("value") ?? 0L;
         }
     }
 
-    public Calculation SetMinimum(long minimumValue) {
+    public CalculationSubevent SetMinimum(long minimumValue) {
         long currentMinimum = GetMinimum();
         if (minimumValue > currentMinimum) {
-            json.GetJsonObject("minimum").PutInt("value", minimumValue);
+            json.GetJsonObject("minimum").PutLong("value", minimumValue);
         }
         return this;
     }
 
-    public Calculation PrepareBase(RPGLContext context) {
+    public CalculationSubevent PrepareBase(RPGLContext context) {
         JsonObject? baseJson = json.GetJsonObject("base");
         SetBase(0);
         if (baseJson is not null) {
@@ -86,7 +86,7 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         return this;
     }
 
-    public Calculation PrepareBonuses(RPGLContext context) {
+    public CalculationSubevent PrepareBonuses(RPGLContext context) {
         JsonArray? bonuses = json.RemoveJsonArray("bonuses");
         json.PutJsonArray("bonuses", new());
         if (bonuses is not null) {
@@ -101,7 +101,7 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         return this;
     }
 
-    public Calculation PrepareMinimum(RPGLContext context) {
+    public CalculationSubevent PrepareMinimum(RPGLContext context) {
         JsonObject? minimumJson = json.RemoveJsonObject("minimum");
         SetMinimum(long.MinValue);
         if (minimumJson is not null) {
@@ -117,13 +117,13 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         bool roundUp = scaleJson.GetBool("round_up") ?? false;
         if (roundUp) {
             return (long) Math.Ceiling((decimal) value 
-                * (scaleJson.GetInt("numerator") ?? 1L)
-                / (scaleJson.GetInt("denominator") ?? 1L)
+                * (scaleJson.GetLong("numerator") ?? 1L)
+                / (scaleJson.GetLong("denominator") ?? 1L)
             );
         } else {
             return value
-                * (scaleJson.GetInt("numerator") ?? 1L)
-                / (scaleJson.GetInt("denominator") ?? 1L);
+                * (scaleJson.GetLong("numerator") ?? 1L)
+                / (scaleJson.GetLong("denominator") ?? 1L);
         }
     }
 
@@ -200,64 +200,64 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         string formula = formulaJson.GetString("formula");
         if (formula == "range") {
             return new JsonObject()
-                .PutInt("bonus", formulaJson.GetInt("bonus") ?? 0L)
+                .PutLong("bonus", formulaJson.GetLong("bonus") ?? 0L)
                 .PutJsonArray("dice", Die.Unpack(formulaJson.GetJsonArray("dice") ?? new()))
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         } else if (formula == "modifier") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
             return new JsonObject()
-                .PutInt("bonus", rpglObject.GetAbilityModifierFromAbilityName(formulaJson.GetString("ability"), context))
+                .PutLong("bonus", rpglObject.GetAbilityModifierFromAbilityName(formulaJson.GetString("ability"), context))
                 .PutJsonArray("dice", new())
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         } else if (formula == "ability") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
             return new JsonObject()
-                .PutInt("bonus", rpglObject.GetAbilityScoreFromAbilityName(formulaJson.GetString("ability"), context))
+                .PutLong("bonus", rpglObject.GetAbilityScoreFromAbilityName(formulaJson.GetString("ability"), context))
                 .PutJsonArray("dice", new())
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         } else if (formula == "proficiency") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
             return new JsonObject()
-                .PutInt("bonus", rpglObject.GetEffectiveProficiencyBonus(context))
+                .PutLong("bonus", rpglObject.GetEffectiveProficiencyBonus(context))
                 .PutJsonArray("dice", new())
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         } else if (formula == "level") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
             string? classDatapackId = formulaJson.GetString("class");
             return new JsonObject()
-                .PutInt("bonus", classDatapackId is null 
+                .PutLong("bonus", classDatapackId is null 
                     ? rpglObject.GetLevel() 
                     : rpglObject.GetLevel(classDatapackId)
                 )
                 .PutJsonArray("dice", new())
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         } else {
             return new JsonObject()
-                .PutInt("bonus", 1L)
+                .PutLong("bonus", 1L)
                 .PutJsonArray("dice", new())
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
-                    .PutInt("numerator", 1L)
-                    .PutInt("denominator", 1L)
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
                     .PutBool("round_up", false)
                 );
         }
@@ -333,7 +333,7 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
         long setValue;
         string formula = formulaJson.GetString("formula");
         if (formula == "number") {
-            setValue = (long) formulaJson.GetInt("number");
+            setValue = (long) formulaJson.GetLong("number");
         } else if (formula == "modifier") {
             setValue = RPGLEffect
                 .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
@@ -361,8 +361,8 @@ public abstract class Calculation(string subeventId) : Subevent(subeventId) {
             return 0L;
         }
         JsonObject scale = formulaJson.GetJsonObject("scale") ?? new JsonObject()
-            .PutInt("numerator", 1L)
-            .PutInt("denominator", 1L)
+            .PutLong("numerator", 1L)
+            .PutLong("denominator", 1L)
             .PutBool("round_up", false);
         return Scale(setValue, scale);
     }

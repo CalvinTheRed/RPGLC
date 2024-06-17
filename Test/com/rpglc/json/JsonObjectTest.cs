@@ -161,11 +161,11 @@ public class JsonObjectTest {
 
     [Fact(DisplayName = "puts and gets int")]
     public void PutsAndGetsInt() {
-        JsonObject json = new JsonObject().PutInt("int_key", 123L);
+        JsonObject json = new JsonObject().PutLong("int_key", 123L);
 
         Assert.Equal(
             123L,
-            json.GetInt("int_key")
+            json.GetLong("int_key")
         );
     }
 
@@ -229,11 +229,11 @@ public class JsonObjectTest {
     public void RemovesInt() {
         JsonObject json = new();
 
-        json.PutInt("key", 123);
+        json.PutLong("key", 123);
 
         int expected = 123;
-        Assert.Equal(expected, json.RemoveInt("key"));
-        Assert.Null(json.RemoveInt("key"));
+        Assert.Equal(expected, json.RemoveLong("key"));
+        Assert.Null(json.RemoveLong("key"));
     }
 
     [Fact(DisplayName = "removes double")]
@@ -333,7 +333,7 @@ public class JsonObjectTest {
         JsonObject json = new(new Dictionary<string, object> {
             { "key", 123L }
         });
-        Assert.Equal(123L, json.SeekInt("key"));
+        Assert.Equal(123L, json.SeekLong("key"));
     }
 
     [Fact(DisplayName = "seeks int deep")]
@@ -347,7 +347,7 @@ public class JsonObjectTest {
                 } }
             } }
         });
-        Assert.Equal(123L, json.SeekInt("key1.key2[0].key3"));
+        Assert.Equal(123L, json.SeekLong("key1.key2[0].key3"));
     }
 
     [Fact(DisplayName = "seeks double shallow")]

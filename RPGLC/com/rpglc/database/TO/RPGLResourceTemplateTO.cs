@@ -13,8 +13,8 @@ public class RPGLResourceTemplateTO : TaggableContentTO {
         RPGLResourceTemplate template = new();
         template.PutJsonArray("refresh_criterion", new JsonArray(RefreshCriterion));
         template.PutString("origin_item", OriginItem);
-        template.PutInt("maximum_uses", MaximumUses);
-        template.PutInt("potency", Potency);
+        template.PutLong("maximum_uses", MaximumUses);
+        template.PutLong("potency", Potency);
         
         ApplyToTemplate(template);
         return template;

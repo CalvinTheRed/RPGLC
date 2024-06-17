@@ -5,7 +5,7 @@ using com.rpglc.testutils.mocks;
 
 namespace com.rpglc.subevent;
 
-public class DummyCalculation : Calculation {
+public class DummyCalculation : CalculationSubevent {
     public DummyCalculation() : base("dummy_calculation") { }
 
     public override Subevent Clone() {
@@ -45,7 +45,7 @@ public class CalculationTest {
             }
             """);
 
-        JsonObject processedBonus = Calculation.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -100,7 +100,7 @@ public class CalculationTest {
             }
             """);
 
-        JsonObject processedBonus = Calculation.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -142,7 +142,7 @@ public class CalculationTest {
             }
             """);
 
-        JsonObject processedBonus = Calculation.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -181,7 +181,7 @@ public class CalculationTest {
             }
             """);
 
-        JsonObject processedBonus = Calculation.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -223,7 +223,7 @@ public class CalculationTest {
             }
             """);
 
-        JsonObject processedBonus = Calculation.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -257,7 +257,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(2, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -284,7 +284,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(-2, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(-2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -311,7 +311,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(13, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(13, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -335,7 +335,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(2, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -362,7 +362,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(1, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(1, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -386,7 +386,7 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(4, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(4, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [DefaultMock]
@@ -410,14 +410,14 @@ public class CalculationTest {
             }
             """);
 
-        Assert.Equal(2, Calculation.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
+        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
     [Fact(DisplayName = "scales")]
     public void ScalesWithDefaults() {
-        Assert.Equal(10, Calculation.Scale(10, new()));
+        Assert.Equal(10, CalculationSubevent.Scale(10, new()));
 
-        Assert.Equal(8, Calculation.Scale(5, new JsonObject().LoadFromString("""
+        Assert.Equal(8, CalculationSubevent.Scale(5, new JsonObject().LoadFromString("""
             {
                 "numerator": 3,
                 "denominator": 2,

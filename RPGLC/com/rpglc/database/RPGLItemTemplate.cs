@@ -41,7 +41,7 @@ public class RPGLItemTemplate : RPGLTemplate {
         JsonObject processedResources = new();
         foreach (string resourceDatapackId in resources.AsDict().Keys) {
             JsonObject resourceData = resources.GetJsonObject(resourceDatapackId);
-            long count = resourceData.RemoveInt("count") ?? 1L;
+            long count = resourceData.RemoveLong("count") ?? 1L;
             for (int i = 0; i < count; i++) {
                 RPGLResource rpglResource = RPGLFactory.NewResource(resourceDatapackId);
                 processedResources.PutJsonArray(rpglResource.GetUuid(), resourceData.GetJsonArray("slots"));

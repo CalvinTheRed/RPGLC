@@ -73,8 +73,8 @@ public class JsonObject {
         return data.TryGetValue(key, out object? value) && value is string s ? s : null;
     }
 
-    public long? GetInt(string key) {
-        return data.TryGetValue(key, out object? value) && value is long i ? i : null;
+    public long? GetLong(string key) {
+        return data.TryGetValue(key, out object? value) && value is long l ? l : null;
     }
 
     public double? GetDouble(string key) {
@@ -110,7 +110,7 @@ public class JsonObject {
         return this;
     }
 
-    public JsonObject PutInt(string key, long? i) {
+    public JsonObject PutLong(string key, long? i) {
         if (i != null) {
             data[key] = i;
         }
@@ -162,10 +162,10 @@ public class JsonObject {
         return null;
     }
 
-    public long? RemoveInt(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is long i) {
+    public long? RemoveLong(string key) {
+        if (key != null && data.TryGetValue(key, out object? value) && value is long l) {
             if (data.Remove(key)) {
-                return i;
+                return l;
             }
         }
         return null;
@@ -205,8 +205,8 @@ public class JsonObject {
         return Seek(path) is string s ? s : null;
     }
 
-    public long? SeekInt(string path) {
-        return Seek(path) is long i ? i : null;
+    public long? SeekLong(string path) {
+        return Seek(path) is long l ? l : null;
     }
 
     public double? SeekDouble(string path) {
@@ -274,13 +274,13 @@ public class JsonObject {
         return this;
     }
 
-    public JsonObject InsertInt(string path, long? i) {
+    public JsonObject InsertLong(string path, long? l) {
         if (path.Contains('.')) {
             string relativeRoot = path[..path.LastIndexOf('.')];
             string key = path[(path.LastIndexOf('.') + 1)..];
-            SeekJsonObject(relativeRoot)?.PutInt(key, i);
+            SeekJsonObject(relativeRoot)?.PutLong(key, l);
         } else {
-            PutInt(path, i);
+            PutLong(path, l);
         }
         return this;
     }
@@ -353,6 +353,58 @@ public class JsonObject {
     }
 
     // =================================================================================================================
+    // PutIfAbsent() methods
+    // =================================================================================================================
+
+    public bool PutIfAbsent(string key, JsonObject jsonObject) {
+        if (!AsDict().ContainsKey(key)) {
+            PutJsonObject(key, jsonObject);
+            return true;
+        }
+        return false;
+    }
+
+    public bool PutIfAbsent(string key, JsonArray jsonArray) {
+        if (!AsDict().ContainsKey(key)) {
+            PutJsonArray(key, jsonArray);
+            return true;
+        }
+        return false;
+    }
+
+    public bool PutIfAbsent(string key, string s) {
+        if (!AsDict().ContainsKey(key)) {
+            PutString(key, s);
+            return true;
+        }
+        return false;
+    }
+
+    public bool PutIfAbsent(string key, long l) {
+        if (!AsDict().ContainsKey(key)) {
+            PutLong(key, l);
+            return true;
+        }
+        return false;
+    }
+
+    public bool PutIfAbsent(string key, double d) {
+        if (!AsDict().ContainsKey(key)) {
+            PutDouble(key, d);
+            return true;
+        }
+        return false;
+    }
+
+    public bool PutIfAbsent(string key, bool b) {
+        if (!AsDict().ContainsKey(key)) {
+            PutBool(key, b);
+            return true;
+        }
+        return false;
+    }
+
+    // =================================================================================================================
     // content-checking methods
     // =================================================================================================================
 
@@ -378,7 +430,7 @@ public class JsonObject {
         return PrettyPrint(0);
     }
 
-    public string PrettyPrint(int indent) {
+    internal string PrettyPrint(int indent) {
         StringBuilder sb = new();
         int remainingItems = data.Count;
         if (remainingItems == 0) {

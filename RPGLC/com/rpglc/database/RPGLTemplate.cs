@@ -13,7 +13,7 @@ public abstract class RPGLTemplate : JsonObject {
         for (int i = 0; i < bonuses.Count(); i++) {
             JsonObject fieldBonus = bonuses.GetJsonObject(i);
             string field = fieldBonus.GetString("field");
-            withBonuses.InsertInt(field, withBonuses.SeekInt(field) + fieldBonus.GetInt("bonus"));
+            withBonuses.InsertLong(field, withBonuses.SeekLong(field) + fieldBonus.GetLong("bonus"));
         }
         return withBonuses;
     }

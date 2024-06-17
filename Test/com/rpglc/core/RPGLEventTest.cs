@@ -95,7 +95,7 @@ public class RPGLEventTest {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglEvent.Scale([rpglResource]);
-        Assert.Equal(0 + 2, rpglEvent.SeekInt("subevents[0].scalable_field"));
+        Assert.Equal(0 + 2, rpglEvent.SeekLong("subevents[0].scalable_field"));
     }
 
     [DefaultMock]
@@ -129,7 +129,7 @@ public class RPGLEventTest {
                     }
                 ]
                 """))
-            .PutInt("scalable_field", 0L);
+            .PutLong("scalable_field", 0L);
 
         RPGLResource rpglResource1 = (RPGLResource) RPGLFactory.NewResource("test:dummy")
             .SetPotency(2L)
@@ -141,7 +141,7 @@ public class RPGLEventTest {
         DBManager.UpdateRPGLResource(rpglResource1);
         DBManager.UpdateRPGLResource(rpglResource2);
         rpglEvent.Scale([rpglResource2, rpglResource1]);
-        Assert.Equal(0 + 2 + 2, rpglEvent.GetInt("scalable_field"));
+        Assert.Equal(0 + 2 + 2, rpglEvent.GetLong("scalable_field"));
     }
 
 };
