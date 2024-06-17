@@ -1,7 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.function;
 using com.rpglc.json;
-using System.Runtime.CompilerServices;
 
 namespace com.rpglc.subevent;
 

@@ -57,8 +57,7 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
                 "events": [ ],
                 "resources": [
                     "test:dummy"
-                ],
-                "proficiency_bonus": 2
+                ]
             }
             """));
 

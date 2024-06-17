@@ -114,6 +114,15 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public long? GetProficiencyBonus() {
+        return GetLong("proficiency_bonus");
+    }
+
+    public RPGLObject SetProficiencyBonus(long? proficiencyBonus) {
+        PutLong("proficiency_bonus", proficiencyBonus);
+        return this;
+    }
+
     public long GetHealthBase() {
         return (long) GetLong("health_base");
     }
@@ -140,15 +149,6 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject SetHealthTemporary(long healthTemporary) {
         PutLong("health_temporary", healthTemporary);
-        return this;
-    }
-
-    public long? GetProficiencyBonus() {
-        return GetLong("proficiency_bonus");
-    }
-
-    public RPGLObject SetProficiencyBonus(long? proficiencyBonus) {
-        PutLong("proficiency_bonus", proficiencyBonus);
         return this;
     }
 

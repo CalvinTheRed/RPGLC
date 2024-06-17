@@ -158,10 +158,10 @@ public class DBManager {
             // origin object is not included in template data
             // proxy object is not included in template data
             // user id is not included in template data
+            ProficiencyBonus = data.GetLong("proficiency_bonus"),
             HealthBase = (long) data.GetLong("health_base"),
             HealthCurrent = (long) data.GetLong("health_current"),
             HealthTemporary = (long) data.GetLong("health_temporary"),
-            ProficiencyBonus = (long) data.GetLong("proficiency_bonus"),
         });
     }
 
