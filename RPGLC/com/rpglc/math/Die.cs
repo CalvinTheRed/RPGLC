@@ -10,7 +10,7 @@ public static class Die {
 
     public static long Roll(long upperBound, JsonArray? determinedList) {
         if (testing && determinedList is not null && determinedList.Count() > 0) {
-            return (long) determinedList.RemoveInt(0);
+            return (long) determinedList.RemoveLong(0);
         } else if (upperBound > 0L) {
             return R.Next((int) upperBound) + 1L;
         } else {

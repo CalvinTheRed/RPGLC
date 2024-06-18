@@ -161,11 +161,11 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "adds and gets int")]
     public void AddsAndGetsInt() {
-        JsonArray json = new JsonArray().AddInt(123L);
+        JsonArray json = new JsonArray().AddLong(123L);
 
         Assert.Equal(
             123L,
-            json.GetInt(0)
+            json.GetLong(0)
         );
     }
 
@@ -231,13 +231,13 @@ public class JsonArrayTest {
 
     [Fact(DisplayName = "removes int")]
     public void RemovesInt() {
-        JsonArray json = new JsonArray().AddInt(123L);
+        JsonArray json = new JsonArray().AddLong(123L);
 
         Assert.Equal(
             123L,
-            json.RemoveInt(0)
+            json.RemoveLong(0)
         );
-        Assert.Null(json.RemoveInt(0));
+        Assert.Null(json.RemoveLong(0));
     }
 
     [Fact(DisplayName = "removes double")]

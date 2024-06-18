@@ -28,7 +28,7 @@ public static class FeatureManager {
         for (int i = 0; i < numDecisions; i++) {
             GrantGainedEffectFromString(
                 rpglObject,
-                options.GetString((int) choices.GetJsonArray(decisionName).GetInt(i))
+                options.GetString((int) choices.GetJsonArray(decisionName).GetLong(i))
             );
         }
     }
