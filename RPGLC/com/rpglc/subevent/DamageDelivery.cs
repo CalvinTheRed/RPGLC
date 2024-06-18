@@ -32,6 +32,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageDelivery Prepare(RPGLContext context, JsonArray originPoint) {
+        json.PutIfAbsent("damage", new JsonObject());
         json.PutIfAbsent("damage_proportion", "all");
         return this;
     }

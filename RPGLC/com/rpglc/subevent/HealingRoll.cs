@@ -64,7 +64,7 @@ public class HealingRoll : Subevent {
         }
     }
 
-    public HealingRoll RerollHealingDice(long upperBound, long lowerBound) {
+    public HealingRoll RerollHealingDice(long lowerBound, long upperBound) {
         JsonArray healingArray = json.GetJsonArray("healing");
         for (int i = 0; i < healingArray.Count(); i++) {
             JsonArray dice = healingArray.GetJsonObject(i).GetJsonArray("dice");
@@ -79,7 +79,7 @@ public class HealingRoll : Subevent {
         return this;
     }
 
-    public HealingRoll SetHealingDice(long set, long upperBound, long lowerBound) {
+    public HealingRoll SetHealingDice(long set, long lowerBound, long upperBound) {
         JsonArray healingArray = json.GetJsonArray("healing");
         for (int i = 0; i < healingArray.Count(); i++) {
             JsonArray dice = healingArray.GetJsonObject(i).GetJsonArray("dice");

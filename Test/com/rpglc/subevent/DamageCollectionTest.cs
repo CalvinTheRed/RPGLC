@@ -11,8 +11,8 @@ public class DamageCollectionTest {
 
     [DefaultMock]
     [ClearDatabaseAfterTest]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
+    [Fact(DisplayName = "prepares default")]
+    public void PreparesDefault() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageCollection damageCollection = new DamageCollection()
             .SetSource(rpglObject)
@@ -148,6 +148,49 @@ public class DamageCollectionTest {
             """,
             damageCollection.GetDamageCollection().PrettyPrint()
         );
+    }
+
+    [DefaultMock]
+    [ClearDatabaseAfterTest]
+    [Fact(DisplayName = "includes damage type")]
+    public void IncludesDamageType() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        DamageCollection damageCollection = new DamageCollection()
+            .JoinSubeventData(new JsonObject()
+                /*{
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "formula": "range",
+                            "bonus": 1,
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                            ],
+                        }
+                    ]
+                }*/
+                .PutJsonArray("damage", new JsonArray()
+                    .AddJsonObject(new JsonObject()
+                        .PutString("damage_type", "fire")
+                        .PutString("formula", "range")
+                        .PutLong("bonus", 1L)
+                        .PutJsonArray("dice", new JsonArray()
+                            .AddJsonObject(new JsonObject()
+                                .PutLong("count", 1L)
+                                .PutLong("size", 6L)
+                                .PutJsonArray("determined", new JsonArray()
+                                    .AddLong(3)
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new());
+
+        Assert.True(damageCollection.IncludesDamageType("fire"));
+        Assert.False(damageCollection.IncludesDamageType("cold"));
     }
 
 };

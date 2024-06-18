@@ -22,8 +22,8 @@ public class DamageAffinityTest {
 
     [DefaultMock]
     [ClearDatabaseAfterTest]
-    [Fact(DisplayName = "does have damage type")]
-    public void DoesHaveDamageType() {
+    [Fact(DisplayName = "includes damage type")]
+    public void IncludesDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageAffinity damageAffinity = new DamageAffinity()
             .SetSource(rpglObject)
@@ -31,18 +31,7 @@ public class DamageAffinityTest {
             .AddDamageType("fire");
 
         Assert.True(damageAffinity.IncludesDamageType("fire"));
-    }
-
-    [DefaultMock]
-    [ClearDatabaseAfterTest]
-    [Fact(DisplayName = "does not have damage type")]
-    public void DoesNotHaveDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
-
-        Assert.False(damageAffinity.IncludesDamageType("fire"));
+        Assert.False(damageAffinity.IncludesDamageType("cold"));
     }
 
     [DefaultMock]

@@ -33,6 +33,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageRoll Prepare(RPGLContext context, JsonArray originPoint) {
+        json.PutIfAbsent("damage", new JsonArray());
         Roll();
         return this;
     }
@@ -73,7 +74,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void RerollDamageDice(string damageType, long upperBound, long lowerBound) {
+    public void RerollDamageDice(string damageType, long lowerBound, long upperBound) {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
@@ -90,7 +91,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void SetDamageDice(string damageType, long set, long upperBound, long lowerBound) {
+    public void SetDamageDice(string damageType, long set, long lowerBound, long upperBound) {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
@@ -107,7 +108,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void MaximizeDamageDice(string damageType, long set, long upperBound, long lowerBound) {
+    public void MaximizeDamageDice(string damageType) {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
