@@ -25,7 +25,7 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
     }
 
     public override CalculateMaximumHitPoints? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateMaximumHitPoints) base.Invoke(context, originPoint);
+        return (CalculateMaximumHitPoints?) base.Invoke(context, originPoint);
     }
 
     public override CalculateMaximumHitPoints JoinSubeventData(JsonObject other) {

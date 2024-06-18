@@ -40,7 +40,7 @@ public class DummySubevent : Subevent {
         return this;
     }
 
-    public override DummySubevent SetOriginItem(string originItem) {
+    public override DummySubevent SetOriginItem(string? originItem) {
         return (DummySubevent) base.SetOriginItem(originItem);
     }
 

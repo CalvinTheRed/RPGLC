@@ -25,7 +25,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageRoll) base.Invoke(context, originPoint);
+        return (DamageRoll?) base.Invoke(context, originPoint);
     }
 
     public override DamageRoll JoinSubeventData(JsonObject other) {

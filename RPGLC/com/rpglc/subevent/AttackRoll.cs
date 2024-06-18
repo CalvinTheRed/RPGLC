@@ -25,10 +25,10 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
     }
 
     public override AttackRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (AttackRoll) base.Invoke(context, originPoint);
+        return (AttackRoll?) base.Invoke(context, originPoint);
     }
 
-    public override AttackRoll? JoinSubeventData(JsonObject other) {
+    public override AttackRoll JoinSubeventData(JsonObject other) {
         return (AttackRoll) base.JoinSubeventData(other);
     }
 

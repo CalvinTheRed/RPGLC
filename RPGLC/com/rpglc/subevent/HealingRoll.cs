@@ -25,7 +25,7 @@ public class HealingRoll : Subevent {
     }
 
     public override HealingRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (HealingRoll) base.Invoke(context, originPoint);
+        return (HealingRoll?) base.Invoke(context, originPoint);
     }
 
     public override HealingRoll JoinSubeventData(JsonObject other) {

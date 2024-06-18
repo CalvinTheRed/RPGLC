@@ -24,7 +24,7 @@ public class CalculateAbilityScore : CalculationSubevent, IAbilitySubevent {
     }
 
     public override CalculateAbilityScore? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateAbilityScore) base.Invoke(context, originPoint);
+        return (CalculateAbilityScore?) base.Invoke(context, originPoint);
     }
 
     public override CalculateAbilityScore JoinSubeventData(JsonObject other) {

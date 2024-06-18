@@ -24,7 +24,7 @@ public class CalculateCriticalHitThreshhold : CalculationSubevent {
     }
 
     public override CalculateCriticalHitThreshhold? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateCriticalHitThreshhold) base.Invoke(context, originPoint);
+        return (CalculateCriticalHitThreshhold?) base.Invoke(context, originPoint);
     }
 
     public override CalculateCriticalHitThreshhold JoinSubeventData(JsonObject other) {

@@ -24,7 +24,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageDelivery? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageDelivery) base.Invoke(context, originPoint);
+        return (DamageDelivery?) base.Invoke(context, originPoint);
     }
 
     public override DamageDelivery JoinSubeventData(JsonObject other) {

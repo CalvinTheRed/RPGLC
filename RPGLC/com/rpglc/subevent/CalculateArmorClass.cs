@@ -24,7 +24,7 @@ public class CalculateArmorClass : CalculationSubevent {
     }
 
     public override CalculateArmorClass? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateArmorClass) base.Invoke(context, originPoint);
+        return (CalculateArmorClass?) base.Invoke(context, originPoint);
     }
 
     public override CalculateArmorClass JoinSubeventData(JsonObject other) {

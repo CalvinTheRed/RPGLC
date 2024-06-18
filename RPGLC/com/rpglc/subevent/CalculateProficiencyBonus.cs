@@ -24,7 +24,7 @@ public class CalculateProficiencyBonus : CalculationSubevent {
     }
 
     public override CalculateProficiencyBonus? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateProficiencyBonus) base.Invoke(context, originPoint);
+        return (CalculateProficiencyBonus?) base.Invoke(context, originPoint);
     }
 
     public override CalculateProficiencyBonus JoinSubeventData(JsonObject other) {

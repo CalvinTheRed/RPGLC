@@ -24,10 +24,10 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageCollection? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageCollection) base.Invoke(context, originPoint);
+        return (DamageCollection?) base.Invoke(context, originPoint);
     }
 
-    public override DamageCollection? JoinSubeventData(JsonObject other) {
+    public override DamageCollection JoinSubeventData(JsonObject other) {
         return (DamageCollection) base.JoinSubeventData(other);
     }
 

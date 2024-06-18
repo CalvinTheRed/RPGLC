@@ -23,15 +23,15 @@ public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override CriticalHitDamageCollection? Invoke(RPGLContext context, json.JsonArray originPoint) {
-        return (CriticalHitDamageCollection) base.Invoke(context, originPoint);
+    public override CriticalHitDamageCollection? Invoke(RPGLContext context, JsonArray originPoint) {
+        return (CriticalHitDamageCollection?) base.Invoke(context, originPoint);
     }
 
-    public override CriticalHitDamageCollection JoinSubeventData(json.JsonObject other) {
+    public override CriticalHitDamageCollection JoinSubeventData(JsonObject other) {
         return (CriticalHitDamageCollection) base.JoinSubeventData(other);
     }
 
-    public override CriticalHitDamageCollection Prepare(RPGLContext context, json.JsonArray originPoint) {
+    public override CriticalHitDamageCollection Prepare(RPGLContext context, JsonArray originPoint) {
         json.PutIfAbsent("damage", new JsonArray());
         return this;
     }

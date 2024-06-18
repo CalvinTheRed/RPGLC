@@ -1,6 +1,5 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using Newtonsoft.Json;
 
 namespace com.rpglc.subevent;
 
@@ -25,7 +24,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageAffinity? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageAffinity) base.Invoke(context, originPoint);
+        return (DamageAffinity?) base.Invoke(context, originPoint);
     }
 
     public override DamageAffinity JoinSubeventData(JsonObject other) {
