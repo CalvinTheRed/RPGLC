@@ -5,8 +5,8 @@ using com.rpglc.testutils.mocks;
 
 namespace com.rpglc.subevent;
 
-public class DummyCalculation : CalculationSubevent {
-    public DummyCalculation() : base("dummy_calculation") { }
+public class DummyCalculationSubevent : CalculationSubevent {
+    public DummyCalculationSubevent() : base("dummy_calculation_subevent") { }
 
     public override Subevent Clone() {
         return this;
@@ -24,7 +24,7 @@ public class DummyCalculation : CalculationSubevent {
 [DieTestingMode]
 [AssignDatabase]
 [Collection("Serial")]
-public class CalculationTest {
+public class CalculationSubeventTest {
 
     [DefaultMock]
     [ClearDatabaseAfterTest]
@@ -431,21 +431,20 @@ public class CalculationTest {
     [Fact(DisplayName = "prepares base")]
     public void PreparesBase() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DummyCalculation dummyCalculation = (DummyCalculation) new DummyCalculation()
+        DummyCalculationSubevent dummyCalculationSubevent = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
-        dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
+        dummyCalculationSubevent.JoinSubeventData(new JsonObject().LoadFromString("""
             {
-                "subevent": "dummy_calculation",
                 "base": {
                     "formula": "number",
                     "number": 2
                 }
             }
             """));
-        dummyCalculation.PrepareBase(new DummyContext());
+        dummyCalculationSubevent.PrepareBase(new DummyContext());
 
-        Assert.Equal(2, dummyCalculation.GetBase());
+        Assert.Equal(2, dummyCalculationSubevent.GetBase());
     }
 
     [DefaultMock]
@@ -453,7 +452,7 @@ public class CalculationTest {
     [Fact(DisplayName = "prepares minimum")]
     public void PreparesMinimum() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DummyCalculation dummyCalculation = (DummyCalculation) new DummyCalculation()
+        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
         dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
@@ -475,7 +474,7 @@ public class CalculationTest {
     [Fact(DisplayName = "prepares bonuses")]
     public void PreparesBonuses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DummyCalculation dummyCalculation = (DummyCalculation) new DummyCalculation()
+        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
         dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
@@ -544,7 +543,7 @@ public class CalculationTest {
     [Fact(DisplayName = "gets")]
     public void Gets() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DummyCalculation dummyCalculation = (DummyCalculation) new DummyCalculation()
+        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
         dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
@@ -580,7 +579,7 @@ public class CalculationTest {
     [Fact(DisplayName = "gets minimum")]
     public void GetsMinimum() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        DummyCalculation dummyCalculation = (DummyCalculation) new DummyCalculation()
+        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
         dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""

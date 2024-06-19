@@ -27,8 +27,8 @@ public class DamageCollectionTest {
     public void PreparesDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageCollection damageCollection = new DamageCollection()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -39,24 +39,8 @@ public class DamageCollectionTest {
                             ],
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutString("formula", "range")
-                        .PutLong("bonus", 1L)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("count", 1L)
-                                .PutLong("size", 6L)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -96,31 +80,16 @@ public class DamageCollectionTest {
             .AddDamage(CalculationSubevent.ProcessBonusJson(
                 new(),
                 new DummySubevent(),
-                new JsonObject()
-                    /*{
-                        "damage": [
-                            {
-                                "damage_type": "fire",
-                                "formula": "range",
-                                "bonus": 1,
-                                "dice": [
-                                    { "count": 1, "size": 6, "determined": [ 3 ] }
-                                ],
-                            }
-                        ]
-                    }*/
-                    .PutString("damage_type", "fire")
-                    .PutString("formula", "range")
-                    .PutLong("bonus", 1L)
-                    .PutJsonArray("dice", new JsonArray()
-                        .AddJsonObject(new JsonObject()
-                            .PutLong("count", 1L)
-                            .PutLong("size", 6L)
-                            .PutJsonArray("determined", new JsonArray()
-                                .AddLong(3)
-                            )
-                        )
-                    ),
+                new JsonObject().LoadFromString("""
+                    {
+                        "damage_type": "fire",
+                        "formula": "range",
+                        "bonus": 1,
+                        "dice": [
+                            { "count": 1, "size": 6, "determined": [ 3 ] }
+                        ],
+                    }
+                    """),
                 new DummyContext()
             ).PutString("damage_type", "fire")
         );
@@ -156,8 +125,8 @@ public class DamageCollectionTest {
     public void IncludesDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageCollection damageCollection = new DamageCollection()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -168,24 +137,8 @@ public class DamageCollectionTest {
                             ],
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutString("formula", "range")
-                        .PutLong("bonus", 1L)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("count", 1L)
-                                .PutLong("size", 6L)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 

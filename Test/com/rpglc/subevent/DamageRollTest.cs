@@ -28,8 +28,8 @@ public class DamageRollTest {
     public void PreparesWithDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -39,22 +39,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -84,8 +70,8 @@ public class DamageRollTest {
     public void DoesIncludeDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -95,22 +81,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -125,8 +97,8 @@ public class DamageRollTest {
     public void RerollsTypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -145,51 +117,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(4)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -250,8 +179,8 @@ public class DamageRollTest {
     public void RerollsTypelessDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -268,38 +197,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -346,8 +245,8 @@ public class DamageRollTest {
     public void SetsTypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -366,50 +265,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -470,8 +327,8 @@ public class DamageRollTest {
     public void SetsTypelessDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -488,36 +345,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -564,8 +393,8 @@ public class DamageRollTest {
     public void MaximizesTypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -582,36 +411,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -658,8 +459,8 @@ public class DamageRollTest {
     public void MaximizesTypelessDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "damage": [
                         {
                             "damage_type": "fire",
@@ -676,36 +477,8 @@ public class DamageRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("damage", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "fire")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutString("damage_type", "cold")
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 

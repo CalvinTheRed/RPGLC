@@ -28,8 +28,8 @@ public class HealingRollTest {
     public void PreparesWithHealing() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingRoll healingRoll = new HealingRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "healing": [
                         {
                             "bonus": 1,
@@ -38,21 +38,8 @@ public class HealingRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("healing", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -81,8 +68,8 @@ public class HealingRollTest {
     public void RerollsHealingDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingRoll healingRoll = new HealingRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "healing": [
                         {
                             "bonus": 1,
@@ -93,37 +80,8 @@ public class HealingRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("healing", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(4)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -170,8 +128,8 @@ public class HealingRollTest {
     public void SetsHealingDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingRoll healingRoll = new HealingRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "healing": [
                         {
                             "bonus": 1,
@@ -182,36 +140,8 @@ public class HealingRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("healing", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(3)
-                                    .AddLong(-1)
-                                )
-                            )
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(6)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -258,8 +188,8 @@ public class HealingRollTest {
     public void MaximizesTypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingRoll healingRoll = new HealingRoll()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "healing": [
                         {
                             "bonus": 1,
@@ -268,22 +198,8 @@ public class HealingRollTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("healing", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(1)
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 

@@ -28,8 +28,8 @@ public class HealingDeliveryTest {
     public void MaximizesTypelessDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingDelivery healingDelivery = new HealingDelivery()
-            .JoinSubeventData(new JsonObject()
-                /*{
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
                     "healing": [
                         {
                             "bonus": 1,
@@ -44,32 +44,8 @@ public class HealingDeliveryTest {
                             ]
                         }
                     ]
-                }*/
-                .PutJsonArray("healing", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                    .AddJsonObject(new JsonObject()
-                        .PutLong("bonus", 1)
-                        .PutJsonArray("dice", new JsonArray()
-                            .AddJsonObject(new JsonObject()
-                                .PutLong("size", 6)
-                                .PutJsonArray("determined", new JsonArray()
-                                    .AddLong(-1)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                }
+                """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
@@ -105,6 +81,40 @@ public class HealingDeliveryTest {
             """,
             healingDelivery.json.GetJsonArray("healing").PrettyPrint()
         );
+    }
+
+    [DefaultMock]
+    [ClearDatabaseAfterTest]
+    [DieTestingMode]
+    [Fact(DisplayName = "gets healing")]
+    public void GetsHealing() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        HealingDelivery healingDelivery = new HealingDelivery()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "healing": [
+                        {
+                            "bonus": 1,
+                            "dice": [
+                                { "size": 6, "determined": [ 3 ] },
+                                { "size": 6, "determined": [ 3 ] }
+                            ]
+                        },
+                        {
+                            "bonus": 1,
+                            "dice": [
+                                { "size": 6, "determined": [ 3 ] }
+                            ]
+                        }
+                    ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new());
+
+        healingDelivery.MaximizeHealingDice();
+
+        Assert.Equal(1 + 3 + 3 + 1 + 3, healingDelivery.GetHealing());
     }
 
 };
