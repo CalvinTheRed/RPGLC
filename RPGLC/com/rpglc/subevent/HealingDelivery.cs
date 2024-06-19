@@ -33,6 +33,7 @@ public class HealingDelivery : Subevent {
     }
 
     public override HealingDelivery Prepare(RPGLContext context, JsonArray originPoint) {
+        json.PutIfAbsent("healing", new JsonArray());
         return this;
     }
 
