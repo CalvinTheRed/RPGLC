@@ -4,7 +4,7 @@ using com.rpglc.testutils;
 
 namespace com.rpglc.condition;
 
-[InitializeConditions]
+[RPGLCInit]
 [Collection("Serial")]
 public class AllTest {
 

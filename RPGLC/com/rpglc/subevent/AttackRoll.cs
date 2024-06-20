@@ -36,8 +36,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
         base.Prepare(context, originPoint);
         json.PutIfAbsent("withhold_damage_modifier", false);
         json.PutIfAbsent("use_origin_attack_ability", false);
-        json.PutIfAbsent("target_armor_class", long.MinValue);
-        json.PutIfAbsent("critical_hit_threshhold", 20L);
+        json.PutIfAbsent("damage", new JsonArray());
 
         // Add tag so nested subevents such as DamageCollection can know they
         // hail from an attack roll made using a particular attack ability.
@@ -52,57 +51,53 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
 
     public override AttackRoll Run(RPGLContext context, JsonArray originPoint) {
         Roll();
-        json.PutIfAbsent("damage", new JsonArray());
+
+        string ability = GetAbility(context);
+        string useOriginAttackAbility = (bool) json.GetBool("use_origin_attack_ability") ? "true" : "false";
         new AddBonus().Execute(
             null,
             this,
-            new JsonObject()
-                /*{
+            new JsonObject().LoadFromString($$"""
+                {
                     "function": "add_bonus",
                     "bonus": [
                         {
                             "formula": "modifier",
-                            "ability": <GetAbility>,
+                            "ability": "{{ability}}",
                             "object": {
                                 "from": "subevent",
                                 "object": "source",
-                                "as_origin": <use_origin_attack_ability>
+                                "as_origin": {{useOriginAttackAbility}}
                             }
                         }
                     ]    
-                }*/
-                .PutString("function", "add_bonus")
-                .PutJsonArray("bonus", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("formula", "modifier")
-                        .PutString("ability", GetAbility(context))
-                        .PutJsonObject("object", new JsonObject()
-                            .PutString("from", "subevent")
-                            .PutString("object", "source")
-                            .PutBool("as_origin", json.GetBool("use_origin_attack_ability"))
-                        )
-                    )
-                ),
+                }
+                """),
             context,
             originPoint
         );
 
         json.PutLong("target_armor_class", GetTarget().CalculateArmorClass(context, this));
         CalculateCriticalHitThreshhold(context, originPoint);
+
         if (GetBase() >= GetCriticalHitThreshhold()) {
-            GetBaseDamage(context, originPoint);
-            GetTargetDamage(context, originPoint);
-            if (ConfirmCriticalDamage(context)) {
-                GetCriticalHitDamage(context, originPoint);
+            if (json.GetJsonArray("damage").Count() > 0) {
+                GetBaseDamage(context, originPoint);
+                GetTargetDamage(context, originPoint);
+                if (ConfirmCriticalDamage(context)) {
+                    GetCriticalHitDamage(context, originPoint);
+                }
+                ResolveDamage(context, originPoint);
             }
-            ResolveDamage(context, originPoint);
             ResolveNestedSubevents("hit", context, originPoint);
         } else if (IsCriticalMiss() || Get() < GetTargetArmorClass()) {
             ResolveNestedSubevents("miss", context, originPoint);
         } else {
-            GetBaseDamage(context, originPoint);
-            GetTargetDamage(context, originPoint);
-            ResolveDamage(context, originPoint);
+            if (json.GetJsonArray("damage").Count() > 0) {
+                GetBaseDamage(context, originPoint);
+                GetTargetDamage(context, originPoint);
+                ResolveDamage(context, originPoint);
+            }
             ResolveNestedSubevents("hit", context, originPoint);
         }
 
@@ -141,7 +136,12 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
                 .PutJsonArray("tags", GetTags().DeepClone()
                     .AddString("base_damage_collection")
                 )
-            );
+            )
+            .SetOriginItem(GetOriginItem())
+            .SetSource(GetSource())
+            .Prepare(context, originPoint)
+            .SetTarget(GetTarget())
+            .Invoke(context, originPoint);
 
         string damageType = json.GetJsonArray("damage").GetJsonObject(0).GetString("damage_type");
 
@@ -300,7 +300,12 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
 
     private void DeliverDamage(RPGLContext context, JsonArray originPoint) {
         DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject())
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "damage": {{json.GetJsonArray("damage")}},
+                    "tags": {{json.GetJsonArray("tags").ToString()}}
+                }
+                """))
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
             .Prepare(context, originPoint)

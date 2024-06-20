@@ -7,8 +7,7 @@ using com.rpglc.testutils.mocks;
 namespace com.rpglc.core;
 
 [AssignDatabase]
-[InitializeConditions]
-[InitializeFunctions]
+[RPGLCInit]
 [Collection("Serial")]
 public class RPGLEffectTest {
 

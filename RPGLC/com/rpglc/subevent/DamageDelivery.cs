@@ -32,7 +32,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
     }
 
     public override DamageDelivery Prepare(RPGLContext context, JsonArray originPoint) {
-        json.PutIfAbsent("damage", new JsonObject());
+        json.PutIfAbsent("damage", new JsonArray());
         json.PutIfAbsent("damage_proportion", "all");
         return this;
     }
@@ -50,6 +50,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
             damageAffinity.AddDamageType(key);
         }
         damageAffinity
+            .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
             .Prepare(context, originPoint)
             .SetTarget(GetTarget())
@@ -125,7 +126,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
                 }
                 string damageType = damageJson.GetString("damage_type");
                 damage.PutLong(damageType, CalculationSubevent.Scale(
-                    total + damage.GetLong(damageType) ?? 0L,
+                    (damage.GetLong(damageType) ?? 0L) + total,
                     damageJson.GetJsonObject("scale")
                 ));
             }

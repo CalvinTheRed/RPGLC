@@ -8,6 +8,7 @@ namespace com.rpglc.core;
 
 [AssignDatabase]
 [Collection("Serial")]
+[RPGLCInit]
 public class RPGLObjectTest {
 
     [DefaultMock]
@@ -151,7 +152,6 @@ public class RPGLObjectTest {
     [ExtraEventsMock]
     [ExtraResourcesMock]
     [ClearDatabaseAfterTest]
-    [InitializeSubevents]
     [Fact(DisplayName = "invokes event")]
     public void InvokesEvent() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

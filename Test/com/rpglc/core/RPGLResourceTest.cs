@@ -6,7 +6,7 @@ using com.rpglc.testutils.mocks;
 namespace com.rpglc.core;
 
 [AssignDatabase]
-[InitializeSubevents]
+[RPGLCInit]
 [DieTestingMode]
 [Collection("Serial")]
 public class RPGLResourceTest {
