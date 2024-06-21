@@ -37,6 +37,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.PutIfAbsent("withhold_damage_modifier", false);
         json.PutIfAbsent("use_origin_attack_ability", false);
         json.PutIfAbsent("damage", new JsonArray());
+        json.PutIfAbsent("vampirism", new JsonArray());
 
         // Add tag so nested subevents such as DamageCollection can know they
         // hail from an attack roll made using a particular attack ability.
@@ -52,8 +53,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     public override AttackRoll Run(RPGLContext context, JsonArray originPoint) {
         Roll();
 
-        string ability = GetAbility(context);
-        string useOriginAttackAbility = (bool) json.GetBool("use_origin_attack_ability") ? "true" : "false";
         new AddBonus().Execute(
             null,
             this,
@@ -63,11 +62,11 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                     "bonus": [
                         {
                             "formula": "modifier",
-                            "ability": "{{ability}}",
+                            "ability": "{{GetAbility(context)}}",
                             "object": {
                                 "from": "subevent",
                                 "object": "source",
-                                "as_origin": {{useOriginAttackAbility}}
+                                "as_origin": {{json.GetBool("use_origin_attack_ability").ToString().ToLower()}}
                             }
                         }
                     ]    
@@ -314,7 +313,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
         JsonObject damageByType = damageDelivery.GetDamage();
         if (json.AsDict().ContainsKey("vampirism")) {
-            (this as IVampiricSubevent).HandleVampirism(this, damageByType, context, originPoint);
+            IVampiricSubevent.HandleVampirism(this, damageByType, context, originPoint);
         }
     }
 

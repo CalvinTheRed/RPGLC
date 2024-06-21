@@ -33,6 +33,7 @@ public class AttackRollTest {
         Assert.True(attackRoll.HasTag("str"));
         Assert.True(attackRoll.HasTag("melee"));
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("damage").ToString());
+        Assert.Equal("""[]""", attackRoll.json.GetJsonArray("vampirism").ToString());
     }
 
     [ClearDatabaseAfterTest]
