@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.database;
+using com.rpglc.function;
 using com.rpglc.json;
 
 namespace com.rpglc.subevent;
@@ -17,8 +18,20 @@ public abstract class Subevent {
     public static void Initialize(bool includeTestingSubevents = false) {
         Subevents.Clear();
 
+        Initialize([
+            new AttackRoll(),
+        ]);
+
         if (includeTestingSubevents) {
-            Subevents.Add("dummy_subevent", new DummySubevent());
+            Initialize([
+                new DummySubevent(),
+            ]);
+        }
+    }
+
+    private static void Initialize(List<Subevent> subevents) {
+        foreach (Subevent subevent in subevents) {
+            Subevents.Add(subevent.subeventId, subevent);
         }
     }
 
@@ -35,8 +48,9 @@ public abstract class Subevent {
         return json.GetJsonArray("tags");
     }
 
-    public void AddTag(string tag) {
+    public Subevent AddTag(string tag) {
         GetTags().AddString(tag);
+        return this;
     }
 
     public bool HasTag(string tag) {

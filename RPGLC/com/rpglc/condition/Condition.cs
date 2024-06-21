@@ -17,15 +17,37 @@ public abstract class Condition(string conditionId) {
     public static void Initialize(bool includeTestingConditions = false) {
         Conditions.Clear();
 
-        Conditions.Add("any", new Any());
-        Conditions.Add("all", new All());
-        Conditions.Add("invert", new Invert());
+        Initialize([
+            new All(),
+            new Any(),
+            new CheckAbility(),
+            new CheckAbilityScore(),
+            new CheckLevel(),
+            new EquippedItemHasTag(),
+            new IncludesDamageType(),
+            new Invert(),
+            new ObjectHasTag(),
+            new ObjectsMatch(),
+            new OriginItemHasTag(),
+            new OriginItemsMatch(),
+            new SubeventHasTag(),
+            new UserIdsMatch(),
+        ]);
 
         if (includeTestingConditions) {
-            Conditions.Add("false", new False());
-            Conditions.Add("true", new True());
+            Initialize([
+                new False(),
+                new True(),
+            ]);
         }
     }
+
+    private static void Initialize(List<Condition> conditions) {
+        foreach (Condition condition in conditions) {
+            Conditions.Add(condition.conditionId, condition);
+        }
+    }
+
 
     private bool VerifyCondition(JsonObject conditionJson) {
         return conditionId == conditionJson.GetString("condition");
@@ -67,7 +89,7 @@ public abstract class Condition(string conditionId) {
         JsonArray originPoint
     );
 
-    public static bool CompareValues(double value, string comparison, double target) {
+    public static bool CompareValues(long value, string comparison, long target) {
         return comparison switch {
             "=" => value == target,
             "!=" => value != target,

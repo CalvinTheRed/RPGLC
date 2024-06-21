@@ -3,7 +3,7 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
-public class DummySubevent : Subevent {
+public class DummySubevent : Subevent, IAbilitySubevent, IDamageTypeSubevent {
 
     public static long Counter = 0L;
 
@@ -50,6 +50,14 @@ public class DummySubevent : Subevent {
 
     public override DummySubevent SetTarget(RPGLObject target) {
         return (DummySubevent) base.SetTarget(target);
+    }
+
+    public string GetAbility(RPGLContext context) {
+        return "str";
+    }
+
+    public bool IncludesDamageType(string damageType) {
+        return Equals(damageType, "fire");
     }
 
     public static void ResetCounter() {

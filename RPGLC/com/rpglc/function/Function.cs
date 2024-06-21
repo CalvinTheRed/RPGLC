@@ -1,4 +1,5 @@
-﻿using com.rpglc.core;
+﻿using com.rpglc.condition;
+using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
 
@@ -13,11 +14,21 @@ public abstract class Function(string functionId) {
     public static void Initialize(bool includeTestingFunctions = false) {
         Functions.Clear();
 
-        Functions.Add("add_bonus", new AddBonus());
-        Functions.Add("add_damage", new AddDamage());
+        Initialize([
+            new AddBonus(),
+            new AddDamage(),
+        ]);
 
         if (includeTestingFunctions) {
-            Functions.Add("dummy_function", new DummyFunction());
+            Initialize([
+                new DummyFunction(),
+            ]);
+        }
+    }
+
+    private static void Initialize(List<Function> functions) {
+        foreach (Function function in functions) {
+            Functions.Add(function.functionId, function);
         }
     }
 

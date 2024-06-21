@@ -8,17 +8,17 @@ public class TaggableContent : PersistentContent {
         return GetJsonArray("tags");
     }
 
-    public TaggableContent SetTags(JsonArray tags) {
+    public virtual TaggableContent SetTags(JsonArray tags) {
         PutJsonArray("tags", tags);
         return this;
     }
 
-    public TaggableContent AddTag(string tag) {
+    public virtual TaggableContent AddTag(string tag) {
         GetTags().AddString(tag);
         return this;
     }
 
-    public TaggableContent RemoveTag(string tag) {
+    public virtual TaggableContent RemoveTag(string tag) {
         GetTags().AsList().Remove(tag);
         return this;
     }

@@ -105,9 +105,10 @@ public class RPGLClass : DatabaseContent {
     // =====================================================================
 
     public void GrantStartingFeatures(RPGLObject rpglObject, JsonObject choices) {
-        FeatureManager.GrantGainedEffects(rpglObject, GetStartingFeatures(), choices);
-        FeatureManager.GrantGainedEvents(rpglObject, GetStartingFeatures());
-        FeatureManager.GrantGainedResources(rpglObject, GetStartingFeatures());
+        JsonObject startingFeatures = GetStartingFeatures() ?? new();
+        FeatureManager.GrantGainedEffects(rpglObject, startingFeatures, choices);
+        FeatureManager.GrantGainedEvents(rpglObject, startingFeatures);
+        FeatureManager.GrantGainedResources(rpglObject, startingFeatures);
     }
 
 };
