@@ -17,6 +17,8 @@ public abstract class Function(string functionId) {
         Initialize([
             new AddBonus(),
             new AddDamage(),
+            new AddHealing(),
+            new AddSubeventTag(),
         ]);
 
         if (includeTestingFunctions) {
