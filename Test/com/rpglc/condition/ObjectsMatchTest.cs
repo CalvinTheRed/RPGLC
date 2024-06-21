@@ -1,8 +1,9 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
@@ -21,8 +22,8 @@ public class ObjectsMatchTest {
         Assert.False(result);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "objects do match")]
     public void ObjectsDoMatch() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -44,8 +45,8 @@ public class ObjectsMatchTest {
         Assert.True(result);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "objects do not match")]
     public void ObjectsDoNotMatch() {
         RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", "Player 1");

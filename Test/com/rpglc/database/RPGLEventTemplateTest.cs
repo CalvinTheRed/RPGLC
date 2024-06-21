@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.database;
 
@@ -8,8 +8,8 @@ namespace com.rpglc.database;
 [Collection("Serial")]
 public class RPGLEventTemplateTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:dummy")
@@ -27,8 +27,8 @@ public class RPGLEventTemplateTest {
         Assert.Equal("""[]""", rpglEvent.GetSubevents().ToString());
     }
 
-    [ExtraEventsMock]
     [ClearDatabaseAfterTest]
+    [ExtraEventsMock]
     [Fact(DisplayName = "assigns cost")]
     public void AssignsCost() {
         RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:complex_event")

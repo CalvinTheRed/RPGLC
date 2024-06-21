@@ -3,11 +3,13 @@ using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace com.rpglc.testutils.mocks;
+namespace com.rpglc.testutils.beforeaftertestattributes.mocks;
 
-public class ExtraEventsMock : BeforeAfterTestAttribute {
+public class ExtraEventsMock : BeforeAfterTestAttribute
+{
 
-    public override void Before(MethodInfo methodUnderTest) {
+    public override void Before(MethodInfo methodUnderTest)
+    {
         base.Before(methodUnderTest);
 
         DBManager.InsertRPGLEventTemplate(new JsonObject().LoadFromString("""

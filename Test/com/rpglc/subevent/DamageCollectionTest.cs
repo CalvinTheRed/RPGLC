@@ -1,7 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -9,8 +10,8 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class DamageCollectionTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -21,8 +22,8 @@ public class DamageCollectionTest {
         Assert.Equal("""[]""", damageCollection.GetDamageCollection().ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares damage")]
     public void PreparesDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -69,8 +70,8 @@ public class DamageCollectionTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "adds damage")]
     public void AddsDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -119,8 +120,8 @@ public class DamageCollectionTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
     public void IncludesDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

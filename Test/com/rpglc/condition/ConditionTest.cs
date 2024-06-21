@@ -1,6 +1,5 @@
 ﻿namespace com.rpglc.condition;
 
-
 public class ConditionTest {
 
     [Fact(DisplayName = "compares values (=)")]

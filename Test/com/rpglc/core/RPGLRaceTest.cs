@@ -1,7 +1,7 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
@@ -9,9 +9,9 @@ namespace com.rpglc.core;
 [Collection("Serial")]
 public class RPGLRaceTest {
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraRacesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "levels up RPGLObject")]
     public void LevelsUpRPGLObject() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

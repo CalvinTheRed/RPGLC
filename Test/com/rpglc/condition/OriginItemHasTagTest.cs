@@ -2,13 +2,14 @@
 using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[Collection("Serial")]
 [AssignDatabase]
+[Collection("Serial")]
 public class OriginItemHasTagTest {
 
     [Fact(DisplayName = "condition mismatch")]
@@ -22,9 +23,9 @@ public class OriginItemHasTagTest {
         Assert.False(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "item does have tag")]
-    [ClearDatabaseAfterTest]
     public void ItemDoesHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
         rpglItem.AddTag("test_tag");
@@ -51,9 +52,9 @@ public class OriginItemHasTagTest {
         Assert.True(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "item does not have tag")]
-    [ClearDatabaseAfterTest]
     public void ItemDoesNotHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
 

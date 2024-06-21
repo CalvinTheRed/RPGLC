@@ -3,11 +3,13 @@ using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace com.rpglc.testutils.mocks;
+namespace com.rpglc.testutils.beforeaftertestattributes.mocks;
 
-public class ExtraItemsMock : BeforeAfterTestAttribute {
+public class ExtraItemsMock : BeforeAfterTestAttribute
+{
 
-    public override void Before(MethodInfo methodUnderTest) {
+    public override void Before(MethodInfo methodUnderTest)
+    {
         base.Before(methodUnderTest);
 
         DBManager.InsertRPGLItemTemplate(new JsonObject().LoadFromString("""

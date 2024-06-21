@@ -1,5 +1,5 @@
-﻿using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+﻿using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
@@ -7,9 +7,9 @@ namespace com.rpglc.core;
 [Collection("Serial")]
 public class RPGLItemTest {
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "gives effects for slots")]
     public void GivesEffectsForSlots() {
         List<RPGLEffect> effects;
@@ -38,9 +38,9 @@ public class RPGLItemTest {
         Assert.Equal(0, effects.Count);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "gives events for slots")]
     public void GivesEventsForSlots() {
         List<RPGLEvent> events;
@@ -69,9 +69,9 @@ public class RPGLItemTest {
         Assert.Equal(0, events.Count);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "gives resources for slots")]
     public void GivesResourcesForSlots() {
         List<RPGLResource> resources;

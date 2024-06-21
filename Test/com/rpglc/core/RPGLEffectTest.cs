@@ -1,18 +1,19 @@
 ﻿using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.core;
 
 [AssignDatabase]
-[RPGLCInit]
 [Collection("Serial")]
+[RPGLCInit]
 public class RPGLEffectTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "evaluates conditions (true)")]
     public void EvaluatesConditionsTrue() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -28,8 +29,8 @@ public class RPGLEffectTest {
         Assert.True(evaluation);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "evaluates conditions (false)")]
     public void EvaluatesConditionsFalse() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -45,10 +46,10 @@ public class RPGLEffectTest {
         Assert.False(evaluation);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
-    [ResetCountersAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "executes functions")]
+    [ResetCountersAfterTest]
     public void ExecutesFunctions() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
 
@@ -63,11 +64,11 @@ public class RPGLEffectTest {
         Assert.Equal(1L, DummyFunction.Counter);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
-    [ClearDatabaseAfterTest]
-    [ResetCountersAfterTest]
     [Fact(DisplayName = "processes subevent")]
+    [ResetCountersAfterTest]
     public void ProcessesSubevent() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:complex_effect");
 

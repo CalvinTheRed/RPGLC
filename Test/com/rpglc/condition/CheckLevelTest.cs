@@ -1,8 +1,9 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
@@ -21,9 +22,9 @@ public class CheckLevelTest {
         Assert.False(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "object level satisfied")]
     public void ObjectLevelSatisfied() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
@@ -51,9 +52,9 @@ public class CheckLevelTest {
         Assert.True(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "object level not satisfied")]
     public void ObjectLevelNotSatisfied() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
@@ -81,9 +82,9 @@ public class CheckLevelTest {
         Assert.False(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "class level satisfied")]
     public void ClassLevelSatisfied() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
@@ -112,9 +113,9 @@ public class CheckLevelTest {
         Assert.True(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "class level not satisfied")]
     public void ClassLevelNotSatisfied() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")

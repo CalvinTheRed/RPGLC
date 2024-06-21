@@ -1,7 +1,7 @@
 ﻿using com.rpglc.database;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
@@ -9,17 +9,17 @@ namespace com.rpglc.core;
 [Collection("Serial")]
 public class RPGLEventTest {
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraEventsMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "too few resources")]
     public void TooFewResources() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
         Assert.False(rpglEvent.ResourcesSatisfyCost([]));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "too many resources")]
     public void TooManyResources() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:dummy");
@@ -28,10 +28,10 @@ public class RPGLEventTest {
         Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource]));
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraEventsMock]
     [ExtraResourcesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "insufficient potency")]
     public void InsufficientPotency() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
@@ -41,10 +41,10 @@ public class RPGLEventTest {
         Assert.False(rpglEvent.ResourcesSatisfyCost([ rpglResource ]));
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraEventsMock]
     [ExtraResourcesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "sufficient resources")]
     public void SufficientResources() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
@@ -54,8 +54,8 @@ public class RPGLEventTest {
         Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource]));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "sufficient resources mixed order")]
     public void SufficientResourcesMixedOrder() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:dummy")
@@ -86,10 +86,10 @@ public class RPGLEventTest {
         Assert.True(rpglEvent.ResourcesSatisfyCost([rpglResource2, rpglResource1]));
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraEventsMock]
     [ExtraResourcesMock]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "scales")]
     public void Scales() {
         RPGLEvent rpglEvent = RPGLFactory.NewEvent("test:complex_event");
@@ -98,8 +98,8 @@ public class RPGLEventTest {
         Assert.Equal(0 + 2, rpglEvent.SeekLong("subevents[0].scalable_field"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "scales mixed order")]
     public void ScalesMixedOrder() {
         RPGLEvent rpglEvent = (RPGLEvent) RPGLFactory.NewEvent("test:dummy")

@@ -1,7 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -9,8 +10,8 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class HealingRollTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares with no healing")]
     public void PreparesWithNoHealing() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -21,8 +22,8 @@ public class HealingRollTest {
         Assert.Equal("""[]""", healingRoll.GetHealing().ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares with healing")]
     public void PreparesWithHealing() {
@@ -61,8 +62,8 @@ public class HealingRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice")]
     public void RerollsHealingDice() {
@@ -121,8 +122,8 @@ public class HealingRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets healing dice")]
     public void SetsHealingDice() {
@@ -181,8 +182,8 @@ public class HealingRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]
     public void MaximizesTypedDamageDice() {

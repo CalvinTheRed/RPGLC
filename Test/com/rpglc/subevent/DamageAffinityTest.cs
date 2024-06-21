@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -8,8 +9,8 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class DamageAffinityTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -20,8 +21,8 @@ public class DamageAffinityTest {
         Assert.Equal("""[]""", damageAffinity.GetAffinities().ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
     public void IncludesDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -34,8 +35,8 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IncludesDamageType("cold"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "adds damage type")]
     public void AddsDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -61,8 +62,8 @@ public class DamageAffinityTest {
             damageAffinity.GetAffinities().PrettyPrint());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "grants immunity")]
     public void GrantsImmunity() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -90,8 +91,8 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsImmune("fire"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "revokes immunity")]
     public void RevokesImmunity() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -120,8 +121,8 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IsImmune("fire"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "grants resistance")]
     public void GrantsResistance() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -149,8 +150,8 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsResistant("fire"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "revokes resistance")]
     public void RevokesResistance() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -179,8 +180,8 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IsResistant("fire"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "grants vulnerability")]
     public void GrantsVulnerability() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -208,8 +209,8 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsVulnerable("fire"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "revokes vulnerability")]
     public void RevokesVulnerability() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

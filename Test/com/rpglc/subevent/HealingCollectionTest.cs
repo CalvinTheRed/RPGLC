@@ -1,7 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -9,8 +10,8 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class HealingCollectionTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -21,8 +22,8 @@ public class HealingCollectionTest {
         Assert.Equal("""[]""", healingCollection.GetHealingCollection().ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares healing")]
     public void PreparesHealing() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -67,8 +68,8 @@ public class HealingCollectionTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "adds healing")]
     public void AddsHealing() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

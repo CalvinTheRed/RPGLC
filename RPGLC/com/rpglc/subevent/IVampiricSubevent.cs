@@ -3,9 +3,9 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
-public static class VampiricSubevent {
+public interface IVampiricSubevent {
 
-    public static void HandleVampirism(Subevent subevent, JsonObject damageByType, RPGLContext context, JsonArray originPoint) {
+    public void HandleVampirism(Subevent subevent, JsonObject damageByType, RPGLContext context, JsonArray originPoint) {
         JsonObject vampirismJson = subevent.json.GetJsonObject("vampirism");
         string vampiricDamageType = vampirismJson.GetString("damage_type");
 

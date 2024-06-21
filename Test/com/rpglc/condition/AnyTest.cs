@@ -1,11 +1,12 @@
 ﻿using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[RPGLCInit]
 [Collection("Serial")]
+[RPGLCInit]
 public class AnyTest {
 
     [Fact(DisplayName = "condition mismatch")]

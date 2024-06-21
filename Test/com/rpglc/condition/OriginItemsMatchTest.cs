@@ -1,13 +1,14 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[Collection("Serial")]
 [AssignDatabase]
+[Collection("Serial")]
 public class OriginItemsMatchTest {
 
     [Fact(DisplayName = "condition mismatch")]
@@ -21,9 +22,9 @@ public class OriginItemsMatchTest {
         Assert.False(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do match")]
-    [ClearDatabaseAfterTest]
     public void ItemsDoMatch() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
 
@@ -42,9 +43,9 @@ public class OriginItemsMatchTest {
         Assert.True(result);
     }
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do not match")]
-    [ClearDatabaseAfterTest]
     public void ItemsDoNotMatch() {
         RPGLItem effectItem = RPGLFactory.NewItem("test:dummy");
         RPGLItem subeventItem = RPGLFactory.NewItem("test:dummy");

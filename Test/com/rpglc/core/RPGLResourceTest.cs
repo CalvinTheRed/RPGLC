@@ -1,21 +1,22 @@
 ﻿using com.rpglc.database;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.core;
 
 [AssignDatabase]
-[RPGLCInit]
-[DieTestingMode]
 [Collection("Serial")]
+[DieTestingMode]
+[RPGLCInit]
 public class RPGLResourceTest {
 
+    [ClearDatabaseAfterTest]
     [DefaultMock]
     [ExtraResourcesMock]
-    [ResetCountersAfterTest]
-    [ClearDatabaseAfterTest]
     [Fact(DisplayName = "refreshes")]
+    [ResetCountersAfterTest]
     public void Refreshes() {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.Exhaust(rpglResource.GetAvailableUses());

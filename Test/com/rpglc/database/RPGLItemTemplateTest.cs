@@ -1,7 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.database;
 
@@ -9,8 +9,8 @@ namespace com.rpglc.database;
 [Collection("Serial")]
 public class RPGLItemTemplateTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string itemUuid = "uuid";
@@ -33,8 +33,9 @@ public class RPGLItemTemplateTest {
         Assert.Equal("""{}""", rpglItem.GetResources().ToString());
     }
 
-    [DefaultMock, ExtraItemsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraItemsMock]
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
         string itemUuid = "uuid";
@@ -64,8 +65,9 @@ public class RPGLItemTemplateTest {
             """, effects.PrettyPrint());
     }
 
-    [DefaultMock, ExtraItemsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraItemsMock]
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string itemUuid = "uuid";

@@ -1,7 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.database;
 
@@ -9,8 +9,8 @@ namespace com.rpglc.database;
 [Collection("Serial")]
 public class RPGLObjectTemplateTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string objectUuid = "uuid";
@@ -47,8 +47,10 @@ public class RPGLObjectTemplateTest {
         Assert.Equal(2L, rpglObject.GetProficiencyBonus());
     }
 
-    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraObjectsMock]
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
         string objectUuid = "uuid";
@@ -61,8 +63,10 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
     }
 
-    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraObjectsMock]
     [Fact(DisplayName = "populates inventory and equips items")]
     public void PopulatesInventoryAndEquipsItems() {
         string objectUuid = "uuid";
@@ -83,8 +87,10 @@ public class RPGLObjectTemplateTest {
         Assert.True(inventory.Contains(equippedItems.GetString("offhand")));
     }
 
-    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraObjectsMock]
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string objectUuid = "uuid";
@@ -98,8 +104,10 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId());
     }
 
-    [DefaultMock, ExtraClassesMock, ExtraObjectsMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraObjectsMock]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");

@@ -4,7 +4,7 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
-public class AttackRoll : RollSubevent, IAbilitySubevent {
+public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public AttackRoll() : base("attack_roll") {
         
@@ -314,7 +314,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent {
 
         JsonObject damageByType = damageDelivery.GetDamage();
         if (json.AsDict().ContainsKey("vampirism")) {
-            VampiricSubevent.HandleVampirism(this, damageByType, context, originPoint);
+            (this as IVampiricSubevent).HandleVampirism(this, damageByType, context, originPoint);
         }
     }
 

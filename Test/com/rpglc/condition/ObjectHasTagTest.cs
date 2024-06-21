@@ -2,8 +2,9 @@
 using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
@@ -22,8 +23,8 @@ public class ObjectHasTagTest {
         Assert.False(result);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "object does have tag")]
     public void ObjectDoesHaveTag() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -50,8 +51,8 @@ public class ObjectHasTagTest {
         Assert.True(result);
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "object does not have tag")]
     public void ObjectDoesNotHaveTag() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");

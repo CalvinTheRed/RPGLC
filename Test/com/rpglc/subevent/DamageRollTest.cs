@@ -1,7 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -9,8 +10,8 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class DamageRollTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares with no damage")]
     public void PreparesWithNoDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -21,8 +22,8 @@ public class DamageRollTest {
         Assert.Equal("""[]""", damageRoll.GetDamage().ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares with damage")]
     public void PreparesWithDamage() {
@@ -63,8 +64,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "includes damage type")]
     public void DoesIncludeDamageType() {
@@ -90,8 +91,8 @@ public class DamageRollTest {
         Assert.False(damageRoll.IncludesDamageType("cold"));
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed damage dice")]
     public void RerollsTypedDamageDice() {
@@ -172,8 +173,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typeless damage dice")]
     public void RerollsTypelessDamageDice() {
@@ -238,8 +239,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets typed damage dice")]
     public void SetsTypedDamageDice() {
@@ -320,8 +321,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets typeless damage dice")]
     public void SetsTypelessDamageDice() {
@@ -386,8 +387,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes typed damage dice")]
     public void MaximizesTypedDamageDice() {
@@ -452,8 +453,8 @@ public class DamageRollTest {
         );
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes typeless damage dice")]
     public void MaximizesTypelessDamageDice() {

@@ -1,8 +1,9 @@
 ﻿using com.rpglc.core;
 using com.rpglc.database;
 using com.rpglc.json;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
@@ -12,8 +13,8 @@ namespace com.rpglc.subevent;
 [RPGLCInit]
 public class AttackRollTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
@@ -34,8 +35,8 @@ public class AttackRollTest {
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("damage").ToString());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "hits")]
     [ResetCountersAfterTest]
     public void Hits() {
@@ -83,8 +84,8 @@ public class AttackRollTest {
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "misses")]
     [ResetCountersAfterTest]
     public void Misses() {
@@ -132,8 +133,8 @@ public class AttackRollTest {
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "critically hits")]
     [ResetCountersAfterTest]
     public void CriticallyHits() {
@@ -181,8 +182,8 @@ public class AttackRollTest {
         Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "critically misses")]
     [ResetCountersAfterTest]
     public void CriticallyMisses() {

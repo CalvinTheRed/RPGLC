@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
-using com.rpglc.testutils;
-using com.rpglc.testutils.mocks;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.database;
 
@@ -8,8 +8,8 @@ namespace com.rpglc.database;
 [Collection("Serial")]
 public class RPGLEffectTemplateTest {
 
-    [DefaultMock]
     [ClearDatabaseAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string effectUuid = "uuid";
