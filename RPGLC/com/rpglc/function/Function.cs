@@ -19,6 +19,9 @@ public abstract class Function(string functionId) {
             new AddDamage(),
             new AddHealing(),
             new AddSubeventTag(),
+            new AddVampirism(),
+            new GrantAdvantage(),
+            new GrantDisadvantage(),
         ]);
 
         if (includeTestingFunctions) {
