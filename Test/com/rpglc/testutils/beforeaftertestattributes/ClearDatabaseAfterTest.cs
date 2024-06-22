@@ -5,12 +5,10 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils.beforeaftertestattributes;
 
-public class ClearDatabaseAfterTest : BeforeAfterTestAttribute
-{
+public class ClearDatabaseAfterTest : BeforeAfterTestAttribute {
 
     // clear database after each individual test
-    public override void After(MethodInfo methodUnderTest)
-    {
+    public override void After(MethodInfo methodUnderTest) {
         base.After(methodUnderTest);
 
         DBManager.DeleteCollection<RPGLClassTO>("classes");

@@ -4,11 +4,9 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils.beforeaftertestattributes;
 
-public class DieTestingMode : BeforeAfterTestAttribute
-{
+public class DieTestingMode : BeforeAfterTestAttribute {
 
-    public override void Before(MethodInfo methodUnderTest)
-    {
+    public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
         Die.SetTesting(true);
     }

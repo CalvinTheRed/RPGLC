@@ -6,9 +6,7 @@ namespace com.rpglc.testutils.subevent;
 
 public class DummyCalculationSubevent : CalculationSubevent {
     
-    public DummyCalculationSubevent() : base("dummy_calculation_subevent") {
-    
-    }
+    public DummyCalculationSubevent() : base("dummy_calculation_subevent") { }
 
     public override Subevent Clone() {
         return this;

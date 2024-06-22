@@ -5,11 +5,9 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils.beforeaftertestattributes.mocks;
 
-public class ExtraObjectsMock : BeforeAfterTestAttribute
-{
+public class ExtraObjectsMock : BeforeAfterTestAttribute {
 
-    public override void Before(MethodInfo methodUnderTest)
-    {
+    public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
         DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
@@ -62,7 +60,6 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute
                 ]
             }
             """));
-
     }
 
 };

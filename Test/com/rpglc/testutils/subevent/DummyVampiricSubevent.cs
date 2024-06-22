@@ -6,9 +6,7 @@ namespace com.rpglc.testutils.subevent;
 
 public class DummyVampiricSubevent : Subevent, IVampiricSubevent {
 
-    public DummyVampiricSubevent() : base("dummy_vampiric_subevent") {
-
-    }
+    public DummyVampiricSubevent() : base("dummy_vampiric_subevent") { }
 
     public override Subevent Clone() {
         return this;
