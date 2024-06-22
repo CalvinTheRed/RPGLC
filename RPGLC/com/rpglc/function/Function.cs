@@ -27,6 +27,8 @@ public abstract class Function(string functionId) {
             new MaximizeDamage(),
             new MaximizeHealing(),
             new RepeatDamageDice(),
+            new RerollDamageDice(),
+            new RerollHealingDice(),
             new RevokeImmunity(),
             new RevokeResistance(),
             new RevokeVulnerability(),
