@@ -32,6 +32,8 @@ public abstract class Function(string functionId) {
             new RevokeImmunity(),
             new RevokeResistance(),
             new RevokeVulnerability(),
+            new SetBase(),
+            new SetDamageDice(),
         ]);
 
         if (includeTestingFunctions) {
