@@ -176,8 +176,8 @@ public class DamageRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls typeless damage dice")]
-    public void RerollsTypelessDamageDice() {
+    [Fact(DisplayName = "rerolls untyped damage dice")]
+    public void RerollsUntypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -324,8 +324,8 @@ public class DamageRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets typeless damage dice")]
-    public void SetsTypelessDamageDice() {
+    [Fact(DisplayName = "sets untyped damage dice")]
+    public void SetsUntypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -456,8 +456,8 @@ public class DamageRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "maximizes typeless damage dice")]
-    public void MaximizesTypelessDamageDice() {
+    [Fact(DisplayName = "maximizes untyped damage dice")]
+    public void MaximizesUntypedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""

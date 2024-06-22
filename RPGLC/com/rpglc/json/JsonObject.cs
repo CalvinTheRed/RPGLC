@@ -110,9 +110,9 @@ public class JsonObject {
         return this;
     }
 
-    public JsonObject PutLong(string key, long? i) {
-        if (i != null) {
-            data[key] = i;
+    public JsonObject PutLong(string key, long? l) {
+        if (l != null) {
+            data[key] = l;
         }
         return this;
     }

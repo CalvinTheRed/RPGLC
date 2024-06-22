@@ -12,14 +12,10 @@ public class OriginItemHasTag : Condition {
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         string originItemAlias = conditionJson.GetString("origin_item");
         RPGLItem? originItem = null;
-        if (Equals(originItemAlias, "subevent")) {
-            originItem = DBManager.QueryRPGLItem(
-                x => x.Uuid == subevent.GetOriginItem()
-            );
-        } else if (Equals(originItemAlias, "effect")) {
-            originItem = DBManager.QueryRPGLItem(
-                x => x.Uuid == rpglEffect.GetOriginItem()
-            );
+        if (Equals(originItemAlias, "subevent") && subevent.GetOriginItem() is not null) {
+            originItem = DBManager.QueryRPGLItem(x => x.Uuid == subevent.GetOriginItem());
+        } else if (Equals(originItemAlias, "effect") && rpglEffect.GetOriginItem() is not null) {
+            originItem = DBManager.QueryRPGLItem(x => x.Uuid == rpglEffect.GetOriginItem());
         }
         return originItem is not null && originItem.HasTag(conditionJson.GetString("tag"));
     }

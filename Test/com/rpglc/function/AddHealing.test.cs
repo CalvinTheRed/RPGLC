@@ -48,8 +48,6 @@ public class AddHealingTest {
             new()
         );
 
-        string tmp = (subevent as HealingCollection).GetHealingCollection().PrettyPrint();
-
         Assert.Equal("""
             [
               {

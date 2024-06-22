@@ -56,7 +56,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
             .SetTarget(GetTarget())
             .Invoke(context, originPoint);
 
-        JsonObject damagewithAffinity = new();
+        JsonObject damageWithAffinity = new();
         foreach (string key in damageJson.AsDict().Keys) {
             if (!damageAffinity.IsImmune(key)) {
                 long typedDamage = (long) damageJson.GetLong(key);
@@ -66,10 +66,10 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
                 if (damageAffinity.IsVulnerable(key)) {
                     typedDamage *= 2;
                 }
-                damagewithAffinity.PutLong(key, typedDamage);
+                damageWithAffinity.PutLong(key, typedDamage);
             }
         }
-        json.PutJsonObject("damage", damagewithAffinity);
+        json.PutJsonObject("damage", damageWithAffinity);
         GetTarget().ReceiveDamage(this, context);
 
         return this;

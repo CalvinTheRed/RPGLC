@@ -39,25 +39,18 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
         new AddBonus().Execute(
             null,
             this,
-            new JsonObject()
-                /*{
+            new JsonObject().LoadFromString($$"""
+                {
                     "function": "add_bonus",
                     "bonus": [
                         {
                             "formula": "range",
                             "dice": [ ],
-                            "bonus": <con modifier * level>
+                            "bonus": {{source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel()}}
                         }
                     ]
-                }*/
-                .PutString("function", "add_bonus")
-                .PutJsonArray("bonus", new JsonArray()
-                    .AddJsonObject(new JsonObject()
-                        .PutString("formula", "range")
-                        .PutJsonArray("dice", new())
-                        .PutLong("bonus", source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel())
-                    )
-                ),
+                }
+                """),
             context,
             originPoint
         );

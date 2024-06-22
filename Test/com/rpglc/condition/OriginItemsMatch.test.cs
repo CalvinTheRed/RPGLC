@@ -65,4 +65,23 @@ public class OriginItemsMatchTest {
         Assert.False(result);
     }
 
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "null items do not match")]
+    public void NullItemsDoNotMatch() {
+        bool result = new OriginItemsMatch().Evaluate(
+            new RPGLEffect().SetOriginItem(null),
+            new DummySubevent().SetOriginItem(null),
+            new JsonObject().LoadFromString("""
+                {
+                    "condition": "origin_items_match"
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.False(result);
+    }
+
 };
