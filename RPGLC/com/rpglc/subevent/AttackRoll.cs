@@ -142,43 +142,28 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             .SetTarget(GetTarget())
             .Invoke(context, originPoint);
 
-        string damageType = json.GetJsonArray("damage").GetJsonObject(0).GetString("damage_type");
-
         // Add damage modifier from attack ability, if applicable
         // TODO make a function for this stuff...
         if (!(bool) json.GetBool("withhold_damage_modifier")) {
             new AddDamage().Execute(
                 null,
                 baseDamageCollection,
-                new JsonObject()
-                    /*{
+                new JsonObject().LoadFromString($$"""
+                    {
                         "function": "add_damage",
                         "damage": [
                             {
                                 "formula": "modifier",
-                                "damage_type": <damageType>,
-                                "ability": <GetAbility()>,
+                                "damage_type": "{{json.GetJsonArray("damage").GetJsonObject(0).GetString("damage_type")}}",
+                                "ability": "{{GetAbility(context)}}",
                                 "object": {
                                     "from": "subevent",
                                     "object": "source",
-                                    "as_origin": if origin ability is used for the attack
-                                }
+                                    "as_origin": {{json.GetBool("use_origin_attack_ability").ToString().ToLower()}}}
                             }
                         ]
-                    }*/
-                    .PutString("function", "add_damage")
-                    .PutJsonArray("damage", new JsonArray()
-                        .AddJsonObject(new JsonObject()
-                            .PutString("formula", "modifier")
-                            .PutString("damage_type", damageType)
-                            .PutString("ability", GetAbility(context))
-                            .PutJsonObject("object", new JsonObject()
-                                .PutString("from", "subevent")
-                                .PutString("object", "source")
-                                .PutBool("as_origin", json.GetBool("use_origin_attack_ability"))
-                            )
-                        )
-                    ),
+                    }
+                    """),
                 context,
                 originPoint
             );
@@ -242,9 +227,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         for (int i = 0; i < damageArray.Count(); i++) {
             JsonObject damageJson = damageArray.GetJsonObject(i);
             JsonArray dice = damageJson.GetJsonArray("dice");
-            if (dice is not null) {
-                dice.AsList().AddRange(dice.DeepClone().AsList());
-            }
+            dice?.AsList().AddRange(dice.DeepClone().AsList());
         }
 
         // Collect any extra damage bonuses which aren't subject to dice doubling

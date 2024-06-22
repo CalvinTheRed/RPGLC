@@ -70,12 +70,4 @@ public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
         return json.GetJsonArray("damage");
     }
 
-    internal void DoubleDice() {
-        JsonArray damageCollection = GetDamageCollection();
-        for (int i = 0; i < damageCollection.Count(); i++) {
-            JsonArray typedDamageDice = damageCollection.GetJsonObject(i).GetJsonArray("dice");
-            typedDamageDice.AsList().AddRange(typedDamageDice.DeepClone().AsList());
-        }
-    }
-
 };
