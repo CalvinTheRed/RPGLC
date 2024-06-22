@@ -1,5 +1,4 @@
-﻿using com.rpglc.condition;
-using com.rpglc.core;
+﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
 
@@ -22,6 +21,12 @@ public abstract class Function(string functionId) {
             new AddVampirism(),
             new GrantAdvantage(),
             new GrantDisadvantage(),
+            new GrantImmunity(),
+            new GrantResistance(),
+            new GrantVulnerability(),
+            new RevokeImmunity(),
+            new RevokeResistance(),
+            new RevokeVulnerability(),
         ]);
 
         if (includeTestingFunctions) {
