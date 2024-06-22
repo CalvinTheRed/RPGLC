@@ -313,6 +313,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
         JsonObject damageByType = damageDelivery.GetDamage();
         if (json.AsDict().ContainsKey("vampirism")) {
+            // TODO excess damage shouldn't contribute to vampirism... should this be handled as a part of DamageDelivery?
             IVampiricSubevent.HandleVampirism(this, damageByType, context, originPoint);
         }
     }
