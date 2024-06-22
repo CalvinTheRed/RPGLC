@@ -42,7 +42,7 @@ public class RPGLResourceTemplate : RPGLTemplate {
             // default frequency
             if (!criterion.AsDict().ContainsKey("frequency")) {
                 criterion.PutJsonObject("frequency", new JsonObject()
-                    .PutInt("bonus", 1L)
+                    .PutLong("bonus", 1L)
                     .PutJsonArray("dice", new())
                 );
             }
@@ -50,7 +50,7 @@ public class RPGLResourceTemplate : RPGLTemplate {
             // default or unpack tries
             if (!criterion.AsDict().ContainsKey("tries")) {
                 criterion.PutJsonObject("tries", new JsonObject()
-                    .PutInt("bonus", 1L)
+                    .PutLong("bonus", 1L)
                     .PutJsonArray("dice", new())
                 );
             }

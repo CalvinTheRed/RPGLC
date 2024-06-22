@@ -23,12 +23,12 @@ public static class FeatureManager {
 
     private static void GrantGainedEffectsFromObject(RPGLObject rpglObject, JsonObject choices, JsonObject gainedEffects) {
         string decisionName = gainedEffects.GetString("name");
-        long numDecisions = gainedEffects.GetInt("count") ?? 1L;
+        long numDecisions = gainedEffects.GetLong("count") ?? 1L;
         JsonArray options = gainedEffects.GetJsonArray("options");
         for (int i = 0; i < numDecisions; i++) {
             GrantGainedEffectFromString(
                 rpglObject,
-                options.GetString((int) choices.GetJsonArray(decisionName).GetInt(i))
+                options.GetString((int) choices.GetJsonArray(decisionName).GetLong(i))
             );
         }
     }
@@ -55,7 +55,7 @@ public static class FeatureManager {
     }
 
     private static void GrantGainedResourcesFromObject(RPGLObject rpglObject, JsonObject gainedResources) {
-        long count = gainedResources.GetInt("count") ?? 1L;
+        long count = gainedResources.GetLong("count") ?? 1L;
         for (int i = 0; i < count; i++) {
             GrantGainedResourceFromString(rpglObject, gainedResources.GetString("resource"));
         }
@@ -110,7 +110,7 @@ public static class FeatureManager {
     }
 
     private static void RevokeLostResourcesFromObject(RPGLObject rpglObject, JsonObject lostResources) {
-        for (int i = 0; i < lostResources.GetInt("count"); i++) {
+        for (int i = 0; i < lostResources.GetLong("count"); i++) {
             RevokeLostResourceFromString(rpglObject, lostResources.GetString("resource"));
         }
     }

@@ -26,29 +26,29 @@ public class RPGLResource : TaggableContent {
     }
 
     public long GetAvailableUses() {
-        return (long) GetInt("available_uses");
+        return (long) GetLong("available_uses");
     }
 
     public RPGLResource SetAvailableUses(long availableUses) {
-        PutInt("available_uses", availableUses);
+        PutLong("available_uses", availableUses);
         return this;
     }
 
     public long GetMaximumUses() {
-        return (long) GetInt("maximum_uses");
+        return (long) GetLong("maximum_uses");
     }
 
     public RPGLResource SetMaximumUses(long maximumUses) {
-        PutInt("maximum_uses", maximumUses);
+        PutLong("maximum_uses", maximumUses);
         return this;
     }
 
     public long GetPotency() {
-        return (long) GetInt("potency");
+        return (long) GetLong("potency");
     }
 
     public RPGLResource SetPotency(long potency) {
-        PutInt("potency", potency);
+        PutLong("potency", potency);
         return this;
     }
 
@@ -96,12 +96,12 @@ public class RPGLResource : TaggableContent {
             for (int i = 0; i < refreshCriterion.Count(); i++) {
                 JsonObject criterion = refreshCriterion.GetJsonObject(i);
                 if (!criterion.AsDict().ContainsKey("frequency_countdown")) {
-                    long countdownInitialValue = (long) criterion.SeekInt("frequency.bonus");
+                    long countdownInitialValue = (long) criterion.SeekLong("frequency.bonus");
                     JsonArray dice = criterion.SeekJsonArray("frequency.dice");
                     for (int j = 0; j < dice.Count(); i++) {
                         countdownInitialValue += Die.Roll(dice.GetJsonObject(j));
                     }
-                    criterion.PutInt("frequency_countdown", countdownInitialValue);
+                    criterion.PutLong("frequency_countdown", countdownInitialValue);
                 }
             }
 
@@ -114,14 +114,14 @@ public class RPGLResource : TaggableContent {
         if (GetAvailableUses() < GetMaximumUses()) {
             bool refreshed = false;
             // update countdown
-            long updatedCountdown = (long) criterion.RemoveInt("frequency_countdown") - 1L;
+            long updatedCountdown = (long) criterion.RemoveLong("frequency_countdown") - 1L;
             if (updatedCountdown > 0) {
                 // decrement countdown
-                criterion.PutInt("frequency_countdown", updatedCountdown);
+                criterion.PutLong("frequency_countdown", updatedCountdown);
             } else {
                 // determine how many tries to make
                 JsonObject triesJson = criterion.GetJsonObject("tries");
-                long tries = (long) triesJson.GetInt("bonus");
+                long tries = (long) triesJson.GetLong("bonus");
                 JsonArray dice = triesJson.GetJsonArray("dice");
                 for (int i = 0; i < dice.Count(); i++) {
                     tries += Die.Roll(dice.GetJsonObject(i));

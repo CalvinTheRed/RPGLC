@@ -73,8 +73,8 @@ public class JsonArray {
         return index < data.Count && data[index] is string s ? s : null;
     }
 
-    public long? GetInt(int index) {
-        return index < data.Count && data[index] is long i ? i : null;
+    public long? GetLong(int index) {
+        return index < data.Count && data[index] is long l ? l : null;
     }
 
     public double? GetDouble(int index) {
@@ -90,42 +90,42 @@ public class JsonArray {
     // =================================================================================================================
 
     public JsonArray AddJsonObject(JsonObject? jsonObject) {
-        if (jsonObject != null) {
+        if (jsonObject is not null) {
             data.Add(jsonObject.AsDict());
         }
         return this;
     }
 
     public JsonArray AddJsonArray(JsonArray? jsonArray) {
-        if (jsonArray != null) {
+        if (jsonArray is not null) {
             data.Add(jsonArray.AsList());
         }
         return this;
     }
 
     public JsonArray AddString(string? s) {
-        if (s != null) {
+        if (s is not null) {
             data.Add(s);
         }
         return this;
     }
 
-    public JsonArray AddInt(long? i) {
-        if (i != null) {
-            data.Add(i);
+    public JsonArray AddLong(long? l) {
+        if (l is not null) {
+            data.Add(l);
         }
         return this;
     }
 
     public JsonArray AddDouble(double? d) {
-        if (d != null) {
+        if (d is not null) {
             data.Add(d);
         }
         return this;
     }
 
     public JsonArray AddBool(bool? b) {
-        if (b != null) {
+        if (b is not null) {
             data.Add(b);
         }
         return this;
@@ -159,10 +159,10 @@ public class JsonArray {
         return null;
     }
 
-    public long? RemoveInt(int index) {
-        if (index < data.Count && data[index] is long i) {
+    public long? RemoveLong(int index) {
+        if (index < data.Count && data[index] is long l) {
             data.RemoveAt(index);
-            return i;
+            return l;
         }
         return null;
     }
@@ -231,7 +231,7 @@ public class JsonArray {
         return PrettyPrint(0);
     }
 
-    private string PrettyPrint(int indent) {
+    internal string PrettyPrint(int indent) {
         StringBuilder sb = new();
         if (IsEmpty()) {
             sb.Append("[ ]");

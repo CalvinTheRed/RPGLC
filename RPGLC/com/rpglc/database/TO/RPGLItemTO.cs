@@ -16,6 +16,7 @@ public class RPGLItemTO : TaggableContentTO {
             .SetResources(new(Resources))
             .SetCost(Cost)
             .SetWeight(Weight)
+            .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)

@@ -50,11 +50,11 @@ public class RPGLClass : DatabaseContent {
     }
 
     public long? GetSubclassLevel() {
-        return GetInt("subclass_level");
+        return GetLong("subclass_level");
     }
 
     public RPGLClass SetSubclassLevel(long? subclassLevel) {
-        PutInt("subevent_level", subclassLevel);
+        PutLong("subevent_level", subclassLevel);
         return this;
     }
 
@@ -84,7 +84,7 @@ public class RPGLClass : DatabaseContent {
             _ = rpglObject.GetClasses().AddJsonObject(new JsonObject()
                 .PutString("name", GetName())
                 .PutString("id", GetDatapackId())
-                .PutInt("level", level)
+                .PutLong("level", level)
                 .PutJsonObject("additional_nested_classes", new())
             );
         } else {
@@ -92,7 +92,7 @@ public class RPGLClass : DatabaseContent {
             for (int i = 0; i < classes.Count(); i++) {
                 JsonObject classData = classes.GetJsonObject(i);
                 if (GetDatapackId() == classData.GetString("id")) {
-                    classData.PutInt("level", level);
+                    classData.PutLong("level", level);
                     break;
                 }
             }
@@ -105,9 +105,10 @@ public class RPGLClass : DatabaseContent {
     // =====================================================================
 
     public void GrantStartingFeatures(RPGLObject rpglObject, JsonObject choices) {
-        FeatureManager.GrantGainedEffects(rpglObject, GetStartingFeatures(), choices);
-        FeatureManager.GrantGainedEvents(rpglObject, GetStartingFeatures());
-        FeatureManager.GrantGainedResources(rpglObject, GetStartingFeatures());
+        JsonObject startingFeatures = GetStartingFeatures() ?? new();
+        FeatureManager.GrantGainedEffects(rpglObject, startingFeatures, choices);
+        FeatureManager.GrantGainedEvents(rpglObject, startingFeatures);
+        FeatureManager.GrantGainedResources(rpglObject, startingFeatures);
     }
 
 };

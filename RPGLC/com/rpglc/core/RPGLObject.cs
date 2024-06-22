@@ -114,41 +114,41 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public long? GetProficiencyBonus() {
+        return GetLong("proficiency_bonus");
+    }
+
+    public RPGLObject SetProficiencyBonus(long? proficiencyBonus) {
+        PutLong("proficiency_bonus", proficiencyBonus);
+        return this;
+    }
+
     public long GetHealthBase() {
-        return (long) GetInt("health_base");
+        return (long) GetLong("health_base");
     }
 
     public RPGLObject SetHealthBase(long healthBase) {
-        PutInt("health_base", healthBase);
+        PutLong("health_base", healthBase);
         return this;
     }
 
     public long GetHealthCurrent() {
-        return (long) GetInt("health_current");
+        return (long) GetLong("health_current");
     }
 
     public RPGLObject SetHealthCurrent(long healthCurrent) {
-        PutInt("health_current", healthCurrent);
+        PutLong("health_current", healthCurrent);
         return this;
     }
 
     // TODO temporary health may benefit from having a more involved data structure to track where it came from...
 
     public long GetHealthTemporary() {
-        return (long) GetInt("health_temporary");
+        return (long) GetLong("health_temporary");
     }
 
     public RPGLObject SetHealthTemporary(long healthTemporary) {
-        PutInt("health_temporary", healthTemporary);
-        return this;
-    }
-
-    public long GetProficiencyBonus() {
-        return (long) GetInt("proficiency_bonus");
-    }
-
-    public RPGLObject SetProficiencyBonus(long proficiencyBonus) {
-        PutInt("proficiency_bonus", proficiencyBonus);
+        PutLong("health_temporary", healthTemporary);
         return this;
     }
 
@@ -205,7 +205,7 @@ public class RPGLObject : TaggableContent {
         for (int i = 0; i < classList.Count(); i++) {
             JsonObject classData = classList.GetJsonObject(i);
             if (classData.GetString("id") == classDatapackId) {
-                return (long) classData.GetInt("level");
+                return (long) classData.GetLong("level");
             }
         }
         return 0L;
@@ -252,8 +252,8 @@ public class RPGLObject : TaggableContent {
                 nestedClassData = additionalNestedClasses.GetJsonObject(nestedClassDatapackId);
             }
             if (nestedClassData is not null) {
-                long classLevel = (long) classData.GetInt("level");
-                long scale = (long) nestedClassData.GetInt("scale");
+                long classLevel = (long) classData.GetLong("level");
+                long scale = (long) nestedClassData.GetLong("scale");
                 bool roundUp = (bool) nestedClassData.GetBool("round_up");
                 if (roundUp) {
                     nestedClassLevel += (long) Math.Ceiling(classLevel / (double) scale);
@@ -316,7 +316,7 @@ public class RPGLObject : TaggableContent {
             AddAdditionalNestedClass(
                 classDatapackId,
                 key,
-                additionalNestedClassData.GetInt("scale") ?? 1L,
+                additionalNestedClassData.GetLong("scale") ?? 1L,
                 additionalNestedClassData.GetBool("round_up") ?? false
             );
         }
@@ -346,11 +346,15 @@ public class RPGLObject : TaggableContent {
                 classData.GetJsonObject("additional_nested_classes").PutJsonObject(
                     additionalNestedClassDatapackId,
                     new JsonObject()
-                        .PutInt("scale", scale)
+                        .PutLong("scale", scale)
                         .PutBool("round_up", roundUp)
                 );
             }
         }
+    }
+
+    public long GetProficiencyBonusByLevel() {
+        return (long) (1 + Math.Ceiling(GetLevel() / 4.0));
     }
 
     // =====================================================================
@@ -544,11 +548,28 @@ public class RPGLObject : TaggableContent {
     }
 
     public long GetEffectiveProficiencyBonus(RPGLContext context) {
-        return GetProficiencyBonus(); // TODO update this later
+        return new CalculateProficiencyBonus()
+            .JoinSubeventData(new JsonObject()
+                .PutJsonArray("tags", GetTags().DeepClone())
+            )
+            .SetSource(this)
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .Get();
     }
 
     public long GetAbilityScoreFromAbilityName(string ability, RPGLContext context) {
-        return (long) GetAbilityScores().GetInt(ability); // TODO update this later
+        return new CalculateAbilityScore()
+            .JoinSubeventData(new JsonObject()
+                .PutJsonArray("tags", GetTags().DeepClone())
+                .PutString("ability", ability)
+            )
+            .SetSource(this)
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .Get();
     }
 
     public long GetAbilityModifierFromAbilityName(string ability, RPGLContext context) {
@@ -562,6 +583,75 @@ public class RPGLObject : TaggableContent {
             score--;
         }
         return (score - 10L) / 2L;
+    }
+
+    public long CalculateArmorClass(RPGLContext context, Subevent? subevent = null) {
+        return new CalculateArmorClass()
+            .JoinSubeventData(new JsonObject()
+                .PutJsonArray("tags", subevent is null ? new() : subevent.GetTags())
+            )
+            .SetOriginItem(subevent is null ? null : subevent.GetOriginItem())
+            .SetSource(subevent is null ? this : subevent.GetSource())
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .Get();
+    }
+
+    // =====================================================================
+    // Hit point management helper methods.
+    // =====================================================================
+
+    public long GetMaximumHitPoints(RPGLContext context) {
+        return new CalculateMaximumHitPoints()
+            .SetSource(this)
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .Get();
+    }
+
+    public void ReceiveDamage(DamageDelivery damageDelivery, RPGLContext context) {
+        JsonObject damageJson = damageDelivery.GetDamage();
+        long damage = 0L;
+        foreach (string key in damageJson.AsDict().Keys) {
+            damage += (long) damageJson.GetLong(key);
+        }
+        ReduceHitPoints(damage, context);
+    }
+
+    private void ReduceHitPoints(long damage, RPGLContext context) {
+        long temporaryHitPoints = GetHealthTemporary();
+        long currentHitPoints = GetHealthCurrent();
+        if (damage > temporaryHitPoints) {
+            if (temporaryHitPoints > 0) {
+                damage -= temporaryHitPoints;
+                temporaryHitPoints = 0L;
+                currentHitPoints -= damage;
+                SetHealthTemporary(temporaryHitPoints);
+                SetHealthCurrent(currentHitPoints);
+                // TODO info_subevent for 0 THP
+            } else {
+                currentHitPoints -= damage;
+                SetHealthCurrent(currentHitPoints);
+            }
+        } else {
+            temporaryHitPoints -= damage;
+            SetHealthTemporary(temporaryHitPoints);
+        }
+        // TODO info_subevents for 0 hp or instant death
+        DBManager.UpdateRPGLObject(this);
+    }
+
+    public void ReceiveHealing(HealingDelivery healingDelivery, RPGLContext context) {
+        long health = GetHealthCurrent();
+        health += healingDelivery.GetHealing();
+        long maximumHitPoints = GetMaximumHitPoints(context);
+        if (health > maximumHitPoints) {
+            health = maximumHitPoints;
+        }
+        SetHealthCurrent(health);
+        DBManager.UpdateRPGLObject(this);
     }
 
 };

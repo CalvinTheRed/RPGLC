@@ -70,7 +70,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 );
             } else if (data is Dictionary<string, object> dict) {
                 JsonObject resourceInstructions = resourceList.GetJsonObject(i);
-                long count = resourceInstructions.GetInt("count") ?? 1L;
+                long count = resourceInstructions.GetLong("count") ?? 1L;
                 for (int j = 0; j < count; j++) {
                     resourceUuidList.AddString(
                         RPGLFactory.NewResource(resourceInstructions.GetString("resource")).GetUuid()
@@ -89,7 +89,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         for (int i = 0; i < classList.Count(); i++) {
             JsonObject classData = classList.GetJsonObject(i);
             string classDatapackId = classData.GetString("id");
-            long level = (long) classData.GetInt("level");
+            long level = (long) classData.GetLong("level");
             JsonObject choices = classData.GetJsonObject("choices");
             for (int j = 0; j < level; j++) {
                 rpglObject.LevelUp(

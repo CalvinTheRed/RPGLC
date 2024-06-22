@@ -10,7 +10,7 @@ public class DummyFunction : Function {
 
     public DummyFunction() : base("dummy_function") { }
 
-    public override void Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
+    public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         Counter++;
     }
 

@@ -14,10 +14,10 @@ public class RPGLObjectTO : TaggableContentTO {
     public List<object> Rotation { get; set; }
     public string? OriginObject { get; set; }
     public string UserId { get; set; }
+    public long? ProficiencyBonus { get; set; }
     public long HealthBase { get; set; }
     public long HealthCurrent { get; set; }
     public long HealthTemporary { get; set; }
-    public long ProficiencyBonus { get; set; }
     public bool? Proxy { get; set; }
 
     public RPGLObject ToRPGLObject() {
@@ -33,10 +33,10 @@ public class RPGLObjectTO : TaggableContentTO {
             .SetRotation(new(Rotation))
             .SetOriginObject(OriginObject)
             .SetUserId(UserId)
+            .SetProficiencyBonus(ProficiencyBonus)
             .SetHealthBase(HealthBase)
             .SetHealthCurrent(HealthCurrent)
             .SetHealthTemporary(HealthTemporary)
-            .SetProficiencyBonus(ProficiencyBonus)
             .SetProxy(Proxy)
             .SetTags(new(Tags))
             .SetUuid(Uuid)

@@ -67,7 +67,7 @@ public class DBManager {
             Features = data.GetJsonObject("features").AsDict(),
             AbilityScoreIncreaseLevels = data.GetJsonArray("ability_score_increase_levels")?.AsList(),
             MulticlassRequirements = data.GetJsonArray("multiclass_requirements")?.AsList(),
-            SubclassLevel = data.GetInt("subclass_level"),
+            SubclassLevel = data.GetLong("subclass_level"),
         });
     }
 
@@ -130,8 +130,8 @@ public class DBManager {
             Effects = data.GetJsonObject("effects").AsDict(),
             Events = data.GetJsonObject("events").AsDict(),
             Resources = data.GetJsonObject("resources").AsDict(),
-            Cost = (long) data.GetInt("cost"),
-            Weight = (long) data.GetInt("weight"),
+            Cost = (long) data.GetLong("cost"),
+            Weight = (long) data.GetLong("weight"),
         });
     }
 
@@ -158,10 +158,10 @@ public class DBManager {
             // origin object is not included in template data
             // proxy object is not included in template data
             // user id is not included in template data
-            HealthBase = (long) data.GetInt("health_base"),
-            HealthCurrent = (long) data.GetInt("health_current"),
-            HealthTemporary = (long) data.GetInt("health_temporary"),
-            ProficiencyBonus = (long) data.GetInt("proficiency_bonus"),
+            ProficiencyBonus = data.GetLong("proficiency_bonus"),
+            HealthBase = (long) data.GetLong("health_base"),
+            HealthCurrent = (long) data.GetLong("health_current"),
+            HealthTemporary = (long) data.GetLong("health_temporary"),
         });
     }
 
@@ -178,8 +178,8 @@ public class DBManager {
             // available uses is not included in template data
             RefreshCriterion = data.GetJsonArray("refresh_criterion").AsList(),
             // origin item is not included in template data
-            MaximumUses = data.GetInt("maximum_uses"),
-            Potency = (long) data.GetInt("potency"),
+            MaximumUses = data.GetLong("maximum_uses"),
+            Potency = (long) data.GetLong("potency"),
         });
     }
 
