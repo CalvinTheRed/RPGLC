@@ -34,6 +34,7 @@ public abstract class Function(string functionId) {
             new RevokeVulnerability(),
             new SetBase(),
             new SetDamageDice(),
+            new SetHealingDice(),
         ]);
 
         if (includeTestingFunctions) {
