@@ -35,6 +35,7 @@ public abstract class Function(string functionId) {
             new SetBase(),
             new SetDamageDice(),
             new SetHealingDice(),
+            new SetMinimum(),
         ]);
 
         if (includeTestingFunctions) {
