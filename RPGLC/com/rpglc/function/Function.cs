@@ -26,6 +26,7 @@ public abstract class Function(string functionId) {
             new GrantVulnerability(),
             new MaximizeDamage(),
             new MaximizeHealing(),
+            new RepeatDamageDice(),
             new RevokeImmunity(),
             new RevokeResistance(),
             new RevokeVulnerability(),

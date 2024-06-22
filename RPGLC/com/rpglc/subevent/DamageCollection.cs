@@ -71,9 +71,9 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         rpglEffect.SetSource(GetSource().GetUuid());
         rpglEffect.SetTarget(null);
         for (int i = 0; i < damageArray.Count(); i++) {
-            JsonObject damageElement = damageArray.GetJsonObject(i);
-            JsonObject damage = CalculationSubevent.ProcessBonusJson(rpglEffect, this, damageElement, context);
-            damage.PutString("damage_type", damageElement.GetString("damage_type"));
+            JsonObject damageJson = damageArray.GetJsonObject(i);
+            JsonObject damage = CalculationSubevent.ProcessBonusJson(rpglEffect, this, damageJson, context);
+            damage.PutString("damage_type", damageJson.GetString("damage_type"));
             AddDamage(damage);
         }
     }
