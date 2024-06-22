@@ -45,14 +45,16 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
         DamageAffinity damageAffinity = new DamageAffinity()
             .JoinSubeventData(new JsonObject()
                 .PutJsonArray("tags", GetTags().DeepClone())
-            );
+            )
+            .SetOriginItem(GetOriginItem())
+            .SetSource(GetSource())
+            .Prepare(context, originPoint);
+
         foreach (string key in damageJson.AsDict().Keys) {
             damageAffinity.AddDamageType(key);
         }
+        
         damageAffinity
-            .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource())
-            .Prepare(context, originPoint)
             .SetTarget(GetTarget())
             .Invoke(context, originPoint);
 
