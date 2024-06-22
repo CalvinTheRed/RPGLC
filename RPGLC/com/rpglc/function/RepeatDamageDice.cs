@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class RepeatDamageDice : Function {
 
-    public RepeatDamageDice() : base("repeat_damage_dice") {
-
-    }
+    public RepeatDamageDice() : base("repeat_damage_dice") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageCollection damageCollection) {

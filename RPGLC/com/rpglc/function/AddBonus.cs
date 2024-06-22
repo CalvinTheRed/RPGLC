@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class AddBonus : Function {
 
-    public AddBonus() : base("add_bonus") {
-
-    }
+    public AddBonus() : base("add_bonus") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CalculationSubevent calculationSubevent) {

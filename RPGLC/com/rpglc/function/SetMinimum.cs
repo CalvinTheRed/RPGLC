@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class SetMinimum : Function {
 
-    public SetMinimum() : base("set_minimum") {
-
-    }
+    public SetMinimum() : base("set_minimum") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CalculationSubevent calculationSubevent) {

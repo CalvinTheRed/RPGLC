@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class HealingCollection : Subevent {
 
-    public HealingCollection() : base("healing_collection") {
-
-    }
+    public HealingCollection() : base("healing_collection") { }
 
     public override Subevent Clone() {
         Subevent clone = new HealingCollection();

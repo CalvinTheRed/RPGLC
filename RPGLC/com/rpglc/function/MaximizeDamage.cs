@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class MaximizeDamage : Function {
 
-    public MaximizeDamage() : base("maximize_damage") {
-
-    }
+    public MaximizeDamage() : base("maximize_damage") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageRoll damageRoll) {

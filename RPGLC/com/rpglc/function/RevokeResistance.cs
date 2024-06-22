@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class RevokeResistance : Function {
 
-    public RevokeResistance() : base("revoke_resistance") {
-
-    }
+    public RevokeResistance() : base("revoke_resistance") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {

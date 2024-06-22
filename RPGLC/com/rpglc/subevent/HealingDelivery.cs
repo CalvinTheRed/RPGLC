@@ -6,9 +6,7 @@ namespace com.rpglc.subevent;
 
 public class HealingDelivery : Subevent {
 
-    public HealingDelivery() : base("healing_delivery") {
-
-    }
+    public HealingDelivery() : base("healing_delivery") { }
 
     public override Subevent Clone() {
         Subevent clone = new HealingDelivery();

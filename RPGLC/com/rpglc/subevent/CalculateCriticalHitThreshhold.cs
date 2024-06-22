@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class CalculateCriticalHitThreshhold : CalculationSubevent {
 
-    public CalculateCriticalHitThreshhold() : base("calculate_critical_hit_threshhold") {
-
-    }
+    public CalculateCriticalHitThreshhold() : base("calculate_critical_hit_threshhold") { }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateCriticalHitThreshhold();

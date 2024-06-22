@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class DamageCollection : Subevent, IDamageTypeSubevent {
 
-    public DamageCollection() : base("damage_collection") {
-
-    }
+    public DamageCollection() : base("damage_collection") { }
 
     public override Subevent Clone() {
         Subevent clone = new DamageCollection();

@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class CalculateProficiencyBonus : CalculationSubevent {
     
-    public CalculateProficiencyBonus() : base("calculate_proficiency_bonus") {
-        
-    }
+    public CalculateProficiencyBonus() : base("calculate_proficiency_bonus") { }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateProficiencyBonus();

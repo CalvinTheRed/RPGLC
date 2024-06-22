@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class AddHealing : Function {
 
-    public AddHealing() : base("add_healing") {
-
-    }
+    public AddHealing() : base("add_healing") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingCollection healingCollection) {

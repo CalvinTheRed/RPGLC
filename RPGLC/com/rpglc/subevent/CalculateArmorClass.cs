@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class CalculateArmorClass : CalculationSubevent {
 
-    public CalculateArmorClass() : base("calculate_armor_class") {
-
-    }
+    public CalculateArmorClass() : base("calculate_armor_class") { }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateArmorClass();

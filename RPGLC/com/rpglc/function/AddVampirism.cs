@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class AddVampirism : Function {
 
-    public AddVampirism() : base("add_vampirism") {
-
-    }
+    public AddVampirism() : base("add_vampirism") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IVampiricSubevent vampiricSubevent) {

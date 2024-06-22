@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class AddDamage : Function {
 
-    public AddDamage() : base("add_damage") {
-
-    }
+    public AddDamage() : base("add_damage") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageCollection damageCollection) {

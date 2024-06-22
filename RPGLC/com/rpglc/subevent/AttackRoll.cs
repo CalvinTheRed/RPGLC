@@ -6,9 +6,7 @@ namespace com.rpglc.subevent;
 
 public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
-    public AttackRoll() : base("attack_roll") {
-        
-    }
+    public AttackRoll() : base("attack_roll") { }
 
     public override Subevent Clone() {
         Subevent clone = new AttackRoll();

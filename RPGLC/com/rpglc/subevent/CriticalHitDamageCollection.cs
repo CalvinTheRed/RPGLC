@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
 
-    public CriticalHitDamageCollection() : base("critical_hit_damage_collection") {
-
-    }
+    public CriticalHitDamageCollection() : base("critical_hit_damage_collection") { }
 
     public override Subevent Clone() {
         Subevent clone = new CriticalHitDamageCollection();

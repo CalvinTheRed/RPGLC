@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class RerollDamageDice : Function {
 
-    public RerollDamageDice() : base("reroll_damage_dice") {
-
-    }
+    public RerollDamageDice() : base("reroll_damage_dice") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageRoll damageRoll) {

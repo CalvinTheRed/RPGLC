@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class CalculateAbilityScore : CalculationSubevent, IAbilitySubevent {
     
-    public CalculateAbilityScore() : base("calculate_ability_score") {
-        
-    }
+    public CalculateAbilityScore() : base("calculate_ability_score") { }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateAbilityScore();

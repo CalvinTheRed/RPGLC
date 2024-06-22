@@ -6,9 +6,7 @@ namespace com.rpglc.function;
 
 public class GrantResistance : Function {
 
-    public GrantResistance() : base("grant_resistance") {
-
-    }
+    public GrantResistance() : base("grant_resistance") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {

@@ -6,9 +6,7 @@ namespace com.rpglc.subevent;
 
 public class CalculateMaximumHitPoints : CalculationSubevent {
 
-    public CalculateMaximumHitPoints() : base("calculate_maximum_hit_points") {
-
-    }
+    public CalculateMaximumHitPoints() : base("calculate_maximum_hit_points") { }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateMaximumHitPoints();

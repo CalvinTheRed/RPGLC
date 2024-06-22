@@ -5,9 +5,7 @@ namespace com.rpglc.subevent;
 
 public class DamageAffinity : Subevent, IDamageTypeSubevent {
 
-    public DamageAffinity() : base("damage_affinity") {
-
-    }
+    public DamageAffinity() : base("damage_affinity") { }
 
     public override Subevent Clone() {
         Subevent clone = new DamageAffinity();
