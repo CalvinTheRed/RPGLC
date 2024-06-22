@@ -13,7 +13,7 @@ public class HealingDeliveryTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
-    public void PreparesDefault() {
+    public void Prepares() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingDelivery healingDelivery = new HealingDelivery()
             .SetSource(rpglObject)
@@ -26,7 +26,7 @@ public class HealingDeliveryTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]
-    public void MaximizesTypelessDamageDice() {
+    public void MaximizesHealingDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         HealingDelivery healingDelivery = new HealingDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -97,14 +97,14 @@ public class HealingDeliveryTest {
                         {
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 3 ] },
-                                { "size": 6, "determined": [ 3 ] }
+                                { "roll": 3, "size": 6, "determined": [ ] },
+                                { "roll": 3, "size": 6, "determined": [ ] }
                             ]
                         },
                         {
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 3 ] }
+                                { "roll": 3, "size": 6, "determined": [ ] }
                             ]
                         }
                     ]
@@ -112,8 +112,6 @@ public class HealingDeliveryTest {
                 """))
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
-
-        healingDelivery.MaximizeHealingDice();
 
         Assert.Equal(1 + 3 + 3 + 1 + 3, healingDelivery.GetHealing());
     }

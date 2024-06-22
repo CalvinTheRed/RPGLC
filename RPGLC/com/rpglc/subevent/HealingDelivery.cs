@@ -73,7 +73,7 @@ public class HealingDelivery : Subevent {
             healing += (long) healingJson.GetLong("bonus");
             JsonArray dice = healingJson.GetJsonArray("dice");
             for (int j = 0; j < dice.Count(); j++) {
-                healing += Die.Roll(dice.GetJsonObject(j));
+                healing += (long) dice.GetJsonObject(j).GetLong("roll");
             }
         }
         return healing;
