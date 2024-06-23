@@ -199,6 +199,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             .Prepare(context, originPoint)
             .SetTarget(GetTarget())
             .Invoke(context, originPoint);
+
         json.PutLong("critical_hit_threshhold", calculateCriticalHitThreshhold.Get());
     }
 
