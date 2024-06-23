@@ -20,6 +20,8 @@ public abstract class Subevent {
 
         Initialize([
             new AttackRoll(),
+            new DealDamage(),
+            new SavingThrow(),
         ]);
 
         if (includeTestingSubevents) {
