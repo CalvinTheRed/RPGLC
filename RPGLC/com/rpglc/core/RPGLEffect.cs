@@ -102,6 +102,9 @@ public class RPGLEffect : TaggableContent {
                 rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglEffect.GetTarget());
             }
         }
+        if (instructions.GetBool("as_origin") ?? false) {
+            rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetOriginObject());
+        }
         return rpglObject;
     }
 

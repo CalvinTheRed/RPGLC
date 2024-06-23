@@ -57,7 +57,7 @@ public abstract class Subevent {
         return GetTags().Contains(tag);
     }
 
-    private bool VerifySubevent(string expected) {
+    public bool VerifySubevent(string expected) {
         return expected == json.GetString("subevent");
     }
 

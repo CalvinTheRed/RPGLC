@@ -23,8 +23,8 @@ public interface IVampiricSubevent {
                 HealingDelivery vampiricHealingDelivery = new HealingDelivery()
                     .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{subevent.GetTags().DeepClone().AddString("vampiric").ToString()}},
-                        "healing": {{totalVampiricHealing.ToString()}}
+                        "tags": {{subevent.GetTags().DeepClone().AddString("vampiric")}},
+                        "healing": {{totalVampiricHealing}}
                     }
                     """))
                     .SetOriginItem(subevent.GetOriginItem())
@@ -55,7 +55,7 @@ public interface IVampiricSubevent {
                 HealingCollection vampiricHealingCollection = new HealingCollection()
                     .JoinSubeventData(new JsonObject().LoadFromString($$"""
                         {
-                            "tags": {{subevent.GetTags().DeepClone().AddString("vampiric").ToString()}}
+                            "tags": {{subevent.GetTags().DeepClone().AddString("vampiric")}}
                         }
                         """))
                     .SetOriginItem(subevent.GetOriginItem())
@@ -78,8 +78,8 @@ public interface IVampiricSubevent {
                 HealingRoll vampiricHealingRoll = new HealingRoll()
                     .JoinSubeventData(new JsonObject().LoadFromString($$"""
                         {
-                            "tags": {{subevent.GetTags().DeepClone().AddString("vampiric").ToString()}},
-                            "healing": {{vampiricHealingCollection.GetHealingCollection().ToString()}}
+                            "tags": {{subevent.GetTags().DeepClone().AddString("vampiric")}},
+                            "healing": {{vampiricHealingCollection.GetHealingCollection()}}
                         }
                         """))
                     .SetOriginItem(subevent.GetOriginItem())
