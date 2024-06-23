@@ -141,6 +141,8 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     }
 
     private void GetBaseDamage(RPGLContext context, JsonArray originPoint) {
+        RPGLObject source = GetSource();
+
         DamageCollection baseDamageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -149,9 +151,9 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 }
                 """))
             .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource())
+            .SetSource(source)
             .Prepare(context, originPoint)
-            .SetTarget(GetSource())
+            .SetTarget(source)
             .Invoke(context, originPoint);
 
         DamageRoll baseDamageRoll = new DamageRoll()
@@ -162,15 +164,18 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 }
                 """))
             .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource())
+            .SetSource(source)
             .Prepare(context, originPoint)
-            .SetTarget(GetSource())
+            .SetTarget(source)
             .Invoke(context, originPoint);
 
         json.PutJsonArray("damage", baseDamageRoll.GetDamage());
     }
 
     private void GetTargetDamage(RPGLContext context, JsonArray originPoint) {
+        RPGLObject source = GetSource();
+        RPGLObject target = GetTarget();
+
         DamageCollection targetDamageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -178,9 +183,9 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 }
                 """))
             .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource())
+            .SetSource(source)
             .Prepare(context, originPoint)
-            .SetTarget(GetTarget())
+            .SetTarget(target)
             .Invoke(context, originPoint);
 
         DamageRoll targetDamageRoll = new DamageRoll()
@@ -191,9 +196,9 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 }
                 """))
             .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource())
+            .SetSource(source)
             .Prepare(context, originPoint)
-            .SetTarget(GetTarget())
+            .SetTarget(target)
             .Invoke(context, originPoint);
 
         json.GetJsonArray("damage").AsList().AddRange(targetDamageRoll.GetDamage().AsList());

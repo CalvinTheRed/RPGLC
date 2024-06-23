@@ -1,6 +1,5 @@
 ﻿using com.rpglc.core;
 using com.rpglc.database;
-using com.rpglc.function;
 using com.rpglc.json;
 
 namespace com.rpglc.subevent;
@@ -21,6 +20,7 @@ public abstract class Subevent {
         Initialize([
             new AttackRoll(),
             new DealDamage(),
+            new Heal(),
             new SavingThrow(),
         ]);
 
