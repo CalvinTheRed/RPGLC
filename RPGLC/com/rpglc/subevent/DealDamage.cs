@@ -117,9 +117,6 @@ public class DealDamage : Subevent, IVampiricSubevent {
     }
 
     private void DeliverDamage(RPGLContext context, JsonArray originPoint) {
-        RPGLObject source = GetSource();
-        RPGLObject target = GetTarget();
-
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -128,9 +125,9 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 }
                 """))
             .SetOriginItem(GetOriginItem())
-            .SetSource(source)
+            .SetSource(GetSource())
             .Prepare(context, originPoint)
-            .SetTarget(target)
+            .SetTarget(GetTarget())
             .Invoke(context, originPoint);
 
         JsonObject damageByType = damageDelivery.GetDamage();
