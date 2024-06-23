@@ -9,6 +9,7 @@ namespace com.rpglc.subevent;
 
 [AssignDatabase]
 [Collection("Serial")]
+[RPGLCInit]
 public class DamageDeliveryTest {
 
     [ClearDatabaseAfterTest]
@@ -126,7 +127,6 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers immune damage")]
-    [RPGLCInit]
     public void DeliversImmuneDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -167,7 +167,6 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers resistance damage")]
-    [RPGLCInit]
     public void DeliversResistanceDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -208,7 +207,6 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers vulnerability damage")]
-    [RPGLCInit]
     public void DeliversVulnerabilityDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 

@@ -243,4 +243,51 @@ public class AttackRollTest {
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "uses origin attack ability")]
+    public void UsesOriginAttackAbility() {
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        originObject.GetAbilityScores().PutLong("int", 20);
+        DBManager.UpdateRPGLObject(originObject);
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+            .SetOriginObject(originObject.GetUuid());
+        DBManager.UpdateRPGLObject(rpglObject);
+
+        RPGLContext context = new DummyContext()
+            .Add(originObject)
+            .Add(rpglObject);
+
+        AttackRoll attackRoll = new AttackRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "attack_ability": "int",
+                    "attack_type": "melee",
+                    "use_origin_attack_ability": true,
+                    "determined": [ 19 ],
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "formula": "range",
+                            "bonus": 1,
+                            "dice": [ ]
+                        }
+                    ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(context, new());
+
+        Assert.Equal(5, attackRoll.GetBonus());
+
+        attackRoll
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
+
+        Assert.Equal(1000 - 1 - 5, rpglObject.GetHealthCurrent());
+    }
+
 };

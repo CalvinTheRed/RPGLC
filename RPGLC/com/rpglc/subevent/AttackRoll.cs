@@ -45,12 +45,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         // hail from an attack roll of a particular attack type.
         AddTag(json.GetString("attack_type"));
 
-        return this;
-    }
-
-    public override AttackRoll Run(RPGLContext context, JsonArray originPoint) {
-        Roll();
-
         new AddBonus().Execute(
             null,
             this,
@@ -73,6 +67,12 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             context,
             originPoint
         );
+
+        return this;
+    }
+
+    public override AttackRoll Run(RPGLContext context, JsonArray originPoint) {
+        Roll();
 
         json.PutLong("target_armor_class", GetTarget().CalculateArmorClass(context, this));
         CalculateCriticalHitThreshhold(context, originPoint);
@@ -283,7 +283,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": {{json.GetJsonArray("damage")}},
-                    "tags": {{json.GetJsonArray("tags").ToString()}}
+                    "tags": {{json.GetJsonArray("tags")}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

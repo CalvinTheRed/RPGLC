@@ -1,4 +1,5 @@
-﻿using com.rpglc.function;
+﻿using com.rpglc.database;
+using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
@@ -75,6 +76,131 @@ public class RPGLEffectTest {
         rpglEffect.ProcessSubevent(new DummySubevent(), new DummyContext(), new());
 
         Assert.Equal(1L, DummyFunction.Counter);
+    }
+
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets effect source object")]
+    public void GetsEffectSourceObject() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+
+        RPGLEffect rpglEffect = new RPGLEffect().SetSource(rpglObject.GetUuid());
+        Subevent subevent = new DummySubevent();
+
+        Assert.Equal(
+            rpglObject.GetUuid(),
+            RPGLEffect.GetObject(
+                rpglEffect,
+                subevent,
+                new JsonObject().LoadFromString("""
+                    {
+                        "from": "effect",
+                        "object": "source"
+                    }
+                    """)
+            ).GetUuid()
+        );
+    }
+
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets effect target object")]
+    public void GetsEffectTargetObject() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+
+        RPGLEffect rpglEffect = new RPGLEffect().SetTarget(rpglObject.GetUuid());
+        Subevent subevent = new DummySubevent();
+
+        Assert.Equal(
+            rpglObject.GetUuid(),
+            RPGLEffect.GetObject(
+                rpglEffect,
+                subevent,
+                new JsonObject().LoadFromString("""
+                    {
+                        "from": "effect",
+                        "object": "target"
+                    }
+                    """)
+            ).GetUuid()
+        );
+    }
+
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets subevent source object")]
+    public void GetsSubeventSourceObject() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent().SetSource(rpglObject);
+
+        Assert.Equal(
+            rpglObject.GetUuid(),
+            RPGLEffect.GetObject(
+                rpglEffect,
+                subevent,
+                new JsonObject().LoadFromString("""
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    }
+                    """)
+            ).GetUuid()
+        );
+    }
+
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets subevent target object")]
+    public void GetsSubeventTargetObject() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent().SetTarget(rpglObject);
+
+        Assert.Equal(
+            rpglObject.GetUuid(),
+            RPGLEffect.GetObject(
+                rpglEffect,
+                subevent,
+                new JsonObject().LoadFromString("""
+                    {
+                        "from": "subevent",
+                        "object": "target"
+                    }
+                    """)
+            ).GetUuid()
+        );
+    }
+
+    [ClearDatabaseAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets origin object")]
+    public void GetsOriginObject() {
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+            .SetOriginObject(originObject.GetUuid());
+        DBManager.UpdateRPGLObject(rpglObject);
+
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent().SetSource(rpglObject);
+
+        Assert.Equal(
+            originObject.GetUuid(),
+            RPGLEffect.GetObject(
+                rpglEffect,
+                subevent,
+                new JsonObject().LoadFromString("""
+                    {
+                        "from": "subevent",
+                        "object": "source",
+                        "as_origin": true
+                    }
+                    """)
+            ).GetUuid()
+        );
     }
 
 };
