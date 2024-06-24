@@ -86,7 +86,7 @@ public class GiveTemporaryHitPointsTest {
 
         rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
-        Assert.Equal(0 + 1 + 3, rpglObject.GetHealthTemporary());
+        Assert.Equal(0 + 1 + 3, rpglObject.GetTemporaryHitPoints());
     }
 
 };

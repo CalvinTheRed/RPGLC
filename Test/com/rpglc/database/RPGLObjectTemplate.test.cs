@@ -31,6 +31,10 @@ public class RPGLObjectTemplateTest {
             rpglObject.GetAbilityScores().ToString()
         );
         Assert.Equal("""{}""", rpglObject.GetEquippedItems().ToString());
+        Assert.Equal(
+            """{"count":0,"rider_effects":[]}""",
+            rpglObject.GetHealthTemporary().ToString()
+        );
         Assert.Equal("""[]""", rpglObject.GetClasses().ToString());
         Assert.Equal("""[]""", rpglObject.GetEvents().ToString());
         Assert.Equal("""[]""", rpglObject.GetInventory().ToString());
@@ -43,7 +47,6 @@ public class RPGLObjectTemplateTest {
         Assert.Null(rpglObject.GetUserId());
         Assert.Equal(1000L, rpglObject.GetHealthBase());
         Assert.Equal(1000L, rpglObject.GetHealthCurrent());
-        Assert.Equal(0L, rpglObject.GetHealthTemporary());
         Assert.Equal(2L, rpglObject.GetProficiencyBonus());
     }
 

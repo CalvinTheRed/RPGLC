@@ -24,6 +24,15 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public JsonObject GetHealthTemporary() {
+        return GetJsonObject("health_temporary");
+    }
+
+    public RPGLObject SetHealthTemporary(JsonObject healthTemporary) {
+        PutJsonObject("health_temporary", healthTemporary);
+        return this;
+    }
+
     public JsonArray GetClasses() {
         return GetJsonArray("classes");
     }
@@ -138,17 +147,6 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject SetHealthCurrent(long healthCurrent) {
         PutLong("health_current", healthCurrent);
-        return this;
-    }
-
-    // TODO temporary health may benefit from having a more involved data structure to track where it came from...
-
-    public long GetHealthTemporary() {
-        return (long) GetLong("health_temporary");
-    }
-
-    public RPGLObject SetHealthTemporary(long healthTemporary) {
-        PutLong("health_temporary", healthTemporary);
         return this;
     }
 
@@ -621,26 +619,26 @@ public class RPGLObject : TaggableContent {
     }
 
     private void ReduceHitPoints(long damage, RPGLContext context) {
-        long temporaryHitPoints = GetHealthTemporary();
+        long temporaryHitPoints = GetTemporaryHitPoints();
         long currentHitPoints = GetHealthCurrent();
         if (damage > temporaryHitPoints) {
             if (temporaryHitPoints > 0) {
                 damage -= temporaryHitPoints;
                 temporaryHitPoints = 0L;
                 currentHitPoints -= damage;
-                SetHealthTemporary(temporaryHitPoints);
+                SetTemporaryHitPoints(temporaryHitPoints);
                 SetHealthCurrent(currentHitPoints);
                 // TODO info_subevent for 0 THP
             } else {
                 currentHitPoints -= damage;
                 SetHealthCurrent(currentHitPoints);
             }
+            DBManager.UpdateRPGLObject(this);
         } else {
             temporaryHitPoints -= damage;
-            SetHealthTemporary(temporaryHitPoints);
+            SetTemporaryHitPoints(temporaryHitPoints);
         }
         // TODO info_subevents for 0 hp or instant death
-        DBManager.UpdateRPGLObject(this);
     }
 
     public void ReceiveHealing(HealingDelivery healingDelivery, RPGLContext context) {
@@ -655,17 +653,27 @@ public class RPGLObject : TaggableContent {
     }
 
     public void ReceiveTemporaryHitPoints(TemporaryHitPointDelivery temporaryHitPointDelivery, JsonArray riderEffects) {
-        long temporaryHitPoints = GetHealthTemporary();
+        long temporaryHitPoints = GetTemporaryHitPoints();
         long newTemporaryHitPoints = temporaryHitPointDelivery.GetTemporaryHitPoints();
 
         if (newTemporaryHitPoints >= temporaryHitPoints) {
             // update temporary hit point count
-            SetHealthTemporary(newTemporaryHitPoints);
+            SetTemporaryHitPoints(newTemporaryHitPoints);
             // remove any old rider effects
             // add any new rider effects
 
             DBManager.UpdateRPGLObject(this);
         }
+    }
+
+    public long GetTemporaryHitPoints() {
+        return (long) GetHealthTemporary().GetLong("count");
+    }
+
+    public RPGLObject SetTemporaryHitPoints(long temporaryHitPoints) {
+        GetHealthTemporary().PutLong("count", temporaryHitPoints);
+        DBManager.UpdateRPGLObject(this);
+        return this;
     }
 
 };

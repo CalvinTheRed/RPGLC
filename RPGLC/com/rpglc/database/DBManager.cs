@@ -147,6 +147,7 @@ public class DBManager {
 
             AbilityScores = data.GetJsonObject("ability_scores").AsDict(),
             EquippedItems = data.GetJsonObject("equipped_items").AsDict(),
+            HealthTemporary = data.GetJsonObject("health_temporary").AsDict(),
             Classes = data.GetJsonArray("classes").AsList(),
             Effects = data.GetJsonArray("effects").AsList(),
             Events = data.GetJsonArray("events").AsList(),
@@ -161,7 +162,6 @@ public class DBManager {
             ProficiencyBonus = data.GetLong("proficiency_bonus"),
             HealthBase = (long) data.GetLong("health_base"),
             HealthCurrent = (long) data.GetLong("health_current"),
-            HealthTemporary = (long) data.GetLong("health_temporary"),
         });
     }
 
@@ -240,6 +240,7 @@ public class DBManager {
 
             AbilityScores = rpglObject.GetAbilityScores().AsDict(),
             EquippedItems = rpglObject.GetEquippedItems().AsDict(),
+            HealthTemporary = rpglObject.GetHealthTemporary().AsDict(),
             Classes = rpglObject.GetClasses().AsList(),
             Events = rpglObject.GetEvents().AsList(),
             Inventory = rpglObject.GetInventory().AsList(),
@@ -251,7 +252,6 @@ public class DBManager {
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
-            HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
             Proxy = rpglObject.GetProxy(),
         });
@@ -648,6 +648,7 @@ public class DBManager {
 
             AbilityScores = rpglObject.GetAbilityScores().AsDict(),
             EquippedItems = rpglObject.GetEquippedItems().AsDict(),
+            HealthTemporary = rpglObject.GetHealthTemporary().AsDict(),
             Classes = rpglObject.GetClasses().AsList(),
             Events = rpglObject.GetEvents().AsList(),
             Inventory = rpglObject.GetInventory().AsList(),
@@ -659,7 +660,6 @@ public class DBManager {
             UserId = rpglObject.GetUserId(),
             HealthBase = rpglObject.GetHealthBase(),
             HealthCurrent = rpglObject.GetHealthCurrent(),
-            HealthTemporary = rpglObject.GetHealthTemporary(),
             ProficiencyBonus = rpglObject.GetProficiencyBonus(),
             Proxy = rpglObject.GetProxy(),
         });
