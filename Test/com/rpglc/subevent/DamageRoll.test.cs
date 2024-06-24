@@ -12,8 +12,8 @@ public class DamageRollTest {
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares with no damage")]
-    public void PreparesWithNoDamage() {
+    [Fact(DisplayName = "prepares default")]
+    public void PreparesDefault() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
             .SetSource(rpglObject)
@@ -25,8 +25,8 @@ public class DamageRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "prepares with damage")]
-    public void PreparesWithDamage() {
+    [Fact(DisplayName = "prepares damage")]
+    public void PreparesDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""

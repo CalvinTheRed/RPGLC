@@ -284,7 +284,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": {{json.GetJsonArray("damage")}},
-                    "tags": {{json.GetJsonArray("tags")}}
+                    "tags": {{GetTags()}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

@@ -654,4 +654,18 @@ public class RPGLObject : TaggableContent {
         DBManager.UpdateRPGLObject(this);
     }
 
+    public void ReceiveTemporaryHitPoints(TemporaryHitPointDelivery temporaryHitPointDelivery, JsonArray riderEffects) {
+        long temporaryHitPoints = GetHealthTemporary();
+        long newTemporaryHitPoints = temporaryHitPointDelivery.GetTemporaryHitPoints();
+
+        if (newTemporaryHitPoints >= temporaryHitPoints) {
+            // update temporary hit point count
+            SetHealthTemporary(newTemporaryHitPoints);
+            // remove any old rider effects
+            // add any new rider effects
+
+            DBManager.UpdateRPGLObject(this);
+        }
+    }
+
 };

@@ -225,7 +225,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 {
                     "damage": {{json.GetJsonArray("damage")}},
                     "damage_proportion": "{{damageProportion}}",
-                    "tags": {{json.GetJsonArray("tags")}}
+                    "tags": {{GetTags()}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

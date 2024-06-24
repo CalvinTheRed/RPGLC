@@ -8,30 +8,30 @@ namespace com.rpglc.subevent;
 
 [AssignDatabase]
 [Collection("Serial")]
-public class HealingRollTest {
+public class TemporaryHitPointRollTest {
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        HealingRoll healingRoll = new HealingRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        Assert.Equal("""[]""", healingRoll.GetHealing().ToString());
+        Assert.Equal("""[]""", temporaryHitPointRoll.GetTemporaryHitPoints().ToString());
     }
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "prepares healing")]
-    public void PreparesHealing() {
+    [Fact(DisplayName = "prepares temporary hit points")]
+    public void PreparesTemporaryHitPoints() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        HealingRoll healingRoll = new HealingRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "healing": [
+                    "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
@@ -58,20 +58,20 @@ public class HealingRollTest {
               }
             ]
             """,
-            healingRoll.GetHealing().PrettyPrint()
+            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
         );
     }
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls healing dice")]
-    public void RerollsHealingDice() {
+    [Fact(DisplayName = "rerolls temporary hit point dice")]
+    public void RerollsTemporaryHitPointDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        HealingRoll healingRoll = new HealingRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "healing": [
+                    "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
@@ -86,7 +86,7 @@ public class HealingRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        healingRoll.RerollHealingDice(2, 5);
+        temporaryHitPointRoll.RerollTemporaryHitPointDice(2, 5);
 
         Assert.Equal("""
             [
@@ -118,20 +118,20 @@ public class HealingRollTest {
               }
             ]
             """,
-            healingRoll.GetHealing().PrettyPrint()
+            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
         );
     }
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets healing dice")]
-    public void SetsHealingDice() {
+    [Fact(DisplayName = "sets temporary hit point dice")]
+    public void SetsTemporaryHitPointDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        HealingRoll healingRoll = new HealingRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "healing": [
+                    "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
@@ -146,7 +146,7 @@ public class HealingRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        healingRoll.SetHealingDice(6, 2, 5);
+        temporaryHitPointRoll.SetTemporaryHitPointDice(6, 2, 5);
 
         Assert.Equal("""
             [
@@ -178,20 +178,20 @@ public class HealingRollTest {
               }
             ]
             """,
-            healingRoll.GetHealing().PrettyPrint()
+            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
         );
     }
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "maximizes healing dice")]
-    public void MaximizesHealingDice() {
+    [Fact(DisplayName = "maximizes temporary hit point dice")]
+    public void MaximizesTemporaryHitPointDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        HealingRoll healingRoll = new HealingRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "healing": [
+                    "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
@@ -204,7 +204,7 @@ public class HealingRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        healingRoll.MaximizeHealingDice();
+        temporaryHitPointRoll.MaximizeTemporaryHitPointDice();
 
         Assert.Equal("""
             [
@@ -222,7 +222,7 @@ public class HealingRollTest {
               }
             ]
             """,
-            healingRoll.GetHealing().PrettyPrint()
+            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
         );
     }
 

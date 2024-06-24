@@ -9,25 +9,25 @@ namespace com.rpglc.function;
 
 [AssignDatabase]
 [Collection("Serial")]
-public class AddHealingTest {
+public class AddTemporaryHitPointsTest {
 
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "adds healing")]
-    public void AddsHealing() {
+    [Fact(DisplayName = "adds temporary hit points")]
+    public void AddsTemporaryHitPoints() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        Subevent subevent = new HealingCollection()
+        Subevent subevent = new TemporaryHitPointCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new AddHealing().Execute(
+        new AddTemporaryHitPoints().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "add_healing",
-                    "healing": [
+                    "function": "add_temporary_hit_points",
+                    "temporary_hit_points": [
                         {
                             "formula": "range",
                             "bonus": 0,
@@ -75,7 +75,7 @@ public class AddHealingTest {
                 }
               }
             ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
+            """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
     }
 
 };
