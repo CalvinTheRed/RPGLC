@@ -5,9 +5,7 @@ namespace com.rpglc.database;
 
 public class RPGLEffectTemplate : RPGLTemplate {
 
-    public RPGLEffectTemplate() : base() {
-
-    }
+    public RPGLEffectTemplate() : base() { }
 
     public RPGLEffectTemplate(JsonObject other) : this() {
         Join(other);

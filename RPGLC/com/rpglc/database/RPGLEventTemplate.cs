@@ -5,9 +5,7 @@ namespace com.rpglc.database;
 
 public class RPGLEventTemplate : RPGLTemplate {
 
-    public RPGLEventTemplate() : base() {
-
-    }
+    public RPGLEventTemplate() : base() { }
 
     public RPGLEventTemplate(JsonObject other) : this() {
         Join(other);
