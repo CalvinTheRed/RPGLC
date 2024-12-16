@@ -154,6 +154,7 @@ public class RPGLObjectTest {
     [ExtraEventsMock]
     [ExtraResourcesMock]
     [Fact(DisplayName = "invokes event")]
+    [DummyCounterManager]
     public void InvokesEvent() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         RPGLContext context = new DummyContext();

@@ -16,7 +16,7 @@ public class RPGLResourceTest {
     [DefaultMock]
     [ExtraResourcesMock]
     [Fact(DisplayName = "refreshes")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void Refreshes() {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.Exhaust(rpglResource.GetAvailableUses());

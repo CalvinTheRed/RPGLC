@@ -5,7 +5,7 @@ using Xunit.Sdk;
 
 namespace com.rpglc.testutils.beforeaftertestattributes;
 
-public class ResetCountersAfterTest : BeforeAfterTestAttribute {
+public class DummyCounterManager : BeforeAfterTestAttribute {
 
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);

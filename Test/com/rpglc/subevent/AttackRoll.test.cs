@@ -39,7 +39,7 @@ public class AttackRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "hits")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void Hits() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = new AttackRoll()
@@ -88,7 +88,7 @@ public class AttackRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "misses")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void Misses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = new AttackRoll()
@@ -137,7 +137,7 @@ public class AttackRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "critically hits")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void CriticallyHits() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = new AttackRoll()
@@ -186,7 +186,7 @@ public class AttackRollTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "critically misses")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void CriticallyMisses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()

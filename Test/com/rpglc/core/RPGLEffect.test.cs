@@ -50,7 +50,7 @@ public class RPGLEffectTest {
     [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "executes functions")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void ExecutesFunctions() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
 
@@ -69,7 +69,7 @@ public class RPGLEffectTest {
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "processes subevent")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void ProcessesSubevent() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:complex_effect");
 

@@ -85,7 +85,7 @@ public class SavingThrowTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "passes with half damage")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void PassesWithHalfDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -137,7 +137,7 @@ public class SavingThrowTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "passes with no damage")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void PassesWithNoDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -189,7 +189,7 @@ public class SavingThrowTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "fails")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void Fails() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
