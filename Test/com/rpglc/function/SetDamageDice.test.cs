@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class SetDamageDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets untyped, unbounded damage dice")]
@@ -139,6 +140,7 @@ public class SetDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets untyped, bounded damage dice")]
@@ -268,6 +270,7 @@ public class SetDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets typed, unbounded damage dice")]
@@ -396,6 +399,7 @@ public class SetDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets typed, bounded damage dice")]

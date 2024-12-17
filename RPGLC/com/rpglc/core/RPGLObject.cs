@@ -6,6 +6,32 @@ namespace com.rpglc.core;
 
 public class RPGLObject : TaggableContent {
 
+    // =====================================================================
+    // Static code.
+    // =====================================================================
+
+    private static readonly List<RPGLObject> RPGL_OBJECTS = [];
+
+    public static void AddRPGLObject(RPGLObject rpglObject) {
+        RPGL_OBJECTS.Add(rpglObject);
+    }
+
+    public static void RemoveRPGLObject(RPGLObject rpglObject) {
+        RPGL_OBJECTS.Remove(rpglObject);
+    }
+
+    public static List<RPGLObject> GetRPGLObjects() {
+        return [.. RPGL_OBJECTS];
+    }
+
+    public static void ClearRPGL() {
+        RPGL_OBJECTS.Clear();
+    }
+
+    // =====================================================================
+    // Instance code.
+    // =====================================================================
+
     public JsonObject GetAbilityScores() {
         return GetJsonObject("ability_scores");
     }
@@ -157,7 +183,6 @@ public class RPGLObject : TaggableContent {
     public RPGLObject GiveItem(string uuid) {
         if (!GetInventory().Contains(uuid)) {
             GetInventory().AddString(uuid);
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -172,7 +197,6 @@ public class RPGLObject : TaggableContent {
                     equippedItems.RemoveString(equipmentSlot);
                 }
             }
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -180,16 +204,14 @@ public class RPGLObject : TaggableContent {
     public RPGLObject EquipItem(string itemUuid, string equipmentSlot) {
         if (GetInventory().Contains(itemUuid)) {
             GetEquippedItems().PutString(equipmentSlot, itemUuid);
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
 
     public RPGLObject UnequipItem(string equipmentSlot) {
         JsonObject equippedItems = GetEquippedItems();
-        if (equippedItems.AsDict().Keys.Contains(equipmentSlot)) {
+        if (equippedItems.AsDict().ContainsKey(equipmentSlot)) {
             equippedItems.RemoveString(equipmentSlot);
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -323,7 +345,6 @@ public class RPGLObject : TaggableContent {
         // update race features
         LevelUpRaces(choices, GetLevel());
 
-        DBManager.UpdateRPGLObject(this);
         return this;
     }
 
@@ -362,7 +383,6 @@ public class RPGLObject : TaggableContent {
     public RPGLObject GiveResource(RPGLResource rpglResource) {
         if (!GetResources().Contains(rpglResource.GetUuid())) {
             GetResources().AddString(rpglResource.GetUuid());
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -370,12 +390,11 @@ public class RPGLObject : TaggableContent {
     public RPGLObject TakeResource(string resourceUuid) {
         if (GetResources().Contains(resourceUuid)) {
             GetResources().AsList().Remove(resourceUuid);
-            DBManager.UpdateRPGLObject(this);
 
-            RPGLResource rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid);
+            RPGLResource rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
             if (rpglResource.GetOriginItem() is null) {
-                // delete resource if it is not supplied by an item
-                DBManager.DeleteRPGLResource(rpglResource);
+                // destroy resource if it is not supplied by an item
+                RPGLResource.RemoveRPGLResource(rpglResource);
             }
             
         }
@@ -386,8 +405,8 @@ public class RPGLObject : TaggableContent {
         List<RPGLResource> resources = [];
         JsonArray resourceUuids = GetResources();
         for (int i = 0; i < resourceUuids.Count(); i++) {
-            resources.Add(DBManager.QueryRPGLResource(
-                x => x.Uuid == resourceUuids.GetString(i))
+            resources.Add(RPGLResource.GetRPGLResources().Find(
+                x => x.GetUuid() == resourceUuids.GetString(i))
             );
         }
 
@@ -405,7 +424,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            RPGLItem rpglItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
             resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
         }
 
@@ -420,7 +439,6 @@ public class RPGLObject : TaggableContent {
         JsonArray events = GetEvents();
         if (!events.Contains(eventDatapackId)) {
             events.AddString(eventDatapackId);
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -429,7 +447,6 @@ public class RPGLObject : TaggableContent {
         JsonArray events = GetEvents();
         if (events.Contains(eventDatapackId)) {
             events.AsList().Remove(eventDatapackId);
-            DBManager.UpdateRPGLObject(this);
         }
         return this;
     }
@@ -448,10 +465,10 @@ public class RPGLObject : TaggableContent {
             RPGLObject source;
             if (rpglEvent.GetString("source") is not null) {
                 // events with a source pre-assigned via AddEvent take priority
-                source = DBManager.QueryRPGLObject(x => x.Uuid == rpglEvent.GetString("source"));
+                source = GetRPGLObjects().Find(x => x.GetUuid() == rpglEvent.GetString("source"));
             } else if (GetProxy() ?? false) {
                 // proxy objects set their origin object as the source for any events they invoke
-                source = DBManager.QueryRPGLObject(x => x.Uuid == GetOriginObject());
+                source = GetRPGLObjects().Find(x => x.GetUuid() == GetOriginObject());
             } else {
                 // ordinary event invocation sets the calling object as the source
                 source = this;
@@ -474,7 +491,7 @@ public class RPGLObject : TaggableContent {
 
     public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
         bool wasSubeventProcessed = false;
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
         foreach (RPGLEffect rpglEffect in effects) {
             wasSubeventProcessed |= rpglEffect.ProcessSubevent(subevent, context, originPoint);
         }
@@ -489,7 +506,7 @@ public class RPGLObject : TaggableContent {
     // =====================================================================
 
     public RPGLObject AddEffect(RPGLEffect rpglEffect) {
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
         bool hasEffect = false;
         foreach (RPGLEffect activeEffect in effects) {
             if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
@@ -499,30 +516,28 @@ public class RPGLObject : TaggableContent {
         }
         if (!hasEffect) {
             rpglEffect.SetTarget(GetUuid());
-            DBManager.UpdateRPGLEffect(rpglEffect);
         }
         return this;
     }
 
     public RPGLObject RemoveEffect(string effectUuid) {
-        RPGLEffect? rpglEffect = DBManager.QueryRPGLEffect(
-            x => x.Uuid == effectUuid && x.Target == GetUuid()
+        RPGLEffect? rpglEffect = RPGLEffect.GetRPGLEffects().Find(
+            x => x.GetUuid() == effectUuid && x.GetTarget() == GetUuid()
         );
         if (rpglEffect is not null) {
             if (rpglEffect.GetOriginItem() is not null) {
                 // effect coming from an item should persist
                 rpglEffect.SetTarget(null);
-                DBManager.UpdateRPGLEffect(rpglEffect);
             } else {
                 // effects not coming from item should not persist
-                DBManager.DeleteRPGLEffect(rpglEffect);
+                RPGLEffect.RemoveRPGLEffect(rpglEffect);
             }
         }
         return this;
     }
 
     public List<RPGLEffect> GetEffectObjects() {
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == GetUuid());
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
 
         // add effects granted by items equipped appropriately
         JsonObject equippedItems = GetEquippedItems();
@@ -538,7 +553,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = DBManager.QueryRPGLItem(x => x.Uuid == itemUuid);
+            RPGLItem rpglItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
             effects.AddRange(rpglItem.GetEffectsForSlots(slotsForEquippedItems[itemUuid]));
         }
 
@@ -633,7 +648,6 @@ public class RPGLObject : TaggableContent {
                 currentHitPoints -= damage;
                 SetHealthCurrent(currentHitPoints);
             }
-            DBManager.UpdateRPGLObject(this);
         } else {
             temporaryHitPoints -= damage;
             SetTemporaryHitPoints(temporaryHitPoints);
@@ -649,7 +663,6 @@ public class RPGLObject : TaggableContent {
             health = maximumHitPoints;
         }
         SetHealthCurrent(health);
-        DBManager.UpdateRPGLObject(this);
     }
 
     public void ReceiveTemporaryHitPoints(TemporaryHitPointDelivery temporaryHitPointDelivery, JsonArray riderEffects) {
@@ -661,8 +674,6 @@ public class RPGLObject : TaggableContent {
             SetTemporaryHitPoints(newTemporaryHitPoints);
             // remove any old rider effects
             // add any new rider effects
-
-            DBManager.UpdateRPGLObject(this);
         }
     }
 
@@ -672,7 +683,6 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject SetTemporaryHitPoints(long temporaryHitPoints) {
         GetHealthTemporary().PutLong("count", temporaryHitPoints);
-        DBManager.UpdateRPGLObject(this);
         return this;
     }
 

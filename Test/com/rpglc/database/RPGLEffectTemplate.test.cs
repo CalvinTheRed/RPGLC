@@ -9,6 +9,7 @@ namespace com.rpglc.database;
 public class RPGLEffectTemplateTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {

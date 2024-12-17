@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
@@ -24,12 +23,12 @@ public class EquippedItemHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "item does have tag")]
     public void ItemDoesHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
         rpglItem.AddTag("test_tag");
-        DBManager.UpdateRPGLItem(rpglItem);
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         rpglObject.GiveItem(rpglItem.GetUuid());
@@ -57,6 +56,7 @@ public class EquippedItemHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "item does not have tag")]
     public void ItemDoesNotHaveTag() {

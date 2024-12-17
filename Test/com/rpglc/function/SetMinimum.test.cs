@@ -13,6 +13,7 @@ namespace com.rpglc.function;
 public class SetMinimumTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "sets minimum")]
     public void SetsMinimum() {

@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class AddTemporaryHitPointsTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "adds temporary hit points")]

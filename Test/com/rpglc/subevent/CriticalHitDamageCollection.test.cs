@@ -10,6 +10,7 @@ namespace com.rpglc.subevent;
 public class CriticalHitDamageCollectionTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {

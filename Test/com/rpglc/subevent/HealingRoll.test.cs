@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class HealingRollTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class HealingRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares healing")]
@@ -63,6 +65,7 @@ public class HealingRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice")]
@@ -123,6 +126,7 @@ public class HealingRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets healing dice")]
@@ -183,6 +187,7 @@ public class HealingRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]

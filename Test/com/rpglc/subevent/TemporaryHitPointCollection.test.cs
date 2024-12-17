@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class TemporaryHitPointCollectionTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class TemporaryHitPointCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares temporary hit points")]
     public void PreparesTemporaryHitPoints() {
@@ -69,6 +71,7 @@ public class TemporaryHitPointCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds temporary hit points")]
     public void AddsTemporaryHitPoints() {

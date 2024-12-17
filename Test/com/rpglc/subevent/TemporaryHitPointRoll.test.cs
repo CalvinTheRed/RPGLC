@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class TemporaryHitPointRollTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class TemporaryHitPointRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares temporary hit points")]
@@ -63,6 +65,7 @@ public class TemporaryHitPointRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice")]
@@ -123,6 +126,7 @@ public class TemporaryHitPointRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets temporary hit point dice")]
@@ -183,6 +187,7 @@ public class TemporaryHitPointRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point dice")]

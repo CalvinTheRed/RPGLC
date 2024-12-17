@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class MaximizeDamageTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage roll)")]
@@ -103,6 +104,7 @@ public class MaximizeDamageTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage delivery)")]
@@ -168,6 +170,7 @@ public class MaximizeDamageTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage roll)")]
@@ -258,6 +261,7 @@ public class MaximizeDamageTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage delivery)")]

@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class RevokeResistanceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes particular resistance")]
     public void RevokesParticularResistance() {
@@ -52,6 +53,7 @@ public class RevokeResistanceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes blanket resistance")]
     public void RevokesBlanketResistance() {

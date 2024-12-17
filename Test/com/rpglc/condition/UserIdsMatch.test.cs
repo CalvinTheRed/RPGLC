@@ -23,6 +23,7 @@ public class UserIdsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do match")]
     public void ObjectsDoMatch() {
@@ -46,6 +47,7 @@ public class UserIdsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do not match")]
     public void ObjectsDoNotMatch() {

@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class GrantResistanceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants particular resistance")]
     public void GrantsParticularResistance() {
@@ -52,6 +53,7 @@ public class GrantResistanceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants blanket resistance")]
     public void GrantsBlanketResistance() {

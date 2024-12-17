@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class GrantImmunityTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants particular immunity")]
     public void GrantsParticularImmunity() {
@@ -52,6 +53,7 @@ public class GrantImmunityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants blanket immunity")]
     public void GrantsBlanketImmunity() {

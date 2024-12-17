@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class CalculateAbilityScoreTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "calculates ability score")]
     public void CalculatesAbilityScore() {

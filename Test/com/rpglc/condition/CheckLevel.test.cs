@@ -23,6 +23,7 @@ public class CheckLevelTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "object level satisfied")]
@@ -53,6 +54,7 @@ public class CheckLevelTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "object level not satisfied")]
@@ -83,6 +85,7 @@ public class CheckLevelTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "class level satisfied")]
@@ -114,6 +117,7 @@ public class CheckLevelTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "class level not satisfied")]

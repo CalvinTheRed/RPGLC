@@ -23,6 +23,7 @@ public class ObjectsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do match")]
     public void ObjectsDoMatch() {
@@ -46,6 +47,7 @@ public class ObjectsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do not match")]
     public void ObjectsDoNotMatch() {

@@ -13,6 +13,7 @@ namespace com.rpglc.function;
 public class AddBonusTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "adds bonus")]

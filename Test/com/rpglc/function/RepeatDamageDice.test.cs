@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class RepeatDamageDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats default dice (damage collection)")]
@@ -102,6 +103,7 @@ public class RepeatDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats default dice (critical hit damage collection)")]
@@ -200,6 +202,7 @@ public class RepeatDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats indicated dice (damage collection)")]
@@ -297,6 +300,7 @@ public class RepeatDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats indicated dice (critical hit damage collection)")]

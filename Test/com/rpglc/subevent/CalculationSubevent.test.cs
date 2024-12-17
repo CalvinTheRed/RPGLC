@@ -13,6 +13,7 @@ namespace com.rpglc.subevent;
 public class CalculationSubeventTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (range)")]
     public void ProcessesBonusJsonRange() {
@@ -63,6 +64,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -105,6 +107,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -147,6 +150,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (proficiency)")]
     public void ProcessesBonusJsonProficiency() {
@@ -186,6 +190,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -228,6 +233,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (number)")]
     public void ProcessesSetJsonNumber() {
@@ -247,6 +253,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -274,6 +281,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -301,6 +309,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (proficiency)")]
     public void ProcessesSetJsonProficiency() {
@@ -325,6 +334,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -352,6 +362,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (scale)")]
     public void ProcessesSetJsonScale() {
@@ -376,6 +387,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (round up)")]
     public void ProcessesSetJsonRoundUp() {
@@ -413,6 +425,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares base")]
     public void PreparesBase() {
@@ -434,6 +447,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares minimum")]
     public void PreparesMinimum() {
@@ -456,6 +470,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares bonuses")]
     public void PreparesBonuses() {
@@ -525,6 +540,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets")]
     public void Gets() {
@@ -561,6 +577,7 @@ public class CalculationSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets minimum")]
     public void GetsMinimum() {

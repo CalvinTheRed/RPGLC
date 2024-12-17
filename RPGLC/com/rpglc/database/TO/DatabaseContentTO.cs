@@ -3,7 +3,7 @@
 namespace com.rpglc.database.TO;
 
 public class DatabaseContentTO {
-    public ObjectId _id { get; set; }
+    //public ObjectId _id { get; set; }
 
     public Dictionary<string, object> Metadata { get; set; }
     public string DatapackId { get; set; }

@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 
 namespace com.rpglc.subevent;
@@ -102,7 +101,7 @@ public abstract class Subevent {
     }
 
     public RPGLObject GetSource() {
-        return DBManager.QueryRPGLObject(x => x.Uuid == json.GetString("source"));
+        return RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("source"));
     }
 
     public virtual Subevent SetSource(RPGLObject source) {
@@ -111,7 +110,7 @@ public abstract class Subevent {
     }
 
     public RPGLObject GetTarget() {
-        return DBManager.QueryRPGLObject(x => x.Uuid == json.GetString("target"));
+        return RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("target"));
     }
 
     public virtual Subevent SetTarget(RPGLObject target) {

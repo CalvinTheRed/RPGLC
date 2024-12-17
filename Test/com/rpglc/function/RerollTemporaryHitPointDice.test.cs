@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class RerollTemporaryHitPointDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls unbounded temporary hit point dice")]
@@ -134,6 +135,7 @@ public class RerollTemporaryHitPointDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls bounded temporary hit point dice")]

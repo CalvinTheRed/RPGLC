@@ -8,6 +8,7 @@ namespace com.rpglc.core;
 public class RPGLItemTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "gives effects for slots")]
@@ -39,6 +40,7 @@ public class RPGLItemTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "gives events for slots")]
@@ -70,6 +72,7 @@ public class RPGLItemTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "gives resources for slots")]

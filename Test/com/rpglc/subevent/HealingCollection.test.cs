@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class HealingCollectionTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class HealingCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares healing")]
     public void PreparesHealing() {
@@ -69,6 +71,7 @@ public class HealingCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds healing")]
     public void AddsHealing() {

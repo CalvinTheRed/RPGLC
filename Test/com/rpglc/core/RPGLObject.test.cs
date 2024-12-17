@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -13,6 +12,7 @@ namespace com.rpglc.core;
 public class RPGLObjectTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "manipulates item in inventory")]
     public void ManipulatesItemInInventory() {
@@ -21,19 +21,16 @@ public class RPGLObjectTest {
 
         // give item
         rpglObject.GiveItem(rpglItem.GetUuid());
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(1, rpglObject.GetInventory().Count());
         Assert.Equal(rpglItem.GetUuid(), rpglObject.GetInventory().GetString(0));
 
         // give item again
         rpglObject.GiveItem(rpglItem.GetUuid());
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(1, rpglObject.GetInventory().Count());
         Assert.Equal(rpglItem.GetUuid(), rpglObject.GetInventory().GetString(0));
 
         // equip item
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(1, rpglObject.GetEquippedItems().AsDict().Keys.Count());
         Assert.Equal(
             rpglItem.GetUuid(),
@@ -42,24 +39,22 @@ public class RPGLObjectTest {
 
         // unequip item
         rpglObject.UnequipItem("mainhand");
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
 
         // take item
         rpglObject.TakeItem(rpglItem.GetUuid());
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(0, rpglObject.GetInventory().Count());
 
         // give, equip, and take item
         rpglObject.GiveItem(rpglItem.GetUuid());
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
         rpglObject.TakeItem(rpglItem.GetUuid());
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(0, rpglObject.GetInventory().Count());
         Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraRacesMock]
@@ -69,7 +64,6 @@ public class RPGLObjectTest {
         rpglObject.GetRaces().AddString("test:race_with_resource_per_level");
         
         rpglObject.LevelUp("test:class_with_nested_class", new());
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(1, rpglObject.GetLevel());
         Assert.Equal(1, rpglObject.GetLevel("test:class_with_nested_class"));
         Assert.Equal(1, rpglObject.GetLevel("test:nested_class"));
@@ -82,7 +76,6 @@ public class RPGLObjectTest {
                 }
             }
             """));
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         Assert.Equal(2, rpglObject.GetLevel());
         Assert.Equal(2, rpglObject.GetLevel("test:class_with_nested_class"));
         Assert.Equal(2, rpglObject.GetLevel("test:nested_class"));
@@ -92,6 +85,7 @@ public class RPGLObjectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "manipulates resources")]
@@ -104,22 +98,19 @@ public class RPGLObjectTest {
 
         RPGLResource rpglResource = RPGLFactory.NewResource("test:dummy");
         rpglObject.GiveResource(rpglResource);
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         resources = rpglObject.GetResourceObjects();
         Assert.Equal(1, resources.Count());
         Assert.Equal("test:dummy", resources[0].GetDatapackId());
 
         rpglObject.TakeResource(rpglResource.GetUuid());
-        rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid());
+        rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
         Assert.Null(rpglResource);
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         resources = rpglObject.GetResourceObjects();
         Assert.Equal(0, resources.Count());
 
         RPGLItem rpglItem = RPGLFactory.NewItem("test:complex_item");
         rpglObject.GiveItem(rpglItem.GetUuid());
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         resources = rpglObject.GetResourceObjects();
         Assert.Equal(1, resources.Count());
         rpglResource = resources[0];
@@ -127,6 +118,7 @@ public class RPGLObjectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "lists effects")]
@@ -142,7 +134,6 @@ public class RPGLObjectTest {
         rpglObject.GiveItem(rpglItem.GetUuid());
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
         rpglObject.EquipItem(rpglItem.GetUuid(), "offhand");
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
         effects = rpglObject.GetEffectObjects();
         Assert.Equal(1, effects.Count());
         rpglEffect = effects[0];
@@ -150,6 +141,7 @@ public class RPGLObjectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEventsMock]
     [ExtraResourcesMock]
@@ -173,7 +165,6 @@ public class RPGLObjectTest {
 
         Assert.Equal(1, DummySubevent.Counter);
 
-        rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid());
         Assert.Equal(9, rpglResource.GetAvailableUses());
     }
 

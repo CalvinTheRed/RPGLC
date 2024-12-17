@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class DamageRollTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares damage")]
@@ -65,6 +67,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "includes damage type")]
@@ -92,6 +95,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed damage dice")]
@@ -174,6 +178,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls untyped damage dice")]
@@ -240,6 +245,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets typed damage dice")]
@@ -322,6 +328,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets untyped damage dice")]
@@ -388,6 +395,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes typed damage dice")]
@@ -454,6 +462,7 @@ public class DamageRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes untyped damage dice")]

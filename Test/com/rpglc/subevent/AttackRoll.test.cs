@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -14,6 +13,7 @@ namespace com.rpglc.subevent;
 public class AttackRollTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
@@ -37,6 +37,7 @@ public class AttackRollTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "hits")]
     [DummyCounterManager]
@@ -80,12 +81,11 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "misses")]
     [DummyCounterManager]
@@ -129,12 +129,11 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "critically hits")]
     [DummyCounterManager]
@@ -178,12 +177,11 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "critically misses")]
     [DummyCounterManager]
@@ -238,22 +236,19 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "uses origin attack ability")]
     public void UsesOriginAttackAbility() {
         RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         originObject.GetAbilityScores().PutLong("int", 20);
-        DBManager.UpdateRPGLObject(originObject);
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
             .SetOriginObject(originObject.GetUuid());
-        DBManager.UpdateRPGLObject(rpglObject);
 
         RPGLContext context = new DummyContext()
             .Add(originObject)
@@ -284,8 +279,6 @@ public class AttackRollTest {
         attackRoll
             .SetTarget(rpglObject)
             .Invoke(context, new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(1000 - 1 - 5, rpglObject.GetHealthCurrent());
     }

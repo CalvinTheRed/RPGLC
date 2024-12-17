@@ -22,7 +22,7 @@ public class ObjectsMatch : Condition {
             }
             """));
 
-        return Equals(effectObject.GetId(), subeventObject.GetId());
+        return Equals(effectObject.GetUuid(), subeventObject.GetUuid());
     }
 
 };

@@ -11,6 +11,7 @@ namespace com.rpglc.subevent;
 public class DamageCollectionTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
@@ -23,6 +24,7 @@ public class DamageCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares damage")]
     public void PreparesDamage() {
@@ -71,6 +73,7 @@ public class DamageCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage")]
     public void AddsDamage() {
@@ -121,6 +124,7 @@ public class DamageCollectionTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
     public void IncludesDamageType() {

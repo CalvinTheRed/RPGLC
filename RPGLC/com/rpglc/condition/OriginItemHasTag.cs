@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
 
@@ -13,9 +12,9 @@ public class OriginItemHasTag : Condition {
         string originItemAlias = conditionJson.GetString("origin_item");
         RPGLItem? originItem = null;
         if (Equals(originItemAlias, "subevent") && subevent.GetOriginItem() is not null) {
-            originItem = DBManager.QueryRPGLItem(x => x.Uuid == subevent.GetOriginItem());
+            originItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == subevent.GetOriginItem());
         } else if (Equals(originItemAlias, "effect") && rpglEffect.GetOriginItem() is not null) {
-            originItem = DBManager.QueryRPGLItem(x => x.Uuid == rpglEffect.GetOriginItem());
+            originItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == rpglEffect.GetOriginItem());
         }
         return originItem is not null && originItem.HasTag(conditionJson.GetString("tag"));
     }

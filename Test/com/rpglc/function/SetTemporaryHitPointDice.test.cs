@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class SetTemporaryHitPointDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets unbounded temporary hit point dice")]
@@ -135,6 +136,7 @@ public class SetTemporaryHitPointDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets bounded temporary hit point dice")]

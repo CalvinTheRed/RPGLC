@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class MaximizeHealingTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing roll")]
@@ -98,6 +99,7 @@ public class MaximizeHealingTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing delivery")]

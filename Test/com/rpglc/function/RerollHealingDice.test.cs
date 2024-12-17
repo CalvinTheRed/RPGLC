@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class RerollHealingDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls unbounded healing dice")]
@@ -134,6 +135,7 @@ public class RerollHealingDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls bounded healing dice")]

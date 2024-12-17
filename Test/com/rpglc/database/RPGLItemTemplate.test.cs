@@ -10,6 +10,7 @@ namespace com.rpglc.database;
 public class RPGLItemTemplateTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
@@ -34,6 +35,7 @@ public class RPGLItemTemplateTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "assigns effects")]
@@ -45,11 +47,11 @@ public class RPGLItemTemplateTest {
         JsonObject effects = rpglItem.GetEffects();
         Assert.Equal(1, effects.Count());
         string effectUuid = effects.AsDict().Keys.ElementAt(0);
-        RPGLEffect rpglEffect = DBManager.QueryRPGLEffect(x => x.Uuid == effectUuid);
+        RPGLEffect rpglEffect = RPGLEffect.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid);
         Assert.NotNull(rpglEffect);
-        Assert.Equal($"""
-            {'{'}
-              "{rpglEffect.GetUuid()}": [
+        Assert.Equal($$"""
+            {
+              "{{rpglEffect.GetUuid()}}": [
                 [
                   "mainhand",
                   "offhand"
@@ -61,11 +63,12 @@ public class RPGLItemTemplateTest {
                   "offhand"
                 ]
               ]
-            {'}'}
+            }
             """, effects.PrettyPrint());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
     [Fact(DisplayName = "assigns resources")]
@@ -77,11 +80,11 @@ public class RPGLItemTemplateTest {
         JsonObject resources = rpglItem.GetResources();
         Assert.Equal(1, resources.Count());
         string resourceUuid = resources.AsDict().Keys.ElementAt(0);
-        RPGLResource rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid);
+        RPGLResource rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
         Assert.NotNull(rpglResource);
-        Assert.Equal($"""
-            {'{'}
-              "{rpglResource.GetUuid()}": [
+        Assert.Equal($$"""
+            {
+              "{{rpglResource.GetUuid()}}": [
                 [
                   "mainhand",
                   "offhand"
@@ -93,7 +96,7 @@ public class RPGLItemTemplateTest {
                   "offhand"
                 ]
               ]
-            {'}'}
+            }
             """, resources.PrettyPrint());
     }
 

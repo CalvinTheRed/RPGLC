@@ -13,6 +13,7 @@ namespace com.rpglc.function;
 public class SetBaseTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "sets base")]
     public void SetsBase() {

@@ -12,6 +12,7 @@ namespace com.rpglc.subevent;
 public class RollSubeventTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
@@ -25,6 +26,7 @@ public class RollSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls with advantage")]
@@ -53,6 +55,7 @@ public class RollSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls with disadvantage")]
@@ -81,6 +84,7 @@ public class RollSubeventTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls normally")]

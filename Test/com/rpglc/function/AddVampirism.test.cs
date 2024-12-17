@@ -13,6 +13,7 @@ namespace com.rpglc.function;
 public class AddVampirismTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds vampirism")]
     public void AddsBonus() {

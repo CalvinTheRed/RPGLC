@@ -10,6 +10,7 @@ namespace com.rpglc.subevent;
 public class CalculateProficiencyBonusTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned proficiency bonus")]
     public void PreparesAssignedProficiencyBonus() {
@@ -22,6 +23,7 @@ public class CalculateProficiencyBonusTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]

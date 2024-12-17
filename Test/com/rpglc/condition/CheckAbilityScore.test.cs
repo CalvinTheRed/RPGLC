@@ -23,6 +23,7 @@ public class CheckAbilityScoreTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "comparison satisfied")]
     public void ComparisonSatisfied() {
@@ -51,6 +52,7 @@ public class CheckAbilityScoreTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "comparison not satisfied")]
     public void ComparisonNotSatisfied() {

@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -12,6 +11,7 @@ namespace com.rpglc.subevent;
 public class GiveTemporaryHitPointsTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares")]
@@ -59,6 +59,7 @@ public class GiveTemporaryHitPointsTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "gives temporary hit points")]
@@ -83,8 +84,6 @@ public class GiveTemporaryHitPointsTest {
             .Prepare(new DummyContext(), new())
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(0 + 1 + 3, rpglObject.GetTemporaryHitPoints());
     }

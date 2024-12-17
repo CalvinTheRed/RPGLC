@@ -23,6 +23,7 @@ public class SubeventHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does have tag")]
     public void SubeventDoesHaveTag() {
@@ -45,6 +46,7 @@ public class SubeventHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does not have tag")]
     public void SubeventDoesNotHaveTag() {

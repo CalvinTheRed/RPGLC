@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -63,6 +62,7 @@ public class FeatureManagerTest {
         """);
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses effects")]
     public void GainsAndLosesEffects() {
@@ -74,8 +74,8 @@ public class FeatureManagerTest {
             features.GetJsonObject("gain"),
             choices
         );
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => 
-            x.Target == rpglObject.GetUuid()
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => 
+            x.GetTarget() == rpglObject.GetUuid()
         );
         Assert.Equal(2, effects.Count);
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
@@ -86,13 +86,14 @@ public class FeatureManagerTest {
             rpglObject,
             features.GetJsonObject("lose")
         );
-        effects = DBManager.QueryRPGLEffects(x =>
-            x.Target == rpglObject.GetUuid()
+        effects = RPGLEffect.GetRPGLEffects().FindAll(x =>
+            x.GetTarget() == rpglObject.GetUuid()
         );
         Assert.Equal(0, effects.Count);
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses events")]
     public void GainsAndLosesEvents() {
@@ -120,6 +121,7 @@ public class FeatureManagerTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses resources")]
     public void GainsAndLosesResources() {
@@ -130,13 +132,11 @@ public class FeatureManagerTest {
             rpglObject,
             features.GetJsonObject("gain")
         );
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
-        Assert.NotNull(rpglObject);
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(2, resources.Count());
-        string datapackId = DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId();
+        string datapackId = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
-        datapackId = DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(1)).GetDatapackId();
+        datapackId = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
 
         // loses resources

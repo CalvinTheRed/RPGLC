@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
@@ -24,12 +23,12 @@ public class ObjectHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "object does have tag")]
     public void ObjectDoesHaveTag() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         rpglObject.AddTag("test_tag");
-        DBManager.UpdateRPGLObject(rpglObject);
 
         bool result = new ObjectHasTag().Evaluate(
             new(),
@@ -52,6 +51,7 @@ public class ObjectHasTagTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "object does not have tag")]
     public void ObjectDoesNotHaveTag() {

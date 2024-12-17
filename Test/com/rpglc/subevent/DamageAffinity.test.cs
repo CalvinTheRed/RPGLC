@@ -10,6 +10,7 @@ namespace com.rpglc.subevent;
 public class DamageAffinityTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
@@ -22,6 +23,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
     public void IncludesDamageType() {
@@ -36,6 +38,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage type")]
     public void AddsDamageType() {
@@ -63,6 +66,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants immunity")]
     public void GrantsImmunity() {
@@ -92,6 +96,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes immunity")]
     public void RevokesImmunity() {
@@ -122,6 +127,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants resistance")]
     public void GrantsResistance() {
@@ -151,6 +157,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes resistance")]
     public void RevokesResistance() {
@@ -181,6 +188,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants vulnerability")]
     public void GrantsVulnerability() {
@@ -210,6 +218,7 @@ public class DamageAffinityTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes vulnerability")]
     public void RevokesVulnerability() {

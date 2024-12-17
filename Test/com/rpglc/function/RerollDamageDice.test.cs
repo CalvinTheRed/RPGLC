@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class RerollDamageDiceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls untyped, unbounded damage dice")]
@@ -138,6 +139,7 @@ public class RerollDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls untyped, bounded damage dice")]
@@ -266,6 +268,7 @@ public class RerollDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed, unbounded damage dice")]
@@ -393,6 +396,7 @@ public class RerollDamageDiceTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed, bounded damage dice")]

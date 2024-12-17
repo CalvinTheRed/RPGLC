@@ -43,7 +43,7 @@ public class RPGLObjectTO : TaggableContentTO {
             .SetMetadata(new(Metadata))
             .SetDatapackId(DatapackId)
             .SetDescription(Description)
-            .SetName(Name)
-            .SetId(_id);
+            .SetName(Name);
+            //.SetId(_id);
     }
 };

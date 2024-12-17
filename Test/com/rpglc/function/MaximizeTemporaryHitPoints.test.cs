@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class MaximizeTemporaryHitPointsTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point roll")]
@@ -98,6 +99,7 @@ public class MaximizeTemporaryHitPointsTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point delivery")]

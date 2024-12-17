@@ -12,6 +12,7 @@ namespace com.rpglc.function;
 public class AddSubeventTagTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "adds tag")]

@@ -3,7 +3,6 @@
 using com.rpglc.json;
 using com.rpglc.database.TO;
 using com.rpglc.core;
-using System.Linq.Expressions;
 
 namespace com.rpglc.database;
 
@@ -371,7 +370,7 @@ public class DBManager {
     // =====================================================================
     // Template instance queries
     // =====================================================================
-
+    /*
     public static RPGLEffect? QueryRPGLEffect(Expression<Func<RPGLEffectTO, bool>> predicate) {
         RPGLEffect? rpglEffect;
         using (DBConnection connection = new(dbDir, dbName)) {
@@ -495,11 +494,11 @@ public class DBManager {
         }
         return resources;
     }
-
+    */
     // =====================================================================
     // Template instance deletions
     // =====================================================================
-
+    /*
     public static void DeleteRPGLEffect(RPGLEffect rpglEffect) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEffectTO>("effects").Delete(rpglEffect.GetId());
@@ -584,11 +583,11 @@ public class DBManager {
         RPGLResourceTO resourceTO = collection.FindOne(x => x.Uuid == uuid);
         collection.Delete(resourceTO._id);
     }
-
+    */
     // =====================================================================
     // Template instance updates
     // =====================================================================
-
+    /*
     public static void UpdateRPGLEffect(RPGLEffect rpglEffect) {
         using DBConnection connection = new(dbDir, dbName);
         connection.Collection<RPGLEffectTO>("effects").Update(new RPGLEffectTO() {
@@ -686,7 +685,7 @@ public class DBManager {
             Potency = rpglResource.GetPotency(),
         });
     }
-
+    */
     // =====================================================================
     // Utility methods.
     // =====================================================================

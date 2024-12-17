@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -13,6 +12,7 @@ namespace com.rpglc.subevent;
 public class DamageDeliveryTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
@@ -26,6 +26,7 @@ public class DamageDeliveryTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers all damage")]
     public void DeliversAllDamage() {
@@ -52,12 +53,11 @@ public class DamageDeliveryTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers half damage")]
     public void DeliversHalfDamage() {
@@ -85,12 +85,11 @@ public class DamageDeliveryTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers no damage")]
     public void DeliversNoDamage() {
@@ -118,12 +117,11 @@ public class DamageDeliveryTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers immune damage")]
@@ -158,12 +156,11 @@ public class DamageDeliveryTest {
             .SetTarget(rpglObject)
             .Invoke(context, new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers resistance damage")]
@@ -198,12 +195,11 @@ public class DamageDeliveryTest {
             .SetTarget(rpglObject)
             .Invoke(context, new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers vulnerability damage")]
@@ -237,8 +233,6 @@ public class DamageDeliveryTest {
             .Prepare(context, new())
             .SetTarget(rpglObject)
             .Invoke(context, new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(1000 - 20, rpglObject.GetHealthCurrent());
     }

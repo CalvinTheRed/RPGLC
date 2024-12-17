@@ -9,6 +9,7 @@ namespace com.rpglc.database;
 public class RPGLResourceTemplateTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
@@ -33,6 +34,7 @@ public class RPGLResourceTemplateTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [ExtraResourcesMock]
     [Fact(DisplayName = "unpacks dice")]
     public void UnpacksDice() {

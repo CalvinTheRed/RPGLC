@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -10,6 +9,7 @@ namespace com.rpglc.core;
 public class RPGLRaceTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraRacesMock]
     [Fact(DisplayName = "levels up RPGLObject")]
@@ -23,7 +23,7 @@ public class RPGLRaceTest {
             }
             """), 1);
 
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == rpglObject.GetUuid());
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == rpglObject.GetUuid());
         Assert.Equal(2, effects.Count);
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
         Assert.Equal("test:dummy", effects[1].GetDatapackId());
@@ -36,11 +36,11 @@ public class RPGLRaceTest {
         Assert.Equal(2, resources.Count());
         Assert.Equal(
             "test:dummy",
-            DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId()
+            RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId()
         );
         Assert.Equal(
             "test:dummy",
-            DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(1)).GetDatapackId()
+            RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId()
         );
     }
 

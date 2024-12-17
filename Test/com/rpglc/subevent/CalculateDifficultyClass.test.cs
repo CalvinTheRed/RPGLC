@@ -10,6 +10,7 @@ namespace com.rpglc.subevent;
 public class CalculateDifficultyClassTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares generated difficulty class")]
     public void PreparesGeneratedDifficultyClass() {
@@ -27,6 +28,7 @@ public class CalculateDifficultyClassTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned difficulty class")]
     public void PreparesAssignedDifficultyClass() {

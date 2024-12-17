@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.function;
+﻿using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
@@ -14,6 +13,7 @@ namespace com.rpglc.core;
 public class RPGLEffectTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "evaluates conditions (true)")]
     public void EvaluatesConditionsTrue() {
@@ -31,6 +31,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "evaluates conditions (false)")]
     public void EvaluatesConditionsFalse() {
@@ -48,6 +49,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "executes functions")]
     [DummyCounterManager]
@@ -66,6 +68,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
     [Fact(DisplayName = "processes subevent")]
@@ -79,6 +82,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets effect source object")]
     public void GetsEffectSourceObject() {
@@ -103,6 +107,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets effect target object")]
     public void GetsEffectTargetObject() {
@@ -127,6 +132,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets subevent source object")]
     public void GetsSubeventSourceObject() {
@@ -151,6 +157,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets subevent target object")]
     public void GetsSubeventTargetObject() {
@@ -175,6 +182,7 @@ public class RPGLEffectTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets origin object")]
     public void GetsOriginObject() {
@@ -182,7 +190,6 @@ public class RPGLEffectTest {
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
             .SetOriginObject(originObject.GetUuid());
-        DBManager.UpdateRPGLObject(rpglObject);
 
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummySubevent().SetSource(rpglObject);

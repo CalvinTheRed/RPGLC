@@ -10,6 +10,7 @@ namespace com.rpglc.database;
 public class RPGLObjectTemplateTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
@@ -51,6 +52,7 @@ public class RPGLObjectTemplateTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -61,12 +63,13 @@ public class RPGLObjectTemplateTest {
             "test:complex_object"
         ).NewInstance(objectUuid);
 
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => x.Target == objectUuid);
+        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == objectUuid);
         Assert.Equal(1, effects.Count());
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -79,9 +82,9 @@ public class RPGLObjectTemplateTest {
 
         JsonArray inventory = rpglObject.GetInventory();
         Assert.Equal(3, inventory.Count());
-        Assert.Equal("test:dummy", DBManager.QueryRPGLItem(x => x.Uuid == inventory.GetString(0)).GetDatapackId());
-        Assert.Equal("test:dummy", DBManager.QueryRPGLItem(x => x.Uuid == inventory.GetString(1)).GetDatapackId());
-        Assert.Equal("test:dummy", DBManager.QueryRPGLItem(x => x.Uuid == inventory.GetString(2)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(0)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(1)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(2)).GetDatapackId());
 
         JsonObject equippedItems = rpglObject.GetEquippedItems();
         Assert.Equal(2, equippedItems.Count());
@@ -91,6 +94,7 @@ public class RPGLObjectTemplateTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]
@@ -104,10 +108,11 @@ public class RPGLObjectTemplateTest {
 
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(1, resources.Count());
-        Assert.Equal("test:dummy", DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId());
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [ExtraObjectsMock]

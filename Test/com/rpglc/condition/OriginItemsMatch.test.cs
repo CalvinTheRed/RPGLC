@@ -23,6 +23,7 @@ public class OriginItemsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do match")]
     public void ItemsDoMatch() {
@@ -44,6 +45,7 @@ public class OriginItemsMatchTest {
     }
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do not match")]
     public void ItemsDoNotMatch() {

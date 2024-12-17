@@ -1,5 +1,4 @@
 using com.rpglc.condition;
-using com.rpglc.database;
 using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
@@ -7,6 +6,32 @@ using com.rpglc.subevent;
 namespace com.rpglc.core;
 
 public class RPGLEffect : TaggableContent {
+
+    // =====================================================================
+    // Static code.
+    // =====================================================================
+
+    private static readonly List<RPGLEffect> RPGL_EFFECTS = [];
+
+    public static void AddRPGLEffect(RPGLEffect rpglEffect) {
+        RPGL_EFFECTS.Add(rpglEffect);
+    }
+
+    public static void RemoveRPGLEffect(RPGLEffect rpglEffect) {
+        RPGL_EFFECTS.Remove(rpglEffect);
+    }
+
+    public static List<RPGLEffect> GetRPGLEffects() {
+        return [.. RPGL_EFFECTS];
+    }
+
+    public static void ClearRPGL() {
+        RPGL_EFFECTS.Clear();
+    }
+
+    // =====================================================================
+    // Instance code.
+    // =====================================================================
 
     public JsonObject GetSubeventFilters() {
         return GetJsonObject("subevent_filters");
@@ -97,13 +122,13 @@ public class RPGLEffect : TaggableContent {
             }
         } else if (fromAlias == "effect") {
             if (objectAlias == "source") {
-                rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglEffect.GetSource());
+                rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetSource());
             } else if (objectAlias == "target") {
-                rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglEffect.GetTarget());
+                rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetTarget());
             }
         }
         if (instructions.GetBool("as_origin") ?? false) {
-            rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetOriginObject());
+            rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglObject.GetOriginObject());
         }
         return rpglObject;
     }

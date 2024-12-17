@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -13,12 +12,12 @@ namespace com.rpglc.subevent;
 public class VampiricSubeventTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "handles vampirism")]
     public void HandlesVampirism() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
             .SetHealthCurrent(0);
-        DBManager.UpdateRPGLObject(rpglObject);
 
         DummyVampiricSubevent dummyVampiricSubevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -57,8 +56,6 @@ public class VampiricSubeventTest {
             new DummyContext(),
             new()
         );
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(5 + 20, rpglObject.GetHealthCurrent());
     }

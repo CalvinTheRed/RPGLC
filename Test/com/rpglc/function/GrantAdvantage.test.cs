@@ -13,6 +13,7 @@ namespace com.rpglc.function;
 public class GrantAdvantageTest {
 
     [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants advantage")]
     public void GrantsAdvantage() {
