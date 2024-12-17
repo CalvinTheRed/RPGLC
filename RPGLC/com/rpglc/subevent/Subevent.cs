@@ -101,7 +101,7 @@ public abstract class Subevent {
     }
 
     public RPGLObject GetSource() {
-        return RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("source"));
+        return RPGL.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("source"));
     }
 
     public virtual Subevent SetSource(RPGLObject source) {
@@ -110,7 +110,7 @@ public abstract class Subevent {
     }
 
     public RPGLObject GetTarget() {
-        return RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("target"));
+        return RPGL.GetRPGLObjects().Find(x => x.GetUuid() == json.GetString("target"));
     }
 
     public virtual Subevent SetTarget(RPGLObject target) {

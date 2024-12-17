@@ -9,11 +9,7 @@ public class ClearRPGLAfterTest : BeforeAfterTestAttribute {
     // clear database after each individual test
     public override void After(MethodInfo methodUnderTest) {
         base.After(methodUnderTest);
-
-        RPGLEffect.ClearRPGL();
-        RPGLItem.ClearRPGL();
-        RPGLObject.ClearRPGL();
-        RPGLResource.ClearRPGL();
+        RPGL.ClearRPGL();
     }
 
 };

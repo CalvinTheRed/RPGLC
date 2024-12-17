@@ -64,13 +64,13 @@ public static class FeatureManager {
         JsonArray lostEffects = lostFeatures.GetJsonArray("effects") ?? new();
         for (int i = 0; i < lostEffects.Count(); i++) {
             string lostEffectDatapackId = lostEffects.GetString(i);
-            List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(
+            List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(
                 x => x.GetTarget() == rpglObject.GetUuid()
             );
             for (int j = 0; j < effects.Count; j++) {
                 RPGLEffect effect = effects[j];
                 if (lostEffectDatapackId == effect.GetDatapackId()) {
-                    RPGLEffect.RemoveRPGLEffect(effect);
+                    RPGL.RemoveRPGLEffect(effect);
                     break;
                 }
             }
@@ -95,13 +95,13 @@ public static class FeatureManager {
     }
 
     private static void RevokeLostResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
-        List<RPGLResource> resources = RPGLResource.GetRPGLResources().FindAll(
+        List<RPGLResource> resources = RPGL.GetRPGLResources().FindAll(
             x => x.GetDatapackId() == resourceDatapackId
         );
         foreach (RPGLResource rpglResource in resources) {
             if (rpglObject.GetResources().Contains(rpglResource.GetUuid())) {
                 rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
-                RPGLResource.RemoveRPGLResource(rpglResource);
+                RPGL.RemoveRPGLResource(rpglResource);
                 break;
             }
         }

@@ -5,32 +5,6 @@ namespace com.rpglc.core;
 
 public class RPGLItem : TaggableContent {
 
-    // =====================================================================
-    // Static code.
-    // =====================================================================
-
-    private static readonly List<RPGLItem> RPGL_ITEMS = [];
-
-    public static void AddRPGLItem(RPGLItem rpglItem) {
-        RPGL_ITEMS.Add(rpglItem);
-    }
-
-    public static void RemoveRPGLItem(RPGLItem rpglItem) {
-        RPGL_ITEMS.Remove(rpglItem);
-    }
-
-    public static List<RPGLItem> GetRPGLItems() {
-        return [.. RPGL_ITEMS];
-    }
-
-    public static void ClearRPGL() {
-        RPGL_ITEMS.Clear();
-    }
-
-    // =====================================================================
-    // Instance code.
-    // =====================================================================
-
     public JsonObject GetEffects() {
         return GetJsonObject("effects");
     }
@@ -95,7 +69,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEffects.Add(RPGLEffect.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid));
+                    grantedEffects.Add(RPGL.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid));
                     break;
                 }
             }
@@ -141,7 +115,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedResources.Add(RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid));
+                    grantedResources.Add(RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid));
                     break;
                 }
             }

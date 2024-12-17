@@ -74,7 +74,7 @@ public class FeatureManagerTest {
             features.GetJsonObject("gain"),
             choices
         );
-        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => 
+        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => 
             x.GetTarget() == rpglObject.GetUuid()
         );
         Assert.Equal(2, effects.Count);
@@ -86,7 +86,7 @@ public class FeatureManagerTest {
             rpglObject,
             features.GetJsonObject("lose")
         );
-        effects = RPGLEffect.GetRPGLEffects().FindAll(x =>
+        effects = RPGL.GetRPGLEffects().FindAll(x =>
             x.GetTarget() == rpglObject.GetUuid()
         );
         Assert.Equal(0, effects.Count);
@@ -134,9 +134,9 @@ public class FeatureManagerTest {
         );
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(2, resources.Count());
-        string datapackId = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId();
+        string datapackId = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
-        datapackId = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId();
+        datapackId = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
 
         // loses resources

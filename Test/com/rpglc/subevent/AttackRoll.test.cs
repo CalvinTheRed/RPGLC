@@ -9,7 +9,7 @@ namespace com.rpglc.subevent;
 [AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
-[RPGLCInit]
+[RPGLInitTesting]
 public class AttackRollTest {
 
     [ClearDatabaseAfterTest]

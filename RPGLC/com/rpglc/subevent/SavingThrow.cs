@@ -129,7 +129,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource((bool) json.GetBool("use_origin_difficulty_class_ability")
-                ? RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == source.GetOriginObject())
+                ? RPGL.GetRPGLObjects().Find(x => x.GetUuid() == source.GetOriginObject())
                 : source
             )
             .Prepare(context, source.GetPosition())

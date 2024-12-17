@@ -47,7 +47,7 @@ public class RPGLItemTemplateTest {
         JsonObject effects = rpglItem.GetEffects();
         Assert.Equal(1, effects.Count());
         string effectUuid = effects.AsDict().Keys.ElementAt(0);
-        RPGLEffect rpglEffect = RPGLEffect.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid);
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid);
         Assert.NotNull(rpglEffect);
         Assert.Equal($$"""
             {
@@ -80,7 +80,7 @@ public class RPGLItemTemplateTest {
         JsonObject resources = rpglItem.GetResources();
         Assert.Equal(1, resources.Count());
         string resourceUuid = resources.AsDict().Keys.ElementAt(0);
-        RPGLResource rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
+        RPGLResource rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
         Assert.NotNull(rpglResource);
         Assert.Equal($$"""
             {

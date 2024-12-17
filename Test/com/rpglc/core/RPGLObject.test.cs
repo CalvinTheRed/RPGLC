@@ -8,7 +8,7 @@ namespace com.rpglc.core;
 
 [AssignDatabase]
 [Collection("Serial")]
-[RPGLCInit]
+[RPGLInitTesting]
 public class RPGLObjectTest {
 
     [ClearDatabaseAfterTest]
@@ -103,7 +103,7 @@ public class RPGLObjectTest {
         Assert.Equal("test:dummy", resources[0].GetDatapackId());
 
         rpglObject.TakeResource(rpglResource.GetUuid());
-        rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
+        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
         Assert.Null(rpglResource);
         resources = rpglObject.GetResourceObjects();
         Assert.Equal(0, resources.Count());

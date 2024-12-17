@@ -9,7 +9,7 @@ namespace com.rpglc.core;
 
 [AssignDatabase]
 [Collection("Serial")]
-[RPGLCInit]
+[RPGLInitTesting]
 public class RPGLEffectTest {
 
     [ClearDatabaseAfterTest]

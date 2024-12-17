@@ -11,7 +11,7 @@ public class EquippedItemHasTag : Condition {
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         string slot = conditionJson.GetString("slot");
-        RPGLItem? rpglItem = RPGLItem.GetRPGLItems().Find(
+        RPGLItem? rpglItem = RPGL.GetRPGLItems().Find(
             x => x.GetUuid() == rpglObject.GetEquippedItems().GetString(slot)
         );
         return rpglItem is not null && rpglItem.HasTag(conditionJson.GetString("tag"));

@@ -7,32 +7,6 @@ namespace com.rpglc.core;
 
 public class RPGLEffect : TaggableContent {
 
-    // =====================================================================
-    // Static code.
-    // =====================================================================
-
-    private static readonly List<RPGLEffect> RPGL_EFFECTS = [];
-
-    public static void AddRPGLEffect(RPGLEffect rpglEffect) {
-        RPGL_EFFECTS.Add(rpglEffect);
-    }
-
-    public static void RemoveRPGLEffect(RPGLEffect rpglEffect) {
-        RPGL_EFFECTS.Remove(rpglEffect);
-    }
-
-    public static List<RPGLEffect> GetRPGLEffects() {
-        return [.. RPGL_EFFECTS];
-    }
-
-    public static void ClearRPGL() {
-        RPGL_EFFECTS.Clear();
-    }
-
-    // =====================================================================
-    // Instance code.
-    // =====================================================================
-
     public JsonObject GetSubeventFilters() {
         return GetJsonObject("subevent_filters");
     }
@@ -122,13 +96,13 @@ public class RPGLEffect : TaggableContent {
             }
         } else if (fromAlias == "effect") {
             if (objectAlias == "source") {
-                rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetSource());
+                rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetSource());
             } else if (objectAlias == "target") {
-                rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetTarget());
+                rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetTarget());
             }
         }
         if (instructions.GetBool("as_origin") ?? false) {
-            rpglObject = RPGLObject.GetRPGLObjects().Find(x => x.GetUuid() == rpglObject.GetOriginObject());
+            rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglObject.GetOriginObject());
         }
         return rpglObject;
     }

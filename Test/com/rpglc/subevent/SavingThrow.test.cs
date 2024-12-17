@@ -8,7 +8,7 @@ namespace com.rpglc.subevent;
 
 [AssignDatabase]
 [Collection("Serial")]
-[RPGLCInit]
+[RPGLInitTesting]
 public class SavingThrowTest {
 
     [ClearDatabaseAfterTest]

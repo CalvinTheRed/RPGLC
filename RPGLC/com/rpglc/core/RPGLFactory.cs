@@ -24,7 +24,7 @@ public static class RPGLFactory {
             .NewInstance(Guid.NewGuid().ToString())
             .SetSource(source)
             .SetTarget(target);
-        RPGLEffect.AddRPGLEffect(rpglEffect);
+        RPGL.AddRPGLEffect(rpglEffect);
         return rpglEffect;
     }
 
@@ -46,7 +46,7 @@ public static class RPGLFactory {
         RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
-        RPGLItem.AddRPGLItem(rpglItem);
+        RPGL.AddRPGLItem(rpglItem);
         return rpglItem;
     }
 
@@ -67,7 +67,7 @@ public static class RPGLFactory {
             .SetUserId(userId)
             .SetPosition(position)
             .SetRotation(rotation);
-        RPGLObject.AddRPGLObject(rpglObject);
+        RPGL.AddRPGLObject(rpglObject);
         RPGLObjectTemplate.ProcessClasses(rpglObject);
         return rpglObject;
     }
@@ -98,7 +98,7 @@ public static class RPGLFactory {
         RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
-        RPGLResource.AddRPGLResource(rpglResource);
+        RPGL.AddRPGLResource(rpglResource);
         return rpglResource;
     }
 

@@ -23,7 +23,7 @@ public class RPGLRaceTest {
             }
             """), 1);
 
-        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == rpglObject.GetUuid());
+        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == rpglObject.GetUuid());
         Assert.Equal(2, effects.Count);
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
         Assert.Equal("test:dummy", effects[1].GetDatapackId());
@@ -36,11 +36,11 @@ public class RPGLRaceTest {
         Assert.Equal(2, resources.Count());
         Assert.Equal(
             "test:dummy",
-            RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId()
+            RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId()
         );
         Assert.Equal(
             "test:dummy",
-            RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId()
+            RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId()
         );
     }
 

@@ -8,7 +8,7 @@ namespace com.rpglc.core;
 [AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
-[RPGLCInit]
+[RPGLInitTesting]
 public class RPGLResourceTest {
 
     [ClearDatabaseAfterTest]
@@ -32,7 +32,7 @@ public class RPGLResourceTest {
         subevent.SetTarget(rpglObject);
         subevent.Invoke(context, new());
 
-        rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
+        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
 
         Assert.Equal(0L, rpglResource.GetAvailableUses());
         Assert.Equal("""
@@ -64,7 +64,7 @@ public class RPGLResourceTest {
 
         subevent.Invoke(context, new());
 
-        rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
+        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
 
         Assert.Equal(5L, rpglResource.GetAvailableUses());
         Assert.Equal("""

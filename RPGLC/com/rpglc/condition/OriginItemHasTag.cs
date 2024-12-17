@@ -12,9 +12,9 @@ public class OriginItemHasTag : Condition {
         string originItemAlias = conditionJson.GetString("origin_item");
         RPGLItem? originItem = null;
         if (Equals(originItemAlias, "subevent") && subevent.GetOriginItem() is not null) {
-            originItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == subevent.GetOriginItem());
+            originItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == subevent.GetOriginItem());
         } else if (Equals(originItemAlias, "effect") && rpglEffect.GetOriginItem() is not null) {
-            originItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == rpglEffect.GetOriginItem());
+            originItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == rpglEffect.GetOriginItem());
         }
         return originItem is not null && originItem.HasTag(conditionJson.GetString("tag"));
     }

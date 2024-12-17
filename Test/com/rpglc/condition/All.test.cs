@@ -6,7 +6,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.condition;
 
 [Collection("Serial")]
-[RPGLCInit]
+[RPGLInitTesting]
 public class AllTest {
 
     [Fact(DisplayName = "condition mismatch")]

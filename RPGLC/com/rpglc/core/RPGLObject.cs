@@ -6,32 +6,6 @@ namespace com.rpglc.core;
 
 public class RPGLObject : TaggableContent {
 
-    // =====================================================================
-    // Static code.
-    // =====================================================================
-
-    private static readonly List<RPGLObject> RPGL_OBJECTS = [];
-
-    public static void AddRPGLObject(RPGLObject rpglObject) {
-        RPGL_OBJECTS.Add(rpglObject);
-    }
-
-    public static void RemoveRPGLObject(RPGLObject rpglObject) {
-        RPGL_OBJECTS.Remove(rpglObject);
-    }
-
-    public static List<RPGLObject> GetRPGLObjects() {
-        return [.. RPGL_OBJECTS];
-    }
-
-    public static void ClearRPGL() {
-        RPGL_OBJECTS.Clear();
-    }
-
-    // =====================================================================
-    // Instance code.
-    // =====================================================================
-
     public JsonObject GetAbilityScores() {
         return GetJsonObject("ability_scores");
     }
@@ -391,10 +365,10 @@ public class RPGLObject : TaggableContent {
         if (GetResources().Contains(resourceUuid)) {
             GetResources().AsList().Remove(resourceUuid);
 
-            RPGLResource rpglResource = RPGLResource.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
+            RPGLResource rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
             if (rpglResource.GetOriginItem() is null) {
                 // destroy resource if it is not supplied by an item
-                RPGLResource.RemoveRPGLResource(rpglResource);
+                RPGL.RemoveRPGLResource(rpglResource);
             }
             
         }
@@ -405,7 +379,7 @@ public class RPGLObject : TaggableContent {
         List<RPGLResource> resources = [];
         JsonArray resourceUuids = GetResources();
         for (int i = 0; i < resourceUuids.Count(); i++) {
-            resources.Add(RPGLResource.GetRPGLResources().Find(
+            resources.Add(RPGL.GetRPGLResources().Find(
                 x => x.GetUuid() == resourceUuids.GetString(i))
             );
         }
@@ -424,7 +398,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
+            RPGLItem rpglItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
             resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
         }
 
@@ -465,10 +439,10 @@ public class RPGLObject : TaggableContent {
             RPGLObject source;
             if (rpglEvent.GetString("source") is not null) {
                 // events with a source pre-assigned via AddEvent take priority
-                source = GetRPGLObjects().Find(x => x.GetUuid() == rpglEvent.GetString("source"));
+                source = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEvent.GetString("source"));
             } else if (GetProxy() ?? false) {
                 // proxy objects set their origin object as the source for any events they invoke
-                source = GetRPGLObjects().Find(x => x.GetUuid() == GetOriginObject());
+                source = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == GetOriginObject());
             } else {
                 // ordinary event invocation sets the calling object as the source
                 source = this;
@@ -491,7 +465,7 @@ public class RPGLObject : TaggableContent {
 
     public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
         bool wasSubeventProcessed = false;
-        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
+        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
         foreach (RPGLEffect rpglEffect in effects) {
             wasSubeventProcessed |= rpglEffect.ProcessSubevent(subevent, context, originPoint);
         }
@@ -506,7 +480,7 @@ public class RPGLObject : TaggableContent {
     // =====================================================================
 
     public RPGLObject AddEffect(RPGLEffect rpglEffect) {
-        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
+        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
         bool hasEffect = false;
         foreach (RPGLEffect activeEffect in effects) {
             if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
@@ -521,7 +495,7 @@ public class RPGLObject : TaggableContent {
     }
 
     public RPGLObject RemoveEffect(string effectUuid) {
-        RPGLEffect? rpglEffect = RPGLEffect.GetRPGLEffects().Find(
+        RPGLEffect? rpglEffect = RPGL.GetRPGLEffects().Find(
             x => x.GetUuid() == effectUuid && x.GetTarget() == GetUuid()
         );
         if (rpglEffect is not null) {
@@ -530,14 +504,14 @@ public class RPGLObject : TaggableContent {
                 rpglEffect.SetTarget(null);
             } else {
                 // effects not coming from item should not persist
-                RPGLEffect.RemoveRPGLEffect(rpglEffect);
+                RPGL.RemoveRPGLEffect(rpglEffect);
             }
         }
         return this;
     }
 
     public List<RPGLEffect> GetEffectObjects() {
-        List<RPGLEffect> effects = RPGLEffect.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
+        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
 
         // add effects granted by items equipped appropriately
         JsonObject equippedItems = GetEquippedItems();
@@ -553,7 +527,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = RPGLItem.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
+            RPGLItem rpglItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
             effects.AddRange(rpglItem.GetEffectsForSlots(slotsForEquippedItems[itemUuid]));
         }
 
@@ -670,10 +644,10 @@ public class RPGLObject : TaggableContent {
         long newTemporaryHitPoints = temporaryHitPointDelivery.GetTemporaryHitPoints();
 
         if (newTemporaryHitPoints >= temporaryHitPoints) {
-            // update temporary hit point count
+            // TODO update temporary hit point count
             SetTemporaryHitPoints(newTemporaryHitPoints);
-            // remove any old rider effects
-            // add any new rider effects
+            // TODO remove any old rider effects
+            // TODO add any new rider effects
         }
     }
 
