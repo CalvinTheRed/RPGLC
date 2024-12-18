@@ -1,8 +1,8 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database.TO;
+using com.rpglc.data.TO;
 using com.rpglc.json;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
 public class Datapack {
     private readonly string datapackNamespace;

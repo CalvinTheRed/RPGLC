@@ -1,9 +1,13 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
-public class RPGLEffectTemplate(JsonObject other) : RPGLTemplate(other) {
+public class RPGLEffectTemplate : RPGLTemplate {
+
+    public RPGLEffectTemplate() : base() { }
+
+    public RPGLEffectTemplate(JsonObject other) : base(other) { }
 
     public override RPGLEffectTemplate ApplyBonuses(JsonArray bonuses) {
         return new(base.ApplyBonuses(bonuses));

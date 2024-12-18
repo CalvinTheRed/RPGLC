@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class DatabaseContentTO {
     //public ObjectId _id { get; set; }

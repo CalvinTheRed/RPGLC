@@ -1,6 +1,6 @@
 ﻿using com.rpglc.json;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class TaggableContentTO : PersistentContentTO {
     public List<object> Tags { get; set; }

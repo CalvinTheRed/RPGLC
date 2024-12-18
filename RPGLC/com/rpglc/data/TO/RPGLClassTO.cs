@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class RPGLClassTO : DatabaseContentTO {
     public Dictionary<string, object>? NestedClasses { get; set; }

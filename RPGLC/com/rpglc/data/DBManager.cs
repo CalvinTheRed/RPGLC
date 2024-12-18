@@ -1,10 +1,10 @@
 ﻿using LiteDB;
 
 using com.rpglc.json;
-using com.rpglc.database.TO;
+using com.rpglc.data.TO;
 using com.rpglc.core;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
 public class DBManager {
     private static string? dbDir;

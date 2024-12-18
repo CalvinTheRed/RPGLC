@@ -1,6 +1,6 @@
 ﻿using com.rpglc.json;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class RPGLObjectTemplateTO : TaggableContentTO {
     public Dictionary<string, object> AbilityScores { get; set; }

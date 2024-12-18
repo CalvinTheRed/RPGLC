@@ -1,6 +1,6 @@
 ﻿using com.rpglc.json;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class RPGLResourceTemplateTO : TaggableContentTO {
     public List<object> RefreshCriterion { get; set; }

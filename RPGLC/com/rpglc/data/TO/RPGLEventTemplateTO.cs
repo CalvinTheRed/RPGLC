@@ -1,4 +1,4 @@
-﻿namespace com.rpglc.database.TO;
+﻿namespace com.rpglc.data.TO;
 
 public class RPGLEventTemplateTO : DatabaseContentTO {
     public Dictionary<string, object> AreaOfEffect { get; set; }

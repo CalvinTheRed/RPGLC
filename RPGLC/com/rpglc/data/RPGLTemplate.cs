@@ -1,8 +1,10 @@
 ﻿using com.rpglc.json;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
 public abstract class RPGLTemplate : JsonObject {
+
+    public RPGLTemplate() { }
 
     public RPGLTemplate(JsonObject other) {
         Join(other);

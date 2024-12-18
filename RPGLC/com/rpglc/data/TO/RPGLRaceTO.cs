@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class RPGLRaceTO : DatabaseContentTO {
     public Dictionary<string, object> AbilityScoreBonuses { get; set; }

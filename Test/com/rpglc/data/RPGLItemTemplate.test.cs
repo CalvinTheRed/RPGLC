@@ -3,7 +3,7 @@ using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
 [AssignDatabase]
 [Collection("Serial")]

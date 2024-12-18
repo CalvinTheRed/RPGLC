@@ -3,7 +3,7 @@ using com.rpglc.json;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
-namespace com.rpglc.database;
+namespace com.rpglc.data;
 
 [AssignDatabase]
 [Collection("Serial")]
@@ -40,10 +40,10 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("""[]""", rpglObject.GetClasses().ToString());
         Assert.Equal("""[]""", rpglObject.GetEvents().ToString());
         Assert.Equal("""[]""", rpglObject.GetInventory().ToString());
-        Assert.Equal("""[]""", rpglObject.GetPosition().ToString());
+        // position assigned by RPGLFactory
         Assert.Equal("""[]""", rpglObject.GetRaces().ToString());
         Assert.Equal("""[]""", rpglObject.GetResources().ToString());
-        Assert.Equal("""[]""", rpglObject.GetRotation().ToString());
+        // rotation assigned by RPGLFactory
         Assert.Null(rpglObject.GetOriginObject());
         Assert.Null(rpglObject.GetProxy());
         Assert.Null(rpglObject.GetUserId());

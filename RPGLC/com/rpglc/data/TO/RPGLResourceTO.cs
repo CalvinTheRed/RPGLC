@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
 
-namespace com.rpglc.database.TO;
+namespace com.rpglc.data.TO;
 
 public class RPGLResourceTO : TaggableContentTO {
     public List<object> RefreshCriterion { get; set; }
