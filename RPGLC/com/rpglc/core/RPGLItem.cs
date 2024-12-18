@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -92,7 +91,9 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEvents.Add(DBManager.QueryRPGLEventTemplateByDatapackId(eventDatapackId).NewInstance());
+                    grantedEvents.Add(RPGL.GetRPGLEventTemplates()
+                        .Find(x => x.GetDatapackId() == eventDatapackId)
+                        .NewInstance());
                     break;
                 }
             }

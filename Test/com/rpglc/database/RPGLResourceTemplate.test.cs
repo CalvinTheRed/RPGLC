@@ -14,7 +14,8 @@ public class RPGLResourceTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string effectUuid = "uuid";
-        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId("test:dummy")
+        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplates()
+            .Find(x => x.GetDatapackId() == "test:dummy")
             .NewInstance(effectUuid);
 
         Assert.Equal(
@@ -39,7 +40,8 @@ public class RPGLResourceTemplateTest {
     [Fact(DisplayName = "unpacks dice")]
     public void UnpacksDice() {
         string effectUuid = "uuid";
-        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId("test:complex_resource")
+        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_resource")
             .NewInstance(effectUuid);
 
         Assert.Equal("""

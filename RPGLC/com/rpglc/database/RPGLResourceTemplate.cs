@@ -4,13 +4,7 @@ using com.rpglc.math;
 
 namespace com.rpglc.database;
 
-public class RPGLResourceTemplate : RPGLTemplate {
-
-    public RPGLResourceTemplate() : base() { }
-
-    public RPGLResourceTemplate(JsonObject other) : this() {
-        Join(other);
-    }
+public class RPGLResourceTemplate(JsonObject other) : RPGLTemplate(other) {
 
     public override RPGLResourceTemplate ApplyBonuses(JsonArray bonuses) {
         return new(base.ApplyBonuses(bonuses));

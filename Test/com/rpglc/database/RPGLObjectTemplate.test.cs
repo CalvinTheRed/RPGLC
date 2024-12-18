@@ -15,7 +15,8 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId("test:dummy")
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
+            .Find(x => x.GetDatapackId() == "test:dummy")
             .NewInstance(objectUuid);
 
         Assert.Equal(
@@ -59,9 +60,9 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:complex_object"
-        ).NewInstance(objectUuid);
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_object")
+            .NewInstance(objectUuid);
 
         List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == objectUuid);
         Assert.Equal(1, effects.Count());
@@ -76,9 +77,9 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "populates inventory and equips items")]
     public void PopulatesInventoryAndEquipsItems() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:complex_object"
-        ).NewInstance(objectUuid);
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_object")
+            .NewInstance(objectUuid);
 
         JsonArray inventory = rpglObject.GetInventory();
         Assert.Equal(3, inventory.Count());
@@ -101,10 +102,9 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string objectUuid = "uuid";
-        RPGLObjectTemplate template = DBManager.QueryRPGLObjectTemplateByDatapackId(
-            "test:complex_object"
-        );
-        RPGLObject rpglObject = template.NewInstance(objectUuid);
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_object")
+            .NewInstance(objectUuid);
 
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(1, resources.Count());

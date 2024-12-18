@@ -14,7 +14,7 @@ public class RPGLEffectTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string effectUuid = "uuid";
-        RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId("test:dummy")
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplates().Find(x => x.GetDatapackId() == "test:dummy")
             .NewInstance(effectUuid);
 
         Assert.Equal(

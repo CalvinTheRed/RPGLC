@@ -1,4 +1,5 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.database;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,7 +11,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLEffectTemplate(new JsonObject().LoadFromString("""
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -36,8 +37,8 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                     ]
                 }
             }
-            """));
-        DBManager.InsertRPGLEffectTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -65,8 +66,8 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                     ]
                 }
             }
-            """));
-        DBManager.InsertRPGLEffectTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -94,8 +95,8 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                     ]
                 }
             }
-            """));
-        DBManager.InsertRPGLEffectTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -123,7 +124,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                     ]
                 }
             }
-            """));
+            """)));
     }
 
 };

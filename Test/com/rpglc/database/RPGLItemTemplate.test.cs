@@ -15,7 +15,8 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:dummy")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
+            .Find(x => x.GetDatapackId() == "test:dummy")
             .NewInstance(itemUuid);
 
         Assert.Equal(
@@ -41,7 +42,8 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:complex_item")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_item")
             .NewInstance(itemUuid);
 
         JsonObject effects = rpglItem.GetEffects();
@@ -74,7 +76,8 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId("test:complex_item")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_item")
             .NewInstance(itemUuid);
 
         JsonObject resources = rpglItem.GetResources();

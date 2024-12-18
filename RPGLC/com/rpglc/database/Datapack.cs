@@ -59,7 +59,7 @@ public class Datapack {
             JsonObject raceJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{raceNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLRace(raceJson);
+            RPGL.AddRPGLRace(new RPGLRace(raceJson.AsDict()));
         }
     }
 
@@ -81,7 +81,7 @@ public class Datapack {
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLEffectTemplate(templateJson);
+            RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(templateJson));
         }
     }
 
@@ -103,7 +103,7 @@ public class Datapack {
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLEventTemplate(templateJson);
+            RPGL.AddRPGLEventTemplate(new RPGLEventTemplate(templateJson));
         }
     }
 
@@ -125,7 +125,7 @@ public class Datapack {
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLItemTemplate(templateJson);
+            RPGL.AddRPGLItemTemplate(new RPGLItemTemplate(templateJson));
         }
     }
 
@@ -147,7 +147,7 @@ public class Datapack {
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLObjectTemplate(templateJson);
+            RPGL.AddRPGLObjectTemplate(new RPGLObjectTemplate(templateJson));
         }
     }
 
@@ -169,7 +169,7 @@ public class Datapack {
             JsonObject templateJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{templateNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLResourceTemplate(templateJson);
+            RPGL.AddRPGLResourceTemplate(new RPGLResourceTemplate(templateJson));
         }
     }
 

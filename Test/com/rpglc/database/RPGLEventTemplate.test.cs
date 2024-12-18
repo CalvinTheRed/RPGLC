@@ -12,7 +12,8 @@ public class RPGLEventTemplateTest {
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
-        RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:dummy")
+        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplates()
+            .Find(x => x.GetDatapackId() == "test:dummy")
             .NewInstance();
 
         Assert.Equal(
@@ -31,7 +32,8 @@ public class RPGLEventTemplateTest {
     [ExtraEventsMock]
     [Fact(DisplayName = "assigns cost")]
     public void AssignsCost() {
-        RPGLEvent rpglEvent = DBManager.QueryRPGLEventTemplateByDatapackId("test:complex_event")
+        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplates()
+            .Find(x => x.GetDatapackId() == "test:complex_event")
             .NewInstance();
 
         Assert.Equal(

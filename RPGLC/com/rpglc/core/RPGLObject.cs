@@ -290,7 +290,7 @@ public class RPGLObject : TaggableContent {
         JsonArray races = GetRaces();
         for (int i = 0; i < races.Count(); i++) {
             string raceDatapackId = races.GetString(i);
-            RPGLRace rpglRace = DBManager.QueryRPGLRaceByDatapackId(raceDatapackId);
+            RPGLRace rpglRace = RPGLFactory.GetRace(raceDatapackId);
             rpglRace.LevelUpRPGLObject(this, choices, level);
         }
     }

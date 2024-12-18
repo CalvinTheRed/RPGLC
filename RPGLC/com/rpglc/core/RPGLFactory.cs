@@ -6,12 +6,11 @@ namespace com.rpglc.core;
 public static class RPGLFactory {
 
     public static RPGLClass? GetClass(string classDatapackId) {
-        //return DBManager.QueryRPGLClassByDatapackId(classDatapackId);
         return RPGL.GetRPGLClasses().Find(x => x.GetDatapackId() == classDatapackId);
     }
 
     public static RPGLRace? GetRace(string raceDatapackId) {
-        return DBManager.QueryRPGLRaceByDatapackId(raceDatapackId);
+        return RPGL.GetRPGLRaces().Find(x => x.GetDatapackId() == raceDatapackId);
     }
 
     public static RPGLEffect NewEffect(
@@ -20,7 +19,7 @@ public static class RPGLFactory {
             string? source = null,
             string? target = null
     ) {
-        RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId(datapackId)
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplates().Find(x => x.GetDatapackId() == datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetSource(source)
@@ -34,7 +33,7 @@ public static class RPGLFactory {
     }
 
     public static RPGLEvent NewEvent(string datapackId, JsonArray bonuses) {
-        return DBManager.QueryRPGLEventTemplateByDatapackId(datapackId)
+        return RPGL.GetRPGLEventTemplates().Find(x => x.GetDatapackId() == datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance();
     }
@@ -44,7 +43,8 @@ public static class RPGLFactory {
     }
 
     public static RPGLItem NewItem(string datapackId, JsonArray bonuses) {
-        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId(datapackId)
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
+            .Find(x => x.GetDatapackId() == datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
         RPGL.AddRPGLItem(rpglItem);
@@ -62,7 +62,8 @@ public static class RPGLFactory {
             JsonArray rotation,
             JsonArray bonuses
     ) {
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(datapackId)
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
+            .Find(x => x.GetDatapackId() == datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetUserId(userId)
@@ -96,7 +97,8 @@ public static class RPGLFactory {
     }
 
     public static RPGLResource NewResource(string datapackId, JsonArray bonuses) {
-        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId(datapackId)
+        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplates()
+            .Find(x => x.GetDatapackId() == datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
         RPGL.AddRPGLResource(rpglResource);

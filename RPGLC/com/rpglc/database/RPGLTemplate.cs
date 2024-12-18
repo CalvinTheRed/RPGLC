@@ -4,8 +4,16 @@ namespace com.rpglc.database;
 
 public abstract class RPGLTemplate : JsonObject {
 
+    public RPGLTemplate(JsonObject other) {
+        Join(other);
+    }
+
     public void Setup(JsonObject other) {
         other.Join(this);
+    }
+
+    public string GetDatapackId() {
+        return GetString("datapack_id");
     }
 
     public virtual JsonObject ApplyBonuses(JsonArray bonuses) {
