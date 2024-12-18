@@ -3,6 +3,9 @@
 namespace com.rpglc.core;
 
 public class DatabaseContent : JsonObject {
+
+    public DatabaseContent(Dictionary<string, object> data) : base(data) { }
+
     /*
     private ObjectId Id;
 

@@ -1,4 +1,5 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.database;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,6 +11,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
+        /*
         DBManager.InsertRPGLClass(new JsonObject().LoadFromString("""
             {
                 "metadata": {
@@ -22,6 +24,19 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "features": { }
             }
             """));
+        */
+        RPGL.AddRPGLClass(new RPGLClass(new JsonObject().LoadFromString("""
+                {
+                    "metadata": {
+                        "author": "Calvin Withun"
+                    },
+                    "name": "Dummy Class",
+                    "description": "This class has no features.",
+                    "datapack_id": "test:dummy",
+                    "nested_classes": { },
+                    "features": { }
+                }
+                """).AsDict()));
         DBManager.InsertRPGLRace(new JsonObject().LoadFromString("""
             {
                 "metadata": {

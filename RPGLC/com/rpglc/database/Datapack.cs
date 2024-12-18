@@ -1,4 +1,6 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.core;
+using com.rpglc.database.TO;
+using com.rpglc.json;
 
 namespace com.rpglc.database;
 
@@ -35,7 +37,7 @@ public class Datapack {
             JsonObject classJson = new JsonObject().LoadFromFile($"{filePath}")
                 .PutString("datapack_id", $"{datapackNamespace}:{classNameBase.Replace(Path.DirectorySeparatorChar, '/')}{filePathName}");
 
-            DBManager.InsertRPGLClass(classJson);
+            RPGL.AddRPGLClass(new RPGLClass(classJson.AsDict()));
         }
     }
 
