@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class DamageCollectionTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
@@ -23,7 +21,6 @@ public class DamageCollectionTest {
         Assert.Equal("""[]""", damageCollection.GetDamageCollection().ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares damage")]
@@ -72,7 +69,6 @@ public class DamageCollectionTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage")]
@@ -123,7 +119,6 @@ public class DamageCollectionTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "includes damage type")]

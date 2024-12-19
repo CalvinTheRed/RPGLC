@@ -7,12 +7,10 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[DieTestingMode]
-[AssignDatabase]
 [Collection("Serial")]
+[DieTestingMode]
 public class CalculationSubeventTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (range)")]
@@ -63,7 +61,6 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -106,7 +103,6 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -149,7 +145,6 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (proficiency)")]
@@ -189,7 +184,6 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -232,7 +226,6 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (number)")]
@@ -252,7 +245,6 @@ public class CalculationSubeventTest {
         Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -280,7 +272,6 @@ public class CalculationSubeventTest {
         Assert.Equal(-2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -308,7 +299,6 @@ public class CalculationSubeventTest {
         Assert.Equal(13, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (proficiency)")]
@@ -333,7 +323,6 @@ public class CalculationSubeventTest {
         Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -361,7 +350,6 @@ public class CalculationSubeventTest {
         Assert.Equal(1, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (scale)")]
@@ -386,7 +374,6 @@ public class CalculationSubeventTest {
         Assert.Equal(4, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (round up)")]
@@ -424,7 +411,6 @@ public class CalculationSubeventTest {
             """)));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares base")]
@@ -446,7 +432,6 @@ public class CalculationSubeventTest {
         Assert.Equal(2, dummyCalculationSubevent.GetBase());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares minimum")]
@@ -469,7 +454,6 @@ public class CalculationSubeventTest {
         Assert.Equal(2, dummyCalculation.GetMinimum());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares bonuses")]
@@ -539,7 +523,6 @@ public class CalculationSubeventTest {
         Assert.Equal(3 + 3 + 2, dummyCalculation.GetBonus());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets")]
@@ -576,7 +559,6 @@ public class CalculationSubeventTest {
         Assert.Equal(10, dummyCalculation.Get());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets minimum")]

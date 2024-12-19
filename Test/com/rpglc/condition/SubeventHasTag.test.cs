@@ -7,7 +7,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class SubeventHasTagTest {
 
@@ -22,7 +21,6 @@ public class SubeventHasTagTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does have tag")]
@@ -45,7 +43,6 @@ public class SubeventHasTagTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does not have tag")]

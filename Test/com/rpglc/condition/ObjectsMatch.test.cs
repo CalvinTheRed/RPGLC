@@ -7,7 +7,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class ObjectsMatchTest {
 
@@ -22,7 +21,6 @@ public class ObjectsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do match")]
@@ -46,7 +44,6 @@ public class ObjectsMatchTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do not match")]

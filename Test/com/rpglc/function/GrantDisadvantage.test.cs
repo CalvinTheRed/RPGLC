@@ -8,11 +8,9 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class GrantDisadvantageTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants disadvantage")]

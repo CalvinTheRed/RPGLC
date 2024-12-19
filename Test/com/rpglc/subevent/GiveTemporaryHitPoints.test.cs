@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class GiveTemporaryHitPointsTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -58,7 +56,6 @@ public class GiveTemporaryHitPointsTest {
             giveTemporaryHitPoints.json.GetJsonArray("temporary_hit_points").PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

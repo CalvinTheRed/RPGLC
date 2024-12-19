@@ -4,11 +4,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLEffectTemplateTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]

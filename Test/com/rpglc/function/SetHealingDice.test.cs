@@ -7,11 +7,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class SetHealingDiceTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -135,7 +133,6 @@ public class SetHealingDiceTest {
             """, (subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

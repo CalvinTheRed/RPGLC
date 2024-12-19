@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class TemporaryHitPointRollTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
@@ -23,7 +21,6 @@ public class TemporaryHitPointRollTest {
         Assert.Equal("""[]""", temporaryHitPointRoll.GetTemporaryHitPoints().ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -64,7 +61,6 @@ public class TemporaryHitPointRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -125,7 +121,6 @@ public class TemporaryHitPointRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -186,7 +181,6 @@ public class TemporaryHitPointRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

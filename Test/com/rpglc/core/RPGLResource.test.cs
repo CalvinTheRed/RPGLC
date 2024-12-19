@@ -5,18 +5,16 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
 [RPGLInitTesting]
 public class RPGLResourceTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [ExtraResourcesMock]
     [Fact(DisplayName = "refreshes")]
-    [DummyCounterManager]
     public void Refreshes() {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.Exhaust(rpglResource.GetAvailableUses());

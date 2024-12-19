@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class HealTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -58,7 +56,6 @@ public class HealTest {
             heal.json.GetJsonArray("healing").PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

@@ -4,11 +4,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLEventTemplateTest {
 
-    [ClearDatabaseAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
@@ -28,7 +26,6 @@ public class RPGLEventTemplateTest {
         Assert.Equal("""[]""", rpglEvent.GetSubevents().ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ExtraEventsMock]
     [Fact(DisplayName = "assigns cost")]
     public void AssignsCost() {

@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class HealingDeliveryTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -23,7 +21,6 @@ public class HealingDeliveryTest {
         Assert.Equal("""[]""", healingDelivery.json.GetJsonArray("healing").ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -86,7 +83,6 @@ public class HealingDeliveryTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

@@ -7,11 +7,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class MaximizeTemporaryHitPointsTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -98,7 +96,6 @@ public class MaximizeTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

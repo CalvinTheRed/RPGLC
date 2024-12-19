@@ -7,11 +7,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class SetTemporaryHitPointDiceTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -135,7 +133,6 @@ public class SetTemporaryHitPointDiceTest {
             """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

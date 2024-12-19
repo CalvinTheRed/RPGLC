@@ -7,11 +7,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RepeatDamageDiceTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -102,7 +100,6 @@ public class RepeatDamageDiceTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -201,7 +198,6 @@ public class RepeatDamageDiceTest {
             """, (subevent as CriticalHitDamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -299,7 +295,6 @@ public class RepeatDamageDiceTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

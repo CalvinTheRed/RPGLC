@@ -7,7 +7,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class ObjectHasTagTest {
 
@@ -22,7 +21,6 @@ public class ObjectHasTagTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "object does have tag")]
@@ -50,7 +48,6 @@ public class ObjectHasTagTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "object does not have tag")]

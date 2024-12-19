@@ -7,11 +7,9 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RollSubeventTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -25,7 +23,6 @@ public class RollSubeventTest {
         Assert.False(dummyRollSubevent.json.GetBool("has_disadvantage"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -54,7 +51,6 @@ public class RollSubeventTest {
         Assert.Equal(10, dummyRollSubevent.Get());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -83,7 +79,6 @@ public class RollSubeventTest {
         Assert.Equal(5, dummyRollSubevent.Get());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

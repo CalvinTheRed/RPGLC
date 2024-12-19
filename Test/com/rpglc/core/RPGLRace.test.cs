@@ -4,11 +4,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLRaceTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraRacesMock]

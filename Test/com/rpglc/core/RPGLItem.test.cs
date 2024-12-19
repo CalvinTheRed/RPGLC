@@ -3,11 +3,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLItemTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
@@ -39,7 +37,6 @@ public class RPGLItemTest {
         Assert.Equal(0, effects.Count);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
@@ -71,7 +68,6 @@ public class RPGLItemTest {
         Assert.Equal(0, events.Count);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]

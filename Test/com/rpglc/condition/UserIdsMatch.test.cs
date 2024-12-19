@@ -7,7 +7,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class UserIdsMatchTest {
 
@@ -22,7 +21,6 @@ public class UserIdsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do match")]
@@ -46,7 +44,6 @@ public class UserIdsMatchTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do not match")]

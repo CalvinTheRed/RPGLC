@@ -4,11 +4,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLClassTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -44,7 +42,6 @@ public class RPGLClassTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]

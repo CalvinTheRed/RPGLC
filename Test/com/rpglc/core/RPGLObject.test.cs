@@ -6,12 +6,10 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 [RPGLInitTesting]
 public class RPGLObjectTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "manipulates item in inventory")]
@@ -53,7 +51,6 @@ public class RPGLObjectTest {
         Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -84,7 +81,6 @@ public class RPGLObjectTest {
         Assert.Equal(2, rpglObject.GetResources().Count());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
@@ -117,7 +113,6 @@ public class RPGLObjectTest {
         Assert.Equal("test:dummy", rpglResource.GetDatapackId());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
@@ -140,13 +135,12 @@ public class RPGLObjectTest {
         Assert.Equal("test:dummy", rpglEffect.GetDatapackId());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [ExtraEventsMock]
     [ExtraResourcesMock]
     [Fact(DisplayName = "invokes event")]
-    [DummyCounterManager]
     public void InvokesEvent() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         RPGLContext context = new DummyContext();

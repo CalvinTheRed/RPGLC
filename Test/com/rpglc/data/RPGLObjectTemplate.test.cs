@@ -5,11 +5,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLObjectTemplateTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
@@ -52,7 +50,6 @@ public class RPGLObjectTemplateTest {
         Assert.Equal(2L, rpglObject.GetProficiencyBonus());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -69,7 +66,6 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -94,7 +90,6 @@ public class RPGLObjectTemplateTest {
         Assert.True(inventory.Contains(equippedItems.GetString("offhand")));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
@@ -111,7 +106,6 @@ public class RPGLObjectTemplateTest {
         Assert.Equal("test:dummy", RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]

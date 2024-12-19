@@ -6,13 +6,11 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
 [RPGLInitTesting]
 public class AttackRollTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -36,7 +34,6 @@ public class AttackRollTest {
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("vampirism").ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "hits")]
@@ -84,11 +81,10 @@ public class AttackRollTest {
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "misses")]
     [DummyCounterManager]
+    [Fact(DisplayName = "misses")]
     public void Misses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = new AttackRoll()
@@ -132,11 +128,10 @@ public class AttackRollTest {
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "critically hits")]
     [DummyCounterManager]
+    [Fact(DisplayName = "critically hits")]
     public void CriticallyHits() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = new AttackRoll()
@@ -180,11 +175,10 @@ public class AttackRollTest {
         Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "critically misses")]
     [DummyCounterManager]
+    [Fact(DisplayName = "critically misses")]
     public void CriticallyMisses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()
@@ -239,7 +233,6 @@ public class AttackRollTest {
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "uses origin attack ability")]

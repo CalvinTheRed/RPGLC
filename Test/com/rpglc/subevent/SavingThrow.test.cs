@@ -6,12 +6,10 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 [RPGLInitTesting]
 public class SavingThrowTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares generated difficulty class")]
@@ -33,7 +31,6 @@ public class SavingThrowTest {
         Assert.Equal(8 + 2 + 0, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned difficulty class")]
@@ -55,7 +52,6 @@ public class SavingThrowTest {
         Assert.Equal(15, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares origin difficulty class")]
@@ -81,12 +77,11 @@ public class SavingThrowTest {
         Assert.Equal(8 + 2 + 5, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "passes with half damage")]
     [DummyCounterManager]
+    [Fact(DisplayName = "passes with half damage")]
     public void PassesWithHalfDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -132,12 +127,11 @@ public class SavingThrowTest {
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "passes with no damage")]
     [DummyCounterManager]
+    [Fact(DisplayName = "passes with no damage")]
     public void PassesWithNoDamage() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 
@@ -183,12 +177,11 @@ public class SavingThrowTest {
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "fails")]
     [DummyCounterManager]
+    [Fact(DisplayName = "fails")]
     public void Fails() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
 

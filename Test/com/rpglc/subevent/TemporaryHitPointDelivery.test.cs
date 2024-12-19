@@ -6,11 +6,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class TemporaryHitPointDeliveryTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -23,7 +21,6 @@ public class TemporaryHitPointDeliveryTest {
         Assert.Equal("""[]""", temporaryHitPointDelivery.json.GetJsonArray("temporary_hit_points").ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
@@ -86,7 +83,6 @@ public class TemporaryHitPointDeliveryTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]

@@ -5,11 +5,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLItemTemplateTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
@@ -35,7 +33,6 @@ public class RPGLItemTemplateTest {
         Assert.Equal("""{}""", rpglItem.GetResources().ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]
@@ -69,7 +66,6 @@ public class RPGLItemTemplateTest {
             """, effects.PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraItemsMock]

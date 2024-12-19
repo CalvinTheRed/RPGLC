@@ -5,11 +5,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class DamageAffinityTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -22,7 +20,6 @@ public class DamageAffinityTest {
         Assert.Equal("""[]""", damageAffinity.GetAffinities().ToString());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
@@ -37,7 +34,6 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IncludesDamageType("cold"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage type")]
@@ -65,7 +61,6 @@ public class DamageAffinityTest {
             damageAffinity.GetAffinities().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants immunity")]
@@ -95,7 +90,6 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsImmune("fire"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes immunity")]
@@ -126,7 +120,6 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IsImmune("fire"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants resistance")]
@@ -156,7 +149,6 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsResistant("fire"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes resistance")]
@@ -187,7 +179,6 @@ public class DamageAffinityTest {
         Assert.False(damageAffinity.IsResistant("fire"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants vulnerability")]
@@ -217,7 +208,6 @@ public class DamageAffinityTest {
         Assert.True(damageAffinity.IsVulnerable("fire"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes vulnerability")]

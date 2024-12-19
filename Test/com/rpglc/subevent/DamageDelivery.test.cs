@@ -6,12 +6,10 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 [RPGLInitTesting]
 public class DamageDeliveryTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
@@ -25,7 +23,6 @@ public class DamageDeliveryTest {
         Assert.Equal("all", damageDelivery.json.GetString("damage_proportion"));
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers all damage")]
@@ -56,7 +53,6 @@ public class DamageDeliveryTest {
         Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers half damage")]
@@ -88,7 +84,6 @@ public class DamageDeliveryTest {
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "delivers no damage")]
@@ -120,7 +115,6 @@ public class DamageDeliveryTest {
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
@@ -159,7 +153,6 @@ public class DamageDeliveryTest {
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]
@@ -198,7 +191,6 @@ public class DamageDeliveryTest {
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraEffectsMock]

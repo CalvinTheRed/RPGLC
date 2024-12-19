@@ -4,11 +4,9 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RPGLResourceTemplateTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
@@ -34,7 +32,6 @@ public class RPGLResourceTemplateTest {
         Assert.Equal(1L, rpglResource.GetPotency());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [ExtraResourcesMock]
     [Fact(DisplayName = "unpacks dice")]

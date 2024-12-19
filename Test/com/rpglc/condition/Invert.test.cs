@@ -5,7 +5,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[Collection("Serial")]
 [RPGLInitTesting]
 public class InvertTest {
 

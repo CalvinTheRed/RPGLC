@@ -4,7 +4,6 @@ using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class FeatureManagerTest {
 
@@ -61,7 +60,6 @@ public class FeatureManagerTest {
         }
         """);
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses effects")]
@@ -92,7 +90,6 @@ public class FeatureManagerTest {
         Assert.Equal(0, effects.Count);
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses events")]
@@ -120,7 +117,6 @@ public class FeatureManagerTest {
         Assert.Equal(0, events.Count());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses resources")]

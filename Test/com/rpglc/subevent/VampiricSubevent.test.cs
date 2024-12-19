@@ -7,11 +7,9 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class VampiricSubeventTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "handles vampirism")]

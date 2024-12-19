@@ -5,11 +5,9 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class CalculateProficiencyBonusTest {
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned proficiency bonus")]
@@ -22,7 +20,6 @@ public class CalculateProficiencyBonusTest {
         Assert.Equal(2L, calculateProficiencyBonus.Get());
     }
 
-    [ClearDatabaseAfterTest]
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
