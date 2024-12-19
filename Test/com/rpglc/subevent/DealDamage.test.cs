@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class DealDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DealDamage dealDamage = new DealDamage()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -63,7 +64,7 @@ public class DealDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "deals damage")]
     public void DealsDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DealDamage dealDamage = new DealDamage()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class VampiricSubeventTest {
     [DefaultMock]
     [Fact(DisplayName = "handles vampirism")]
     public void HandlesVampirism() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetHealthCurrent(0);
 
         DummyVampiricSubevent dummyVampiricSubevent = new DummyVampiricSubevent()

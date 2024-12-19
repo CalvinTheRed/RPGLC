@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class AddTemporaryHitPointsTest {
     [DieTestingMode]
     [Fact(DisplayName = "adds temporary hit points")]
     public void AddsTemporaryHitPoints() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());

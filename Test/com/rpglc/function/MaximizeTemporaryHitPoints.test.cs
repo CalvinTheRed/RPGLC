@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class MaximizeTemporaryHitPointsTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point roll")]
     public void MaximizesTemporaryHitPointRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -101,7 +102,7 @@ public class MaximizeTemporaryHitPointsTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point delivery")]
     public void MaximizesTemporaryHitPointDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

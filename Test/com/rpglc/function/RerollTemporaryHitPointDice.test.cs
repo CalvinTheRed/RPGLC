@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class RerollTemporaryHitPointDiceTest {
     [DieTestingMode]
     [Fact(DisplayName = "rerolls unbounded temporary hit point dice")]
     public void RerollsUnboundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -137,7 +138,7 @@ public class RerollTemporaryHitPointDiceTest {
     [DieTestingMode]
     [Fact(DisplayName = "rerolls bounded temporary hit point dice")]
     public void RerollsBoundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

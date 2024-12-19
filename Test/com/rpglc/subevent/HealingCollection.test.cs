@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -13,7 +14,7 @@ public class HealingCollectionTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingCollection healingCollection = new HealingCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -25,7 +26,7 @@ public class HealingCollectionTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares healing")]
     public void PreparesHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingCollection healingCollection = new HealingCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -71,7 +72,7 @@ public class HealingCollectionTest {
     [DefaultMock]
     [Fact(DisplayName = "adds healing")]
     public void AddsHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingCollection healingCollection = new HealingCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())

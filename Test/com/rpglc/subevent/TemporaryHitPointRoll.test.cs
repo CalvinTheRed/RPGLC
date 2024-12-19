@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -13,7 +14,7 @@ public class TemporaryHitPointRollTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -26,7 +27,7 @@ public class TemporaryHitPointRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "prepares temporary hit points")]
     public void PreparesTemporaryHitPoints() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -66,7 +67,7 @@ public class TemporaryHitPointRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice")]
     public void RerollsTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -126,7 +127,7 @@ public class TemporaryHitPointRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "sets temporary hit point dice")]
     public void SetsTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -186,7 +187,7 @@ public class TemporaryHitPointRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point dice")]
     public void MaximizesTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

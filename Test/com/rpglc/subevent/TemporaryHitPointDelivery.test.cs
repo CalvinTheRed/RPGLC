@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -13,7 +14,7 @@ public class TemporaryHitPointDeliveryTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointDelivery temporaryHitPointDelivery = new TemporaryHitPointDelivery()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -26,7 +27,7 @@ public class TemporaryHitPointDeliveryTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point dice")]
     public void MaximizesTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointDelivery temporaryHitPointDelivery = new TemporaryHitPointDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -88,7 +89,7 @@ public class TemporaryHitPointDeliveryTest {
     [DieTestingMode]
     [Fact(DisplayName = "gets temporary hit points")]
     public void GetsTemporaryHitPoints() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         TemporaryHitPointDelivery temporaryHitPointDelivery = new TemporaryHitPointDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class SetHealingDiceTest {
     [DieTestingMode]
     [Fact(DisplayName = "sets unbounded healing dice")]
     public void SetsUnboundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -138,7 +139,7 @@ public class SetHealingDiceTest {
     [DieTestingMode]
     [Fact(DisplayName = "sets bounded healing dice")]
     public void RerollsBoundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

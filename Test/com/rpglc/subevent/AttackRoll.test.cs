@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class AttackRollTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -39,7 +40,7 @@ public class AttackRollTest {
     [Fact(DisplayName = "hits")]
     [DummyCounterManager]
     public void Hits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -86,7 +87,7 @@ public class AttackRollTest {
     [DummyCounterManager]
     [Fact(DisplayName = "misses")]
     public void Misses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -133,7 +134,7 @@ public class AttackRollTest {
     [DummyCounterManager]
     [Fact(DisplayName = "critically hits")]
     public void CriticallyHits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -180,7 +181,7 @@ public class AttackRollTest {
     [DummyCounterManager]
     [Fact(DisplayName = "critically misses")]
     public void CriticallyMisses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -237,10 +238,10 @@ public class AttackRollTest {
     [DefaultMock]
     [Fact(DisplayName = "uses origin attack ability")]
     public void UsesOriginAttackAbility() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         originObject.GetAbilityScores().PutLong("int", 20);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
 
         RPGLContext context = new DummyContext()

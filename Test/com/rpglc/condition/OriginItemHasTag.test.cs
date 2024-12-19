@@ -4,6 +4,7 @@ using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils;
 
 namespace com.rpglc.condition;
 
@@ -28,7 +29,7 @@ public class OriginItemHasTagTest {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
         rpglItem.AddTag("test_tag");
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new OriginItemHasTag().Evaluate(
             new(),
@@ -55,7 +56,7 @@ public class OriginItemHasTagTest {
     public void ItemDoesNotHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new OriginItemHasTag().Evaluate(
             new(),
@@ -80,7 +81,7 @@ public class OriginItemHasTagTest {
     [DefaultMock]
     [Fact(DisplayName = "null item does not have tag")]
     public void NullItemDoesNotHaveTag() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new OriginItemHasTag().Evaluate(
             new(),

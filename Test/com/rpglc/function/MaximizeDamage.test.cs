@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -15,7 +16,7 @@ public class MaximizeDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage roll)")]
     public void MaximizesSpecificDamageType_DamageRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -106,7 +107,7 @@ public class MaximizeDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage delivery)")]
     public void MaximizesSpecificDamageType_DamageDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -171,7 +172,7 @@ public class MaximizeDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage roll)")]
     public void MaximizesEveryDamageType_DamageRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -261,7 +262,7 @@ public class MaximizeDamageTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage delivery)")]
     public void MaximizesEveryDamageType_DamageDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

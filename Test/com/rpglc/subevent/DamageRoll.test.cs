@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -13,7 +14,7 @@ public class DamageRollTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -26,7 +27,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "prepares damage")]
     public void PreparesDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -68,7 +69,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "includes damage type")]
     public void DoesIncludeDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -95,7 +96,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed damage dice")]
     public void RerollsTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -177,7 +178,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "rerolls untyped damage dice")]
     public void RerollsUntypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -243,7 +244,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "sets typed damage dice")]
     public void SetsTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -325,7 +326,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "sets untyped damage dice")]
     public void SetsUntypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -391,7 +392,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes typed damage dice")]
     public void MaximizesTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -457,7 +458,7 @@ public class DamageRollTest {
     [DieTestingMode]
     [Fact(DisplayName = "maximizes untyped damage dice")]
     public void MaximizesUntypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

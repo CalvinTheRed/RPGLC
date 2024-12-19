@@ -1,4 +1,5 @@
 ﻿using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -18,7 +19,7 @@ public class RPGLResourceTest {
     public void Refreshes() {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.Exhaust(rpglResource.GetAvailableUses());
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .GiveResource(rpglResource);
         RPGLContext context = new DummyContext()
             .Add(rpglObject);

@@ -1,4 +1,5 @@
 ﻿using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -64,7 +65,7 @@ public class FeatureManagerTest {
     [DefaultMock]
     [Fact(DisplayName = "gains and loses effects")]
     public void GainsAndLosesEffects() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         
         // gains effects
         FeatureManager.GrantGainedEffects(
@@ -94,7 +95,7 @@ public class FeatureManagerTest {
     [DefaultMock]
     [Fact(DisplayName = "gains and loses events")]
     public void GainsAndLosesEvents() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         // gains events
         FeatureManager.GrantGainedEvents(
@@ -121,7 +122,7 @@ public class FeatureManagerTest {
     [DefaultMock]
     [Fact(DisplayName = "gains and loses resources")]
     public void GainsAndLosesResources() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         // gains resources
         FeatureManager.GrantGainedResources(

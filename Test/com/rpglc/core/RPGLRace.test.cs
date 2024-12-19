@@ -1,4 +1,5 @@
 ﻿using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -12,7 +13,7 @@ public class RPGLRaceTest {
     [ExtraRacesMock]
     [Fact(DisplayName = "levels up RPGLObject")]
     public void LevelsUpRPGLObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLRace rpglRace = RPGLFactory.GetRace("test:race_with_leveled_features");
 
         rpglRace.LevelUpRPGLObject(rpglObject, new JsonObject().LoadFromString("""

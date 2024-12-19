@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageDelivery damageDelivery = new DamageDelivery()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -27,7 +28,7 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [Fact(DisplayName = "delivers all damage")]
     public void DeliversAllDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -57,7 +58,7 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [Fact(DisplayName = "delivers half damage")]
     public void DeliversHalfDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -88,7 +89,7 @@ public class DamageDeliveryTest {
     [DefaultMock]
     [Fact(DisplayName = "delivers no damage")]
     public void DeliversNoDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -120,7 +121,7 @@ public class DamageDeliveryTest {
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers immune damage")]
     public void DeliversImmuneDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect damageImmunity = RPGLFactory.NewEffect("test:damage_immunity");
         rpglObject.AddEffect(damageImmunity);
@@ -158,7 +159,7 @@ public class DamageDeliveryTest {
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers resistance damage")]
     public void DeliversResistanceDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect damageResistance = RPGLFactory.NewEffect("test:damage_resistance");
         rpglObject.AddEffect(damageResistance);
@@ -196,7 +197,7 @@ public class DamageDeliveryTest {
     [ExtraEffectsMock]
     [Fact(DisplayName = "delivers vulnerability damage")]
     public void DeliversVulnerabilityDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect damageResistance = RPGLFactory.NewEffect("test:damage_vulnerability");
         rpglObject.AddEffect(damageResistance);

@@ -20,7 +20,6 @@ public class RPGLEffectTO : TaggableContentTO {
             .SetDatapackId(DatapackId)
             .SetDescription(Description)
             .SetName(Name);
-            //.SetId(_id);
     }
 
 };

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class RollSubeventTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -28,7 +29,7 @@ public class RollSubeventTest {
     [DieTestingMode]
     [Fact(DisplayName = "rolls with advantage")]
     public void RollsWithAdvantage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -56,7 +57,7 @@ public class RollSubeventTest {
     [DieTestingMode]
     [Fact(DisplayName = "rolls with disadvantage")]
     public void RollsWithDisadvantage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -84,7 +85,7 @@ public class RollSubeventTest {
     [DieTestingMode]
     [Fact(DisplayName = "rolls normally")]
     public void RollsNormally() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

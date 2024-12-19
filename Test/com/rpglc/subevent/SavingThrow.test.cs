@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class SavingThrowTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares generated difficulty class")]
     public void PreparesGeneratedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         SavingThrow savingThrow = new SavingThrow()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -35,7 +36,7 @@ public class SavingThrowTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned difficulty class")]
     public void PreparesAssignedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         SavingThrow savingThrow = new SavingThrow()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -56,10 +57,10 @@ public class SavingThrowTest {
     [DefaultMock]
     [Fact(DisplayName = "prepares origin difficulty class")]
     public void PreparesOriginDifficultyClass() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         originObject.GetAbilityScores().PutLong("int", 20L);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
 
         SavingThrow savingThrow = new SavingThrow()
@@ -83,7 +84,7 @@ public class SavingThrowTest {
     [DummyCounterManager]
     [Fact(DisplayName = "passes with half damage")]
     public void PassesWithHalfDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -133,7 +134,7 @@ public class SavingThrowTest {
     [DummyCounterManager]
     [Fact(DisplayName = "passes with no damage")]
     public void PassesWithNoDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -183,7 +184,7 @@ public class SavingThrowTest {
     [DummyCounterManager]
     [Fact(DisplayName = "fails")]
     public void Fails() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);

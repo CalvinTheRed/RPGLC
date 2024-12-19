@@ -1,5 +1,6 @@
 ﻿using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -14,7 +15,7 @@ public class RPGLObjectTest {
     [DefaultMock]
     [Fact(DisplayName = "manipulates item in inventory")]
     public void ManipulatesItemInInventory() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
 
         // give item
@@ -57,7 +58,7 @@ public class RPGLObjectTest {
     [ExtraRacesMock]
     [Fact(DisplayName = "levels up")]
     public void LevelsUp() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         rpglObject.GetRaces().AddString("test:race_with_resource_per_level");
         
         rpglObject.LevelUp("test:class_with_nested_class", new());
@@ -88,7 +89,7 @@ public class RPGLObjectTest {
     public void ManipulatesResources() {
         List<RPGLResource> resources;
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         resources = rpglObject.GetResourceObjects();
         Assert.Equal(0, resources.Count());
 
@@ -121,7 +122,7 @@ public class RPGLObjectTest {
         List<RPGLEffect> effects;
         RPGLEffect rpglEffect;
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         effects = rpglObject.GetEffectObjects();
         Assert.Equal(0, effects.Count());
 
@@ -142,7 +143,7 @@ public class RPGLObjectTest {
     [ExtraResourcesMock]
     [Fact(DisplayName = "invokes event")]
     public void InvokesEvent() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext();
         context.Add(rpglObject);
 

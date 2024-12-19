@@ -1,4 +1,5 @@
 ﻿using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -12,7 +13,7 @@ public class RPGLClassTest {
     [ExtraClassesMock]
     [Fact(DisplayName = "grants starting features")]
     public void GrantsStartingFeatures() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLClass rpglClass = RPGLFactory.GetClass("test:class_with_starting_features");
 
         rpglClass.GrantStartingFeatures(rpglObject, new JsonObject().LoadFromString("""
@@ -47,7 +48,7 @@ public class RPGLClassTest {
     [ExtraClassesMock]
     [Fact(DisplayName = "levels up RPGLObject")]
     public void LevelsUpRPGLObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLClass rpglClass = RPGLFactory.GetClass("test:class_with_leveled_features");
 
         Assert.Equal(0, rpglObject.GetLevel("test:class_with_leveled_features"));

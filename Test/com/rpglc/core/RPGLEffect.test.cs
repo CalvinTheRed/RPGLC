@@ -1,6 +1,7 @@
 ﻿using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -80,7 +81,7 @@ public class RPGLEffectTest {
     [DefaultMock]
     [Fact(DisplayName = "gets effect source object")]
     public void GetsEffectSourceObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect rpglEffect = new RPGLEffect().SetSource(rpglObject.GetUuid());
         Subevent subevent = new DummySubevent();
@@ -104,7 +105,7 @@ public class RPGLEffectTest {
     [DefaultMock]
     [Fact(DisplayName = "gets effect target object")]
     public void GetsEffectTargetObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect rpglEffect = new RPGLEffect().SetTarget(rpglObject.GetUuid());
         Subevent subevent = new DummySubevent();
@@ -128,7 +129,7 @@ public class RPGLEffectTest {
     [DefaultMock]
     [Fact(DisplayName = "gets subevent source object")]
     public void GetsSubeventSourceObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummySubevent().SetSource(rpglObject);
@@ -152,7 +153,7 @@ public class RPGLEffectTest {
     [DefaultMock]
     [Fact(DisplayName = "gets subevent target object")]
     public void GetsSubeventTargetObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummySubevent().SetTarget(rpglObject);
@@ -176,9 +177,9 @@ public class RPGLEffectTest {
     [DefaultMock]
     [Fact(DisplayName = "gets origin object")]
     public void GetsOriginObject() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
 
         RPGLEffect rpglEffect = new();

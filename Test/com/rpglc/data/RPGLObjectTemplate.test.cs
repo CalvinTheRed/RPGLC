@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
@@ -112,7 +113,7 @@ public class RPGLObjectTemplateTest {
     [ExtraObjectsMock]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
 
         Assert.Equal(
             """

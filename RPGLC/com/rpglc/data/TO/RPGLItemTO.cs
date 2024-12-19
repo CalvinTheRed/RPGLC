@@ -22,7 +22,6 @@ public class RPGLItemTO : TaggableContentTO {
             .SetDatapackId(DatapackId)
             .SetDescription(Description)
             .SetName(Name);
-            //.SetId(_id);
     }
 
 };
