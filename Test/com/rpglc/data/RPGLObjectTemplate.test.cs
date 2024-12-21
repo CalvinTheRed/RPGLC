@@ -62,7 +62,7 @@ public class RPGLObjectTemplateTest {
             .NewInstance(objectUuid);
 
         List<RPGLEffect> effects = rpglObject.GetEffectObjects();
-        Assert.Equal(2, effects.Count());
+        Assert.Equal(2, effects.Count);
         Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:dummy"));
         Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:complex_effect"));
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
@@ -100,13 +100,12 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_object")
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate("test:complex_object")
             .NewInstance(objectUuid);
 
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(1, resources.Count());
-        Assert.Equal("test:dummy", RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGL.GetRPGLResource(resources.GetString(0)).GetDatapackId());
     }
 
     [ClearRPGLAfterTest]

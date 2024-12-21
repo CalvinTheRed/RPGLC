@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.data;
@@ -10,8 +9,7 @@ public class RPGLEventTemplateTest {
     [DefaultMock]
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
-        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplates()
-            .Find(x => x.GetDatapackId() == "test:dummy")
+        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplate("test:dummy")
             .NewInstance();
 
         Assert.Equal(
@@ -29,8 +27,7 @@ public class RPGLEventTemplateTest {
     [ExtraEventsMock]
     [Fact(DisplayName = "assigns cost")]
     public void AssignsCost() {
-        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_event")
+        RPGLEvent rpglEvent = RPGL.GetRPGLEventTemplate("test:complex_event")
             .NewInstance();
 
         Assert.Equal(

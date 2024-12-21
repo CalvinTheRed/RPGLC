@@ -13,8 +13,7 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
-            .Find(x => x.GetDatapackId() == "test:dummy")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplate("test:dummy")
             .NewInstance(itemUuid);
 
         Assert.Equal(
@@ -39,14 +38,13 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "assigns effects")]
     public void AssignsEffects() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_item")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplate("test:complex_item")
             .NewInstance(itemUuid);
 
         JsonObject effects = rpglItem.GetEffects();
         Assert.Equal(1, effects.Count());
         string effectUuid = effects.AsDict().Keys.ElementAt(0);
-        RPGLEffect rpglEffect = RPGL.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid);
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffect(effectUuid);
         Assert.NotNull(rpglEffect);
         Assert.Equal($$"""
             {
@@ -72,14 +70,13 @@ public class RPGLItemTemplateTest {
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
         string itemUuid = "uuid";
-        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_item")
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplate("test:complex_item")
             .NewInstance(itemUuid);
 
         JsonObject resources = rpglItem.GetResources();
         Assert.Equal(1, resources.Count());
         string resourceUuid = resources.AsDict().Keys.ElementAt(0);
-        RPGLResource rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
+        RPGLResource rpglResource = RPGL.GetRPGLResource(resourceUuid);
         Assert.NotNull(rpglResource);
         Assert.Equal($$"""
             {

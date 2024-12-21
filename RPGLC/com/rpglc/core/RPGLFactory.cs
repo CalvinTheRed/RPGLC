@@ -4,14 +4,6 @@ namespace com.rpglc.core;
 
 public static class RPGLFactory {
 
-    public static RPGLClass? GetClass(string classDatapackId) {
-        return RPGL.GetRPGLClasses().Find(x => x.GetDatapackId() == classDatapackId);
-    }
-
-    public static RPGLRace? GetRace(string raceDatapackId) {
-        return RPGL.GetRPGLRaces().Find(x => x.GetDatapackId() == raceDatapackId);
-    }
-
     public static RPGLEffect NewEffect(
             string datapackId,
             JsonArray bonuses,

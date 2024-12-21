@@ -12,7 +12,7 @@ public class RPGLEffectTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string effectUuid = "uuid";
-        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplates().Find(x => x.GetDatapackId() == "test:dummy")
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplate("test:dummy")
             .NewInstance(effectUuid);
 
         Assert.Equal(

@@ -31,8 +31,6 @@ public class RPGLResourceTest {
         subevent.SetTarget(rpglObject);
         subevent.Invoke(context, new());
 
-        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
-
         Assert.Equal(0L, rpglResource.GetAvailableUses());
         Assert.Equal("""
             {
@@ -62,8 +60,6 @@ public class RPGLResourceTest {
             """, rpglResource.SeekJsonObject("refresh_criterion[0]").PrettyPrint());
 
         subevent.Invoke(context, new());
-
-        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
 
         Assert.Equal(5L, rpglResource.GetAvailableUses());
         Assert.Equal("""

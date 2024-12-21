@@ -65,9 +65,7 @@ public static class FeatureManager {
         JsonArray lostEffects = lostFeatures.GetJsonArray("effects") ?? new();
         for (int i = 0; i < lostEffects.Count(); i++) {
             string lostEffectDatapackId = lostEffects.GetString(i);
-            List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(
-                x => x.GetTarget() == rpglObject.GetUuid()
-            );
+            List<RPGLEffect> effects = rpglObject.GetEffectObjects();
             for (int j = 0; j < effects.Count; j++) {
                 RPGLEffect effect = effects[j];
                 if (lostEffectDatapackId == effect.GetDatapackId()) {

@@ -116,7 +116,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLClass")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLClass() {
-        RPGLClass rpglClass = RPGLFactory.GetClass("test:dummy");
+        RPGLClass rpglClass = RPGL.GetRPGLClass("test:dummy");
         DBManager.InsertRPGLClass(rpglClass);
         List<RPGLClass> rpglClasses = DBManager.QueryRPGLClasses();
         Assert.Single(rpglClasses);
@@ -128,7 +128,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLRace")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLRace() {
-        RPGLRace rpglRace = RPGLFactory.GetRace("test:dummy");
+        RPGLRace rpglRace = RPGL.GetRPGLRace("test:dummy");
         DBManager.InsertRPGLRace(rpglRace);
         List<RPGLRace> rpglRaces = DBManager.QueryRPGLRaces();
         Assert.Single(rpglRaces);

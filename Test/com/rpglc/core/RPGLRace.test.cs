@@ -14,7 +14,7 @@ public class RPGLRaceTest {
     [Fact(DisplayName = "levels up RPGLObject")]
     public void LevelsUpRPGLObject() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLRace rpglRace = RPGLFactory.GetRace("test:race_with_leveled_features");
+        RPGLRace rpglRace = RPGL.GetRPGLRace("test:race_with_leveled_features");
 
         rpglRace.LevelUpRPGLObject(rpglObject, new JsonObject().LoadFromString("""
             {
@@ -22,7 +22,7 @@ public class RPGLRaceTest {
             }
             """), 1);
 
-        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == rpglObject.GetUuid());
+        List<RPGLEffect> effects = rpglObject.GetEffectObjects();
         Assert.Equal(2, effects.Count);
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
         Assert.Equal("test:dummy", effects[1].GetDatapackId());
@@ -35,11 +35,11 @@ public class RPGLRaceTest {
         Assert.Equal(2, resources.Count());
         Assert.Equal(
             "test:dummy",
-            RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(0)).GetDatapackId()
+            RPGL.GetRPGLResource(resources.GetString(0)).GetDatapackId()
         );
         Assert.Equal(
             "test:dummy",
-            RPGL.GetRPGLResources().Find(x => x.GetUuid() == resources.GetString(1)).GetDatapackId()
+            RPGL.GetRPGLResource(resources.GetString(1)).GetDatapackId()
         );
     }
 
