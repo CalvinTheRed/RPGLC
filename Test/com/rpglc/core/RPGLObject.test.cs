@@ -245,4 +245,52 @@ public class RPGLObjectTest {
         Assert.Equal(0, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
     }
 
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds new effect")]
+    public void AddsNewEffect() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
+        rpglObject.AddEffect(rpglEffect);
+
+        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect));
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "allows effect duplicates")]
+    public void AllowsEffectDuplicates() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        RPGLEffect rpglEffect1 = RPGLFactory.NewEffect("test:dummy").SetAllowDuplicates(true);
+        RPGLEffect rpglEffect2 = RPGLFactory.NewEffect("test:dummy").SetAllowDuplicates(true);
+        rpglObject.AddEffect(rpglEffect1);
+        rpglObject.AddEffect(rpglEffect2);
+
+        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect1));
+        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect2));
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "prevents effect duplicates")]
+    public void PreventsEffectDuplicates() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        RPGLEffect rpglEffect1 = RPGLFactory.NewEffect("test:dummy").SetAllowDuplicates(false);
+        RPGLEffect rpglEffect2 = RPGLFactory.NewEffect("test:dummy").SetAllowDuplicates(false);
+        rpglObject.AddEffect(rpglEffect1);
+        rpglObject.AddEffect(rpglEffect2);
+
+        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect1));
+        Assert.False(rpglObject.GetEffectObjects().Contains(rpglEffect2));
+    }
+
 };

@@ -43,6 +43,15 @@ public class RPGLEffect : TaggableContent {
         return this;
     }
 
+    public bool GetAllowDuplicates() {
+        return GetBool("allow_duplicates") ?? false;
+    }
+
+    public RPGLEffect SetAllowDuplicates(bool? allowDuplicates) {
+        PutBool("allow_duplicates", allowDuplicates);
+        return this;
+    }
+
     // =====================================================================
     // Utility methods.
     // =====================================================================
