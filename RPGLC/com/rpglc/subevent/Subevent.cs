@@ -19,6 +19,7 @@ public abstract class Subevent {
         Initialize([
             new AttackRoll(),
             new DealDamage(),
+            new GiveTemporaryHitPoints(),
             new Heal(),
             new SavingThrow(),
         ]);
