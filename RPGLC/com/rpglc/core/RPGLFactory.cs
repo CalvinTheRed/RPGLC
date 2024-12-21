@@ -32,7 +32,7 @@ public static class RPGLFactory {
     }
 
     public static RPGLEvent NewEvent(string datapackId, JsonArray bonuses) {
-        return RPGL.GetRPGLEventTemplates().Find(x => x.GetDatapackId() == datapackId)
+        return RPGL.GetRPGLEventTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance();
     }
@@ -42,8 +42,7 @@ public static class RPGLFactory {
     }
 
     public static RPGLItem NewItem(string datapackId, JsonArray bonuses) {
-        RPGLItem rpglItem = RPGL.GetRPGLItemTemplates()
-            .Find(x => x.GetDatapackId() == datapackId)
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
         RPGL.AddRPGLItem(rpglItem);
@@ -61,8 +60,7 @@ public static class RPGLFactory {
             JsonArray rotation,
             JsonArray bonuses
     ) {
-        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
-            .Find(x => x.GetDatapackId() == datapackId)
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetUserId(userId)
@@ -95,8 +93,7 @@ public static class RPGLFactory {
     }
 
     public static RPGLResource NewResource(string datapackId, JsonArray bonuses) {
-        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplates()
-            .Find(x => x.GetDatapackId() == datapackId)
+        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
         RPGL.AddRPGLResource(rpglResource);

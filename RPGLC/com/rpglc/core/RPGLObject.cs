@@ -462,7 +462,7 @@ public class RPGLObject : TaggableContent {
 
     public bool ProcessSubevent(Subevent subevent, RPGLContext context, JsonArray originPoint) {
         bool wasSubeventProcessed = false;
-        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
+        List<RPGLEffect> effects = GetEffectObjects();
         foreach (RPGLEffect rpglEffect in effects) {
             wasSubeventProcessed |= rpglEffect.ProcessSubevent(subevent, context, originPoint);
         }
@@ -477,7 +477,7 @@ public class RPGLObject : TaggableContent {
     // =====================================================================
 
     public RPGLObject AddEffect(RPGLEffect rpglEffect) {
-        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == GetUuid());
+        List<RPGLEffect> effects = GetEffectObjects();
         bool hasEffect = false;
         foreach (RPGLEffect activeEffect in effects) {
             if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
@@ -525,7 +525,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
+            RPGLItem rpglItem = RPGL.GetRPGLItem(itemUuid);
             effects.AddRange(rpglItem.GetEffectsForSlots(slotsForEquippedItems[itemUuid]));
         }
 

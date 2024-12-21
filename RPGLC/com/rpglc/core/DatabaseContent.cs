@@ -8,18 +8,6 @@ public class DatabaseContent : JsonObject {
 
     public DatabaseContent(Dictionary<string, object> data) : base(data) { }
 
-    /*
-    private ObjectId Id;
-
-    public ObjectId GetId() {
-        return Id;
-    }
-
-    public DatabaseContent SetId(ObjectId id) {
-        Id = id;
-        return this;
-    }
-    */
     public JsonObject GetMetadata() {
         return GetJsonObject("metadata");
     }

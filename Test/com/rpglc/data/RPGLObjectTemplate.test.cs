@@ -14,8 +14,7 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "creates new instance")]
     public void CreatesNewInstance() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
-            .Find(x => x.GetDatapackId() == "test:dummy")
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate("test:dummy")
             .NewInstance(objectUuid);
 
         Assert.Equal(
@@ -59,8 +58,7 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "assigns effects and rider effects")]
     public void AssignsEffectsAndRiderEffects() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_object")
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate("test:complex_object")
             .NewInstance(objectUuid);
 
         List<RPGLEffect> effects = rpglObject.GetEffectObjects();
@@ -78,15 +76,14 @@ public class RPGLObjectTemplateTest {
     [Fact(DisplayName = "populates inventory and equips items")]
     public void PopulatesInventoryAndEquipsItems() {
         string objectUuid = "uuid";
-        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
-            .Find(x => x.GetDatapackId() == "test:complex_object")
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate("test:complex_object")
             .NewInstance(objectUuid);
 
         JsonArray inventory = rpglObject.GetInventory();
         Assert.Equal(3, inventory.Count());
-        Assert.Equal("test:dummy", RPGL.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(0)).GetDatapackId());
-        Assert.Equal("test:dummy", RPGL.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(1)).GetDatapackId());
-        Assert.Equal("test:dummy", RPGL.GetRPGLItems().Find(x => x.GetUuid() == inventory.GetString(2)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGL.GetRPGLItem(inventory.GetString(0)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGL.GetRPGLItem(inventory.GetString(1)).GetDatapackId());
+        Assert.Equal("test:dummy", RPGL.GetRPGLItem(inventory.GetString(2)).GetDatapackId());
 
         JsonObject equippedItems = rpglObject.GetEquippedItems();
         Assert.Equal(2, equippedItems.Count());

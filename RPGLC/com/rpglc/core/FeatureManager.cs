@@ -1,4 +1,5 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.data.TO;
+using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -96,14 +97,12 @@ public static class FeatureManager {
 
     private static void RevokeLostResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
         List<RPGLResource> resources = RPGL.GetRPGLResources().FindAll(
-            x => x.GetDatapackId() == resourceDatapackId
+            x => x.GetDatapackId() == resourceDatapackId && rpglObject.GetResources().Contains(x.GetUuid())
         );
         foreach (RPGLResource rpglResource in resources) {
-            if (rpglObject.GetResources().Contains(rpglResource.GetUuid())) {
-                rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
-                RPGL.RemoveRPGLResource(rpglResource);
-                break;
-            }
+            rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
+            RPGL.RemoveRPGLResource(rpglResource);
+            break;
         }
     }
 

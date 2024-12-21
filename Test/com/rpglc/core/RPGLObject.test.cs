@@ -30,7 +30,7 @@ public class RPGLObjectTest {
 
         // equip item
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
-        Assert.Equal(1, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+        Assert.Single(rpglObject.GetEquippedItems().AsDict().Keys);
         Assert.Equal(
             rpglItem.GetUuid(),
             rpglObject.GetEquippedItems().GetString("mainhand")
@@ -38,7 +38,7 @@ public class RPGLObjectTest {
 
         // unequip item
         rpglObject.UnequipItem("mainhand");
-        Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+        Assert.Empty(rpglObject.GetEquippedItems().AsDict().Keys);
 
         // take item
         rpglObject.TakeItem(rpglItem.GetUuid());
@@ -49,7 +49,7 @@ public class RPGLObjectTest {
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
         rpglObject.TakeItem(rpglItem.GetUuid());
         Assert.Equal(0, rpglObject.GetInventory().Count());
-        Assert.Equal(0, rpglObject.GetEquippedItems().AsDict().Keys.Count());
+        Assert.Empty(rpglObject.GetEquippedItems().AsDict().Keys);
     }
 
     [ClearRPGLAfterTest]
@@ -91,25 +91,25 @@ public class RPGLObjectTest {
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         resources = rpglObject.GetResourceObjects();
-        Assert.Equal(0, resources.Count());
+        Assert.Empty(resources);
 
         RPGLResource rpglResource = RPGLFactory.NewResource("test:dummy");
         rpglObject.GiveResource(rpglResource);
         resources = rpglObject.GetResourceObjects();
-        Assert.Equal(1, resources.Count());
+        Assert.Single(resources);
         Assert.Equal("test:dummy", resources[0].GetDatapackId());
 
         rpglObject.TakeResource(rpglResource.GetUuid());
-        rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == rpglResource.GetUuid());
+        rpglResource = RPGL.GetRPGLResource(rpglResource.GetUuid());
         Assert.Null(rpglResource);
         resources = rpglObject.GetResourceObjects();
-        Assert.Equal(0, resources.Count());
+        Assert.Empty(resources);
 
         RPGLItem rpglItem = RPGLFactory.NewItem("test:complex_item");
         rpglObject.GiveItem(rpglItem.GetUuid());
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
         resources = rpglObject.GetResourceObjects();
-        Assert.Equal(1, resources.Count());
+        Assert.Single(resources);
         rpglResource = resources[0];
         Assert.Equal("test:dummy", rpglResource.GetDatapackId());
     }
@@ -124,14 +124,14 @@ public class RPGLObjectTest {
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         effects = rpglObject.GetEffectObjects();
-        Assert.Equal(0, effects.Count());
+        Assert.Empty(effects);
 
         RPGLItem rpglItem = RPGLFactory.NewItem("test:complex_item");
         rpglObject.GiveItem(rpglItem.GetUuid());
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
         rpglObject.EquipItem(rpglItem.GetUuid(), "offhand");
         effects = rpglObject.GetEffectObjects();
-        Assert.Equal(1, effects.Count());
+        Assert.Single(effects);
         rpglEffect = effects[0];
         Assert.Equal("test:dummy", rpglEffect.GetDatapackId());
     }
@@ -196,10 +196,9 @@ public class RPGLObjectTest {
 
         Assert.Equal(10L, rpglObject.GetTemporaryHitPoints());
 
-        RPGLEffect riderEffect = RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:dummy");
-        Assert.NotNull(riderEffect);
-        Assert.True(rpglObject.GetEffectObjects().Contains(riderEffect));
         Assert.Equal(1, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+        RPGLEffect riderEffect = RPGL.GetRPGLEffect(rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").GetString(0));
+        Assert.Equal("test:dummy", riderEffect.GetDatapackId());
     }
 
     [ClearRPGLAfterTest]
@@ -213,10 +212,9 @@ public class RPGLObjectTest {
         RPGLContext context = new DummyContext();
         context.Add(rpglObject);
 
-        RPGLEffect riderEffect = RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:complex_effect");
-        Assert.NotNull(riderEffect);
-        Assert.True(rpglObject.GetEffectObjects().Contains(riderEffect));
         Assert.Equal(1, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+        RPGLEffect riderEffect = RPGL.GetRPGLEffect(rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").GetString(0));
+        Assert.Equal("test:complex_effect", riderEffect.GetDatapackId());
 
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -243,7 +241,7 @@ public class RPGLObjectTest {
             .Invoke(context, new());
 
         Assert.Null(RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:complex_effect"));
-        Assert.False(rpglObject.GetEffectObjects().Contains(riderEffect));
+        Assert.DoesNotContain(riderEffect, rpglObject.GetEffectObjects());
         Assert.Equal(0, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
     }
 

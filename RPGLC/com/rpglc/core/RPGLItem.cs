@@ -68,7 +68,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEffects.Add(RPGL.GetRPGLEffects().Find(x => x.GetUuid() == effectUuid));
+                    grantedEffects.Add(RPGL.GetRPGLEffect(effectUuid));
                     break;
                 }
             }
@@ -91,8 +91,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEvents.Add(RPGL.GetRPGLEventTemplates()
-                        .Find(x => x.GetDatapackId() == eventDatapackId)
+                    grantedEvents.Add(RPGL.GetRPGLEventTemplate(eventDatapackId)
                         .NewInstance());
                     break;
                 }
@@ -116,7 +115,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedResources.Add(RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid));
+                    grantedResources.Add(RPGL.GetRPGLResource(resourceUuid));
                     break;
                 }
             }

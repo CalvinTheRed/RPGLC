@@ -96,13 +96,13 @@ public class RPGLEffect : TaggableContent {
             }
         } else if (fromAlias == "effect") {
             if (objectAlias == "source") {
-                rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetSource());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetSource());
             } else if (objectAlias == "target") {
-                rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEffect.GetTarget());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetTarget());
             }
         }
         if (instructions.GetBool("as_origin") ?? false) {
-            rpglObject = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglObject.GetOriginObject());
+            rpglObject = RPGL.GetRPGLObject(rpglObject.GetOriginObject());
         }
         return rpglObject;
     }
