@@ -138,7 +138,7 @@ public class SetTemporaryHitPointDiceTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets bounded temporary hit point dice")]
-    public void RerollsBoundedTemporaryHitPointDice() {
+    public void SetsBoundedTemporaryHitPointDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""

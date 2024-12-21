@@ -68,7 +68,7 @@ public class DamageRollTest {
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "includes damage type")]
-    public void DoesIncludeDamageType() {
+    public void IncludesDamageType() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
