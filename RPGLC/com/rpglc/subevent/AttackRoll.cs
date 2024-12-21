@@ -81,9 +81,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             if (json.GetJsonArray("damage").Count() > 0) {
                 GetBaseDamage(context, originPoint);
                 GetTargetDamage(context, originPoint);
-                if (ConfirmCriticalDamage(context)) {
-                    GetCriticalHitDamage(context, originPoint);
-                }
+                GetCriticalHitDamage(context, originPoint);
                 ResolveDamage(context, originPoint);
             }
             ResolveNestedSubevents("hit", context, originPoint);
