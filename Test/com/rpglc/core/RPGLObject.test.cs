@@ -163,4 +163,88 @@ public class RPGLObjectTest {
         Assert.Equal(9, rpglResource.GetAvailableUses());
     }
 
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gains temporary hit points and rider effects")]
+    public void GainsTemporaryHitPointsAndRiderEffects() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        Assert.Equal(0, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+
+        GiveTemporaryHitPoints giveTemporaryHitPoints = new GiveTemporaryHitPoints()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "temporary_hit_points": [
+                        {
+                            "formula": "range",
+                            "dice": [ ],
+                            "bonus": 10
+                        }
+                    ],
+                    "rider_effects": [
+                        "test:dummy"
+                    ]
+                }
+                """))
+            .SetOriginItem(null)
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        Assert.Equal(10L, rpglObject.GetTemporaryHitPoints());
+
+        RPGLEffect riderEffect = RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:dummy");
+        Assert.NotNull(riderEffect);
+        Assert.True(rpglObject.GetEffectObjects().Contains(riderEffect));
+        Assert.Equal(1, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [ExtraClassesMock]
+    [ExtraEffectsMock]
+    [ExtraObjectsMock]
+    [Fact(DisplayName = "loses temporary hit point rider effects")]
+    public void LosesTemporaryHitPointRiderEffects() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        context.Add(rpglObject);
+
+        RPGLEffect riderEffect = RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:complex_effect");
+        Assert.NotNull(riderEffect);
+        Assert.True(rpglObject.GetEffectObjects().Contains(riderEffect));
+        Assert.Equal(1, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+
+        DamageDelivery damageDelivery = new DamageDelivery()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "dice": [],
+                            "bonus": 10,
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
+                        }
+                    ],
+                    "tags": []
+                }
+                """))
+            .SetOriginItem(null)
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        Assert.Null(RPGL.GetRPGLEffects().Find(x => x.GetDatapackId() == "test:complex_effect"));
+        Assert.False(rpglObject.GetEffectObjects().Contains(riderEffect));
+        Assert.Equal(0, rpglObject.GetHealthTemporary().GetJsonArray("rider_effects").Count());
+    }
+
 };

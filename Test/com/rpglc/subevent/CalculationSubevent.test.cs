@@ -65,6 +65,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (modifier)")]
     public void ProcessesBonusJsonModifier() {
@@ -107,6 +108,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (ability)")]
     public void ProcessesBonusJsonAbility() {
@@ -188,6 +190,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (level)")]
     public void ProcessesBonusJsonLevel() {
@@ -249,6 +252,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (modifier)")]
     public void ProcessesSetJsonModifier() {
@@ -276,6 +280,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (ability)")]
     public void ProcessesSetJsonAbility() {
@@ -327,6 +332,7 @@ public class CalculationSubeventTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (level)")]
     public void ProcessesSetJsonLevel() {

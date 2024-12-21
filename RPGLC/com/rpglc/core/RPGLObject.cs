@@ -1,5 +1,4 @@
-﻿using com.rpglc.data;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.subevent;
 
 namespace com.rpglc.core;
@@ -365,7 +364,7 @@ public class RPGLObject : TaggableContent {
         if (GetResources().Contains(resourceUuid)) {
             GetResources().AsList().Remove(resourceUuid);
 
-            RPGLResource rpglResource = RPGL.GetRPGLResources().Find(x => x.GetUuid() == resourceUuid);
+            RPGLResource rpglResource = RPGL.GetRPGLResource(resourceUuid);
             if (rpglResource.GetOriginItem() is null) {
                 // destroy resource if it is not supplied by an item
                 RPGL.RemoveRPGLResource(rpglResource);
@@ -379,9 +378,7 @@ public class RPGLObject : TaggableContent {
         List<RPGLResource> resources = [];
         JsonArray resourceUuids = GetResources();
         for (int i = 0; i < resourceUuids.Count(); i++) {
-            resources.Add(RPGL.GetRPGLResources().Find(
-                x => x.GetUuid() == resourceUuids.GetString(i))
-            );
+            resources.Add(RPGL.GetRPGLResource(resourceUuids.GetString(i)));
         }
 
         // add resources granted by items equipped appropriately
@@ -398,7 +395,7 @@ public class RPGLObject : TaggableContent {
             }
         }
         foreach (string itemUuid in slotsForEquippedItems.Keys) {
-            RPGLItem rpglItem = RPGL.GetRPGLItems().Find(x => x.GetUuid() == itemUuid);
+            RPGLItem rpglItem = RPGL.GetRPGLItem(itemUuid);
             resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
         }
 
@@ -439,10 +436,10 @@ public class RPGLObject : TaggableContent {
             RPGLObject source;
             if (rpglEvent.GetString("source") is not null) {
                 // events with a source pre-assigned via AddEvent take priority
-                source = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == rpglEvent.GetString("source"));
+                source = RPGL.GetRPGLObject(rpglEvent.GetString("source"));
             } else if (GetProxy() ?? false) {
                 // proxy objects set their origin object as the source for any events they invoke
-                source = RPGL.GetRPGLObjects().Find(x => x.GetUuid() == GetOriginObject());
+                source = RPGL.GetRPGLObject(GetOriginObject());
             } else {
                 // ordinary event invocation sets the calling object as the source
                 source = this;
@@ -484,6 +481,7 @@ public class RPGLObject : TaggableContent {
         bool hasEffect = false;
         foreach (RPGLEffect activeEffect in effects) {
             if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
+                // TODO prohibit redundant effect types?
                 hasEffect = true;
                 break;
             }
@@ -610,14 +608,13 @@ public class RPGLObject : TaggableContent {
     private void ReduceHitPoints(long damage, RPGLContext context) {
         long temporaryHitPoints = GetTemporaryHitPoints();
         long currentHitPoints = GetHealthCurrent();
-        if (damage > temporaryHitPoints) {
+        if (damage >= temporaryHitPoints) {
             if (temporaryHitPoints > 0) {
                 damage -= temporaryHitPoints;
-                temporaryHitPoints = 0L;
                 currentHitPoints -= damage;
-                SetTemporaryHitPoints(temporaryHitPoints);
+                SetTemporaryHitPoints(0L);
                 SetHealthCurrent(currentHitPoints);
-                // TODO info_subevent for 0 THP
+                RemoveTemporaryHitPointRiderEffects();
             } else {
                 currentHitPoints -= damage;
                 SetHealthCurrent(currentHitPoints);
@@ -639,15 +636,36 @@ public class RPGLObject : TaggableContent {
         SetHealthCurrent(health);
     }
 
-    public void ReceiveTemporaryHitPoints(TemporaryHitPointDelivery temporaryHitPointDelivery, JsonArray riderEffects) {
+    public void ReceiveTemporaryHitPoints(TemporaryHitPointDelivery temporaryHitPointDelivery, JsonArray riderEffectIds) {
         long temporaryHitPoints = GetTemporaryHitPoints();
         long newTemporaryHitPoints = temporaryHitPointDelivery.GetTemporaryHitPoints();
 
-        if (newTemporaryHitPoints >= temporaryHitPoints) {
-            // TODO update temporary hit point count
+        if (newTemporaryHitPoints >= temporaryHitPoints) { // TODO make it possible to reject new THP?
             SetTemporaryHitPoints(newTemporaryHitPoints);
-            // TODO remove any old rider effects
-            // TODO add any new rider effects
+            RemoveTemporaryHitPointRiderEffects();
+            JsonArray newRiderEffects = new();
+            for (int i = 0; i < riderEffectIds.Count(); i++) {
+                RPGLEffect riderEffect = RPGLFactory.NewEffect(
+                    riderEffectIds.GetString(i),
+                    temporaryHitPointDelivery.GetSource().GetUuid(),
+                    GetUuid()
+                );
+                AddEffect(riderEffect);
+                newRiderEffects.AddString(riderEffect.GetUuid());
+            }
+            GetHealthTemporary().PutJsonArray("rider_effects", newRiderEffects);
+        }
+    }
+
+    private void RemoveTemporaryHitPointRiderEffects() {
+        JsonArray riderEffects = GetHealthTemporary().RemoveJsonArray("rider_effects");
+        GetHealthTemporary().PutJsonArray("rider_effects", new());
+        for (int i = 0; i < riderEffects.Count(); i++) {
+            RPGLEffect? riderEffect = RPGL.GetRPGLEffect(riderEffects.GetString(i));
+            if (riderEffect != null) {
+                RemoveEffect(riderEffect.GetUuid());
+                RPGL.RemoveRPGLEffect(riderEffect);
+            }
         }
     }
 

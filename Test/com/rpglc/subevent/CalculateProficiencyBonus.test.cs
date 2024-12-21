@@ -24,6 +24,7 @@ public class CalculateProficiencyBonusTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "prepares inferred proficiency bonus")]
     public void PreparesInferredProficiencyBonus() {

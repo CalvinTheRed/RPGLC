@@ -273,4 +273,48 @@ public static class RPGL {
         return [.. RPGL_RACES];
     }
 
+    public static RPGLEffectTemplate? GetRPGLEffectTemplate(string datapackId) {
+        return RPGL_EFFECT_TEMPLATES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLEventTemplate? GetRPGLEventTemplate(string datapackId) {
+        return RPGL_EVENT_TEMPLATES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLItemTemplate? GetRPGLItemTemplate(string datapackId) {
+        return RPGL_ITEM_TEMPLATES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLObjectTemplate? GetRPGLObjectTemplate(string datapackId) {
+        return RPGL_OBJECT_TEMPLATES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLResourceTemplate? GetRPGLResourceTemplate(string datapackId) {
+        return RPGL_RESOURCE_TEMPLATES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLEffect? GetRPGLEffect(string uuid) {
+        return RPGL_EFFECTS.Find(x => x.GetUuid() == uuid);
+    }
+
+    public static RPGLItem? GetRPGLItem(string uuid) {
+        return RPGL_ITEMS.Find(x => x.GetUuid() == uuid);
+    }
+
+    public static RPGLObject? GetRPGLObject(string uuid) {
+        return RPGL_OBJECTS.Find(x => x.GetUuid() == uuid);
+    }
+
+    public static RPGLResource? GetRPGLResource(string uuid) {
+        return RPGL_RESOURCES.Find(x => x.GetUuid() == uuid);
+    }
+
+    public static RPGLClass? GetRPGLClass(string datapackId) {
+        return RPGL_CLASSES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
+    public static RPGLRace? GetRPGLRace(string datapackId) {
+        return RPGL_RACES.Find(x => x.GetDatapackId() == datapackId);
+    }
+
 };

@@ -12,7 +12,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLEffectTemplate")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLEffectTemplate() {
-        RPGLEffectTemplate template = RPGL.GetRPGLEffectTemplates().Find(x => x.GetDatapackId() == "test:dummy");
+        RPGLEffectTemplate template = RPGL.GetRPGLEffectTemplate("test:dummy");
         DBManager.InsertRPGLEffectTemplate(template);
         List<RPGLEffectTemplate> templates = DBManager.QueryRPGLEffectTemplates();
         Assert.Single(templates);
@@ -23,7 +23,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLEventTemplate")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLEventTemplate() {
-        RPGLEventTemplate template = RPGL.GetRPGLEventTemplates().Find(x => x.GetDatapackId() == "test:dummy");
+        RPGLEventTemplate template = RPGL.GetRPGLEventTemplate("test:dummy");
         DBManager.InsertRPGLEventTemplate(template);
         List<RPGLEventTemplate> templates = DBManager.QueryRPGLEventTemplates();
         Assert.Single(templates);
@@ -34,7 +34,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLItemTemplate")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLItemTemplate() {
-        RPGLItemTemplate template = RPGL.GetRPGLItemTemplates().Find(x => x.GetDatapackId() == "test:dummy");
+        RPGLItemTemplate template = RPGL.GetRPGLItemTemplate("test:dummy");
         DBManager.InsertRPGLItemTemplate(template);
         List<RPGLItemTemplate> templates = DBManager.QueryRPGLItemTemplates();
         Assert.Single(templates);
@@ -45,7 +45,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLObjectTemplate")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLObjectTemplate() {
-        RPGLObjectTemplate template = RPGL.GetRPGLObjectTemplates().Find(x => x.GetDatapackId() == "test:dummy");
+        RPGLObjectTemplate template = RPGL.GetRPGLObjectTemplate("test:dummy");
         DBManager.InsertRPGLObjectTemplate(template);
         List<RPGLObjectTemplate> templates = DBManager.QueryRPGLObjectTemplates();
         Assert.Single(templates);
@@ -56,7 +56,7 @@ public class DBManagerTest {
     [Fact(DisplayName = "inserts and queries RPGLResourceTemplate")]
     [UsesDatabase]
     public void InsertsAndQueriesRPGLResourceTemplate() {
-        RPGLResourceTemplate template = RPGL.GetRPGLResourceTemplates().Find(x => x.GetDatapackId() == "test:dummy");
+        RPGLResourceTemplate template = RPGL.GetRPGLResourceTemplate("test:dummy");
         DBManager.InsertRPGLResourceTemplate(template);
         List<RPGLResourceTemplate> templates = DBManager.QueryRPGLResourceTemplates();
         Assert.Single(templates);

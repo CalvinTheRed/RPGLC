@@ -1,5 +1,4 @@
-﻿using com.rpglc.data;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -19,7 +18,7 @@ public static class RPGLFactory {
             string? source = null,
             string? target = null
     ) {
-        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplates().Find(x => x.GetDatapackId() == datapackId)
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetSource(source)
@@ -70,7 +69,6 @@ public static class RPGLFactory {
             .SetPosition(position)
             .SetRotation(rotation);
         RPGL.AddRPGLObject(rpglObject);
-        RPGLObjectTemplate.ProcessClasses(rpglObject);
         return rpglObject;
     }
 

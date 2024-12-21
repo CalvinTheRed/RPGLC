@@ -54,22 +54,26 @@ public class RPGLObjectTemplateTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
-    [Fact(DisplayName = "assigns effects")]
-    public void AssignsEffects() {
+    [Fact(DisplayName = "assigns effects and rider effects")]
+    public void AssignsEffectsAndRiderEffects() {
         string objectUuid = "uuid";
         RPGLObject rpglObject = RPGL.GetRPGLObjectTemplates()
             .Find(x => x.GetDatapackId() == "test:complex_object")
             .NewInstance(objectUuid);
 
-        List<RPGLEffect> effects = RPGL.GetRPGLEffects().FindAll(x => x.GetTarget() == objectUuid);
-        Assert.Equal(1, effects.Count());
+        List<RPGLEffect> effects = rpglObject.GetEffectObjects();
+        Assert.Equal(2, effects.Count());
+        Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:dummy"));
+        Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:complex_effect"));
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "populates inventory and equips items")]
     public void PopulatesInventoryAndEquipsItems() {
@@ -94,6 +98,7 @@ public class RPGLObjectTemplateTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "assigns resources")]
     public void AssignsResources() {
@@ -110,6 +115,7 @@ public class RPGLObjectTemplateTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "assigns nested classes")]
     public void AssignsNestedClasses() {

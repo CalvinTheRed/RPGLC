@@ -11,30 +11,6 @@ public class DefaultMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        RPGL.AddRPGLClass(new RPGLClass(new JsonObject().LoadFromString("""
-                {
-                    "metadata": {
-                        "author": "Calvin Withun"
-                    },
-                    "name": "Dummy Class",
-                    "description": "This class has no features.",
-                    "datapack_id": "test:dummy",
-                    "nested_classes": { },
-                    "features": { }
-                }
-                """).AsDict()));
-        RPGL.AddRPGLRace(new RPGLRace(new JsonObject().LoadFromString("""
-            {
-                "metadata": {
-                    "author": "Calvin Withun"
-                },
-                "name": "Dummy Race",
-                "description": "This race has no features.",
-                "datapack_id": "test:dummy",
-                "ability_score_bonuses": { },
-                "features": { }
-            }
-            """).AsDict()));
         RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
@@ -122,6 +98,30 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "refresh_criterion": [ ]
             }
             """)));
+        RPGL.AddRPGLClass(new RPGLClass(new JsonObject().LoadFromString("""
+                {
+                    "metadata": {
+                        "author": "Calvin Withun"
+                    },
+                    "name": "Dummy Class",
+                    "description": "This class has no features.",
+                    "datapack_id": "test:dummy",
+                    "nested_classes": { },
+                    "features": { }
+                }
+                """).AsDict()));
+        RPGL.AddRPGLRace(new RPGLRace(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "Dummy Race",
+                "description": "This race has no features.",
+                "datapack_id": "test:dummy",
+                "ability_score_bonuses": { },
+                "features": { }
+            }
+            """).AsDict()));
     }
 
 };

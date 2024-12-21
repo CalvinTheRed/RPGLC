@@ -31,8 +31,10 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
                 "health_base": 1000,
                 "health_current": 1000,
                 "health_temporary": {
-                    "count": 0,
-                    "rider_effects": [ ]
+                    "count": 10,
+                    "rider_effects": [
+                        "test:complex_effect"
+                    ]
                 },
                 "equipped_items": {
                     "mainhand": "test:dummy",

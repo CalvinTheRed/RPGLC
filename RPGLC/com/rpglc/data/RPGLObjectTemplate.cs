@@ -20,6 +20,8 @@ public class RPGLObjectTemplate : RPGLTemplate {
         ProcessInventory(rpglObject);
         ProcessEquippedItems(rpglObject);
         ProcessResources(rpglObject);
+        ProcessClasses(rpglObject);
+        ProcessTemporaryHitPoints(rpglObject);
 
         return rpglObject;
     }
@@ -77,7 +79,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
         rpglObject.SetResources(resourceUuidList);
     }
 
-    public static void ProcessClasses(RPGLObject rpglObject) {
+    private static void ProcessClasses(RPGLObject rpglObject) {
         JsonArray classList = rpglObject.GetClasses();
         rpglObject.SetClasses(new());
 
@@ -95,6 +97,18 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 );
             }
         }
+    }
+
+    private static void ProcessTemporaryHitPoints(RPGLObject rpglObject) {
+        JsonObject healthTemporary = rpglObject.GetHealthTemporary();
+        JsonArray riderEffectIds = healthTemporary.RemoveJsonArray("rider_effects");
+        JsonArray riderEffects = new();
+        for (int i = 0; i < riderEffectIds.Count(); i++) {
+            RPGLEffect riderEffect = RPGLFactory.NewEffect(riderEffectIds.GetString(i), rpglObject.GetUuid(), rpglObject.GetUuid());
+            rpglObject.AddEffect(riderEffect);
+            riderEffects.AddString(riderEffect.GetUuid());
+        }
+        healthTemporary.PutJsonArray("rider_effects", riderEffects);
     }
 
 };
