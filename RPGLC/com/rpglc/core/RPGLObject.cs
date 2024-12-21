@@ -478,15 +478,9 @@ public class RPGLObject : TaggableContent {
 
     public RPGLObject AddEffect(RPGLEffect rpglEffect) {
         List<RPGLEffect> effects = GetEffectObjects();
-        bool hasEffect = false;
-        foreach (RPGLEffect activeEffect in effects) {
-            if (activeEffect.GetUuid() == rpglEffect.GetUuid()) {
-                // TODO prohibit redundant effect types?
-                hasEffect = true;
-                break;
-            }
-        }
-        if (!hasEffect) {
+        bool hasEffect = effects.Find(x => x.GetUuid() == rpglEffect.GetUuid()) is not null;
+        bool instanceAlreadyApplied = effects.Find(x => x.GetDatapackId() == rpglEffect.GetDatapackId()) is not null;
+        if (!hasEffect && (rpglEffect.GetAllowDuplicates() || !instanceAlreadyApplied)) {
             rpglEffect.SetTarget(GetUuid());
         }
         return this;
