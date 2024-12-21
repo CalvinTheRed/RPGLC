@@ -4,10 +4,10 @@ using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class ObjectsMatchTest {
 
@@ -22,11 +22,11 @@ public class ObjectsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do match")]
     public void ObjectsDoMatch() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new ObjectsMatch().Evaluate(
             new RPGLEffect().SetSource(rpglObject.GetUuid()),
@@ -45,12 +45,12 @@ public class ObjectsMatchTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do not match")]
     public void ObjectsDoNotMatch() {
-        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        RPGLObject subeventObjejct = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLObject subeventObjejct = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new ObjectsMatch().Evaluate(
             new RPGLEffect().SetSource(effectObject.GetUuid()),

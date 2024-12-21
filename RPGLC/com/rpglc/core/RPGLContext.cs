@@ -5,6 +5,28 @@ namespace com.rpglc.core;
 
 public abstract class RPGLContext {
 
+    // =====================================================================
+    // Static code.
+    // =====================================================================
+
+    private static readonly List<RPGLContext> RPGL_CONTEXTS = [];
+    
+    public static void AddContext(RPGLContext context) {
+        RPGL_CONTEXTS.Add(context);
+    }
+
+    public static void RemoveContext(RPGLContext context) {
+        RPGL_CONTEXTS.Remove(context);
+    }
+
+    public static List<RPGLContext> GetContexts() {
+        return [.. RPGL_CONTEXTS];
+    }
+
+    // =====================================================================
+    // Instance code.
+    // =====================================================================
+
     private readonly List<RPGLObject> contextObjects;
 
     public RPGLContext() {

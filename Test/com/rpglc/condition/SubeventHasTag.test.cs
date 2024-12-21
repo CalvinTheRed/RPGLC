@@ -1,13 +1,13 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class SubeventHasTagTest {
 
@@ -22,11 +22,11 @@ public class SubeventHasTagTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does have tag")]
     public void SubeventDoesHaveTag() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new SubeventHasTag().Evaluate(
             new(),
@@ -44,11 +44,11 @@ public class SubeventHasTagTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "subevent does not have tag")]
     public void SubeventDoesNotHaveTag() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new SubeventHasTag().Evaluate(
             new(),

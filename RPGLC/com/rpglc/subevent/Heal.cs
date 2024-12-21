@@ -123,7 +123,7 @@ public class Heal : Subevent {
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "healing": {{json.GetJsonArray("healing")}},
-                    "tags": {{json.GetJsonArray("tags")}}
+                    "tags": {{GetTags()}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

@@ -1,4 +1,4 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,7 +10,7 @@ public class ExtraRacesMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLRace(new JsonObject().LoadFromString("""
+        RPGL.AddRPGLRace(new RPGLRace(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -48,8 +48,8 @@ public class ExtraRacesMock : BeforeAfterTestAttribute {
                     }
                 }
             }
-            """));
-        DBManager.InsertRPGLRace(new JsonObject().LoadFromString("""
+            """).AsDict()));
+        RPGL.AddRPGLRace(new RPGLRace(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -106,7 +106,7 @@ public class ExtraRacesMock : BeforeAfterTestAttribute {
                     }
                 }
             }
-            """));
+            """).AsDict()));
     }
 
 };

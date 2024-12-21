@@ -4,6 +4,10 @@ namespace com.rpglc.core;
 
 public class RPGLRace : DatabaseContent {
 
+    public RPGLRace() : base([]) { }
+
+    public RPGLRace(Dictionary<string, object> data) : base(data) { }
+
     public JsonObject GetAbilityScoreBonuses() {
         return GetJsonObject("ability_score_bonuses");
     }

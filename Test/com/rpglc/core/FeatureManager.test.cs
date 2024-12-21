@@ -1,11 +1,10 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class FeatureManagerTest {
 
@@ -62,21 +61,20 @@ public class FeatureManagerTest {
         }
         """);
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses effects")]
     public void GainsAndLosesEffects() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
-        
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        List<RPGLEffect> effects = rpglObject.GetEffectObjects();
+
         // gains effects
         FeatureManager.GrantGainedEffects(
             rpglObject,
             features.GetJsonObject("gain"),
             choices
         );
-        List<RPGLEffect> effects = DBManager.QueryRPGLEffects(x => 
-            x.Target == rpglObject.GetUuid()
-        );
+        effects = rpglObject.GetEffectObjects();
         Assert.Equal(2, effects.Count);
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
         Assert.Equal("test:dummy", effects[1].GetDatapackId());
@@ -86,17 +84,15 @@ public class FeatureManagerTest {
             rpglObject,
             features.GetJsonObject("lose")
         );
-        effects = DBManager.QueryRPGLEffects(x =>
-            x.Target == rpglObject.GetUuid()
-        );
-        Assert.Equal(0, effects.Count);
+        effects = rpglObject.GetEffectObjects();
+        Assert.Empty(effects);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses events")]
     public void GainsAndLosesEvents() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         // gains events
         FeatureManager.GrantGainedEvents(
@@ -119,24 +115,22 @@ public class FeatureManagerTest {
         Assert.Equal(0, events.Count());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gains and loses resources")]
     public void GainsAndLosesResources() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         // gains resources
         FeatureManager.GrantGainedResources(
             rpglObject,
             features.GetJsonObject("gain")
         );
-        rpglObject = DBManager.QueryRPGLObject(x => x.UserId == "Player 1");
-        Assert.NotNull(rpglObject);
         JsonArray resources = rpglObject.GetResources();
         Assert.Equal(2, resources.Count());
-        string datapackId = DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(0)).GetDatapackId();
+        string datapackId = RPGL.GetRPGLResource(resources.GetString(0)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
-        datapackId = DBManager.QueryRPGLResource(x => x.Uuid == resources.GetString(1)).GetDatapackId();
+        datapackId = RPGL.GetRPGLResource(resources.GetString(1)).GetDatapackId();
         Assert.Equal("test:dummy", datapackId);
 
         // loses resources

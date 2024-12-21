@@ -1,5 +1,4 @@
 using com.rpglc.condition;
-using com.rpglc.database;
 using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
@@ -97,13 +96,13 @@ public class RPGLEffect : TaggableContent {
             }
         } else if (fromAlias == "effect") {
             if (objectAlias == "source") {
-                rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglEffect.GetSource());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetSource());
             } else if (objectAlias == "target") {
-                rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglEffect.GetTarget());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetTarget());
             }
         }
         if (instructions.GetBool("as_origin") ?? false) {
-            rpglObject = DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetOriginObject());
+            rpglObject = RPGL.GetRPGLObject(rpglObject.GetOriginObject());
         }
         return rpglObject;
     }

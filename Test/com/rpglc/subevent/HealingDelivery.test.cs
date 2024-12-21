@@ -1,20 +1,20 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class HealingDeliveryTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingDelivery healingDelivery = new HealingDelivery()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -22,12 +22,12 @@ public class HealingDeliveryTest {
         Assert.Equal("""[]""", healingDelivery.json.GetJsonArray("healing").ToString());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]
     public void MaximizesHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingDelivery healingDelivery = new HealingDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -84,12 +84,12 @@ public class HealingDeliveryTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "gets healing")]
     public void GetsHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingDelivery healingDelivery = new HealingDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

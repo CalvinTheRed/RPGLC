@@ -1,22 +1,22 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RepeatDamageDiceTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats default dice (damage collection)")]
     public void RepeatsDefaultDice_DamageCollection() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -101,12 +101,12 @@ public class RepeatDamageDiceTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats default dice (critical hit damage collection)")]
     public void RepeatsDefaultDice_CriticalHitDamageCollection() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new CriticalHitDamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -199,12 +199,12 @@ public class RepeatDamageDiceTest {
             """, (subevent as CriticalHitDamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats indicated dice (damage collection)")]
     public void RepeatsIndicatedDice_DamageCollection() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -296,12 +296,12 @@ public class RepeatDamageDiceTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "repeats indicated dice (critical hit damage collection)")]
     public void RepeatsIndicatedDice_CriticalHitDamageCollection() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new CriticalHitDamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

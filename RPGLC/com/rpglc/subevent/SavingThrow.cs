@@ -1,5 +1,4 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.function;
 using com.rpglc.json;
 
@@ -130,7 +129,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource((bool) json.GetBool("use_origin_difficulty_class_ability")
-                ? DBManager.QueryRPGLObject(x => x.Uuid == source.GetOriginObject())
+                ? RPGL.GetRPGLObject(source.GetOriginObject())
                 : source
             )
             .Prepare(context, source.GetPosition())
@@ -225,7 +224,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 {
                     "damage": {{json.GetJsonArray("damage")}},
                     "damage_proportion": "{{damageProportion}}",
-                    "tags": {{json.GetJsonArray("tags")}}
+                    "tags": {{GetTags()}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

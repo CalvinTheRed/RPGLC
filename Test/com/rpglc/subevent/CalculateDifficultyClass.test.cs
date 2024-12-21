@@ -1,19 +1,19 @@
 ﻿using com.rpglc.core;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class CalculateDifficultyClassTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares generated difficulty class")]
     public void PreparesGeneratedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         CalculateDifficultyClass calculateDifficultyClass = new CalculateDifficultyClass()
             .JoinSubeventData(new json.JsonObject().LoadFromString("""
                 {
@@ -26,11 +26,11 @@ public class CalculateDifficultyClassTest {
         Assert.Equal(8 + 2 + 0, calculateDifficultyClass.Get());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned difficulty class")]
     public void PreparesAssignedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         CalculateDifficultyClass calculateDifficultyClass = new CalculateDifficultyClass()
             .JoinSubeventData(new json.JsonObject().LoadFromString("""
                 {

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -7,15 +8,14 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RollSubeventTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -24,12 +24,12 @@ public class RollSubeventTest {
         Assert.False(dummyRollSubevent.json.GetBool("has_disadvantage"));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls with advantage")]
     public void RollsWithAdvantage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -52,12 +52,12 @@ public class RollSubeventTest {
         Assert.Equal(10, dummyRollSubevent.Get());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls with disadvantage")]
     public void RollsWithDisadvantage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -80,12 +80,12 @@ public class RollSubeventTest {
         Assert.Equal(5, dummyRollSubevent.Get());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rolls normally")]
     public void RollsNormally() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyRollSubevent dummyRollSubevent = new DummyRollSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

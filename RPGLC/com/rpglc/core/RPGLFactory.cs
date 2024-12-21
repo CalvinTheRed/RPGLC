@@ -1,17 +1,8 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
 public static class RPGLFactory {
-
-    public static RPGLClass? GetClass(string classDatapackId) {
-        return DBManager.QueryRPGLClassByDatapackId(classDatapackId);
-    }
-
-    public static RPGLRace? GetRace(string raceDatapackId) {
-        return DBManager.QueryRPGLRaceByDatapackId(raceDatapackId);
-    }
 
     public static RPGLEffect NewEffect(
             string datapackId,
@@ -19,14 +10,12 @@ public static class RPGLFactory {
             string? source = null,
             string? target = null
     ) {
-        RPGLEffect rpglEffect = DBManager.QueryRPGLEffectTemplateByDatapackId(datapackId)
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetSource(source)
             .SetTarget(target);
-
-        DBManager.InsertRPGLEffect(rpglEffect);
-        rpglEffect.SetId(DBManager.QueryRPGLEffect(x => x.Uuid == rpglEffect.GetUuid()).GetId());
+        RPGL.AddRPGLEffect(rpglEffect);
         return rpglEffect;
     }
 
@@ -35,7 +24,7 @@ public static class RPGLFactory {
     }
 
     public static RPGLEvent NewEvent(string datapackId, JsonArray bonuses) {
-        return DBManager.QueryRPGLEventTemplateByDatapackId(datapackId)
+        return RPGL.GetRPGLEventTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance();
     }
@@ -45,12 +34,10 @@ public static class RPGLFactory {
     }
 
     public static RPGLItem NewItem(string datapackId, JsonArray bonuses) {
-        RPGLItem rpglItem = DBManager.QueryRPGLItemTemplateByDatapackId(datapackId)
+        RPGLItem rpglItem = RPGL.GetRPGLItemTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
-
-        DBManager.InsertRPGLItem(rpglItem);
-        rpglItem.SetId(DBManager.QueryRPGLItem(x => x.Uuid == rpglItem.GetUuid()).GetId());
+        RPGL.AddRPGLItem(rpglItem);
         return rpglItem;
     }
 
@@ -65,16 +52,13 @@ public static class RPGLFactory {
             JsonArray rotation,
             JsonArray bonuses
     ) {
-        RPGLObject rpglObject = DBManager.QueryRPGLObjectTemplateByDatapackId(datapackId)
+        RPGLObject rpglObject = RPGL.GetRPGLObjectTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString())
             .SetUserId(userId)
             .SetPosition(position)
             .SetRotation(rotation);
-
-        DBManager.InsertRPGLObject(rpglObject);
-        rpglObject.SetId(DBManager.QueryRPGLObject(x => x.Uuid == rpglObject.GetUuid()).GetId());
-        RPGLObjectTemplate.ProcessClasses(rpglObject);
+        RPGL.AddRPGLObject(rpglObject);
         return rpglObject;
     }
 
@@ -101,12 +85,10 @@ public static class RPGLFactory {
     }
 
     public static RPGLResource NewResource(string datapackId, JsonArray bonuses) {
-        RPGLResource rpglResource = DBManager.QueryRPGLResourceTemplateByDatapackId(datapackId)
+        RPGLResource rpglResource = RPGL.GetRPGLResourceTemplate(datapackId)
             .ApplyBonuses(bonuses)
             .NewInstance(Guid.NewGuid().ToString());
-
-        DBManager.InsertRPGLResource(rpglResource);
-        rpglResource.SetId(DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid()).GetId());
+        RPGL.AddRPGLResource(rpglResource);
         return rpglResource;
     }
 

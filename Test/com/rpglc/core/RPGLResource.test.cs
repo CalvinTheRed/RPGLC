@@ -1,27 +1,25 @@
-﻿using com.rpglc.database;
-using com.rpglc.subevent;
+﻿using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.core;
 
-[AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
-[RPGLCInit]
+[RPGLInitTesting]
 public class RPGLResourceTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [ExtraResourcesMock]
     [Fact(DisplayName = "refreshes")]
-    [ResetCountersAfterTest]
     public void Refreshes() {
         RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
         rpglResource.Exhaust(rpglResource.GetAvailableUses());
-        DBManager.UpdateRPGLResource(rpglResource);
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .GiveResource(rpglResource);
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -32,8 +30,6 @@ public class RPGLResourceTest {
         subevent.Prepare(context, new());
         subevent.SetTarget(rpglObject);
         subevent.Invoke(context, new());
-
-        rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid());
 
         Assert.Equal(0L, rpglResource.GetAvailableUses());
         Assert.Equal("""
@@ -65,8 +61,6 @@ public class RPGLResourceTest {
 
         subevent.Invoke(context, new());
 
-        rpglResource = DBManager.QueryRPGLResource(x => x.Uuid == rpglResource.GetUuid());
-
         Assert.Equal(5L, rpglResource.GetAvailableUses());
         Assert.Equal("""
             {
@@ -93,5 +87,7 @@ public class RPGLResourceTest {
             }
             """, rpglResource.SeekJsonObject("refresh_criterion[0]").PrettyPrint());
     }
+
+    // TODO other unit tests for RPGLResource functions
 
 };

@@ -1,4 +1,4 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.data.TO;
 using com.rpglc.json;
 
 namespace com.rpglc.core;
@@ -65,13 +65,11 @@ public static class FeatureManager {
         JsonArray lostEffects = lostFeatures.GetJsonArray("effects") ?? new();
         for (int i = 0; i < lostEffects.Count(); i++) {
             string lostEffectDatapackId = lostEffects.GetString(i);
-            List<RPGLEffect> effects = DBManager.QueryRPGLEffects(
-                x => x.Target == rpglObject.GetUuid()
-            );
+            List<RPGLEffect> effects = rpglObject.GetEffectObjects();
             for (int j = 0; j < effects.Count; j++) {
                 RPGLEffect effect = effects[j];
                 if (lostEffectDatapackId == effect.GetDatapackId()) {
-                    DBManager.DeleteRPGLEffect(effect);
+                    RPGL.RemoveRPGLEffect(effect);
                     break;
                 }
             }
@@ -96,16 +94,13 @@ public static class FeatureManager {
     }
 
     private static void RevokeLostResourceFromString(RPGLObject rpglObject, string resourceDatapackId) {
-        List<RPGLResource> resources = DBManager.QueryRPGLResources(
-            x => x.DatapackId == resourceDatapackId
+        List<RPGLResource> resources = RPGL.GetRPGLResources().FindAll(
+            x => x.GetDatapackId() == resourceDatapackId && rpglObject.GetResources().Contains(x.GetUuid())
         );
         foreach (RPGLResource rpglResource in resources) {
-            if (rpglObject.GetResources().Contains(rpglResource.GetUuid())) {
-                rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
-                DBManager.UpdateRPGLObject(rpglObject);
-                DBManager.DeleteRPGLResource(rpglResource);
-                break;
-            }
+            rpglObject.GetResources().AsList().Remove(rpglResource.GetUuid());
+            RPGL.RemoveRPGLResource(rpglResource);
+            break;
         }
     }
 

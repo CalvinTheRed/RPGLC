@@ -1,4 +1,5 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.data;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,7 +11,7 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
+        RPGL.AddRPGLObjectTemplate(new RPGLObjectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -29,7 +30,12 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
                 },
                 "health_base": 1000,
                 "health_current": 1000,
-                "health_temporary": 0,
+                "health_temporary": {
+                    "count": 10,
+                    "rider_effects": [
+                        "test:complex_effect"
+                    ]
+                },
                 "equipped_items": {
                     "mainhand": "test:dummy",
                     "offhand": "test:dummy"
@@ -59,7 +65,7 @@ public class ExtraObjectsMock : BeforeAfterTestAttribute {
                     "test:dummy"
                 ]
             }
-            """));
+            """)));
     }
 
 };

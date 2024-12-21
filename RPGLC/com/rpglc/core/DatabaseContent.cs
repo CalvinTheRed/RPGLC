@@ -1,20 +1,12 @@
 ﻿using com.rpglc.json;
-using LiteDB;
 
 namespace com.rpglc.core;
 
 public class DatabaseContent : JsonObject {
 
-    private ObjectId Id;
+    public DatabaseContent() { }
 
-    public ObjectId GetId() {
-        return Id;
-    }
-
-    public DatabaseContent SetId(ObjectId id) {
-        Id = id;
-        return this;
-    }
+    public DatabaseContent(Dictionary<string, object> data) : base(data) { }
 
     public JsonObject GetMetadata() {
         return GetJsonObject("metadata");

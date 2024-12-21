@@ -121,7 +121,7 @@ public class DealDamage : Subevent, IVampiricSubevent {
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": {{json.GetJsonArray("damage")}},
-                    "tags": {{json.GetJsonArray("tags")}}
+                    "tags": {{GetTags()}}
                 }
                 """))
             .SetOriginItem(GetOriginItem())

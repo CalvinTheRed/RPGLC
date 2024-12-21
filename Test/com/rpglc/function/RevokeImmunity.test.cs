@@ -1,21 +1,21 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RevokeImmunityTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes particular immunity")]
     public void RevokesParticularImmunity() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageAffinity()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
@@ -51,11 +51,11 @@ public class RevokeImmunityTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes blanket immunity")]
     public void RevokesBlanketImmunity() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageAffinity()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())

@@ -1,20 +1,20 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class HealingRollTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares with no healing")]
-    public void PreparesWithNoHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+    [Fact(DisplayName = "prepares default")]
+    public void PreparesDefault() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingRoll healingRoll = new HealingRoll()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -22,12 +22,12 @@ public class HealingRollTest {
         Assert.Equal("""[]""", healingRoll.GetHealing().ToString());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "prepares with healing")]
-    public void PreparesWithHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+    [Fact(DisplayName = "prepares healing")]
+    public void PreparesHealing() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -62,12 +62,12 @@ public class HealingRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice")]
     public void RerollsHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -122,12 +122,12 @@ public class HealingRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "sets healing dice")]
     public void SetsHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -182,12 +182,12 @@ public class HealingRollTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]
-    public void MaximizesTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+    public void MaximizesHealingDice() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

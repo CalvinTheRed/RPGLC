@@ -4,10 +4,10 @@ using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class CheckAbilityScoreTest {
 
@@ -22,11 +22,11 @@ public class CheckAbilityScoreTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "comparison satisfied")]
     public void ComparisonSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new CheckAbilityScore().Evaluate(
             new(),
@@ -50,11 +50,11 @@ public class CheckAbilityScoreTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "comparison not satisfied")]
     public void ComparisonNotSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new CheckAbilityScore().Evaluate(
             new(),

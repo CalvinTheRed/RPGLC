@@ -1,4 +1,5 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.data;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,7 +11,7 @@ public class ExtraEventsMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLEventTemplate(new JsonObject().LoadFromString("""
+        RPGL.AddRPGLEventTemplate(new RPGLEventTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -39,7 +40,7 @@ public class ExtraEventsMock : BeforeAfterTestAttribute {
                     }
                 ]
             }
-            """));
+            """)));
     }
 
 };

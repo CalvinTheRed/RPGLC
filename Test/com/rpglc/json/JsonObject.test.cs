@@ -1,6 +1,4 @@
-﻿using com.rpglc.json;
-
-namespace RPGLC.json.test;
+﻿namespace com.rpglc.json;
 
 public class JsonObjectTest {
 

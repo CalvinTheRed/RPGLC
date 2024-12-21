@@ -1,22 +1,22 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class RerollHealingDiceTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls unbounded healing dice")]
     public void RerollsUnboundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -133,12 +133,12 @@ public class RerollHealingDiceTest {
             """, (subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls bounded healing dice")]
     public void RerollsBoundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

@@ -4,10 +4,10 @@ using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class CheckLevelTest {
 
@@ -22,12 +22,12 @@ public class CheckLevelTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "object level satisfied")]
     public void ObjectLevelSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .LevelUp("test:dummy", new())
             .LevelUp("test:nested_class", new());
 
@@ -52,12 +52,12 @@ public class CheckLevelTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "object level not satisfied")]
     public void ObjectLevelNotSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .LevelUp("test:dummy", new())
             .LevelUp("test:nested_class", new());
 
@@ -82,12 +82,12 @@ public class CheckLevelTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "class level satisfied")]
     public void ClassLevelSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .LevelUp("test:dummy", new())
             .LevelUp("test:nested_class", new());
 
@@ -113,12 +113,12 @@ public class CheckLevelTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
     [Fact(DisplayName = "class level not satisfied")]
     public void ClassLevelNotSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .LevelUp("test:dummy", new())
             .LevelUp("test:nested_class", new());
 

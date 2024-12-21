@@ -7,7 +7,6 @@ using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class OriginItemsMatchTest {
 
@@ -22,7 +21,7 @@ public class OriginItemsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do match")]
     public void ItemsDoMatch() {
@@ -43,7 +42,7 @@ public class OriginItemsMatchTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "items do not match")]
     public void ItemsDoNotMatch() {
@@ -65,7 +64,7 @@ public class OriginItemsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "null items do not match")]
     public void NullItemsDoNotMatch() {

@@ -4,6 +4,10 @@ namespace com.rpglc.core;
 
 public class RPGLClass : DatabaseContent {
 
+    public RPGLClass() : base([]) { }
+
+    public RPGLClass(Dictionary<string, object> data) : base(data) { }
+
     public JsonObject? GetNestedClasses() {
         return GetJsonObject("nested_classes") ?? new();
     }

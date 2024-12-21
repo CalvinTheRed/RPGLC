@@ -1,20 +1,20 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class DamageCollectionTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares default")]
     public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageCollection damageCollection = new DamageCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
@@ -22,11 +22,11 @@ public class DamageCollectionTest {
         Assert.Equal("""[]""", damageCollection.GetDamageCollection().ToString());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares damage")]
     public void PreparesDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageCollection damageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -70,11 +70,11 @@ public class DamageCollectionTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage")]
     public void AddsDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageCollection damageCollection = new DamageCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
@@ -120,11 +120,11 @@ public class DamageCollectionTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "includes damage type")]
     public void IncludesDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageCollection damageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {

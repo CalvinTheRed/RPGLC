@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.math;
 using com.rpglc.subevent;
 
@@ -104,8 +103,6 @@ public class RPGLResource : TaggableContent {
                     criterion.PutLong("frequency_countdown", countdownInitialValue);
                 }
             }
-
-            DBManager.UpdateRPGLResource(this);
         }
         return this;
     }
@@ -138,7 +135,6 @@ public class RPGLResource : TaggableContent {
 
                 // TODO should the countdowns be removed from other criteria at this point?
             }
-            DBManager.UpdateRPGLResource(this);
             return refreshed;
         }
         return false;

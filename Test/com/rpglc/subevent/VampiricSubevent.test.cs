@@ -1,6 +1,6 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -8,17 +8,15 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class VampiricSubeventTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "handles vampirism")]
     public void HandlesVampirism() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetHealthCurrent(0);
-        DBManager.UpdateRPGLObject(rpglObject);
 
         DummyVampiricSubevent dummyVampiricSubevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -57,8 +55,6 @@ public class VampiricSubeventTest {
             new DummyContext(),
             new()
         );
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(5 + 20, rpglObject.GetHealthCurrent());
     }

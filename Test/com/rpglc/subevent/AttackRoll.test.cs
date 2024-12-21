@@ -1,23 +1,22 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 [DieTestingMode]
-[RPGLCInit]
+[RPGLInitTesting]
 public class AttackRollTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -36,12 +35,12 @@ public class AttackRollTest {
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("vampirism").ToString());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "hits")]
-    [ResetCountersAfterTest]
+    [DummyCounterManager]
     public void Hits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -80,17 +79,15 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [Fact(DisplayName = "misses")]
-    [ResetCountersAfterTest]
     public void Misses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -129,17 +126,15 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [Fact(DisplayName = "critically hits")]
-    [ResetCountersAfterTest]
     public void CriticallyHits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -178,17 +173,15 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
+    [DummyCounterManager]
     [Fact(DisplayName = "critically misses")]
-    [ResetCountersAfterTest]
     public void CriticallyMisses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -238,22 +231,18 @@ public class AttackRollTest {
 
         Assert.Equal(2, DummySubevent.Counter);
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(1000, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "uses origin attack ability")]
     public void UsesOriginAttackAbility() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         originObject.GetAbilityScores().PutLong("int", 20);
-        DBManager.UpdateRPGLObject(originObject);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
-        DBManager.UpdateRPGLObject(rpglObject);
 
         RPGLContext context = new DummyContext()
             .Add(originObject)
@@ -284,8 +273,6 @@ public class AttackRollTest {
         attackRoll
             .SetTarget(rpglObject)
             .Invoke(context, new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(1000 - 1 - 5, rpglObject.GetHealthCurrent());
     }

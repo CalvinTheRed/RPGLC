@@ -1,22 +1,21 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
-[RPGLCInit]
+[RPGLInitTesting]
 public class SavingThrowTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares generated difficulty class")]
     public void PreparesGeneratedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         SavingThrow savingThrow = new SavingThrow()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -33,11 +32,11 @@ public class SavingThrowTest {
         Assert.Equal(8 + 2 + 0, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares assigned difficulty class")]
     public void PreparesAssignedDifficultyClass() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         SavingThrow savingThrow = new SavingThrow()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -54,17 +53,15 @@ public class SavingThrowTest {
         Assert.Equal(15, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares origin difficulty class")]
     public void PreparesOriginDifficultyClass() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         originObject.GetAbilityScores().PutLong("int", 20L);
-        DBManager.UpdateRPGLObject(originObject);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1")
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
-        DBManager.UpdateRPGLObject(rpglObject);
 
         SavingThrow savingThrow = new SavingThrow()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -81,13 +78,13 @@ public class SavingThrowTest {
         Assert.Equal(8 + 2 + 5, savingThrow.GetDifficultyClass());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
+    [DummyCounterManager]
     [Fact(DisplayName = "passes with half damage")]
-    [ResetCountersAfterTest]
     public void PassesWithHalfDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -127,19 +124,17 @@ public class SavingThrowTest {
             .SetTarget(rpglObject)
             .Invoke(context, new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(2, DummySubevent.Counter);
         Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
+    [DummyCounterManager]
     [Fact(DisplayName = "passes with no damage")]
-    [ResetCountersAfterTest]
     public void PassesWithNoDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -179,19 +174,17 @@ public class SavingThrowTest {
             .SetTarget(rpglObject)
             .Invoke(context, new());
 
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
-
         Assert.Equal(2, DummySubevent.Counter);
         Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
+    [DummyCounterManager]
     [Fact(DisplayName = "fails")]
-    [ResetCountersAfterTest]
     public void Fails() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
@@ -229,8 +222,6 @@ public class SavingThrowTest {
             .Prepare(context, new())
             .SetTarget(rpglObject)
             .Invoke(context, new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(2, DummySubevent.Counter);
         Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());

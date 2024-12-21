@@ -1,4 +1,5 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.data;
 using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
@@ -10,32 +11,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLClass(new JsonObject().LoadFromString("""
-            {
-                "metadata": {
-                    "author": "Calvin Withun"
-                },
-                "name": "Dummy Class",
-                "description": "This class has no features.",
-                "datapack_id": "test:dummy",
-                "nested_classes": { },
-                "features": { }
-            }
-            """));
-        DBManager.InsertRPGLRace(new JsonObject().LoadFromString("""
-            {
-                "metadata": {
-                    "author": "Calvin Withun"
-                },
-                "name": "Dummy Race",
-                "description": "This race has no features.",
-                "datapack_id": "test:dummy",
-                "ability_score_bonuses": { },
-                "features": { }
-            }
-            
-            """));
-        DBManager.InsertRPGLEffectTemplate(new JsonObject().LoadFromString("""
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -46,8 +22,8 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "tags": [ ],
                 "subevent_filters": { }
             }
-            """));
-        DBManager.InsertRPGLEventTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLEventTemplate(new RPGLEventTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -59,8 +35,8 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "cost": [ ],
                 "subevents": [ ]
             }
-            """));
-        DBManager.InsertRPGLItemTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLItemTemplate(new RPGLItemTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -75,8 +51,8 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "events": { },
                 "resources": { }
             }
-            """));
-        DBManager.InsertRPGLObjectTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLObjectTemplate(new RPGLObjectTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -95,7 +71,10 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 },
                 "health_base": 1000,
                 "health_current": 1000,
-                "health_temporary": 0,
+                "health_temporary": {
+                    "count": 0,
+                    "rider_effects": [ ]
+                },
                 "equipped_items": { },
                 "inventory": [ ],
                 "classes": [ ],
@@ -105,8 +84,8 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "resources": [ ],
                 "proficiency_bonus": 2
             }
-            """));
-        DBManager.InsertRPGLResourceTemplate(new JsonObject().LoadFromString("""
+            """)));
+        RPGL.AddRPGLResourceTemplate(new RPGLResourceTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -118,7 +97,31 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "potency": 1,
                 "refresh_criterion": [ ]
             }
-            """));
+            """)));
+        RPGL.AddRPGLClass(new RPGLClass(new JsonObject().LoadFromString("""
+                {
+                    "metadata": {
+                        "author": "Calvin Withun"
+                    },
+                    "name": "Dummy Class",
+                    "description": "This class has no features.",
+                    "datapack_id": "test:dummy",
+                    "nested_classes": { },
+                    "features": { }
+                }
+                """).AsDict()));
+        RPGL.AddRPGLRace(new RPGLRace(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "Dummy Race",
+                "description": "This race has no features.",
+                "datapack_id": "test:dummy",
+                "ability_score_bonuses": { },
+                "features": { }
+            }
+            """).AsDict()));
     }
 
 };

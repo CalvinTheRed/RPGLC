@@ -1,4 +1,6 @@
-﻿using com.rpglc.database;
+﻿using com.rpglc.core;
+using com.rpglc.data;
+using com.rpglc.json;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -9,7 +11,7 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
     public override void Before(MethodInfo methodUnderTest) {
         base.Before(methodUnderTest);
 
-        DBManager.InsertRPGLResourceTemplate(new json.JsonObject().LoadFromString("""
+        RPGL.AddRPGLResourceTemplate(new RPGLResourceTemplate(new JsonObject().LoadFromString("""
             {
                 "metadata": {
                     "author": "Calvin Withun"
@@ -38,7 +40,7 @@ public class ExtraResourcesMock : BeforeAfterTestAttribute {
                     }
                 ]
             }
-            """));
+            """)));
     }
 
 };

@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -140,14 +139,12 @@ public class RPGLEvent : DatabaseContent {
                             // deplete resource uses and update costCount, then proceed to next resource
                             costJson.PutLong("count", costCount - availableResourceUses);
                             rpglResource.SetAvailableUses(0L);
-                            DBManager.UpdateRPGLResource(rpglResource);
                             break;
                         } else {
                             // update costCount and resource use count and then proceed to next costJson
                             costJson.PutLong("count", 0L);
                             availableResourceUses -= costCount;
                             rpglResource.SetAvailableUses(availableResourceUses);
-                            DBManager.UpdateRPGLResource(rpglResource);
                         }
                     }
                 }

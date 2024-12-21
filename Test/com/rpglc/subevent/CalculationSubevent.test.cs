@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -7,12 +8,11 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.subevent;
 
-[DieTestingMode]
-[AssignDatabase]
 [Collection("Serial")]
+[DieTestingMode]
 public class CalculationSubeventTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (range)")]
     public void ProcessesBonusJsonRange() {
@@ -62,13 +62,14 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (modifier)")]
     public void ProcessesBonusJsonModifier() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -104,13 +105,14 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (ability)")]
     public void ProcessesBonusJsonAbility() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -146,11 +148,11 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes bonus json (proficiency)")]
     public void ProcessesBonusJsonProficiency() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -185,13 +187,14 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes bonus json (level)")]
     public void ProcessesBonusJsonLevel() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -227,7 +230,7 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (number)")]
     public void ProcessesSetJsonNumber() {
@@ -246,13 +249,14 @@ public class CalculationSubeventTest {
         Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (modifier)")]
     public void ProcessesSetJsonModifier() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -273,13 +277,14 @@ public class CalculationSubeventTest {
         Assert.Equal(-2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (ability)")]
     public void ProcessesSetJsonAbility() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -300,11 +305,11 @@ public class CalculationSubeventTest {
         Assert.Equal(13, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (proficiency)")]
     public void ProcessesSetJsonProficiency() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -324,13 +329,14 @@ public class CalculationSubeventTest {
         Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
+    [ExtraEffectsMock]
     [ExtraObjectsMock]
     [Fact(DisplayName = "processes set json (level)")]
     public void ProcessesSetJsonLevel() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -351,7 +357,7 @@ public class CalculationSubeventTest {
         Assert.Equal(1, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (scale)")]
     public void ProcessesSetJsonScale() {
@@ -375,7 +381,7 @@ public class CalculationSubeventTest {
         Assert.Equal(4, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "processes set json (round up)")]
     public void ProcessesSetJsonRoundUp() {
@@ -412,11 +418,11 @@ public class CalculationSubeventTest {
             """)));
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares base")]
     public void PreparesBase() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyCalculationSubevent dummyCalculationSubevent = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
@@ -433,11 +439,11 @@ public class CalculationSubeventTest {
         Assert.Equal(2, dummyCalculationSubevent.GetBase());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares minimum")]
     public void PreparesMinimum() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
@@ -455,11 +461,11 @@ public class CalculationSubeventTest {
         Assert.Equal(2, dummyCalculation.GetMinimum());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares bonuses")]
     public void PreparesBonuses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
@@ -524,11 +530,11 @@ public class CalculationSubeventTest {
         Assert.Equal(3 + 3 + 2, dummyCalculation.GetBonus());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets")]
     public void Gets() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);
@@ -560,11 +566,11 @@ public class CalculationSubeventTest {
         Assert.Equal(10, dummyCalculation.Get());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "gets minimum")]
     public void GetsMinimum() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
             .SetSource(rpglObject)
             .SetTarget(rpglObject);

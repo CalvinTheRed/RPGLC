@@ -1,13 +1,13 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class UserIdsMatchTest {
 
@@ -22,11 +22,11 @@ public class UserIdsMatchTest {
         Assert.False(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do match")]
     public void ObjectsDoMatch() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
 
         bool result = new UserIdsMatch().Evaluate(
             new RPGLEffect().SetSource(rpglObject.GetUuid()),
@@ -45,11 +45,11 @@ public class UserIdsMatchTest {
         Assert.True(result);
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do not match")]
     public void ObjectsDoNotMatch() {
-        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLObject subeventObjejct = RPGLFactory.NewObject("test:dummy", "Player 2");
 
         bool result = new UserIdsMatch().Evaluate(

@@ -1,5 +1,4 @@
-﻿using com.rpglc.database;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 
 namespace com.rpglc.core;
 
@@ -69,7 +68,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEffects.Add(DBManager.QueryRPGLEffect(x => x.Uuid == effectUuid));
+                    grantedEffects.Add(RPGL.GetRPGLEffect(effectUuid));
                     break;
                 }
             }
@@ -92,7 +91,8 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedEvents.Add(DBManager.QueryRPGLEventTemplateByDatapackId(eventDatapackId).NewInstance());
+                    grantedEvents.Add(RPGL.GetRPGLEventTemplate(eventDatapackId)
+                        .NewInstance());
                     break;
                 }
             }
@@ -115,7 +115,7 @@ public class RPGLItem : TaggableContent {
                     slotCombinationMatch &= slots.Contains(slotCombination.GetString(j));
                 }
                 if (slotCombinationMatch) {
-                    grantedResources.Add(DBManager.QueryRPGLResource(x => x.Uuid == resourceUuid));
+                    grantedResources.Add(RPGL.GetRPGLResource(resourceUuid));
                     break;
                 }
             }

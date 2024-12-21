@@ -1,22 +1,21 @@
 ﻿using com.rpglc.core;
-using com.rpglc.database;
 using com.rpglc.json;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class DealDamageTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DealDamage dealDamage = new DealDamage()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -60,12 +59,12 @@ public class DealDamageTest {
             dealDamage.json.GetJsonArray("damage").PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "deals damage")]
     public void DealsDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DealDamage dealDamage = new DealDamage()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -85,8 +84,6 @@ public class DealDamageTest {
             .Prepare(new DummyContext(), new())
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
-
-        rpglObject = DBManager.QueryRPGLObject(x => x._id == rpglObject.GetId());
 
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }

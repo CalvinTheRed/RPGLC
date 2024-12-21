@@ -1,22 +1,22 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
-[AssignDatabase]
 [Collection("Serial")]
 public class MaximizeHealingTest {
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing roll")]
     public void MaximizesHealingRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -97,12 +97,12 @@ public class MaximizeHealingTest {
             """, (subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [ClearDatabaseAfterTest]
+    [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes healing delivery")]
     public void MaximizesHealingDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", "Player 1");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
