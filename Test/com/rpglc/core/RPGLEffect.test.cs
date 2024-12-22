@@ -48,6 +48,54 @@ public class RPGLEffectTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [Fact(DisplayName = "checks confirmation (no confirmation)")]
+    [UsesRPGLConfirmation]
+    public void ChecksConfirmation_NoConfirmation() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy")
+            .SetTarget(rpglObject.GetUuid());
+
+        bool confirmation = rpglEffect.CheckForConfirmation(new DummySubevent().SetSource(rpglObject));
+
+        Assert.True(confirmation);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "checks confirmation (confirmed)")]
+    [UsesRPGLConfirmation]
+    public void ChecksConfirmation_Confirmed() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy")
+            .SetOptional(true)
+            .SetTarget(rpglObject.GetUuid());
+
+        DummyConfirmation.ScheduleResponse(true);
+
+        bool confirmation = rpglEffect.CheckForConfirmation(new DummySubevent().SetSource(rpglObject));
+
+        Assert.True(confirmation);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "checks confirmation (denied)")]
+    [UsesRPGLConfirmation]
+    public void ChecksConfirmation_Denied() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy")
+            .SetOptional(true)
+            .SetTarget(rpglObject.GetUuid());
+
+        DummyConfirmation.ScheduleResponse(false);
+
+        bool confirmation = rpglEffect.CheckForConfirmation(new DummySubevent().SetSource(rpglObject));
+
+        Assert.False(confirmation);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
     [DummyCounterManager]
     [Fact(DisplayName = "executes functions")]
     public void ExecutesFunctions() {
