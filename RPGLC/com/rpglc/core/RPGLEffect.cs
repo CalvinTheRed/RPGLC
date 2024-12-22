@@ -52,6 +52,15 @@ public class RPGLEffect : TaggableContent {
         return this;
     }
 
+    public bool GetOptional() {
+        return GetBool("optional") ?? false;
+    }
+
+    public RPGLEffect SetOptional(bool? optional) {
+        PutBool("optional", optional);
+        return this;
+    }
+
     // =====================================================================
     // Utility methods.
     // =====================================================================
@@ -64,8 +73,16 @@ public class RPGLEffect : TaggableContent {
                 for (int i = 0; i < matchedFilterBehaviors.Count(); i++) {
                     JsonObject matchedFilterBehavior = matchedFilterBehaviors.GetJsonObject(i);
                     JsonArray conditions = matchedFilterBehavior.GetJsonArray("conditions");
-                    if (!subevent.IsEffectApplied(this) && EvaluateConditions(subevent, conditions, context, originPoint)) {
-                        ExecuteFunctions(subevent, matchedFilterBehavior.GetJsonArray("functions"), context, originPoint);
+                    if (!subevent.IsEffectApplied(this) 
+                            && EvaluateConditions(subevent, conditions, context, originPoint) 
+                            && CheckForConfirmation(subevent)
+                    ) {
+                        ExecuteFunctions(
+                            subevent,
+                            matchedFilterBehavior.GetJsonArray("functions"),
+                            context,
+                            originPoint
+                        );
                         subevent.AddModifyingEffect(this);
                         return true;
                     }
@@ -83,6 +100,14 @@ public class RPGLEffect : TaggableContent {
                 .Evaluate(this, subevent, conditionJson, context, originPoint);
         }
         return conditionsMet;
+    }
+
+    public bool CheckForConfirmation(Subevent subevent) {
+        // TODO should probably add a temporary indicator for if confirmation was rejected on a previous iteration within processSubevent...
+        if (GetOptional()) {
+            return RPGLConfirmation.GetInstance().Confirm(this, subevent);
+        }
+        return true;
     }
 
     public void ExecuteFunctions(Subevent subevent, JsonArray functions, RPGLContext context, JsonArray originPoint) {

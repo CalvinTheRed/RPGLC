@@ -20,6 +20,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "description": "This effect has some testing features.",
                 "datapack_id": "test:complex_effect",
                 "allow_duplicates": true,
+                "optional": false,
                 "tags": [ ],
                 "subevent_filters": {
                     "dummy_subevent": [
@@ -48,6 +49,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "description": "This effect grants its target immunity to damage.",
                 "datapack_id": "test:damage_immunity",
                 "allow_duplicates": true,
+                "optional": false,
                 "tags": [ ],
                 "subevent_filters": {
                     "damage_affinity": [
@@ -78,6 +80,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "description": "This effect grants its target resistance to damage.",
                 "datapack_id": "test:damage_resistance",
                 "allow_duplicates": true,
+                "optional": false,
                 "tags": [ ],
                 "subevent_filters": {
                     "damage_affinity": [
@@ -108,6 +111,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "description": "This effect grants its target vulnerability to damage.",
                 "datapack_id": "test:damage_vulnerability",
                 "allow_duplicates": true,
+                "optional": false,
                 "tags": [ ],
                 "subevent_filters": {
                     "damage_affinity": [

@@ -14,7 +14,7 @@ public abstract class Condition(string conditionId) {
 
     private readonly string conditionId = conditionId;
 
-    public static void Initialize(bool includeTestingConditions = false) {
+    public static void Initialize() {
         Conditions.Clear();
 
         Initialize([
@@ -33,13 +33,6 @@ public abstract class Condition(string conditionId) {
             new SubeventHasTag(),
             new UserIdsMatch(),
         ]);
-
-        if (includeTestingConditions) {
-            Initialize([
-                new False(),
-                new True(),
-            ]);
-        }
     }
 
     private static void Initialize(List<Condition> conditions) {

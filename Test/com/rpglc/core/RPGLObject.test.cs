@@ -1,9 +1,11 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.data.TO;
+using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.core;
 
@@ -256,7 +258,7 @@ public class RPGLObjectTest {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
         rpglObject.AddEffect(rpglEffect);
 
-        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect));
+        Assert.Contains(rpglEffect, rpglObject.GetEffectObjects());
     }
 
     [ClearRPGLAfterTest]
@@ -272,8 +274,8 @@ public class RPGLObjectTest {
         rpglObject.AddEffect(rpglEffect1);
         rpglObject.AddEffect(rpglEffect2);
 
-        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect1));
-        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect2));
+        Assert.Contains(rpglEffect1, rpglObject.GetEffectObjects());
+        Assert.Contains(rpglEffect2, rpglObject.GetEffectObjects());
     }
 
     [ClearRPGLAfterTest]
@@ -289,8 +291,8 @@ public class RPGLObjectTest {
         rpglObject.AddEffect(rpglEffect1);
         rpglObject.AddEffect(rpglEffect2);
 
-        Assert.True(rpglObject.GetEffectObjects().Contains(rpglEffect1));
-        Assert.False(rpglObject.GetEffectObjects().Contains(rpglEffect2));
+        Assert.Contains(rpglEffect1, rpglObject.GetEffectObjects());
+        Assert.DoesNotContain(rpglEffect2, rpglObject.GetEffectObjects());
     }
 
 };

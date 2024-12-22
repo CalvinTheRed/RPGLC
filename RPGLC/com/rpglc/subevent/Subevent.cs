@@ -13,7 +13,7 @@ public abstract class Subevent {
 
     readonly string subeventId;
 
-    public static void Initialize(bool includeTestingSubevents = false) {
+    public static void Initialize() {
         Subevents.Clear();
 
         Initialize([
@@ -23,12 +23,6 @@ public abstract class Subevent {
             new Heal(),
             new SavingThrow(),
         ]);
-
-        if (includeTestingSubevents) {
-            Initialize([
-                new DummySubevent(),
-            ]);
-        }
     }
 
     private static void Initialize(List<Subevent> subevents) {

@@ -3,6 +3,7 @@ using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.core;
 
@@ -24,12 +25,12 @@ public class RPGLResourceTest {
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
 
-        Subevent subevent = new DummySubevent();
-        subevent.AddTag("refresh_resource");
-        subevent.SetSource(rpglObject);
-        subevent.Prepare(context, new());
-        subevent.SetTarget(rpglObject);
-        subevent.Invoke(context, new());
+        Subevent subevent = new DummySubevent()
+            .AddTag("refresh_resource")
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
 
         Assert.Equal(0L, rpglResource.GetAvailableUses());
         Assert.Equal("""

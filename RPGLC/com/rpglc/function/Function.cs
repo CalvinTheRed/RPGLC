@@ -10,7 +10,7 @@ public abstract class Function(string functionId) {
 
     public readonly string functionId = functionId;
 
-    public static void Initialize(bool includeTestingFunctions = false) {
+    public static void Initialize() {
         Functions.Clear();
 
         Initialize([
@@ -37,12 +37,6 @@ public abstract class Function(string functionId) {
             new SetHealingDice(),
             new SetMinimum(),
         ]);
-
-        if (includeTestingFunctions) {
-            Initialize([
-                new DummyFunction(),
-            ]);
-        }
     }
 
     private static void Initialize(List<Function> functions) {

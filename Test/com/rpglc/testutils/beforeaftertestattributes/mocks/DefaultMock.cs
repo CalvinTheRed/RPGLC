@@ -20,6 +20,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "description": "This effect has no features.",
                 "datapack_id": "test:dummy",
                 "allow_duplicates": true,
+                "optional": false,
                 "tags": [ ],
                 "subevent_filters": { }
             }

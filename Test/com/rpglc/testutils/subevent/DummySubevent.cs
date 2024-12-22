@@ -1,7 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.subevent;
 
-namespace com.rpglc.subevent;
+namespace com.rpglc.testutils.subevent;
 
 public class DummySubevent : Subevent, IAbilitySubevent, IDamageTypeSubevent {
 
