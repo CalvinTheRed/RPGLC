@@ -1,6 +1,6 @@
 ﻿namespace com.rpglc.subevent;
 
-internal interface IDamageTypeSubevent {
+public interface IDamageTypeSubevent {
 
     public abstract bool IncludesDamageType(string damageType);
 

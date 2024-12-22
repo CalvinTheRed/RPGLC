@@ -25,12 +25,6 @@ public static class RPGL {
         Subevent.Initialize();
     }
 
-    public static void InitTesting() {
-        Condition.Initialize(true);
-        Function.Initialize(true);
-        Subevent.Initialize(true);
-    }
-
     public static void LoadDatapacks(string path) {
         foreach (string datapackPath in Directory.GetDirectories(path)) {
             _ = new Datapack(datapackPath);

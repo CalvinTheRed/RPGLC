@@ -1,8 +1,9 @@
 ﻿using com.rpglc.core;
+using com.rpglc.function;
 using com.rpglc.json;
 using com.rpglc.subevent;
 
-namespace com.rpglc.function;
+namespace com.rpglc.testutils.function;
 
 public class DummyFunction : Function {
 

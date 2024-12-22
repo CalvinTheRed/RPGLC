@@ -1,5 +1,5 @@
-﻿using com.rpglc.function;
-using com.rpglc.subevent;
+﻿using com.rpglc.testutils.function;
+using com.rpglc.testutils.subevent;
 using System.Reflection;
 using Xunit.Sdk;
 
