@@ -39,7 +39,7 @@ public class AbilitySaveTest {
     [Fact(DisplayName = "prepares calculated difficulty")]
     public void PreparesCalculatedDifficulty() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        rpglObject.InsertLong("ability_scores.str", 12);
+        rpglObject.InsertLong("ability_scores.str", 12L);
         AbilitySave abilitySave = new AbilitySave()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -60,7 +60,7 @@ public class AbilitySaveTest {
     [Fact(DisplayName = "prepares calculated difficulty as origin")]
     public void PreparesCalculatedDifficultyAsOrigin() {
         RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        originObject.InsertLong("ability_scores.str", 12);
+        originObject.InsertLong("ability_scores.str", 12L);
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .SetOriginObject(originObject.GetUuid());
         AbilitySave abilitySave = new AbilitySave()
