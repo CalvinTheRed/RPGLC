@@ -73,25 +73,15 @@ public class AbilitySave : Subevent {
     }
 
     private void CalculateDifficultyClass(RPGLContext context) {
-        CalculateDifficultyClass calculateDifficultyClass = new();
         long? difficultyClass = GetDifficultyClass();
-        if (difficultyClass.HasValue) {
-            calculateDifficultyClass.JoinSubeventData(new JsonObject().LoadFromString($$"""
+        CalculateDifficultyClass calculateDifficultyClass = new CalculateDifficultyClass()
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "difficulty_class": {{difficultyClass}},
+                    "difficulty_class": {{(difficultyClass.HasValue ? difficultyClass : json.GetString("difficulty_class_ability"))}},
                     "tags": {{GetTags()}}
                 }
-                """));
-        } else {
-            calculateDifficultyClass.JoinSubeventData(new JsonObject().LoadFromString($$"""
-                {
-                    "difficulty_class_ability": "{{json.GetString("difficulty_class_ability")}}",
-                    "tags": {{GetTags()}}
-                }
-                """));
-        }
-
-        calculateDifficultyClass.SetOriginItem(GetOriginItem())
+                """))
+            .SetOriginItem(GetOriginItem())
             .SetSource((bool) json.GetBool("use_origin_difficulty_class_ability")
                 ? RPGL.GetRPGLObject(GetSource().GetOriginObject())
                 : GetSource()
@@ -118,7 +108,7 @@ public class AbilitySave : Subevent {
         }
     }
 
-    public long? GetDifficultyClass() {
+    private long? GetDifficultyClass() {
         return json.GetLong("difficulty_class");
     }
 

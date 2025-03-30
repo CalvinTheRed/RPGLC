@@ -31,7 +31,7 @@ public class AbilitySaveTest {
             .Prepare(new DummyContext(), new());
 
         Assert.False(abilitySave.json.GetBool("use_origin_difficulty_class_ability"));
-        Assert.Equal(15, abilitySave.GetDifficultyClass());
+        Assert.Equal(15, abilitySave.json.GetLong("difficulty_class"));
     }
 
     [ClearRPGLAfterTest]
@@ -52,7 +52,7 @@ public class AbilitySaveTest {
             .Prepare(new DummyContext(), new());
 
         Assert.False(abilitySave.json.GetBool("use_origin_difficulty_class_ability"));
-        Assert.Equal(8 + 1 + 2, abilitySave.GetDifficultyClass());
+        Assert.Equal(8 + 1 + 2, abilitySave.json.GetLong("difficulty_class"));
     }
 
     [ClearRPGLAfterTest]
@@ -76,7 +76,7 @@ public class AbilitySaveTest {
             .Prepare(new DummyContext(), new());
 
         Assert.True(abilitySave.json.GetBool("use_origin_difficulty_class_ability"));
-        Assert.Equal(8 + 1 + 2, abilitySave.GetDifficultyClass());
+        Assert.Equal(8 + 1 + 2, abilitySave.json.GetLong("difficulty_class"));
     }
 
     [ClearRPGLAfterTest]
@@ -85,7 +85,7 @@ public class AbilitySaveTest {
     [Fact(DisplayName = "passes")]
     public void Passes() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AbilitySave abilitySave = new AbilitySave()
+        _ = new AbilitySave()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "ability": "str",
@@ -106,11 +106,11 @@ public class AbilitySaveTest {
                         }
                     ]
                 }
-                """));
-        abilitySave.SetSource(rpglObject);
-        abilitySave.Prepare(new DummyContext(), new());
-        abilitySave.SetTarget(rpglObject);
-        abilitySave.Invoke(new DummyContext(), new());
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new())
+            .SetTarget(rpglObject)
+            .Invoke(new DummyContext(), new());
 
         Assert.Equal(1, DummySubevent.Counter);
     }
