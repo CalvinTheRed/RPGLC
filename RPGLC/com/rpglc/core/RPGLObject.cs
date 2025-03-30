@@ -457,7 +457,7 @@ public class RPGLObject : TaggableContent {
             .Prepare(context, GetPosition())
             .SetTarget(this)
             .Invoke(context, GetPosition())
-            .GetEventsList());
+            .GetEventObjects());
 
         return events;
     }
