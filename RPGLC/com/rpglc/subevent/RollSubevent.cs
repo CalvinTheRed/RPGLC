@@ -8,6 +8,7 @@ public abstract class RollSubevent(string subeventId) : CalculationSubevent(sube
     
     public override RollSubevent Prepare(RPGLContext context, JsonArray originPoint) {
         base.Prepare(context, originPoint);
+        json.PutIfAbsent("determined", new JsonArray());
         json.PutBool("has_advantage", false);
         json.PutBool("has_disadvantage", false);
         return this;
