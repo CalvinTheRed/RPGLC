@@ -399,6 +399,11 @@ public class RPGLObject : TaggableContent {
             resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
         }
 
+        // add origin object resources if proxy
+        if (GetProxy() == true && GetOriginObject() != null) {
+            resources.AddRange(RPGL.GetRPGLObject(GetOriginObject()).GetResourceObjects());
+        }
+
         return resources;
     }
 

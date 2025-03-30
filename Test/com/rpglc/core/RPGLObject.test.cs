@@ -302,7 +302,7 @@ public class RPGLObjectTest {
             .AddEvent("test:dummy");
 
         List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
-        Assert.Equal(1, events.Count());
+        Assert.Single(events);
     }
 
     [ClearRPGLAfterTest]
@@ -316,7 +316,7 @@ public class RPGLObjectTest {
         rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
 
         List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
-        Assert.Equal(1, events.Count());
+        Assert.Single(events);
     }
 
     [ClearRPGLAfterTest]
@@ -344,7 +344,34 @@ public class RPGLObjectTest {
             """));
 
         List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
-        Assert.Equal(1, events.Count());
+        Assert.Single(events);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "does access proxy resources")]
+    public void DoesAccessProxyResources() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .GiveResource(RPGLFactory.NewResource("test:dummy"));
+        RPGLObject proxyObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetOriginObject(rpglObject.GetUuid())
+            .SetProxy(true);
+
+        List<RPGLResource> resources = proxyObject.GetResourceObjects();
+        Assert.Single(resources);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "does not access proxy resources")]
+    public void DoesNotAccessProxyResources() {
+        _ = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .GiveResource(RPGLFactory.NewResource("test:dummy"));
+        RPGLObject proxyObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetProxy(false);
+
+        List<RPGLResource> resources = proxyObject.GetResourceObjects();
+        Assert.Empty(resources);
     }
 
 };
