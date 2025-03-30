@@ -9,7 +9,6 @@ namespace com.rpglc.subevent;
 
 [Collection("Serial")]
 [DieTestingMode]
-[RPGLInitTesting]
 public class AbilityCheckTest {
 
     [ClearRPGLAfterTest]
@@ -87,7 +86,7 @@ public class AbilityCheckTest {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "check_ability": "str",
+                    "ability": "str",
                     "determined": [ 10 ]
                 }
                 """))
@@ -108,7 +107,7 @@ public class AbilityCheckTest {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "check_ability": "str",
+                    "ability": "str",
                     "determined": [ 10 ],
                     "has_expertise": true,
                     "has_proficiency": true,
@@ -132,7 +131,7 @@ public class AbilityCheckTest {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "check_ability": "str",
+                    "ability": "str",
                     "determined": [ 10 ],
                     "has_proficiency": true,
                     "has_half_proficiency": true
@@ -155,7 +154,7 @@ public class AbilityCheckTest {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "check_ability": "str",
+                    "ability": "str",
                     "determined": [ 10 ],
                     "has_half_proficiency": true
                 }

@@ -40,15 +40,15 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
 
     public override AbilityCheck Run(RPGLContext context, JsonArray originPoint) {
         Roll();
-        int proficiencyNumerator = 0;
-        int proficiencyDenominator = 1;
+        long proficiencyNumerator = 0L;
+        long proficiencyDenominator = 1L;
         if (GetExpertise()) {
-            proficiencyNumerator = 2;
+            proficiencyNumerator = 2L;
         } else if (GetProficiency()) {
-            proficiencyNumerator = 1;
+            proficiencyNumerator = 1L;
         } else if (GetHalfProficiency()) {
-            proficiencyNumerator = 1;
-            proficiencyDenominator = 2;
+            proficiencyNumerator = 1L;
+            proficiencyDenominator = 2L;
         }
         new AddBonus().Execute(null, this, new JsonObject().LoadFromString($$"""
             {
@@ -140,7 +140,7 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
     }
 
     public string GetAbility(RPGLContext context) {
-        return json.GetString("check_ability");
+        return json.GetString("ability");
     }
 
     public string? GetSkill() {
