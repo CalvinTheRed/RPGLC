@@ -23,6 +23,7 @@ public abstract class Condition(string conditionId) {
             new CheckAbility(),
             new CheckAbilityScore(),
             new CheckLevel(),
+            new CheckSkill(),
             new EquippedItemHasTag(),
             new IncludesDamageType(),
             new Invert(),

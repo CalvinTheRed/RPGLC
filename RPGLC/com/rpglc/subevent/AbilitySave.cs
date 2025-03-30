@@ -2,7 +2,7 @@
 using com.rpglc.json;
 using com.rpglc.subevent;
 
-namespace RPGLC.com.rpglc.subevent;
+namespace com.rpglc.subevent;
 
 public class AbilitySave : Subevent {
 
@@ -74,13 +74,16 @@ public class AbilitySave : Subevent {
 
     private void CalculateDifficultyClass(RPGLContext context) {
         long? difficultyClass = GetDifficultyClass();
+
         CalculateDifficultyClass calculateDifficultyClass = new CalculateDifficultyClass()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "difficulty_class": {{(difficultyClass.HasValue ? difficultyClass : json.GetString("difficulty_class_ability"))}},
+                    {{(difficultyClass.HasValue
+                    ? $"\"difficulty_class\": {difficultyClass}"
+                    : $"\"difficulty_class_ability\": \"{json.GetString("difficulty_class_ability")}\"")}},
                     "tags": {{GetTags()}}
                 }
-                """))
+            """))
             .SetOriginItem(GetOriginItem())
             .SetSource((bool) json.GetBool("use_origin_difficulty_class_ability")
                 ? RPGL.GetRPGLObject(GetSource().GetOriginObject())

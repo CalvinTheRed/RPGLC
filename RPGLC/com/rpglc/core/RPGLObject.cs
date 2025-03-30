@@ -422,6 +422,46 @@ public class RPGLObject : TaggableContent {
         return this;
     }
 
+    public List<RPGLEvent> GetEventObjects(RPGLContext context) {
+        List<RPGLEvent> events = [];
+
+        // template-granted events
+        JsonArray innateEvents = GetEvents();
+        for (int i = 0; i < innateEvents.Count(); i++) {
+            events.Add(RPGLFactory.NewEvent(innateEvents.GetString(i)));
+        }
+
+        // equipment-granted events
+        JsonObject equippedItems = GetEquippedItems();
+        JsonObject slotsByItemUuid = new();
+        foreach (string equipmentSlot in equippedItems.AsDict().Keys) {
+            string itemUuid = equippedItems.GetString(equipmentSlot);
+            if (slotsByItemUuid.AsDict().ContainsKey(itemUuid)) {
+                slotsByItemUuid.GetJsonArray(itemUuid).AddString(equipmentSlot);
+            } else {
+                slotsByItemUuid.PutJsonArray(itemUuid, new JsonArray().AddString(equipmentSlot));
+            }
+        }
+        foreach(string itemUuid in slotsByItemUuid.AsDict().Keys) {
+            JsonArray slotsArray = slotsByItemUuid.GetJsonArray(itemUuid);
+            List<string> slotsList = [];
+            for (int i = 0; i < slotsArray.Count(); i++) {
+                slotsList.Add(slotsArray.GetString(i));
+            }
+            events.AddRange(RPGL.GetRPGLItem(itemUuid).GetEventsForSlots(slotsList));
+        }
+
+        // effect-granted events
+        events.AddRange(new GetEvents()
+            .SetSource(this)
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .GetEventObjects());
+
+        return events;
+    }
+
     public void InvokeEvent(
         RPGLEvent rpglEvent,
         JsonArray originPoint,

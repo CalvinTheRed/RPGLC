@@ -17,6 +17,7 @@ public abstract class Subevent {
         Subevents.Clear();
 
         Initialize([
+            new AbilitySave(),
             new AttackRoll(),
             new DealDamage(),
             new GiveTemporaryHitPoints(),

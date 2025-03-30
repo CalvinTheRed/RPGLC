@@ -1,5 +1,4 @@
-﻿using com.rpglc.data.TO;
-using com.rpglc.json;
+﻿using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
@@ -62,7 +61,7 @@ public class RPGLObjectTest {
     public void LevelsUp() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         rpglObject.GetRaces().AddString("test:race_with_resource_per_level");
-        
+
         rpglObject.LevelUp("test:class_with_nested_class", new());
         Assert.Equal(1, rpglObject.GetLevel());
         Assert.Equal(1, rpglObject.GetLevel("test:class_with_nested_class"));
@@ -155,8 +154,8 @@ public class RPGLObjectTest {
         rpglObject.InvokeEvent(
             RPGLFactory.NewEvent("test:complex_event"),
             new(),
-            [ rpglResource ],
-            [ rpglObject ],
+            [rpglResource],
+            [rpglObject],
             context
         );
 
@@ -293,6 +292,59 @@ public class RPGLObjectTest {
 
         Assert.Contains(rpglEffect1, rpglObject.GetEffectObjects());
         Assert.DoesNotContain(rpglEffect2, rpglObject.GetEffectObjects());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets events from template data")]
+    public void GetsEventsFromTemplateData() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .AddEvent("test:dummy");
+
+        List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
+        Assert.Equal(1, events.Count());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [ExtraItemsMock]
+    [Fact(DisplayName = "gets events from equipped items")]
+    public void GetsEventsFromEquippedItems() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:complex_item");
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject.EquipItem(rpglItem.GetUuid(), "mainhand");
+
+        List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
+        Assert.Equal(1, events.Count());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets events from effects")]
+    public void GetsEventsFromEffects() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy", rpglObject.GetUuid(), rpglObject.GetUuid());
+        rpglEffect.Join(new JsonObject().LoadFromString("""
+            {
+                "subevent_filters": {
+                    "get_events": [
+                        {
+                            "conditions": [ ],
+                            "functions": [
+                                {
+                                    "function": "add_event",
+                                    "event": "test:dummy"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """));
+
+        List<RPGLEvent> events = rpglObject.GetEventObjects(new DummyContext().Add(rpglObject));
+        Assert.Equal(1, events.Count());
     }
 
 };

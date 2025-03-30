@@ -16,6 +16,7 @@ public abstract class Function(string functionId) {
         Initialize([
             new AddBonus(),
             new AddDamage(),
+            new AddEvent(),
             new AddHealing(),
             new AddSubeventTag(),
             new AddVampirism(),
@@ -23,6 +24,9 @@ public abstract class Function(string functionId) {
             new GrantDisadvantage(),
             new GrantImmunity(),
             new GrantResistance(),
+            new GrantSkillExpertise(),
+            new GrantSkillHalfProficiency(),
+            new GrantSkillProficiency(),
             new GrantVulnerability(),
             new MaximizeDamage(),
             new MaximizeHealing(),
