@@ -50,9 +50,9 @@ public class GetEvents : Subevent {
         return (GetEvents) base.SetTarget(target);
     }
 
-    public void AddEvent(string eventId) {
-        JsonArray events = json.GetJsonArray("events");
-        events.AddString(eventId);
+    public GetEvents AddEvent(string eventId) {
+        json.GetJsonArray("events").AddString(eventId);
+        return this;
     }
 
     public List<RPGLEvent> GetEventObjects() {
