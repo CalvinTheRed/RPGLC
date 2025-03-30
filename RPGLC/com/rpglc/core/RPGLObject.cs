@@ -425,7 +425,7 @@ public class RPGLObject : TaggableContent {
     public List<RPGLEvent> GetEventObjects(RPGLContext context) {
         List<RPGLEvent> events = [];
 
-        // innate events
+        // template-granted events
         JsonArray innateEvents = GetEvents();
         for (int i = 0; i < innateEvents.Count(); i++) {
             events.Add(RPGLFactory.NewEvent(innateEvents.GetString(i)));
