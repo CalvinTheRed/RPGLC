@@ -2,7 +2,7 @@
 using com.rpglc.json;
 using com.rpglc.subevent;
 
-namespace RPGLC.com.rpglc.subevent;
+namespace com.rpglc.subevent;
 
 public class AbilitySave : Subevent {
 

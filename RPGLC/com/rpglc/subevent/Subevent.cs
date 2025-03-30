@@ -1,6 +1,5 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using RPGLC.com.rpglc.subevent;
 
 namespace com.rpglc.subevent;
 
