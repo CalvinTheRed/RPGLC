@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using RPGLC.com.rpglc.subevent;
 
 namespace com.rpglc.subevent;
 
@@ -17,6 +18,7 @@ public abstract class Subevent {
         Subevents.Clear();
 
         Initialize([
+            new AbilitySave(),
             new AttackRoll(),
             new DealDamage(),
             new GiveTemporaryHitPoints(),
