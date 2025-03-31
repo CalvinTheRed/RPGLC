@@ -723,11 +723,6 @@ public class RPGLObject : TaggableContent {
 
     public List<string> GetObjectTags(RPGLContext context) {
         return new GetObjectTags()
-            .JoinSubeventData(new JsonObject().LoadFromString($$"""
-                {
-                    "tags": {{GetTags()}}
-                }
-                """))
             .SetSource(this)
             .Prepare(context, GetPosition())
             .SetTarget(this)

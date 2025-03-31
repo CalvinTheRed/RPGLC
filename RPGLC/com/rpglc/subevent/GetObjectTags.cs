@@ -30,11 +30,16 @@ public class GetObjectTags : Subevent {
     }
 
     public override GetObjectTags Prepare(RPGLContext context, JsonArray originPoint) {
-        json.PutIfAbsent("tags", new JsonArray());
+        json.PutIfAbsent("object_tags", new JsonArray());
         return this;
     }
 
     public override GetObjectTags Run(RPGLContext context, JsonArray originPoint) {
+        JsonArray objectTags = json.GetJsonArray("object_tags");
+        JsonArray tags = GetTarget().GetTags();
+        for (int i = 0; i < tags.Count(); i++) {
+            objectTags.AddString(tags.GetString(i));
+        }
         return this;
     }
 
@@ -51,13 +56,13 @@ public class GetObjectTags : Subevent {
     }
 
     public GetObjectTags AddObjectTag(string tag) {
-        json.GetJsonArray("tags").AddString(tag);
+        json.GetJsonArray("object_tags").AddString(tag);
         return this;
     }
 
     public List<string> ObjectTags() {
         List<string> tags = [];
-        JsonArray tagsArray = json.GetJsonArray("tags");
+        JsonArray tagsArray = json.GetJsonArray("object_tags");
         for (int i = 0; i < tagsArray.Count(); i++) {
             tags.Add(tagsArray.GetString(i));
         }
