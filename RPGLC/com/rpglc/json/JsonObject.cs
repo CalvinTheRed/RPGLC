@@ -90,42 +90,42 @@ public class JsonObject {
     // =================================================================================================================
 
     public JsonObject PutJsonObject(string key, JsonObject? jsonObject) {
-        if (jsonObject != null) {
+        if (jsonObject is not null) {
             data[key] = jsonObject.AsDict();
         }
         return this;
     }
 
     public JsonObject PutJsonArray(string key, JsonArray? jsonArray) {
-        if (jsonArray != null) {
+        if (jsonArray is not null) {
             data[key] = jsonArray.AsList();
         }
         return this;
     }
 
     public JsonObject PutString(string key, string? s) {
-        if (s != null) {
+        if (s is not null) {
             data[key] = s;
         }
         return this;
     }
 
     public JsonObject PutLong(string key, long? l) {
-        if (l != null) {
+        if (l is not null) {
             data[key] = l;
         }
         return this;
     }
 
     public JsonObject PutDouble(string key, double? d) {
-        if (d != null) {
+        if (d is not null) {
             data[key] = d;
         }
         return this;
     }
 
     public JsonObject PutBool(string key, bool? b) {
-        if (b != null) {
+        if (b is not null) {
             data[key] = b;
         }
         return this;
@@ -136,7 +136,7 @@ public class JsonObject {
     // =================================================================================================================
 
     public JsonObject? RemoveJsonObject(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is Dictionary<string, object> dict) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is Dictionary<string, object> dict) {
             if (data.Remove(key)) {
                 return new JsonObject(dict);
             }
@@ -145,7 +145,7 @@ public class JsonObject {
     }
 
     public JsonArray? RemoveJsonArray(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is List<object> list) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is List<object> list) {
             if (data.Remove(key)) {
                 return new JsonArray(list);
             }
@@ -154,7 +154,7 @@ public class JsonObject {
     }
 
     public string? RemoveString(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is string s) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is string s) {
             if (data.Remove(key)) {
                 return s;
             }
@@ -163,7 +163,7 @@ public class JsonObject {
     }
 
     public long? RemoveLong(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is long l) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is long l) {
             if (data.Remove(key)) {
                 return l;
             }
@@ -172,7 +172,7 @@ public class JsonObject {
     }
 
     public double? RemoveDouble(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is double d) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is double d) {
             if (data.Remove(key)) {
                 return d;
             }
@@ -181,7 +181,7 @@ public class JsonObject {
     }
 
     public bool? RemoveBool(string key) {
-        if (key != null && data.TryGetValue(key, out object? value) && value is bool b) {
+        if (key is not null && data.TryGetValue(key, out object? value) && value is bool b) {
             if (data.Remove(key)) {
                 return b;
             }

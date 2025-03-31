@@ -399,6 +399,11 @@ public class RPGLObject : TaggableContent {
             resources.AddRange(rpglItem.GetResourcesForSlots(slotsForEquippedItems[itemUuid]));
         }
 
+        // add origin object resources if proxy
+        if (GetProxy() ?? false && GetOriginObject() is not null) {
+            resources.AddRange(RPGL.GetRPGLObject(GetOriginObject()).GetResourceObjects());
+        }
+
         return resources;
     }
 
@@ -696,7 +701,7 @@ public class RPGLObject : TaggableContent {
         GetHealthTemporary().PutJsonArray("rider_effects", new());
         for (int i = 0; i < riderEffects.Count(); i++) {
             RPGLEffect? riderEffect = RPGL.GetRPGLEffect(riderEffects.GetString(i));
-            if (riderEffect != null) {
+            if (riderEffect is not null) {
                 RemoveEffect(riderEffect.GetUuid());
                 RPGL.RemoveRPGLEffect(riderEffect);
             }
