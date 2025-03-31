@@ -55,7 +55,7 @@ public class GetEvents : Subevent {
         return this;
     }
 
-    public List<RPGLEvent> GetEventObjects() {
+    public List<RPGLEvent> Events() {
         List<RPGLEvent> events = [];
         JsonArray eventIds = json.GetJsonArray("events");
         for (int i = 0; i < eventIds.Count(); i++) {
