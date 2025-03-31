@@ -432,4 +432,36 @@ public class RPGLObjectTest {
         Assert.Empty(resources);
     }
 
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "gets object tags")]
+    public void GetsObjectTags() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.AddTag("test_tag_1");
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy", rpglObject.GetUuid(), rpglObject.GetUuid());
+        rpglEffect.Join(new JsonObject().LoadFromString("""
+            {
+                "subevent_filters": {
+                    "get_object_tags": [
+                        {
+                            "conditions": [ ],
+                            "functions": [
+                                {
+                                    "function": "add_object_tag",
+                                    "tag": "test_tag_2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """));
+
+        List<string> objectTags = rpglObject.GetObjectTags(context);
+        Assert.Contains("test_tag_1", objectTags);
+        Assert.Contains("test_tag_2", objectTags);
+    }
+
 };

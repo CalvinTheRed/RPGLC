@@ -462,7 +462,7 @@ public class RPGLObject : TaggableContent {
             .Prepare(context, GetPosition())
             .SetTarget(this)
             .Invoke(context, GetPosition())
-            .GetEventObjects());
+            .Events());
 
         return events;
     }
@@ -715,6 +715,19 @@ public class RPGLObject : TaggableContent {
     public RPGLObject SetTemporaryHitPoints(long temporaryHitPoints) {
         GetHealthTemporary().PutLong("count", temporaryHitPoints);
         return this;
+    }
+
+    // =====================================================================
+    // Other misc helper methods.
+    // =====================================================================
+
+    public List<string> GetObjectTags(RPGLContext context) {
+        return new GetObjectTags()
+            .SetSource(this)
+            .Prepare(context, GetPosition())
+            .SetTarget(this)
+            .Invoke(context, GetPosition())
+            .ObjectTags();
     }
 
 };

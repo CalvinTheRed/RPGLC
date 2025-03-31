@@ -18,6 +18,7 @@ public abstract class Function(string functionId) {
             new AddDamage(),
             new AddEvent(),
             new AddHealing(),
+            new AddObjectTag(),
             new AddSubeventTag(),
             new AddVampirism(),
             new GrantAdvantage(),
