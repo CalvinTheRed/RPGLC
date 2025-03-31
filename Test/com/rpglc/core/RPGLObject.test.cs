@@ -4,6 +4,7 @@ using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils.function;
 using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.core;
@@ -142,8 +143,8 @@ public class RPGLObjectTest {
     [DummyCounterManager]
     [ExtraEventsMock]
     [ExtraResourcesMock]
-    [Fact(DisplayName = "invokes event")]
-    public void InvokesEvent() {
+    [Fact(DisplayName = "invokes event as self")]
+    public void InvokesEventAsSelf() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext();
         context.Add(rpglObject);
@@ -160,6 +161,63 @@ public class RPGLObjectTest {
         );
 
         Assert.Equal(1, DummySubevent.Counter);
+
+        Assert.Equal(9, rpglResource.GetAvailableUses());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DummyCounterManager]
+    [ExtraEventsMock]
+    [ExtraResourcesMock]
+    [Fact(DisplayName = "invokes event as proxy")]
+    public void InvokesEventAsProxy() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLObject proxyObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetOriginObject(rpglObject.GetUuid())
+            .SetProxy(true);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject)
+            .Add(proxyObject);
+
+        RPGLResource rpglResource = RPGLFactory.NewResource("test:complex_resource");
+        rpglObject.GiveResource(rpglResource);
+
+        _ = RPGLFactory.NewEffect("test:dummy")
+            .SetTarget(rpglObject.GetUuid())
+            .Join(new JsonObject().LoadFromString("""
+                {
+                    "subevent_filters": {
+                        "dummy_subevent": [
+                            {
+                                "conditions": [
+                                    {
+                                        "condition": "objects_match",
+                                        "effect": "target",
+                                        "subevent": "source"
+                                    }
+                                ],
+                                "functions": [
+                                    {
+                                        "function": "dummy_function"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+                """));
+
+        proxyObject.InvokeEvent(
+            RPGLFactory.NewEvent("test:complex_event"),
+            new(),
+            [rpglResource],
+            [rpglObject],
+            context
+        );
+
+        Assert.Equal(1, DummySubevent.Counter);
+        Assert.Equal(1, DummyFunction.Counter);
 
         Assert.Equal(9, rpglResource.GetAvailableUses());
     }
