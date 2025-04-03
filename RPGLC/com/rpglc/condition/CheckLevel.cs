@@ -11,7 +11,7 @@ public class CheckLevel : Condition {
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         string classDatapackId = conditionJson.GetString("class");
-        long level = classDatapackId is null
+        long level = classDatapackId == "*"
             ? rpglObject.GetLevel()
             : rpglObject.GetLevel(classDatapackId);
         

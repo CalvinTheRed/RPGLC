@@ -24,8 +24,8 @@ public class EquippedItemHasTagTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "item does have tag")]
-    public void ItemDoesHaveTag() {
+    [Fact(DisplayName = "slot does have tag")]
+    public void SlotDoesHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
         rpglItem.AddTag("test_tag");
 
@@ -56,8 +56,8 @@ public class EquippedItemHasTagTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "item does not have tag")]
-    public void ItemDoesNotHaveTag() {
+    [Fact(DisplayName = "slot does not have tag")]
+    public void SlotDoesNotHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
@@ -75,6 +75,69 @@ public class EquippedItemHasTagTest {
                         "object": "source"
                     },
                     "slot": "test_slot",
+                    "tag": "test_tag"
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.False(result);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "equipment does have tag")]
+    public void EquipmentDoesHaveTag() {
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
+        rpglItem.AddTag("test_tag");
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject.EquipItem(rpglItem.GetUuid(), "test_slot");
+
+        bool result = new EquippedItemHasTag().Evaluate(
+            new(),
+            new DummySubevent().SetSource(rpglObject),
+            new JsonObject().LoadFromString("""
+                {
+                    "condition": "equipped_item_has_tag",
+                    "object": {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    "slot": "*",
+                    "tag": "test_tag"
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.True(result);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "equipment does not have tag")]
+    public void EquipmentDoesNotHaveTag() {
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GiveItem(rpglItem.GetUuid());
+        rpglObject.EquipItem(rpglItem.GetUuid(), "test_slot");
+
+        bool result = new EquippedItemHasTag().Evaluate(
+            new(),
+            new DummySubevent().SetSource(rpglObject),
+            new JsonObject().LoadFromString("""
+                {
+                    "condition": "equipped_item_has_tag",
+                    "object": {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    "slot": "*",
                     "tag": "test_tag"
                 }
                 """),

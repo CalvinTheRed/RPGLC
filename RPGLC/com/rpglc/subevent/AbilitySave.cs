@@ -1,10 +1,9 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.subevent;
 
 namespace com.rpglc.subevent;
 
-public class AbilitySave : Subevent {
+public class AbilitySave : Subevent, IAbilitySubevent {
 
     public AbilitySave() : base("ability_save") { }
 
@@ -41,7 +40,7 @@ public class AbilitySave : Subevent {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "ability": "{{json.GetString("ability")}}",
+                    "ability": "{{GetAbility(context)}}",
                     "skill": "{{GetSkill()}}",
                     "tags": {{GetTags()}},
                     "determined": {{json.GetJsonArray("determined")}}
@@ -70,6 +69,10 @@ public class AbilitySave : Subevent {
 
     public override AbilitySave SetTarget(RPGLObject target) {
         return (AbilitySave) base.SetTarget(target);
+    }
+
+    public string GetAbility(RPGLContext context) {
+        return json.GetString("ability");
     }
 
     private void CalculateDifficultyClass(RPGLContext context) {
