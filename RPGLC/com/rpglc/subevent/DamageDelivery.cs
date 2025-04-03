@@ -101,7 +101,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
         JsonArray damageArray = json.GetJsonArray("damage");
         for (int i = 0; i < damageArray.Count(); i++) {
             JsonObject damageJson = damageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, damageJson.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == damageJson.GetString("damage_type")) {
                 JsonArray dice = damageJson.GetJsonArray("dice");
                 for (int j = 0; j < dice.Count(); j++) {
                     JsonObject die = dice.GetJsonObject(j);

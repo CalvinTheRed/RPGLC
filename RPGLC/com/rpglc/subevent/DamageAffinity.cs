@@ -93,7 +93,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("immunity", true);
             }
         }
@@ -104,7 +104,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("resistance", true);
             }
         }
@@ -115,7 +115,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("vulnerability", true);
             }
         }
@@ -126,7 +126,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("immunity_revoked", true);
             }
         }
@@ -137,7 +137,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("resistance_revoked", true);
             }
         }
@@ -148,7 +148,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("vulnerability_revoked", true);
             }
         }

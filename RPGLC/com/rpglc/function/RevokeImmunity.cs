@@ -10,7 +10,7 @@ public class RevokeImmunity : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {
-            damageAffinity.RevokeImmunity(functionJson.GetString("damage_type") ?? "");
+            damageAffinity.RevokeImmunity(functionJson.GetString("damage_type") ?? "*");
         }
     }
 

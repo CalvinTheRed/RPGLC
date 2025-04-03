@@ -44,7 +44,7 @@ public interface IVampiricSubevent {
 
         for (int i = 0; i < vampirismArray.Count(); i++) {
             JsonObject vampirismJson = vampirismArray.GetJsonObject(i);
-            string vampiricDamageType = vampirismJson.GetString("damage_type") ?? "";
+            string vampiricDamageType = vampirismJson.GetString("damage_type") ?? "*";
 
             long vampiricHealing = CalculationSubevent.Scale(
                 GetVampiricDamage(damageByType, vampiricDamageType),
@@ -99,7 +99,7 @@ public interface IVampiricSubevent {
     }
 
     private static long GetVampiricDamage(JsonObject damageByType, string vampiricDamageType) {
-        if (Equals(vampiricDamageType, "")) {
+        if (vampiricDamageType == "*") {
             long vampiricDamage = 0L;
             foreach(string key in damageByType.AsDict().Keys) {
                 vampiricDamage += (long) damageByType.GetLong(key);

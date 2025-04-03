@@ -10,7 +10,7 @@ public class GrantResistance : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {
-            damageAffinity.GrantResistance(functionJson.GetString("damage_type") ?? "");
+            damageAffinity.GrantResistance(functionJson.GetString("damage_type") ?? "*");
         }
     }
 

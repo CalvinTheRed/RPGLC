@@ -456,8 +456,8 @@ public class DamageRollTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "maximizes untyped damage dice")]
-    public void MaximizesUntypedDamageDice() {
+    [Fact(DisplayName = "maximizes wild card damage dice")]
+    public void MaximizesWildCardDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -483,7 +483,7 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.MaximizeDamageDice("");
+        damageRoll.MaximizeDamageDice("*");
 
         Assert.Equal("""
             [

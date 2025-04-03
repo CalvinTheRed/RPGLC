@@ -239,9 +239,9 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
                 );
         } else if (formula == "level") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
-            string? classDatapackId = formulaJson.GetString("class");
+            string classDatapackId = formulaJson.GetString("class") ?? "*";
             return new JsonObject()
-                .PutLong("bonus", classDatapackId is null 
+                .PutLong("bonus", classDatapackId == "*"
                     ? rpglObject.GetLevel() 
                     : rpglObject.GetLevel(classDatapackId)
                 )

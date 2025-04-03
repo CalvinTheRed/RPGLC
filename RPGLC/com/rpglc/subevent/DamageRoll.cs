@@ -110,7 +110,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
