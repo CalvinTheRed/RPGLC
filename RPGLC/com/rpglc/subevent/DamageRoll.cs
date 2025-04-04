@@ -76,7 +76,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
@@ -89,17 +89,21 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void SetDamageDice(string damageType, long set, long lowerBound, long upperBound) {
+    public void SetDamageDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+        string damageType = functionJson.GetString("damage_type") ?? "*";
+        long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
+        long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
+        
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
                     long roll = (long) typedDamageDie.GetLong("roll");
                     if (roll < upperBound && roll > lowerBound) {
-                        typedDamageDie.PutLong("roll", set);
+                        typedDamageDie.PutLong("roll", CalculationSubevent.ProcessSetJson(rpglEffect, this, functionJson.GetJsonObject("set"), context));
                     }
                 }
             }

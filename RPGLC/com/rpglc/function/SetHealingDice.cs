@@ -10,11 +10,7 @@ public class SetHealingDice : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {
-            healingRoll.SetHealingDice(
-                (long) functionJson.GetLong("set"),
-                functionJson.GetLong("lower_bound") ?? 0L,
-                functionJson.GetLong("upper_bound") ?? long.MaxValue
-            );
+            healingRoll.SetHealingDice(rpglEffect, functionJson, context);
         }
     }
 

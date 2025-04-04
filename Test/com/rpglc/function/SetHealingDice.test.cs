@@ -59,7 +59,10 @@ public class SetHealingDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_healing_dice",
-                    "set": 4
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    }
                 }
                 """),
             new DummyContext(),
@@ -177,12 +180,15 @@ public class SetHealingDiceTest {
             .Prepare(new DummyContext(), new());
 
         new SetHealingDice().Execute(
-            new RPGLEffect(),
+            new(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_healing_dice",
-                    "set": 4,
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    },
                     "lower_bound": 2,
                     "upper_bound": 5
                 }

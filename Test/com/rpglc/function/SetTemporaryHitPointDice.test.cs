@@ -59,7 +59,10 @@ public class SetTemporaryHitPointDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_temporary_hit_point_dice",
-                    "set": 4
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    }
                 }
                 """),
             new DummyContext(),
@@ -182,7 +185,10 @@ public class SetTemporaryHitPointDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_temporary_hit_point_dice",
-                    "set": 4,
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    },
                     "lower_bound": 2,
                     "upper_bound": 5
                 }

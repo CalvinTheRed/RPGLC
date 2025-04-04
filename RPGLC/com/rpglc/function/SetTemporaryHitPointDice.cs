@@ -10,11 +10,7 @@ public class SetTemporaryHitPointDice : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
-            temporaryHitPointRoll.SetTemporaryHitPointDice(
-                (long) functionJson.GetLong("set"),
-                functionJson.GetLong("lower_bound") ?? 0L,
-                functionJson.GetLong("upper_bound") ?? long.MaxValue
-            );
+            temporaryHitPointRoll.SetTemporaryHitPointDice(rpglEffect, functionJson, context);
         }
     }
 

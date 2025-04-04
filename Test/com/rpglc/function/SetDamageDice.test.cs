@@ -61,7 +61,10 @@ public class SetDamageDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_damage_dice",
-                    "set": 4
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    }
                 }
                 """),
             new DummyContext(),
@@ -188,7 +191,10 @@ public class SetDamageDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "set_damage_dice",
-                    "set": 4,
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    },
                     "lower_bound": 2,
                     "upper_bound": 5
                 }
@@ -318,7 +324,10 @@ public class SetDamageDiceTest {
                 {
                     "function": "set_damage_dice",
                     "damage_type": "fire",
-                    "set": 4
+                    "set": {
+                        "formula": "number",
+                        "number": 4
+                    }
                 }
                 """),
             new DummyContext(),
@@ -446,7 +455,10 @@ public class SetDamageDiceTest {
                 {
                     "function": "set_damage_dice",
                     "damage_type": "fire",
-                    "set": 4,
+                    "set": {
+                      "formula": "number",
+                      "number": 4
+                    },
                     "lower_bound": 2,
                     "upper_bound": 5
                 }

@@ -77,7 +77,9 @@ public class HealingRoll : Subevent {
         return this;
     }
 
-    public HealingRoll SetHealingDice(long set, long lowerBound, long upperBound) {
+    public HealingRoll SetHealingDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+        long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
+        long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         JsonArray healingArray = json.GetJsonArray("healing");
         for (int i = 0; i < healingArray.Count(); i++) {
             JsonArray dice = healingArray.GetJsonObject(i).GetJsonArray("dice");
@@ -85,7 +87,7 @@ public class HealingRoll : Subevent {
                 JsonObject die = dice.GetJsonObject(j);
                 long roll = (long) die.GetLong("roll");
                 if (roll <= upperBound && roll >= lowerBound) {
-                    die.PutLong("roll", set);
+                    die.PutLong("roll", CalculationSubevent.ProcessSetJson(rpglEffect, this, functionJson.GetJsonObject("set"), context));
                 }
             }
         }

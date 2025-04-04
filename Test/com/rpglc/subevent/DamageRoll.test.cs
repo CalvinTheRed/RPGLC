@@ -203,7 +203,7 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.RerollDamageDice("", 1, 6);
+        damageRoll.RerollDamageDice("*", 1, 6);
 
         Assert.Equal("""
             [
@@ -271,7 +271,21 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.SetDamageDice("fire", 6, 2, 5);
+        damageRoll.SetDamageDice(
+            new(),
+            new JsonObject().LoadFromString("""
+                {
+                    "damage_type": "fire",
+                    "lower_bound": 2,
+                    "upper_bound": 5,
+                    "set": {
+                        "formula": "number",
+                        "number": 6
+                    }
+                }
+                """),
+            new DummyContext()
+        );
 
         Assert.Equal("""
             [
@@ -324,8 +338,8 @@ public class DamageRollTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets untyped damage dice")]
-    public void SetsUntypedDamageDice() {
+    [Fact(DisplayName = "sets wild card damage dice")]
+    public void SetsWildCardDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -351,7 +365,21 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.SetDamageDice("", 5, 1, 6);
+        damageRoll.SetDamageDice(
+            new(),
+            new JsonObject().LoadFromString("""
+                {
+                    "damage_type": "*",
+                    "lower_bound": 1,
+                    "upper_bound": 6,
+                    "set": {
+                        "formula": "number",
+                        "number": 5
+                    }
+                }
+                """),
+            new DummyContext()
+        );
 
         Assert.Equal("""
             [

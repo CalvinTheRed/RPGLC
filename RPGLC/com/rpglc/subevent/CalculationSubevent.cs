@@ -347,8 +347,8 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
                 .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
                 .GetEffectiveProficiencyBonus(context);
         } else if (formula == "level") {
-            string? classDatapackId = formulaJson.GetString("class");
-            if (classDatapackId is null) {
+            string classDatapackId = formulaJson.GetString("class") ?? "*";
+            if (classDatapackId == "*") {
                 setValue = RPGLEffect
                     .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
                     .GetLevel();
@@ -360,10 +360,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         } else {
             return 0L;
         }
-        JsonObject scale = formulaJson.GetJsonObject("scale") ?? new JsonObject()
-            .PutLong("numerator", 1L)
-            .PutLong("denominator", 1L)
-            .PutBool("round_up", false);
+        JsonObject scale = formulaJson.GetJsonObject("scale") ?? new ();
         return Scale(setValue, scale);
     }
 

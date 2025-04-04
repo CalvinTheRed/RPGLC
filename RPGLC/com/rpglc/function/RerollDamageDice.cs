@@ -11,7 +11,7 @@ public class RerollDamageDice : Function {
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageRoll damageRoll) {
             damageRoll.RerollDamageDice(
-                functionJson.GetString("damage_type") ?? "",
+                functionJson.GetString("damage_type") ?? "*",
                 functionJson.GetLong("lower_bound") ?? 0L,
                 functionJson.GetLong("upper_bound") ?? long.MaxValue
             );
