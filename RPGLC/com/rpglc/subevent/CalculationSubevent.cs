@@ -432,72 +432,6 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     /// <param name="context"></param>
     /// <returns></returns>
     public static long ProcessSetJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
-        /*[
-            {
-                "formula": "number",
-                "number": #,
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "modifier",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "ability",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "level",
-                "class": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            }
-        ]*/
         long setValue;
         string formula = formulaJson.GetString("formula");
         if (formula == "number") {
@@ -528,8 +462,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         } else {
             return 0L;
         }
-        JsonObject scale = formulaJson.GetJsonObject("scale") ?? new ();
-        return Scale(setValue, scale);
+        return Scale(setValue, formulaJson.GetJsonObject("scale") ?? new());
     }
 
 };
