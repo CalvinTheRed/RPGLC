@@ -4,6 +4,21 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.condition;
 
+/// <summary>
+///   Returns true if the nested condition returns false.
+///   
+///   <code>
+///   {
+///     "condition": "invert",
+///     "invert": &lt;nested condition&gt;
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"invert" is a nested condition.</item>
+///   </list>
+///   
+/// </summary>
 public class Invert : Condition {
 
     public Invert() : base("invert") { }

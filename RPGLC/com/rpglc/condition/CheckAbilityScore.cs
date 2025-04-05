@@ -4,6 +4,30 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.condition;
 
+/// <summary>
+///   Returns true if the specified object's ability score satisfies a specified condition.
+///   
+///   <code>
+///   {
+///     "condition": "check_ability_score",
+///     "object": {
+///       "from": "subevent" | "effect",
+///       "object": "source" | "target"
+///     },
+///     "ability": &lt;string&gt;,
+///     "comparison": "&lt;" | "&lt;=" | "&gt;" | "&gt;=" | "=" | "!=",
+///     "compare_to": &lt;long&gt;
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"object" indicates which object's ability score is being checked.</item>
+///     <item>"ability" indicates which ability score is being checked.</item>
+///     <item>"comparison" the comparative operator to use in the order of `ability comparison compare_to`.</item>
+///     <item>"compare_to" the value the ability score is compared to.</item>
+///   </list>
+///   
+/// </summary>
 public class CheckAbilityScore : Condition {
 
     public CheckAbilityScore() : base("check_ability_score") { }

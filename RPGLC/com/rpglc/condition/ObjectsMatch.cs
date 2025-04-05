@@ -4,6 +4,23 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.condition;
 
+/// <summary>
+///   Returns true if the specified objects are the same object.
+///   
+///   <code>
+///   {
+///     "condition": "objects_match",
+///     "subevent": "source" | "target",
+///     "effect": "source" | "target"
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"subevent" indicates which object drawn from the subevent to reference in the comparison.</item>
+///     <item>"effect" indicates which object drawn from the effect to reference in the comparison.</item>
+///   </list>
+///   
+/// </summary>
 public class ObjectsMatch : Condition {
 
     public ObjectsMatch() : base("objects_match") { }

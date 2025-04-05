@@ -4,6 +4,22 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.condition;
 
+/// <summary>
+///   Returns true if at least one nested condition returns true. If a nested condition returns true, none of the following conditions will be evaluated.
+///
+///   <code>
+///   {
+///     "condition": "any",
+///     "conditions": [
+///       &lt;nested conditions here&gt;
+///     ]
+///   }
+///   </code>
+///   <list type="bullet">
+///     <item>"conditions" is a list of 1 or more nested conditions.</item>
+///   </list>
+///   
+/// </summary>
 public class Any : Condition {
 
     public Any() : base("any") { }
