@@ -9,6 +9,33 @@ public interface IVampiricSubevent {
         return subevent.json.GetJsonArray("vampirism");
     }
 
+    /// <summary>
+    /// <b>Vampirism Formula</b>
+    /// <br />
+    /// The following is the vampirism formula recognized by RPGLC. Note that the "scale" field is optional, and will default to a value of
+    /// <code>
+    /// {
+    ///   "numerator": 1,
+    ///   "denominator": 1,
+    ///   "round_up": false
+    /// }
+    /// </code>
+    /// if not specified. Note also that the "damage_type" field is optional, and will default to a value of "*" if not specified. This value indicates that the vampirism formula applies across all damage types, rather than only applying to a single damage type.
+    /// 
+    /// <code>
+    /// {
+    ///   "damage_type": &lt;string = "*"&gt;,
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// </summary>
+    /// <param name="subevent"></param>
+    /// <param name="vampirismJson"></param>
     public void AddVampirism(Subevent subevent, JsonObject vampirismJson) {
         if (subevent is IVampiricSubevent) {
             GetVampirism(subevent).AddJsonObject(vampirismJson);
