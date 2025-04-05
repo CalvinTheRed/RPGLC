@@ -127,76 +127,127 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         }
     }
 
+    /// <summary>
+    /// <b>Bonus Formulae</b>
+    /// <br />
+    /// The following is a list of bonus formulae recognized by RPGLC. Note that all "scale" fields are optional, and will default to a value of
+    /// <code>
+    /// {
+    ///   "numerator": 1,
+    ///   "denominator": 1,
+    ///   "round_up": false
+    /// }
+    /// </code>
+    /// if not specified. Note also that if these formulas are used to represent damage bonuses, each must have an additional "damage_type" field storing a string representing the damage type being added.
+    /// 
+    /// <br /><br />
+    /// <b>range</b>
+    /// <br />
+    /// Rolls a collection of dice and adds a defined bonus to the sum.
+    /// <code>
+    /// {
+    ///   "formula": "range",
+    ///   "bonus": &lt;long&gt;,
+    ///   "dice": [
+    ///     { "count": &lt;long&gt;, "size": &lt;long&gt; }
+    ///   ],
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>modifier</b>
+    /// <br />
+    /// Calculates an object's modifier for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "modifier",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>ability</b>
+    /// <br />
+    /// Calculates an object's score for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "ability",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>proficiency</b>
+    /// <br />
+    /// Calculates an object's proficiency bonus.
+    /// <code>
+    /// {
+    ///   "formula": "proficiency",
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>level</b>
+    /// <br />
+    /// Calculates an object's level in a specified class.
+    /// <code>
+    /// {
+    ///   "formula": "level",
+    ///   "class": &lt;string = "*"&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    /// <param name="rpglEffect"></param>
+    /// <param name="subevent"></param>
+    /// <param name="formulaJson"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public static JsonObject ProcessBonusJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
-        /*[
-            {
-                "formula": "range",
-                "bonus": #,
-                "dice": [
-                    { "count": #, "size": #, "determined": [ # ] }
-                ],
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "modifier",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "ability",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "level",
-                "class": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            }
-        ]*/
         string formula = formulaJson.GetString("formula");
         if (formula == "range") {
             return new JsonObject()
@@ -263,6 +314,123 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         }
     }
 
+    /// <summary>
+    /// <b>Set Formulae</b>
+    /// <br />
+    /// The following is a list of set formulae recognized by RPGLC. Note that all "scale" fields are optional, and will default to a value of
+    /// <code>
+    /// {
+    ///   "numerator": 1,
+    ///   "denominator": 1,
+    ///   "round_up": false
+    /// }
+    /// </code>
+    /// if not specified. Note also that if these formulas are used to represent damage bonuses, each must have an additional "damage_type" field storing a string representing the damage type being added.
+    /// 
+    /// <br /><br />
+    /// <b>number</b>
+    /// <br />
+    /// Returns a defined value.
+    /// <code>
+    /// {
+    ///   "formula": "number",
+    ///   "number": &lt;long&gt;,
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>modifier</b>
+    /// <br />
+    /// Calculates an object's modifier for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "modifier",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>ability</b>
+    /// <br />
+    /// Calculates an object's score for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "ability",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>proficiency</b>
+    /// <br />
+    /// Calculates an object's proficiency bonus.
+    /// <code>
+    /// {
+    ///   "formula": "proficiency",
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>level</b>
+    /// <br />
+    /// Calculates an object's level in a specified class.
+    /// <code>
+    /// {
+    ///   "formula": "level",
+    ///   "class": &lt;string = "*"&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    /// <param name="rpglEffect"></param>
+    /// <param name="subevent"></param>
+    /// <param name="formulaJson"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public static long ProcessSetJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
         /*[
             {
