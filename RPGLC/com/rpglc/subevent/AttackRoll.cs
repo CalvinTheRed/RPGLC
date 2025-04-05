@@ -33,7 +33,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     public override AttackRoll Prepare(RPGLContext context, JsonArray originPoint) {
         base.Prepare(context, originPoint);
         json.PutIfAbsent("withhold_damage_modifier", false);
-        json.PutIfAbsent("use_origin_attack_ability", false);
+        json.PutIfAbsent("use_origin_ability", false);
         json.PutIfAbsent("damage", new JsonArray());
         json.PutIfAbsent("vampirism", new JsonArray());
 
@@ -58,7 +58,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                             "object": {
                                 "from": "subevent",
                                 "object": "source",
-                                "as_origin": {{json.GetBool("use_origin_attack_ability").ToString().ToLower()}}
+                                "as_origin": {{json.GetBool("use_origin_ability").ToString().ToLower()}}
                             }
                         }
                     ]    
@@ -120,7 +120,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     }
 
     public string GetAbility(RPGLContext context) {
-        return json.GetString("attack_ability");
+        return json.GetString("ability");
     }
 
     private void GetBaseDamage(RPGLContext context, JsonArray originPoint) {
@@ -155,7 +155,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                                 "object": {
                                     "from": "subevent",
                                     "object": "source",
-                                    "as_origin": {{json.GetBool("use_origin_attack_ability").ToString().ToLower()}}}
+                                    "as_origin": {{json.GetBool("use_origin_ability").ToString().ToLower()}}}
                             }
                         ]
                     }
