@@ -4,6 +4,59 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Performs an attack roll against a target. Different results may occur on a hit or miss. Damage defined in "damage" is only dealt on a hit.
+///   
+///   <code>
+///   {
+///     "subevent": "attack_roll",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "save_ability": &lt;string&gt;,
+///     "difficulty_class": &lt;long = null&gt;,
+///     "difficulty_class_ability": &lt;string = null&gt;,
+///     "use_origin_difficulty_class_ability": &lt;bool = false&gt;,
+///     "damage": [
+///       &lt;bonus formula&gt;
+///     ],
+///     "damage_on_pass": &lt;"all" | "half" | "none" = "half"&gt;,
+///     "vampirism": [
+///       &lt;vampirism formula&gt;
+///     ],
+///     "pass": [
+///       &lt;nested subevent&gt;
+///     ],
+///     "fail": [
+///       &lt;nested subevent&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"save_ability" indicates what ability is used to make the saving throw.</item>
+///     <item>"difficulty_class" is an optional field and it will default to a value of null if left unspecified. This field indicates what value, if any, to use as the difficulty class. If null, the difficulty class will not be assigned in this way.</item>
+///     <item>"difficulty_class_ability" is an optional field and it will default to a value of null if left unspecified. This field indicates what ability, if any, should be used to calculate the save's difficulty class. If null, the difficulty class will not be calculated in this way.</item>
+///     <item>"use_origin_difficulty_class_ability" is an optional field and it will default to a value of false if left unspecified. If true, the save_ability score used for this subevent will be taken from the target's origin object, instead of from the target.</item>
+///     <item>"damage" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how much damage is dealt by the saving throw on a failed save, if any.</item>
+///     <item>"damage_on_pass" is an optional field and it will default to a value of "half" if left unspecified. This field incidates what proportion of the subevent's damage will be dealt on a successful save.</item>
+///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
+///     <item>"pass" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target passes its save. The damage defined by "damage" will be dealt in accordance with the value of "damage_on_pass".</item>
+///     <item>"fail" is an optional field and it will default to a vlaue of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source fails its save. The damage defined by "damage" will be dealt in full.</item>
+///   </list>
+///   
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public SavingThrow() : base("saving_throw") { }

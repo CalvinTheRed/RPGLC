@@ -4,7 +4,7 @@ using com.rpglc.json;
 namespace com.rpglc.subevent;
 
 /// <summary>
-///   Collects damage for a damaging subevent.
+///   Delivers calculated damage to an object.
 ///   
 ///   <br /><br />
 ///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
