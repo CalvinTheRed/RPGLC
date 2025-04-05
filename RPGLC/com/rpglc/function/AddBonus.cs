@@ -4,6 +4,33 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.function;
 
+/// <summary>
+///   Adds a list of bonuses to a calculation subevent according to a defined formula.
+///   
+///   <code>
+///   {
+///     "function": "add_bonus",
+///     "bonus": [
+///       &lt;bonus formula&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"bonus" is a list of bonus formulae to add to a calculation-type subevent.</item>
+///   </list>
+///   
+///   <b>Compatible Subevents</b>
+///   <list type="bullet">
+///     <item>CalculateAbilityScore</item>
+///     <item>CalculateArmorClass</item>
+///     <item>CalculateCriticalHitThreshhold</item>
+///     <item>CalculateDifficultyClass</item>
+///     <item>CalculateMaximumHitPoints</item>
+///     <item>CalculateProficiencyBonus</item>
+///   </list>
+///   
+/// </summary>
 public class AddBonus : Function {
 
     public AddBonus() : base("add_bonus") { }
