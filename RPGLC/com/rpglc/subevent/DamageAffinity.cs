@@ -3,6 +3,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Determines an object's affinities for damage types in a DamageDelivery subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class DamageAffinity : Subevent, IDamageTypeSubevent {
 
     public DamageAffinity() : base("damage_affinity") { }

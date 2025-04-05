@@ -3,6 +3,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Calculates the value of an object's ability score.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class CalculateAbilityScore : CalculationSubevent, IAbilitySubevent {
     
     public CalculateAbilityScore() : base("calculate_ability_score") { }

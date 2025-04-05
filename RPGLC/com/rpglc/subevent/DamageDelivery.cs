@@ -3,6 +3,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects damage for a damaging subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class DamageDelivery : Subevent, IDamageTypeSubevent {
 
     public DamageDelivery() : base("damage_delivery") { }

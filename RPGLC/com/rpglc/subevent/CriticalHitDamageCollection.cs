@@ -3,6 +3,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects damage for a critical hit. By default, this subevent will contain all damage collected by the base DamageCalculation of the parent AttackRoll subevent, but with twice as many dice. Any further damage bonuses will not be doubled.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
 
     public CriticalHitDamageCollection() : base("critical_hit_damage_collection") { }

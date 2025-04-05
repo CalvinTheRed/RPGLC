@@ -4,6 +4,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Performs an ability check and stores the result. This subevent does not precipitate any special behavior on its own.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class AbilityCheck : RollSubevent, IAbilitySubevent {
 
     public AbilityCheck() : base("ability_check") { }

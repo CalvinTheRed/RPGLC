@@ -3,6 +3,24 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Calculates the threshhold at which point an attack will become a critical hit.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class CalculateCriticalHitThreshhold : CalculationSubevent {
 
     public CalculateCriticalHitThreshhold() : base("calculate_critical_hit_threshhold") { }

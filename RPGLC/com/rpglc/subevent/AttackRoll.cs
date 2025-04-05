@@ -4,6 +4,57 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Performs an attack roll against a target. Different results may occur on a hit or miss. Damage defined in "damage" is only dealt on a hit.
+///   
+///   <code>
+///   {
+///     "subevent": "attack_roll",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "attack_type": &lt;string&gt;,
+///     "ability": &lt;string&gt;,
+///     "use_origin_ability": &lt;bool = false&gt;,
+///     "damage": [
+///       &lt;bonus formula&gt;
+///     ],
+///     "withhold_damage_modifier": &lt;bool = false&gt;,
+///     "vampirism": [
+///       &lt;vampirism formula&gt;
+///     ],
+///     "hit": [
+///       &lt;nested subevent&gt;
+///     ],
+///     "miss": [
+///       &lt;nested_subevent&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"attack_type" indicates what kind of attack is being made (normally "melee", "ranged", or "thrown"). This value will be promoted to the subevent's tags.</item>
+///     <item>"ability" indicates what ability is used to make the ability check.</item>
+///     <item>"use_origin_ability" is an optional field and it will default to a value of false if left unspecified. If true, the ability score used for this subevent will be taken from the source's origin object, instead of from the source.</item>
+///     <item>"damage" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how much damage the attack deals on a hit, if any.</item>
+///     <item>"withhold_damage_modifier" is an optional field and it will default to a value of false if left unspecified. If true, the subevent will not add the modifier of the attack's ability score to the subevent's base damage roll.</item>
+///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
+///     <item>"hit" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source hits the target. The damage defined by "damage" will be dealt on a hit.</item>
+///     <item>"miss" is an optional field and it will default to a vlaue of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source misses the target. The damage defined by "damage" will not be dealt on a miss.</item>
+///   </list>
+///   
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public AttackRoll() : base("attack_roll") { }

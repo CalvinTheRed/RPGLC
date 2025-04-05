@@ -3,6 +3,27 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects damage for a damaging subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <i>Note that all damaging subevents will create two DamageCollection subevents. The first will have the "base" tag, and will represent damage that is applied to all targets of the damaging subevent. The second will have the "target" tag, and will represent damage that is only applied to a specific target of the damaging subevent.</i>
+///   
+///   <br /><br />
+///   <b>Compatible Conditions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+///   <b>Compatible Functions</b>
+///   <list type="bullet">
+///     <item></item>
+///   </list>
+///   
+/// </summary>
 public class DamageCollection : Subevent, IDamageTypeSubevent {
 
     public DamageCollection() : base("damage_collection") { }
