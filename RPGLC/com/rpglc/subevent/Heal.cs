@@ -23,16 +23,6 @@ namespace com.rpglc.subevent;
 ///     <item>"healing" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how many hit points will be restored, if any.</item>
 ///   </list>
 ///   
-///   <b>Compatible Conditions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
 /// </summary>
 public class Heal : Subevent {
 

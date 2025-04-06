@@ -11,14 +11,22 @@ namespace com.rpglc.subevent;
 ///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Conditions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>CheckSkill</item>
+///     <item>CheckAbility</item>
 ///   </list>
 ///   
-///   <b>Compatible Functions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///     <item>GrantAdvantage</item>
+///     <item>GrantDisadvantage</item>
+///     <item>GrantSkillExpertise</item>
+///     <item>GrantSkillHalfProficiency</item>
+///     <item>GrantSkillProficiency</item>
 ///   </list>
 ///   
 /// </summary>

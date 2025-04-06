@@ -13,14 +13,9 @@ namespace com.rpglc.subevent;
 ///   <i>Note that all healing subevents will create two HealingCollection subevents. The first will have the "base" tag, and will represent healing that is applied to all targets of the healing subevent. The second will have the "target" tag, and will represent healing that is only applied to a specific target of the healing subevent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
+///     <item>AddHealing</item>
 ///   </list>
 ///   
 /// </summary>

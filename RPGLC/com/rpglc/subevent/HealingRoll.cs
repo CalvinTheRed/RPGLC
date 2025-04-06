@@ -11,14 +11,11 @@ namespace com.rpglc.subevent;
 ///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
+///     <item>MaximizeHealing</item>
+///     <item>RerollHealingDice</item>
+///     <item>SetHealingDice</item>
 ///   </list>
 ///   
 /// </summary>

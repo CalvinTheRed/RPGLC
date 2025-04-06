@@ -10,14 +10,19 @@ namespace com.rpglc.subevent;
 ///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Conditions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>IncludesDamageType</item>
 ///   </list>
 ///   
-///   <b>Compatible Functions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>GrantImmunity</item>
+///     <item>GrantResistance</item>
+///     <item>GrantVulnerability</item>
+///     <item>RevokeImmunity</item>
+///     <item>RevokeResistance</item>
+///     <item>RevokeVulnerability</item>
 ///   </list>
 ///   
 /// </summary>

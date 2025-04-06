@@ -44,14 +44,20 @@ namespace com.rpglc.subevent;
 ///     <item>"miss" is an optional field and it will default to a vlaue of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source misses the target. The damage defined by "damage" will not be dealt on a miss.</item>
 ///   </list>
 ///   
-///   <b>Compatible Conditions</b>
+///   <br /><br />
+///   <b>Special Conditions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>CheckAbility</item>
 ///   </list>
 ///   
-///   <b>Compatible Functions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///     <item>GrantAdvantage</item>
+///     <item>GrantDisadvantage</item>
+///     <item>AddVampirism</item>
 ///   </list>
 ///   
 /// </summary>

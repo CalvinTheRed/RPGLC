@@ -40,14 +40,10 @@ namespace com.rpglc.subevent;
 ///     <item>"fail" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target fails the save.</item>
 ///   </list>
 ///   
-///   <b>Compatible Conditions</b>
+///   <br /><br />
+///   <b>Special Conditions</b>
 ///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
+///     <item>CheckAbility</item>
 ///   </list>
 ///   
 /// </summary>

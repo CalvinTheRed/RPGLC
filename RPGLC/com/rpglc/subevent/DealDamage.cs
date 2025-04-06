@@ -27,16 +27,6 @@ namespace com.rpglc.subevent;
 ///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
 ///   </list>
 ///   
-///   <b>Compatible Conditions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
 /// </summary>
 public class DealDamage : Subevent, IVampiricSubevent {
 

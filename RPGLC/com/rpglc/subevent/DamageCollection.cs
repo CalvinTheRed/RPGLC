@@ -13,14 +13,15 @@ namespace com.rpglc.subevent;
 ///   <i>Note that all damaging subevents will create two DamageCollection subevents. The first will have the "base" tag, and will represent damage that is applied to all targets of the damaging subevent. The second will have the "target" tag, and will represent damage that is only applied to a specific target of the damaging subevent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Conditions</b>
 ///   <list type="bullet">
 ///     <item></item>
 ///   </list>
 ///   
-///   <b>Compatible Functions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>AddDamage</item>
+///     <item>RepeatDamageDice</item>
 ///   </list>
 ///   
 /// </summary>

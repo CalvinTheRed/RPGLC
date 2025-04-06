@@ -13,14 +13,9 @@ namespace com.rpglc.subevent;
 ///   <i>Note that all temporary hit point subevents will create two TemporaryHitPointCollection subevents. The first will have the "base" tag, and will represent temporary hit points that are applied to all targets of the temporary hit point subevent. The second will have the "target" tag, and will represent temporary hit points that are only applied to a specific target of the temporary hit point subevent.</i>
 ///   
 ///   <br /><br />
-///   <b>Compatible Conditions</b>
+///   <b>Special Functions</b>
 ///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
+///     <item>AddTemporaryHitPoints</item>
 ///   </list>
 ///   
 /// </summary>

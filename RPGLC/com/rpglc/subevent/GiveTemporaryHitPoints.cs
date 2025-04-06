@@ -27,16 +27,6 @@ namespace com.rpglc.subevent;
 ///     <item>"rider_effects" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates what rider effects, if any, to give to the target along with the temporary hit points.</item>
 ///   </list>
 ///   
-///   <b>Compatible Conditions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
-///   <b>Compatible Functions</b>
-///   <list type="bullet">
-///     <item></item>
-///   </list>
-///   
 /// </summary>
 public class GiveTemporaryHitPoints : Subevent {
 
