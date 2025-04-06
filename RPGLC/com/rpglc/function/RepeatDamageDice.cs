@@ -14,7 +14,7 @@ namespace com.rpglc.function;
 ///   }
 ///   </code>
 ///   
-///   <i>Note that this function should be paired with a condition checking for the subevent to have either the "base" or "target" tag. Neglecting this check will cause the repetition to be performed to a damaging subevent more than once.</i>
+///   <i>Note that this function should be paired with a condition checking for DamageCollection subevents to have either the "base" or "target" tag. Neglecting this check will cause the repetition to be performed to a damaging subevent more than once.</i>
 ///   
 ///   <list type="bullet">
 ///     <item>"count" is an optional field and will default to a value of 1 if not specified. This field represents a number of times to repeat the first damage die in a damage collection.</item>

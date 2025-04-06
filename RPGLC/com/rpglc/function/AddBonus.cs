@@ -5,7 +5,7 @@ using com.rpglc.subevent;
 namespace com.rpglc.function;
 
 /// <summary>
-///   Adds a list of bonuses to a calculation subevent according to a defined formula.
+///   Adds a list of bonuses to a calculation subevent according to defined formulae.
 ///   
 ///   <code>
 ///   {

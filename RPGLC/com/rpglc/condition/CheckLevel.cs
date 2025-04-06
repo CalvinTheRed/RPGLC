@@ -14,7 +14,7 @@ namespace com.rpglc.condition;
 ///       "from": "subevent" | "effect",
 ///       "object": "source" | "target"
 ///     },
-///     "class": "*" | &lt;class datapack id&gt;,
+///     "class": "*" | &lt;string&gt;,
 ///     "comparison": "&lt;" | "&lt;=" | "&gt;" | "&gt;=" | "=" | "!=",
 ///     "compare_to": &lt;long&gt;
 ///   }
@@ -22,7 +22,7 @@ namespace com.rpglc.condition;
 ///   
 ///   <list type="bullet">
 ///     <item>"object" indicates which object's level is being checked.</item>
-///     <item>"class" indicates which class's level is being checked. If "*", the object's total level is checked, rather than its level in a particular class.</item>
+///     <item>"class" is the datapack id of a class to use for checking a object's level. If "*", the object's total level across all classes is used for the check.</item>
 ///     <item>"comparison" the comparative operator to use in the order of `ability comparison compare_to`.</item>
 ///     <item>"compare_to" the value the level is compared to.</item>
 ///   </list>

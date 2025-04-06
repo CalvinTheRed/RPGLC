@@ -5,7 +5,7 @@ using com.rpglc.subevent;
 namespace com.rpglc.condition;
 
 /// <summary>
-///   Returns true if the subevent's damage type matches the condition's subevent.
+///   Returns true if the subevent includes the condition's damage type.
 ///   
 ///   <code>
 ///   {

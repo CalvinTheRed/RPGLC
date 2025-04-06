@@ -10,7 +10,6 @@ namespace com.rpglc.subevent;
 ///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
 ///   
 ///   <br /><br />
-///   <b>Special Conditions</b>
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>AddBonus</item>

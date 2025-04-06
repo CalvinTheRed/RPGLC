@@ -40,14 +40,8 @@ namespace com.rpglc.subevent;
 ///     <item>"fail" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target fails the save.</item>
 ///   </list>
 ///   
-///   <br /><br />
-///   <b>Special Conditions</b>
-///   <list type="bullet">
-///     <item>CheckAbility</item>
-///   </list>
-///   
 /// </summary>
-public class AbilitySave : Subevent, IAbilitySubevent {
+public class AbilitySave : Subevent {
 
     public AbilitySave() : base("ability_save") { }
 
@@ -84,7 +78,7 @@ public class AbilitySave : Subevent, IAbilitySubevent {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "ability": "{{GetAbility(context)}}",
+                    "ability": "{{json.GetString("ability")}}",
                     "skill": "{{GetSkill()}}",
                     "tags": {{GetTags()}},
                     "determined": {{json.GetJsonArray("determined")}}
@@ -113,10 +107,6 @@ public class AbilitySave : Subevent, IAbilitySubevent {
 
     public override AbilitySave SetTarget(RPGLObject target) {
         return (AbilitySave) base.SetTarget(target);
-    }
-
-    public string GetAbility(RPGLContext context) {
-        return json.GetString("ability");
     }
 
     private void CalculateDifficultyClass(RPGLContext context) {

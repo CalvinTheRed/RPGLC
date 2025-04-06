@@ -33,7 +33,7 @@ namespace com.rpglc.subevent;
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents. The subevent's "attack_type" value is added to its tags upon subevent preparation.</item>
 ///     <item>"attack_type" indicates what kind of attack is being made (normally "melee", "ranged", or "thrown"). This value will be promoted to the subevent's tags.</item>
 ///     <item>"ability" indicates what ability is used to make the ability check.</item>
 ///     <item>"use_origin_ability" is an optional field and it will default to a value of false if left unspecified. If true, the ability score used for this subevent will be taken from the source's origin object, instead of from the source.</item>

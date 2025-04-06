@@ -5,7 +5,7 @@ using com.rpglc.subevent;
 namespace com.rpglc.function;
 
 /// <summary>
-///   Rerolls temporary hit point dice that rolled within a defined range in a temporary hit point roll.
+///   Sets the base value of a calculation subevent according to a defined formula.
 ///   
 ///   <code>
 ///   {
