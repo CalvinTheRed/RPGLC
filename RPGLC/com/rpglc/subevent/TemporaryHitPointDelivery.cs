@@ -3,6 +3,19 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Delivers calculated temporary hit points to an object.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>MaximizeTemporaryHitPoints</item>
+///   </list>
+///   
+/// </summary>
 public class TemporaryHitPointDelivery : Subevent {
 
     public TemporaryHitPointDelivery() : base("temporary_hit_point_delivery") { }

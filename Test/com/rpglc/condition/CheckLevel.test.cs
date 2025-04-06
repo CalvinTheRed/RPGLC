@@ -41,6 +41,7 @@ public class CheckLevelTest {
                         "from": "subevent",
                         "object": "source"
                     },
+                    "class": "*",
                     "comparison": "=",
                     "compare_to": 2
                 }
@@ -71,6 +72,7 @@ public class CheckLevelTest {
                         "from": "subevent",
                         "object": "source"
                     },
+                    "class": "*",
                     "comparison": "!=",
                     "compare_to": 2
                 }

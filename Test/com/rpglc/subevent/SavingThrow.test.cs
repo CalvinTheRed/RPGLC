@@ -97,10 +97,9 @@ public class SavingThrowTest {
                     "difficulty_class_ability": "int",
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 10,
-                            "dice": [ ]
+                            "number": 10
                         }
                     ],
                     "damage_on_pass": "half",
@@ -147,10 +146,9 @@ public class SavingThrowTest {
                     "difficulty_class_ability": "int",
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 10,
-                            "dice": [ ]
+                            "number": 10
                         }
                     ],
                     "damage_on_pass": "none",
@@ -197,10 +195,9 @@ public class SavingThrowTest {
                     "difficulty_class_ability": "int",
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 10,
-                            "dice": [ ]
+                            "number": 10
                         }
                     ],
                     "pass": [

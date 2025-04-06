@@ -4,6 +4,21 @@ using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Rolls dice collected in a TemporaryHitPointCollection subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>MaximizeTemporaryHitPoints</item>
+///     <item>OverrideTemporaryHitPointDice</item>
+///     <item>RerollTemporaryHitPointDice</item>
+///   </list>
+///   
+/// </summary>
 public class TemporaryHitPointRoll : Subevent {
 
     public TemporaryHitPointRoll() : base("temporary_hit_point_roll") { }
@@ -77,7 +92,9 @@ public class TemporaryHitPointRoll : Subevent {
         return this;
     }
 
-    public TemporaryHitPointRoll SetTemporaryHitPointDice(long set, long lowerBound, long upperBound) {
+    public TemporaryHitPointRoll OverrideTemporaryHitPointDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+        long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
+        long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         JsonArray temporaryHitPointArray = json.GetJsonArray("temporary_hit_points");
         for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
             JsonArray dice = temporaryHitPointArray.GetJsonObject(i).GetJsonArray("dice");
@@ -85,7 +102,9 @@ public class TemporaryHitPointRoll : Subevent {
                 JsonObject die = dice.GetJsonObject(j);
                 long roll = (long) die.GetLong("roll");
                 if (roll <= upperBound && roll >= lowerBound) {
-                    die.PutLong("roll", set);
+                    die.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
+                        CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                    );
                 }
             }
         }

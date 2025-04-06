@@ -33,11 +33,8 @@ public class TemporaryHitPointCollectionTest {
                 {
                     "temporary_hit_points": [
                         {
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ],
+                            "formula": "number",
+                            "number": 10
                         }
                     ]
                 }
@@ -48,15 +45,8 @@ public class TemporaryHitPointCollectionTest {
         Assert.Equal("""
             [
               {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      3
-                    ],
-                    "size": 6
-                  }
-                ],
+                "bonus": 10,
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,
@@ -77,16 +67,13 @@ public class TemporaryHitPointCollectionTest {
         TemporaryHitPointCollection temporaryHitPointCollection = new TemporaryHitPointCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
-            .AddTemporaryHitPoints(CalculationSubevent.ProcessBonusJson(
+            .AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormula(
                 new(),
                 new DummySubevent(),
                 new JsonObject().LoadFromString("""
                     {
-                        "formula": "range",
-                        "bonus": 1,
-                        "dice": [
-                            { "count": 1, "size": 6, "determined": [ 3 ] }
-                        ],
+                        "formula": "number",
+                        "number": 10
                     }
                     """),
                 new DummyContext()
@@ -96,15 +83,8 @@ public class TemporaryHitPointCollectionTest {
         Assert.Equal("""
             [
               {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      3
-                    ],
-                    "size": 6
-                  }
-                ],
+                "bonus": 10,
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,

@@ -237,9 +237,8 @@ public class RPGLObjectTest {
                 {
                     "temporary_hit_points": [
                         {
-                            "formula": "range",
-                            "dice": [ ],
-                            "bonus": 10
+                            "formula": "number",
+                            "number": 10
                         }
                     ],
                     "rider_effects": [

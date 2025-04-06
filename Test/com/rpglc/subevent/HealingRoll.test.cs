@@ -146,7 +146,20 @@ public class HealingRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        healingRoll.SetHealingDice(6, 2, 5);
+        healingRoll.OverrideHealingDice(
+            new(),
+            new JsonObject().LoadFromString("""
+                {
+                    "lower_bound": 2,
+                    "upper_bound": 5,
+                    "override": {
+                        "formula": "number",
+                        "number": 6
+                    }
+                }
+                """),
+            new DummyContext()
+        );
 
         Assert.Equal("""
             [

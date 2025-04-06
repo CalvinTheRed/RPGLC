@@ -146,7 +146,20 @@ public class TemporaryHitPointRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        temporaryHitPointRoll.SetTemporaryHitPointDice(6, 2, 5);
+        temporaryHitPointRoll.OverrideTemporaryHitPointDice(
+            new(),
+            new JsonObject().LoadFromString("""
+                {
+                    "lower_bound": 2,
+                    "upper_bound": 5,
+                    "override": {
+                        "formula": "number",
+                        "number": 6
+                    }
+                }
+                """),
+            new DummyContext()
+        );
 
         Assert.Equal("""
             [

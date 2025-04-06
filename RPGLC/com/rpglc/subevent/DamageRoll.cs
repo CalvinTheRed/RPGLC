@@ -4,6 +4,26 @@ using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Rolls dice collected in a DamageCollection subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Conditions</b>
+///   <list type="bullet">
+///     <item>IncludesDamageType</item>
+///   </list>
+///   
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>MaximizeDamage</item>
+///     <item>OverrideDamageDice</item>    
+///     <item>RerollDamageDice</item>
+///   </list>
+///   
+/// </summary>
 public class DamageRoll : Subevent, IDamageTypeSubevent {
 
     public DamageRoll() : base("damage_roll") { }
@@ -76,7 +96,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
@@ -89,17 +109,23 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void SetDamageDice(string damageType, long set, long lowerBound, long upperBound) {
+    public void OverrideDamageDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+        string damageType = functionJson.GetString("damage_type") ?? "*";
+        long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
+        long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
+        
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
                     long roll = (long) typedDamageDie.GetLong("roll");
                     if (roll < upperBound && roll > lowerBound) {
-                        typedDamageDie.PutLong("roll", set);
+                        typedDamageDie.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
+                            CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                        );
                     }
                 }
             }
@@ -110,7 +136,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         JsonArray typedDamageArray = json.GetJsonArray("damage");
         for (int i = 0; i < typedDamageArray.Count(); i++) {
             JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, typedDamage.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
                 JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
                 for (int j = 0; j < typedDamageDieArray.Count(); j++) {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);

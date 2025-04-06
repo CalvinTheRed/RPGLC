@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.math;
+using System.ComponentModel.DataAnnotations;
 
 namespace com.rpglc.subevent;
 
@@ -81,7 +82,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
             RPGLEffect rpglEffect = new RPGLEffect()
                 .SetSource(GetSource().GetUuid())
                 .SetTarget(GetTarget().GetUuid());
-            SetBase(ProcessSetJson(rpglEffect, this, baseJson, context));
+            SetBase(ProcessFormulaJson(SimplifyCalculationFormula(rpglEffect, this, baseJson, context)));
         }
         return this;
     }
@@ -95,7 +96,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
                 .SetTarget(GetTarget().GetUuid());
             for (int i = 0; i < bonuses.Count(); i++) {
                 JsonObject bonusJson = bonuses.GetJsonObject(i);
-                AddBonus(ProcessBonusJson(rpglEffect, this, bonusJson, context));
+                AddBonus(SimplifyCalculationFormula(rpglEffect, this, bonusJson, context));
             }
         }
         return this;
@@ -108,12 +109,14 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
             RPGLEffect rpglEffect = new RPGLEffect()
                 .SetSource(GetSource().GetUuid())
                 .SetTarget(GetTarget().GetUuid());
-            SetMinimum(ProcessSetJson(rpglEffect, this, minimumJson, context));
+            SetMinimum(ProcessFormulaJson(SimplifyCalculationFormula(rpglEffect, this, minimumJson, context)));
         }
         return this;
     }
 
     public static long Scale(long value, JsonObject scaleJson) {
+        // TODO possible to abstract out numerator and denominator to use calculation formulae?
+        // Would make CalculateMaximumHitPoints less hard-coded, and make other features easier to implement.
         bool roundUp = scaleJson.GetBool("round_up") ?? false;
         if (roundUp) {
             return (long) Math.Ceiling((decimal) value 
@@ -127,81 +130,156 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         }
     }
 
-    public static JsonObject ProcessBonusJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
-        /*[
-            {
-                "formula": "range",
-                "bonus": #,
-                "dice": [
-                    { "count": #, "size": #, "determined": [ # ] }
-                ],
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "modifier",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "ability",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "level",
-                "class": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            }
-        ]*/
+    /// <summary>
+    /// <b>Calculation Formulae</b>
+    /// <br />
+    /// The following is a list of calculation formulae recognized by RPGLC. Note that all "scale" fields are optional, and will default to a value of
+    /// <code>
+    /// {
+    ///   "numerator": 1,
+    ///   "denominator": 1,
+    ///   "round_up": false
+    /// }
+    /// </code>
+    /// if not specified. Note also that if these formulas are used to represent damage values, each must have an additional "damage_type" field storing a string representing the damage type being added.
+    /// 
+    /// <br /><br />
+    /// <b>range</b>
+    /// <br />
+    /// Returns a determined number.
+    /// <code>
+    /// {
+    ///   "formula": "number",
+    ///   "number": &lt;long&gt;,
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>dice</b>
+    /// <br />
+    /// Returns a set of dice.
+    /// <code>
+    /// {
+    ///   "formula": "dice",
+    ///   "dice": [
+    ///     { "count": &lt;long&gt;, "size": &lt;long&gt; }
+    ///   ],
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>modifier</b>
+    /// <br />
+    /// Calculates an object's modifier for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "modifier",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>ability</b>
+    /// <br />
+    /// Calculates an object's score for a given ability.
+    /// <code>
+    /// {
+    ///   "formula": "ability",
+    ///   "ability": &lt;string&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>proficiency</b>
+    /// <br />
+    /// Calculates an object's proficiency bonus.
+    /// <code>
+    /// {
+    ///   "formula": "proficiency",
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// 
+    /// <br /><br />
+    /// <b>level</b>
+    /// <br />
+    /// Calculates an object's level in a specified class.
+    /// <code>
+    /// {
+    ///   "formula": "level",
+    ///   "class": &lt;string = "*"&gt;,
+    ///   "object": {
+    ///     "from": "effect" | "subevent",
+    ///     "object": "source" | "target",
+    ///     "as_origin": &lt;bool = false&gt;
+    ///   },
+    ///   "scale": {
+    ///     "numerator": &lt;long&gt;,
+    ///     "denominator": &lt;long&gt;,
+    ///     "round_up": &lt;bool = false&gt;
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    /// <param name="rpglEffect"></param>
+    /// <param name="subevent"></param>
+    /// <param name="formulaJson"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public static JsonObject SimplifyCalculationFormula(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
         string formula = formulaJson.GetString("formula");
-        if (formula == "range") {
+        if (formula == "number") {
             return new JsonObject()
-                .PutLong("bonus", formulaJson.GetLong("bonus") ?? 0L)
-                .PutJsonArray("dice", Die.Unpack(formulaJson.GetJsonArray("dice") ?? new()))
+                .PutLong("bonus", formulaJson.GetLong("number"))
+                .PutJsonArray("dice", new())
+                .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
+                    .PutLong("numerator", 1L)
+                    .PutLong("denominator", 1L)
+                    .PutBool("round_up", false)
+                );
+        } else if (formula == "dice") {
+            return new JsonObject()
+                .PutLong("bonus", 0L)
+                .PutJsonArray("dice", Die.Unpack(formulaJson.GetJsonArray("dice")))
                 .PutJsonObject("scale", formulaJson.GetJsonObject("scale") ?? new JsonObject()
                     .PutLong("numerator", 1L)
                     .PutLong("denominator", 1L)
@@ -239,10 +317,10 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
                 );
         } else if (formula == "level") {
             RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"));
-            string? classDatapackId = formulaJson.GetString("class");
+            string classDatapackId = formulaJson.GetString("class") ?? "*";
             return new JsonObject()
-                .PutLong("bonus", classDatapackId is null 
-                    ? rpglObject.GetLevel() 
+                .PutLong("bonus", classDatapackId == "*"
+                    ? rpglObject.GetLevel()
                     : rpglObject.GetLevel(classDatapackId)
                 )
                 .PutJsonArray("dice", new())
@@ -263,108 +341,15 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
         }
     }
 
-    public static long ProcessSetJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
-        /*[
-            {
-                "formula": "number",
-                "number": #,
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "modifier",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "ability",
-                "ability": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            },
-            {
-                "formula": "level",
-                "class": "...",
-                "object": {
-                    "from": "effect" | "subevent",
-                    "object": "source" | "target",
-                    "as_origin": t/f
-                },
-                "scale": {
-                    "numerator": #,
-                    "denominator": #,
-                    "round_up": t/f
-                }
-            }
-        ]*/
-        long setValue;
-        string formula = formulaJson.GetString("formula");
-        if (formula == "number") {
-            setValue = (long) formulaJson.GetLong("number");
-        } else if (formula == "modifier") {
-            setValue = RPGLEffect
-                .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
-                .GetAbilityModifierFromAbilityName(formulaJson.GetString("ability"), context);
-        } else if (formula == "ability") {
-            setValue = RPGLEffect
-                .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
-                .GetAbilityScoreFromAbilityName(formulaJson.GetString("ability"), context);
-        } else if (formula == "proficiency") {
-            setValue = RPGLEffect
-                .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
-                .GetEffectiveProficiencyBonus(context);
-        } else if (formula == "level") {
-            string? classDatapackId = formulaJson.GetString("class");
-            if (classDatapackId is null) {
-                setValue = RPGLEffect
-                    .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
-                    .GetLevel();
-            } else {
-                setValue = RPGLEffect
-                    .GetObject(rpglEffect, subevent, formulaJson.GetJsonObject("object"))
-                    .GetLevel(classDatapackId);
-            }
-        } else {
-            return 0L;
+    public static long ProcessFormulaJson(JsonObject formulaJson) {
+        long value = formulaJson.GetLong("bonus") ?? 0L;
+        JsonArray diceArray = formulaJson.GetJsonArray("dice") ?? new();
+        for (int i = 0; i < diceArray.Count(); i++) {
+            JsonObject dieObject = diceArray.GetJsonObject(i);
+            Die.Roll(dieObject);
+            value += (long) dieObject.GetLong("roll");
         }
-        JsonObject scale = formulaJson.GetJsonObject("scale") ?? new JsonObject()
-            .PutLong("numerator", 1L)
-            .PutLong("denominator", 1L)
-            .PutBool("round_up", false);
-        return Scale(setValue, scale);
+        return Scale(value, formulaJson.GetJsonObject("scale") ?? new());
     }
 
 };

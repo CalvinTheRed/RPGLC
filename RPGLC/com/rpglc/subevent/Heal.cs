@@ -3,6 +3,27 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Restores hit points to an object. This subevent will not raise an object's hit points beyond its hit point maximum.
+///   
+///   <code>
+///   {
+///     "subevent": "heal",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "healing": [
+///       &lt;bonus formula&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"healing" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how many hit points will be restored, if any.</item>
+///   </list>
+///   
+/// </summary>
 public class Heal : Subevent {
 
     public Heal() : base("heal") { }
@@ -30,6 +51,7 @@ public class Heal : Subevent {
     }
 
     public override Heal Prepare(RPGLContext context, JsonArray originPoint) {
+        json.PutIfAbsent("healing", new JsonArray());
         GetBaseHealing(context, originPoint);
         return this;
     }

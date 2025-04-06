@@ -4,6 +4,21 @@ using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Rolls dice collected in a HealingCollection subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>MaximizeHealing</item>
+///     <item>OverrideHealingDice</item>
+///     <item>RerollHealingDice</item>
+///   </list>
+///   
+/// </summary>
 public class HealingRoll : Subevent {
 
     public HealingRoll() : base("healing_roll") { }
@@ -77,7 +92,9 @@ public class HealingRoll : Subevent {
         return this;
     }
 
-    public HealingRoll SetHealingDice(long set, long lowerBound, long upperBound) {
+    public HealingRoll OverrideHealingDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+        long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
+        long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         JsonArray healingArray = json.GetJsonArray("healing");
         for (int i = 0; i < healingArray.Count(); i++) {
             JsonArray dice = healingArray.GetJsonObject(i).GetJsonArray("dice");
@@ -85,7 +102,9 @@ public class HealingRoll : Subevent {
                 JsonObject die = dice.GetJsonObject(j);
                 long roll = (long) die.GetLong("roll");
                 if (roll <= upperBound && roll >= lowerBound) {
-                    die.PutLong("roll", set);
+                    die.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
+                        CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                    );
                 }
             }
         }

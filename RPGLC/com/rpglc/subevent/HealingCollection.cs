@@ -3,6 +3,22 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects healing for a healing subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <i>Note that all healing subevents will create two HealingCollection subevents. The first will have the "base" tag, and will represent healing that is applied to all targets of the healing subevent. The second will have the "target" tag, and will represent healing that is only applied to a specific target of the healing subevent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddHealing</item>
+///   </list>
+///   
+/// </summary>
 public class HealingCollection : Subevent {
 
     public HealingCollection() : base("healing_collection") { }
@@ -59,7 +75,7 @@ public class HealingCollection : Subevent {
         rpglEffect.SetSource(GetSource().GetUuid());
         rpglEffect.SetTarget(null);
         for (int i = 0; i < healingArray.Count(); i++) {
-            AddHealing(CalculationSubevent.ProcessBonusJson(
+            AddHealing(CalculationSubevent.SimplifyCalculationFormula(
                 rpglEffect,
                 this,
                 healingArray.GetJsonObject(i),

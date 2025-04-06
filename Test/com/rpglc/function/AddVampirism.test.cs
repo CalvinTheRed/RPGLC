@@ -15,7 +15,7 @@ public class AddVampirismTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds vampirism")]
-    public void AddsBonus() {
+    public void AddsVampirism() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -59,6 +59,79 @@ public class AddVampirismTest {
                   "round_up": false
                 }
               }
+            ]
+            """,
+            IVampiricSubevent.GetVampirism(subevent).PrettyPrint()
+        );
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds default vampirism array")]
+    public void AddsDefaultVampirismArray() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        Subevent subevent = new DummyVampiricSubevent()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "attack_ability": "str",
+                    "attack_type": "melee"
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new());
+
+        new AddVampirism().Execute(
+            new RPGLEffect(),
+            subevent,
+            new JsonObject().LoadFromString("""
+                {
+                    "function": "add_vampirism"
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.Equal("""
+            [
+              { }
+            ]
+            """,
+            IVampiricSubevent.GetVampirism(subevent).PrettyPrint()
+        );
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds default vampirism object")]
+    public void AddsDefaultVampirismObject() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        Subevent subevent = new DummyVampiricSubevent()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "attack_ability": "str",
+                    "attack_type": "melee"
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new());
+
+        new AddVampirism().Execute(
+            new RPGLEffect(),
+            subevent,
+            new JsonObject().LoadFromString("""
+                {
+                    "function": "add_vampirism",
+                    "vampirism": [ ]
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.Equal("""
+            [
+              { }
             ]
             """,
             IVampiricSubevent.GetVampirism(subevent).PrettyPrint()

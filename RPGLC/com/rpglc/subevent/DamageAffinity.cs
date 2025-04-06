@@ -3,6 +3,29 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Determines an object's affinities for damage types in a DamageDelivery subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Conditions</b>
+///   <list type="bullet">
+///     <item>IncludesDamageType</item>
+///   </list>
+///   
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>GrantImmunity</item>
+///     <item>GrantResistance</item>
+///     <item>GrantVulnerability</item>
+///     <item>RevokeImmunity</item>
+///     <item>RevokeResistance</item>
+///     <item>RevokeVulnerability</item>
+///   </list>
+///   
+/// </summary>
 public class DamageAffinity : Subevent, IDamageTypeSubevent {
 
     public DamageAffinity() : base("damage_affinity") { }
@@ -93,7 +116,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("immunity", true);
             }
         }
@@ -104,7 +127,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("resistance", true);
             }
         }
@@ -115,7 +138,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("vulnerability", true);
             }
         }
@@ -126,7 +149,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("immunity_revoked", true);
             }
         }
@@ -137,7 +160,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("resistance_revoked", true);
             }
         }
@@ -148,7 +171,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         JsonArray affinities = GetAffinities();
         for (int i = 0; i < affinities.Count(); i++) {
             JsonObject affinity = affinities.GetJsonObject(i);
-            if (Equals(damageType, "") || Equals(damageType, affinity.GetString("damage_type"))) {
+            if (damageType == "*" || damageType == affinity.GetString("damage_type")) {
                 affinity.PutBool("vulnerability_revoked", true);
             }
         }

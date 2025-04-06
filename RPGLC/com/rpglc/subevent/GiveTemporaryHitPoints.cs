@@ -3,6 +3,31 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Gives temporary hit points to an object and possibly assigns rider effects.
+///   
+///   <code>
+///   {
+///     "subevent": "give_temporary_hit_points",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "temporary_hit_points": [
+///       &lt;bonus formula&gt;
+///     ],
+///     "rider_effects": [
+///       &lt;string&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"temporary_hit_points" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how many temporary hit points will be delivered, if any.</item>
+///     <item>"rider_effects" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates what rider effects, if any, to give to the target along with the temporary hit points.</item>
+///   </list>
+///   
+/// </summary>
 public class GiveTemporaryHitPoints : Subevent {
 
     public GiveTemporaryHitPoints() : base("give_temporary_hit_points") { }

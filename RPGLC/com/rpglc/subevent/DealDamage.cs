@@ -3,6 +3,31 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Deals damage directly with no contest to reduce or avoid that damage.
+///   
+///   <code>
+///   {
+///     "subevent": "deal_damage",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "damage": [
+///       &lt;bonus formula&gt;
+///     ],
+///     "vampirism": [
+///       &lt;vampirism formula&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"damage" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates how much damage will be delivered, if any.</item>
+///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
+///   </list>
+///   
+/// </summary>
 public class DealDamage : Subevent, IVampiricSubevent {
 
     public DealDamage() : base("deal_damage") { }

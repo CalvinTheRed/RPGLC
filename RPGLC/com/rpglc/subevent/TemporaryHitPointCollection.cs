@@ -3,6 +3,22 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects temporary hit points for a temporary hit point subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <i>Note that all temporary hit point subevents will create two TemporaryHitPointCollection subevents. The first will have the "base" tag, and will represent temporary hit points that are applied to all targets of the temporary hit point subevent. The second will have the "target" tag, and will represent temporary hit points that are only applied to a specific target of the temporary hit point subevent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddTemporaryHitPoints</item>
+///   </list>
+///   
+/// </summary>
 public class TemporaryHitPointCollection : Subevent {
 
     public TemporaryHitPointCollection() : base("temporary_hit_point_collection") { }
@@ -59,7 +75,7 @@ public class TemporaryHitPointCollection : Subevent {
         rpglEffect.SetSource(GetSource().GetUuid());
         rpglEffect.SetTarget(null);
         for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
-            AddTemporaryHitPoints(CalculationSubevent.ProcessBonusJson(
+            AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormula(
                 rpglEffect,
                 this,
                 temporaryHitPointArray.GetJsonObject(i),

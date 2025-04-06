@@ -21,7 +21,7 @@ public class AttackRollTest {
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "str",
+                    "ability": "str",
                     "attack_type": "melee"
                 }
                 """))
@@ -29,7 +29,7 @@ public class AttackRollTest {
             .Prepare(new DummyContext(), new());
 
         Assert.False(attackRoll.json.GetBool("withhold_damage_modifier"));
-        Assert.False(attackRoll.json.GetBool("use_origin_attack_ability"));
+        Assert.False(attackRoll.json.GetBool("use_origin_ability"));
         Assert.True(attackRoll.HasTag("str"));
         Assert.True(attackRoll.HasTag("melee"));
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("damage").ToString());
@@ -45,17 +45,21 @@ public class AttackRollTest {
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "str",
+                    "ability": "str",
                     "attack_type": "melee",
                     "determined": [ 19 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -92,17 +96,21 @@ public class AttackRollTest {
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "str",
+                    "ability": "str",
                     "attack_type": "melee",
                     "determined": [ 2 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -139,17 +147,21 @@ public class AttackRollTest {
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "str",
+                    "ability": "str",
                     "attack_type": "melee",
                     "determined": [ 20 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -186,17 +198,21 @@ public class AttackRollTest {
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "str",
+                    "ability": "str",
                     "attack_type": "melee",
                     "determined": [ 1 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -252,16 +268,15 @@ public class AttackRollTest {
         AttackRoll attackRoll = new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "attack_ability": "int",
+                    "ability": "int",
                     "attack_type": "melee",
-                    "use_origin_attack_ability": true,
+                    "use_origin_ability": true,
                     "determined": [ 19 ],
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [ ]
+                            "number": 1
                         }
                     ]
                 }

@@ -3,6 +3,21 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Calculates an object's armor class.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///   </list>
+///   
+/// </summary>
 public class CalculateArmorClass : CalculationSubevent {
 
     public CalculateArmorClass() : base("calculate_armor_class") { }

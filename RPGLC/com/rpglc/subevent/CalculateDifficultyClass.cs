@@ -4,6 +4,21 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Calculates the difficulty class for a save-type subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///   </list>
+///   
+/// </summary>
 public class CalculateDifficultyClass : CalculationSubevent {
     
     public CalculateDifficultyClass() : base("calculate_difficulty_class") { }

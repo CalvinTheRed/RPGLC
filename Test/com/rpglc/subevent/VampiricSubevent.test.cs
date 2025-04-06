@@ -36,7 +36,8 @@ public class VampiricSubeventTest {
                                 "denominator": 1,
                                 "round_up": false
                             }
-                        }
+                        },
+                        { }
                     ]
                 }
                 """))
@@ -56,7 +57,7 @@ public class VampiricSubeventTest {
             new()
         );
 
-        Assert.Equal(5 + 20, rpglObject.GetHealthCurrent());
+        Assert.Equal(5 + 20 + 20, rpglObject.GetHealthCurrent());
     }
 
 };

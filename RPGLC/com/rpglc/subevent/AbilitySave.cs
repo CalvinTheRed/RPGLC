@@ -1,9 +1,46 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.subevent;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Performs an ability check and compares it to a difficulty class. Different results may occur on a pass or fail.
+///   
+///   <code>
+///   {
+///     "subevent": "ability_save",
+///     "tags": [
+///       &lt;string&gt;
+///     ],
+///     "ability": &lt;string&gt;,
+///     "skill": &lt;string = null&gt;,
+///     "use_origin_difficulty_class_ability": &lt;bool = false&gt;,
+///     "difficulty_class_ability": &lt;string = null&gt;,
+///     "difficulty_class": &lt;long = null&gt;,
+///     "pass": [
+///       &lt;nested subevent&gt;
+///     ],
+///     "fail": [
+///       &lt;nested subevent&gt;
+///     ]
+///   }
+///   </code>
+///   
+///   <i>Note that "difficulty_class_ability" and "difficulty_class" are mutually exclusive, but that one of them is required for the subevent to work as intended.</i>
+///   
+///   <br /><br />
+///   <list type="bullet">
+///     <item>"tags" is an optional field and will default to a value of [ ] if left unspecified. Any tags provided will be inherited by any nested subevents.</item>
+///     <item>"ability" indicates what ability is used to make the ability check.</item>
+///     <item>"skill" is an optional field and will default to a value of null if left unspecified. This field indicates what skill, if any, is used to make the ability check. This typically goes to inform how proficiency bonuses will be applied to the subevent.</item>
+///     <item>"use_origin_difficulty_class_ability" is an optional field and it will default to a value of false if left unspecified. If true, the ability score used for this subevent will be taken from the source's origin object, instead of from the source.</item>
+///     <item>"difficulty_class_ability" is an optional field and it will default to a value of null if left unspecified. This field indicates what ability, if any, should be used to calculate the save's difficulty class. If null, the difficulty class will not be calculated in this way.</item>
+///     <item>"difficulty_class" is an optional field and it will default to a value of null if left unspecified. This field indicates what value, if any, to use as the difficulty class. If null, the difficulty class will not be assigned in this way.</item>
+///     <item>"pass" is an optional field and it will default to a vlaue of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target passes the save.</item>
+///     <item>"fail" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target fails the save.</item>
+///   </list>
+///   
+/// </summary>
 public class AbilitySave : Subevent {
 
     public AbilitySave() : base("ability_save") { }

@@ -4,6 +4,21 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Calculates the maximum hit points of an object.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///   </list>
+///   
+/// </summary>
 public class CalculateMaximumHitPoints : CalculationSubevent {
 
     public CalculateMaximumHitPoints() : base("calculate_maximum_hit_points") { }
@@ -44,9 +59,8 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
                     "function": "add_bonus",
                     "bonus": [
                         {
-                            "formula": "range",
-                            "dice": [ ],
-                            "bonus": {{source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel()}}
+                            "formula": "number",
+                            "number": {{source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel()}}
                         }
                     ]
                 }

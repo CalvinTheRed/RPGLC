@@ -31,6 +31,9 @@ public abstract class Function(string functionId) {
             new GrantVulnerability(),
             new MaximizeDamage(),
             new MaximizeHealing(),
+            new OverrideDamageDice(),
+            new OverrideHealingDice(),
+            new OverrideTemporaryHitPointDice(),
             new RepeatDamageDice(),
             new RerollDamageDice(),
             new RerollHealingDice(),
@@ -38,8 +41,6 @@ public abstract class Function(string functionId) {
             new RevokeResistance(),
             new RevokeVulnerability(),
             new SetBase(),
-            new SetDamageDice(),
-            new SetHealingDice(),
             new SetMinimum(),
         ]);
     }

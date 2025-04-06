@@ -4,6 +4,23 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.function;
 
+/// <summary>
+///   Grants advantage to a d20 subevent.
+///   
+///   <code>
+///   {
+///     "function": "grant_advantage"
+///   }
+///   </code>
+///   
+///   <b>Compatible Subevents</b>
+///   <list type="bullet">
+///     <item>AbilityCheck</item>
+///     <item>AttackRoll</item>
+///     <item>SavingThrow</item>
+///   </list>
+///   
+/// </summary>
 public class GrantAdvantage : Function {
 
     public GrantAdvantage() : base("grant_advantage") { }

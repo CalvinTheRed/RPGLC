@@ -3,6 +3,19 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects events available to an object.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddEvent</item>
+///   </list>
+///   
+/// </summary>
 public class GetEvents : Subevent {
     
     public GetEvents() : base("get_events") { }

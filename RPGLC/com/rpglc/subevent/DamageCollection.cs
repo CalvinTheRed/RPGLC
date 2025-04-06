@@ -3,6 +3,28 @@ using com.rpglc.json;
 
 namespace com.rpglc.subevent;
 
+/// <summary>
+///   Collects damage for a damaging subevent.
+///   
+///   <br /><br />
+///   <i>This subevent is unavailable to be used directly inside an RPGLEvent.</i>
+///   
+///   <br /><br />
+///   <i>Note that all damaging subevents will create two DamageCollection subevents. The first will have the "base" tag, and will represent damage that is applied to all targets of the damaging subevent. The second will have the "target" tag, and will represent damage that is only applied to a specific target of the damaging subevent.</i>
+///   
+///   <br /><br />
+///   <b>Special Conditions</b>
+///   <list type="bullet">
+///     <item>IncludesDamageType</item>
+///   </list>
+///   
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddDamage</item>
+///     <item>RepeatDamageDice</item>
+///   </list>
+///   
+/// </summary>
 public class DamageCollection : Subevent, IDamageTypeSubevent {
 
     public DamageCollection() : base("damage_collection") { }
@@ -70,7 +92,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         rpglEffect.SetTarget(null);
         for (int i = 0; i < damageArray.Count(); i++) {
             JsonObject damageJson = damageArray.GetJsonObject(i);
-            JsonObject damage = CalculationSubevent.ProcessBonusJson(rpglEffect, this, damageJson, context);
+            JsonObject damage = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, damageJson, context);
             damage.PutString("damage_type", damageJson.GetString("damage_type"));
             AddDamage(damage);
         }

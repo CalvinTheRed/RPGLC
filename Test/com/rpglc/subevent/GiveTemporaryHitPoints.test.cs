@@ -21,11 +21,8 @@ public class GiveTemporaryHitPointsTest {
                 {
                     "temporary_hit_points": [
                         {
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
-                            ]
+                            "formula": "number",
+                            "number": 10
                         }
                     ]
                 }
@@ -36,16 +33,8 @@ public class GiveTemporaryHitPointsTest {
         Assert.Equal("""
             [
               {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  }
-                ],
+                "bonus": 10,
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,
@@ -69,11 +58,8 @@ public class GiveTemporaryHitPointsTest {
                 {
                     "temporary_hit_points": [
                         {
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
-                            ]
+                            "formula": "number",
+                            "number": 10
                         }
                     ]
                 }
@@ -83,7 +69,7 @@ public class GiveTemporaryHitPointsTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        Assert.Equal(0 + 1 + 3, rpglObject.GetTemporaryHitPoints());
+        Assert.Equal(0 + 10, rpglObject.GetTemporaryHitPoints());
     }
 
 };

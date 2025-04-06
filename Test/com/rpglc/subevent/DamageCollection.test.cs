@@ -33,12 +33,16 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ],
+                            ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 10
                         }
                     ]
                 }
@@ -49,7 +53,7 @@ public class DamageCollectionTest {
         Assert.Equal("""
             [
               {
-                "bonus": 1,
+                "bonus": 0,
                 "damage_type": "fire",
                 "dice": [
                   {
@@ -59,6 +63,16 @@ public class DamageCollectionTest {
                     "size": 6
                   }
                 ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 10,
+                "damage_type": "fire",
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,
@@ -79,36 +93,25 @@ public class DamageCollectionTest {
         DamageCollection damageCollection = new DamageCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
-            .AddDamage(CalculationSubevent.ProcessBonusJson(
+            .AddDamage(CalculationSubevent.SimplifyCalculationFormula(
                 new(),
                 new DummySubevent(),
                 new JsonObject().LoadFromString("""
                     {
+                        "formula": "number",
                         "damage_type": "fire",
-                        "formula": "range",
-                        "bonus": 1,
-                        "dice": [
-                            { "count": 1, "size": 6, "determined": [ 3 ] }
-                        ],
+                        "number": 10
                     }
                     """),
                 new DummyContext()
-            ).PutString("damage_type", "fire")
-        );
+            ).PutString("damage_type", "fire"));
 
         Assert.Equal("""
             [
               {
-                "bonus": 1,
+                "bonus": 10,
                 "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      3
-                    ],
-                    "size": 6
-                  }
-                ],
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,
@@ -131,12 +134,9 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ],
+                            "number": 10
                         }
                     ]
                 }
