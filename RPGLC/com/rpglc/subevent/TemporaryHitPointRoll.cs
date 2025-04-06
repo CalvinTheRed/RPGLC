@@ -102,7 +102,9 @@ public class TemporaryHitPointRoll : Subevent {
                 JsonObject die = dice.GetJsonObject(j);
                 long roll = (long) die.GetLong("roll");
                 if (roll <= upperBound && roll >= lowerBound) {
-                    die.PutLong("roll", CalculationSubevent.ProcessSetJson(rpglEffect, this, functionJson.GetJsonObject("set"), context));
+                    die.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
+                        CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                    );
                 }
             }
         }

@@ -278,7 +278,7 @@ public class DamageRollTest {
                     "damage_type": "fire",
                     "lower_bound": 2,
                     "upper_bound": 5,
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 6
                     }
@@ -372,7 +372,7 @@ public class DamageRollTest {
                     "damage_type": "*",
                     "lower_bound": 1,
                     "upper_bound": 6,
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 5
                     }

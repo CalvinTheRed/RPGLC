@@ -50,12 +50,16 @@ public class AttackRollTest {
                     "determined": [ 19 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -97,12 +101,16 @@ public class AttackRollTest {
                     "determined": [ 2 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -144,12 +152,16 @@ public class AttackRollTest {
                     "determined": [ 20 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -191,12 +203,16 @@ public class AttackRollTest {
                     "determined": [ 1 ],
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
                         }
                     ],
                     "hit": [
@@ -258,10 +274,9 @@ public class AttackRollTest {
                     "determined": [ 19 ],
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [ ]
+                            "number": 1
                         }
                     ]
                 }

@@ -22,17 +22,15 @@ public class RepeatDamageDiceTest {
                 {
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 0,
                             "dice": [
                                 { "size": 6, "determined": [ 3 ] }
                             ]
                         },
                         {
+                            "formula": "dice",
                             "damage_type": "cold",
-                            "formula": "range",
-                            "bonus": 0,
                             "dice": [
                                 { "size": 6, "determined": [ 3 ] }
                             ]
@@ -210,17 +208,15 @@ public class RepeatDamageDiceTest {
                 {
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 0,
                             "dice": [
                                 { "size": 6, "determined": [ 3 ] }
                             ]
                         },
                         {
+                            "formula": "dice",
                             "damage_type": "cold",
-                            "formula": "range",
-                            "bonus": 0,
                             "dice": [
                                 { "size": 6, "determined": [ 3 ] }
                             ]

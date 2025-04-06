@@ -36,7 +36,7 @@ public class AddHealing : Function {
         if (subevent is HealingCollection healingCollection) {
             JsonArray healingArray = functionJson.GetJsonArray("healing");
             for (int i = 0; i < healingArray.Count(); i++) {
-                healingCollection.AddHealing(CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, healingArray.GetJsonObject(i), context));
+                healingCollection.AddHealing(CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, healingArray.GetJsonObject(i), context));
             }
         }
     }

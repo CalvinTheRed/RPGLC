@@ -123,7 +123,9 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
                     JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
                     long roll = (long) typedDamageDie.GetLong("roll");
                     if (roll < upperBound && roll > lowerBound) {
-                        typedDamageDie.PutLong("roll", CalculationSubevent.ProcessSetJson(rpglEffect, this, functionJson.GetJsonObject("set"), context));
+                        typedDamageDie.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
+                            CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                        );
                     }
                 }
             }

@@ -36,7 +36,7 @@ public class AddTemporaryHitPoints : Function {
         if (subevent is TemporaryHitPointCollection temporaryHitPointCollection) {
             JsonArray temporaryHitPointArray = functionJson.GetJsonArray("temporary_hit_points");
             for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
-                temporaryHitPointCollection.AddTemporaryHitPoints(CalculationSubevent.ProcessBonusJson(
+                temporaryHitPointCollection.AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormulaJson(
                     rpglEffect,
                     subevent,
                     temporaryHitPointArray.GetJsonObject(i),

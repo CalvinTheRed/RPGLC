@@ -152,7 +152,7 @@ public class HealingRollTest {
                 {
                     "lower_bound": 2,
                     "upper_bound": 5,
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 6
                     }

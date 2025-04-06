@@ -59,7 +59,7 @@ public class OverrideHealingDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_healing_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     }
@@ -185,7 +185,7 @@ public class OverrideHealingDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_healing_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     },

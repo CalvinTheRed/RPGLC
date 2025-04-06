@@ -59,9 +59,8 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
                     "function": "add_bonus",
                     "bonus": [
                         {
-                            "formula": "range",
-                            "dice": [ ],
-                            "bonus": {{source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel()}}
+                            "formula": "number",
+                            "number": {{source.GetAbilityModifierFromAbilityName("con", context) * source.GetLevel()}}
                         }
                     ]
                 }

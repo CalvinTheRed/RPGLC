@@ -21,12 +21,16 @@ public class DealDamageTest {
                 {
                     "damage": [
                         {
+                            "formula": "dice",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3, -1 ] }
                             ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 10
                         }
                     ]
                 }
@@ -37,7 +41,7 @@ public class DealDamageTest {
         Assert.Equal("""
             [
               {
-                "bonus": 1,
+                "bonus": 0,
                 "damage_type": "fire",
                 "dice": [
                   {
@@ -48,6 +52,16 @@ public class DealDamageTest {
                     "size": 6
                   }
                 ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 10,
+                "damage_type": "fire",
+                "dice": [ ],
                 "scale": {
                   "denominator": 1,
                   "numerator": 1,
@@ -70,12 +84,9 @@ public class DealDamageTest {
                 {
                     "damage": [
                         {
+                            "formula": "number",
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
-                            ]
+                            "number": 10
                         }
                     ]
                 }
@@ -85,7 +96,7 @@ public class DealDamageTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
+        Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
     }
 
 };

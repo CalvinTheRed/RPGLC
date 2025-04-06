@@ -35,7 +35,9 @@ public class SetMinimum : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CalculationSubevent calculationSubevent) {
-            calculationSubevent.SetMinimum(CalculationSubevent.ProcessSetJson(rpglEffect, subevent, functionJson.GetJsonObject("minimum"), context));
+            calculationSubevent.SetMinimum(CalculationSubevent.ProcessFormulaJson(
+                CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, functionJson.GetJsonObject("minimum"), context))
+            );
         }
     }
 

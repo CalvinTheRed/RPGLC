@@ -75,7 +75,7 @@ public class HealingCollection : Subevent {
         rpglEffect.SetSource(GetSource().GetUuid());
         rpglEffect.SetTarget(null);
         for (int i = 0; i < healingArray.Count(); i++) {
-            AddHealing(CalculationSubevent.ProcessBonusJson(
+            AddHealing(CalculationSubevent.SimplifyCalculationFormulaJson(
                 rpglEffect,
                 this,
                 healingArray.GetJsonObject(i),

@@ -30,16 +30,14 @@ public class AddBonusTest {
                     "function": "add_bonus",
                     "bonus": [
                         {
-                            "formula": "range",
-                            "bonus": 0,
+                            "formula": "dice",
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
                         },
                         {
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [ ]
+                            "formula": "number",
+                            "number": 1
                         }
                     ]
                 }

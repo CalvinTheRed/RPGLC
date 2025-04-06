@@ -14,8 +14,8 @@ public class CalculationSubeventTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "processes bonus json (range)")]
-    public void ProcessesBonusJsonRange() {
+    [Fact(DisplayName = "simplifies number formula")]
+    public void SimplifiesNumberFormula() {
         RPGLContext context = new DummyContext();
 
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
@@ -23,20 +23,53 @@ public class CalculationSubeventTest {
 
         JsonObject formulaJson = new JsonObject().LoadFromString("""
             {
-                "formula": "range",
-                "dice": [
-                    { "count": 2, "size": 6, "determined": [ 3 ] }
-                ],
-                "bonus": 1
+                "formula": "number",
+                "number": 1
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
             {
               "bonus": 1,
+              "dice": [ ],
+              "scale": {
+                "denominator": 1,
+                "numerator": 1,
+                "round_up": false
+              }
+            }
+            """,
+            simplifiedFormula.PrettyPrint()
+        );
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "simplifies dice formula")]
+    public void SimplifiesDiceFormula() {
+        RPGLContext context = new DummyContext();
+
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
+        Subevent subevent = new DummySubevent();
+
+        JsonObject formulaJson = new JsonObject().LoadFromString("""
+            {
+                "formula": "dice",
+                "dice": [
+                    { "count": 2, "size": 6, "determined": [ 3 ] }
+                ]
+            }
+            """);
+
+        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+
+        Assert.Equal(
+            """
+            {
+              "bonus": 0,
               "dice": [
                 {
                   "determined": [
@@ -58,7 +91,7 @@ public class CalculationSubeventTest {
               }
             }
             """,
-            processedBonus.PrettyPrint()
+            simplifiedFormula.PrettyPrint()
         );
     }
 
@@ -67,8 +100,8 @@ public class CalculationSubeventTest {
     [ExtraClassesMock]
     [ExtraEffectsMock]
     [ExtraObjectsMock]
-    [Fact(DisplayName = "processes bonus json (modifier)")]
-    public void ProcessesBonusJsonModifier() {
+    [Fact(DisplayName = "simplifies modifier formula")]
+    public void SimplifiesModifierFormula() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
@@ -87,7 +120,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -110,8 +143,8 @@ public class CalculationSubeventTest {
     [ExtraClassesMock]
     [ExtraEffectsMock]
     [ExtraObjectsMock]
-    [Fact(DisplayName = "processes bonus json (ability)")]
-    public void ProcessesBonusJsonAbility() {
+    [Fact(DisplayName = "simplifies ability formula")]
+    public void SimplifiesAbilityFormula() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
@@ -130,7 +163,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -150,8 +183,8 @@ public class CalculationSubeventTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "processes bonus json (proficiency)")]
-    public void ProcessesBonusJsonProficiency() {
+    [Fact(DisplayName = "simplifies proficiency formula")]
+    public void SimplifiesProficiencyFormula() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
@@ -169,7 +202,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -192,8 +225,8 @@ public class CalculationSubeventTest {
     [ExtraClassesMock]
     [ExtraEffectsMock]
     [ExtraObjectsMock]
-    [Fact(DisplayName = "processes bonus json (level)")]
-    public void ProcessesBonusJsonLevel() {
+    [Fact(DisplayName = "simplifies level formula")]
+    public void SimplifiesLevelFormula() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
 
@@ -212,7 +245,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -230,182 +263,7 @@ public class CalculationSubeventTest {
         );
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "processes set json (number)")]
-    public void ProcessesSetJsonNumber() {
-        RPGLContext context = new DummyContext();
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "number",
-                "number": 2
-            }
-            """);
-
-        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "processes set json (modifier)")]
-    public void ProcessesSetJsonModifier() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "modifier",
-                "ability": "cha",
-                "object": {
-                    "from": "subevent",
-                    "object": "source"
-                }
-            }
-            """);
-
-        Assert.Equal(-2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "processes set json (ability)")]
-    public void ProcessesSetJsonAbility() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "ability",
-                "ability": "str",
-                "object": {
-                    "from": "subevent",
-                    "object": "source"
-                }
-            }
-            """);
-
-        Assert.Equal(13, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "processes set json (proficiency)")]
-    public void ProcessesSetJsonProficiency() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "subevent",
-                    "object": "source"
-                }
-            }
-            """);
-
-        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "processes set json (level)")]
-    public void ProcessesSetJsonLevel() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "level",
-                "class": "test:class_with_nested_class",
-                "object": {
-                    "from": "subevent",
-                    "object": "source"
-                }
-            }
-            """);
-
-        Assert.Equal(1, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "processes set json (scale)")]
-    public void ProcessesSetJsonScale() {
-        RPGLContext context = new DummyContext();
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "number",
-                "number": 2,
-                "scale": {
-                    "numerator": 2,
-                    "denominator": 1,
-                    "round_up": false
-                }
-            }
-            """);
-
-        Assert.Equal(4, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "processes set json (round up)")]
-    public void ProcessesSetJsonRoundUp() {
-        RPGLContext context = new DummyContext();
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "number",
-                "number": 1,
-                "scale": {
-                    "numerator": 4,
-                    "denominator": 3,
-                    "round_up": true
-                }
-            }
-            """);
-
-        Assert.Equal(2, CalculationSubevent.ProcessSetJson(rpglEffect, subevent, formulaJson, context));
-    }
-
-    [Fact(DisplayName = "scales")]
+    [Fact(DisplayName = "scales with defaults")]
     public void ScalesWithDefaults() {
         Assert.Equal(10, CalculationSubevent.Scale(10, new()));
 
@@ -474,16 +332,14 @@ public class CalculationSubeventTest {
                 "subevent": "dummy_calculation",
                 "bonuses": [
                     {
-                        "formula": "range",
-                        "bonus": 0,
+                        "formula": "dice",
                         "dice": [
                             { "count": 2, "size": 6, "determined": [ 3 ] }
                         ]
                     },
                     {
-                        "formula": "range",
-                        "bonus": 2,
-                        "dice": [ ]
+                        "formula": "number",
+                        "number": 2
                     }
                 ]
             }
@@ -547,16 +403,14 @@ public class CalculationSubeventTest {
                 },
                 "bonuses": [
                     {
-                        "formula": "range",
-                        "bonus": 0,
+                        "formula": "dice",
                         "dice": [
                             { "count": 2, "size": 6, "determined": [ 3 ] }
                         ]
                     },
                     {
-                        "formula": "range",
-                        "bonus": 2,
-                        "dice": [ ]
+                        "formula": "number",
+                        "number": 2
                     }
                 ]
             }
@@ -583,16 +437,14 @@ public class CalculationSubeventTest {
                 },
                 "bonuses": [
                     {
-                        "formula": "range",
-                        "bonus": 0,
+                        "formula": "dice",
                         "dice": [
                             { "count": 2, "size": 6, "determined": [ 3 ] }
                         ]
                     },
                     {
-                        "formula": "range",
-                        "bonus": 2,
-                        "dice": [ ]
+                        "formula": "number",
+                        "number": 2
                     }
                 ],
                 "minimum": {

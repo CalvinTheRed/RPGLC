@@ -29,16 +29,14 @@ public class AddTemporaryHitPointsTest {
                     "function": "add_temporary_hit_points",
                     "temporary_hit_points": [
                         {
-                            "formula": "range",
-                            "bonus": 0,
+                            "formula": "dice",
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
                         },
                         {
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [ ]
+                            "formula": "number",
+                            "number": 1
                         }
                     ]
                 }

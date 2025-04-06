@@ -38,7 +38,7 @@ public class AddDamage : Function {
             JsonArray damageArray = functionJson.GetJsonArray("damage");
             for (int i = 0; i < damageArray.Count(); i++) {
                 JsonObject damageElement = damageArray.GetJsonObject(i);
-                JsonObject damage = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, damageElement, context);
+                JsonObject damage = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, damageElement, context);
                 string? damageType = damageElement.GetString("damage_type");
                 if (damageType is null) {
                     damage.PutString("damage_type", damageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type"));
@@ -51,7 +51,7 @@ public class AddDamage : Function {
             JsonArray damageArray = functionJson.GetJsonArray("damage");
             for (int i = 0; i < damageArray.Count(); i++) {
                 JsonObject damageElement = damageArray.GetJsonObject(i);
-                JsonObject damage = CalculationSubevent.ProcessBonusJson(rpglEffect, subevent, damageElement, context);
+                JsonObject damage = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, damageElement, context);
                 string? damageType = damageElement.GetString("damage_type");
                 if (damageType is null) {
                     damage.PutString("damage_type", criticalHitDamageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type"));

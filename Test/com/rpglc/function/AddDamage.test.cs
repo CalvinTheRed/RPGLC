@@ -30,17 +30,15 @@ public class AddDamageTest {
                     "damage": [
                         {
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 0,
+                            "formula": "dice",
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
                             ]
                         },
                         {
                             "damage_type": "fire",
-                            "formula": "range",
-                            "bonus": 1,
-                            "dice": [ ]
+                            "formula": "number",
+                            "number": 1
                         }
                     ]
                 }

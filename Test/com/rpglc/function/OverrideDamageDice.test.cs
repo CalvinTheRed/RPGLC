@@ -61,7 +61,7 @@ public class OverrideDamageDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     }
@@ -191,7 +191,7 @@ public class OverrideDamageDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     },
@@ -324,7 +324,7 @@ public class OverrideDamageDiceTest {
                 {
                     "function": "override_damage_dice",
                     "damage_type": "fire",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     }
@@ -455,7 +455,7 @@ public class OverrideDamageDiceTest {
                 {
                     "function": "override_damage_dice",
                     "damage_type": "fire",
-                    "set": {
+                    "override": {
                       "formula": "number",
                       "number": 4
                     },

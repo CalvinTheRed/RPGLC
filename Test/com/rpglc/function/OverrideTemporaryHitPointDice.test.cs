@@ -59,7 +59,7 @@ public class OverrideTemporaryHitPointDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_temporary_hit_point_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     }
@@ -185,7 +185,7 @@ public class OverrideTemporaryHitPointDiceTest {
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_temporary_hit_point_dice",
-                    "set": {
+                    "override": {
                         "formula": "number",
                         "number": 4
                     },
