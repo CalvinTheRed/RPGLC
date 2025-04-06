@@ -11,7 +11,7 @@ namespace com.rpglc.function;
 ///   {
 ///     "function": "add_healing",
 ///     "healing": [
-///       &lt;bonus formula&gt;
+///       &lt;calculation formula&gt;
 ///     ]
 ///   }
 ///   </code>
@@ -19,7 +19,7 @@ namespace com.rpglc.function;
 ///   <i>Note that this function should be paired with a condition checking for the subevent to have either the "base" or "target" tag. Neglecting this check will cause the bonus to be applied to a healing subevent more than once.</i>
 ///   
 ///   <list type="bullet">
-///     <item>"healing" is a list of bonus formulae to add to the healing collection.</item>
+///     <item>"healing" is a list of calculation formulae to add to the healing collection.</item>
 ///   </list>
 ///   
 ///   <b>Compatible Subevents</b>
@@ -36,7 +36,7 @@ public class AddHealing : Function {
         if (subevent is HealingCollection healingCollection) {
             JsonArray healingArray = functionJson.GetJsonArray("healing");
             for (int i = 0; i < healingArray.Count(); i++) {
-                healingCollection.AddHealing(CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, healingArray.GetJsonObject(i), context));
+                healingCollection.AddHealing(CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, healingArray.GetJsonObject(i), context));
             }
         }
     }

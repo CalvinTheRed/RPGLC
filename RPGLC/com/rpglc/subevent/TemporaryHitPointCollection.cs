@@ -75,7 +75,7 @@ public class TemporaryHitPointCollection : Subevent {
         rpglEffect.SetSource(GetSource().GetUuid());
         rpglEffect.SetTarget(null);
         for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
-            AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormulaJson(
+            AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormula(
                 rpglEffect,
                 this,
                 temporaryHitPointArray.GetJsonObject(i),

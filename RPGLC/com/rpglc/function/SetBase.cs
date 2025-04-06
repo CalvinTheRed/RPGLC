@@ -10,12 +10,12 @@ namespace com.rpglc.function;
 ///   <code>
 ///   {
 ///     "function": "set_base",
-///     "base": &lt;base formula&gt;
+///     "base": &lt;calculation formula&gt;
 ///   }
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>"base" is a base formula that sets the base of a calculation-type subevent.</item>
+///     <item>"base" is a calculation formula that sets the base of a calculation-type subevent.</item>
 ///   </list>
 ///   
 ///   <b>Compatible Subevents</b>
@@ -36,7 +36,7 @@ public class SetBase : Function {
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CalculationSubevent calculationSubevent) {
             calculationSubevent.SetBase(CalculationSubevent.ProcessFormulaJson(
-                CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, functionJson.GetJsonObject("base"), context))
+                CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, functionJson.GetJsonObject("base"), context))
             );
         }
     }

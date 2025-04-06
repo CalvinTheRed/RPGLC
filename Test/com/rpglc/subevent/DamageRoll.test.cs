@@ -176,8 +176,8 @@ public class DamageRollTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls untyped damage dice")]
-    public void RerollsUntypedDamageDice() {
+    [Fact(DisplayName = "rerolls wild card damage dice")]
+    public void RerollsWildCardDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""

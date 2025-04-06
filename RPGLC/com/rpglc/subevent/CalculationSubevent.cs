@@ -82,7 +82,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
             RPGLEffect rpglEffect = new RPGLEffect()
                 .SetSource(GetSource().GetUuid())
                 .SetTarget(GetTarget().GetUuid());
-            SetBase(ProcessFormulaJson(SimplifyCalculationFormulaJson(rpglEffect, this, baseJson, context)));
+            SetBase(ProcessFormulaJson(SimplifyCalculationFormula(rpglEffect, this, baseJson, context)));
         }
         return this;
     }
@@ -96,7 +96,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
                 .SetTarget(GetTarget().GetUuid());
             for (int i = 0; i < bonuses.Count(); i++) {
                 JsonObject bonusJson = bonuses.GetJsonObject(i);
-                AddBonus(SimplifyCalculationFormulaJson(rpglEffect, this, bonusJson, context));
+                AddBonus(SimplifyCalculationFormula(rpglEffect, this, bonusJson, context));
             }
         }
         return this;
@@ -109,12 +109,14 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
             RPGLEffect rpglEffect = new RPGLEffect()
                 .SetSource(GetSource().GetUuid())
                 .SetTarget(GetTarget().GetUuid());
-            SetMinimum(ProcessFormulaJson(SimplifyCalculationFormulaJson(rpglEffect, this, minimumJson, context)));
+            SetMinimum(ProcessFormulaJson(SimplifyCalculationFormula(rpglEffect, this, minimumJson, context)));
         }
         return this;
     }
 
     public static long Scale(long value, JsonObject scaleJson) {
+        // TODO possible to abstract out numerator and denominator to use calculation formulae?
+        // Would make CalculateMaximumHitPoints less hard-coded, and make other features easier to implement.
         bool roundUp = scaleJson.GetBool("round_up") ?? false;
         if (roundUp) {
             return (long) Math.Ceiling((decimal) value 
@@ -263,7 +265,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     /// <param name="formulaJson"></param>
     /// <param name="context"></param>
     /// <returns></returns>
-    public static JsonObject SimplifyCalculationFormulaJson(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
+    public static JsonObject SimplifyCalculationFormula(RPGLEffect rpglEffect, Subevent subevent, JsonObject formulaJson, RPGLContext context) {
         string formula = formulaJson.GetString("formula");
         if (formula == "number") {
             return new JsonObject()

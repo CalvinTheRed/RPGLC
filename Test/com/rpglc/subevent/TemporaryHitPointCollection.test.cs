@@ -67,7 +67,7 @@ public class TemporaryHitPointCollectionTest {
         TemporaryHitPointCollection temporaryHitPointCollection = new TemporaryHitPointCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
-            .AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormulaJson(
+            .AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormula(
                 new(),
                 new DummySubevent(),
                 new JsonObject().LoadFromString("""

@@ -67,7 +67,7 @@ public class HealingCollectionTest {
         HealingCollection healingCollection = new HealingCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
-            .AddHealing(CalculationSubevent.SimplifyCalculationFormulaJson(
+            .AddHealing(CalculationSubevent.SimplifyCalculationFormula(
                 new(),
                 new DummySubevent(),
                 new JsonObject().LoadFromString("""

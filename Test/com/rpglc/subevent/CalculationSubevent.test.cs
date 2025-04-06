@@ -28,7 +28,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -64,7 +64,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -120,7 +120,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -134,7 +134,7 @@ public class CalculationSubeventTest {
               }
             }
             """,
-            processedBonus.PrettyPrint()
+            simplifiedBonus.PrettyPrint()
         );
     }
 
@@ -163,7 +163,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -177,7 +177,7 @@ public class CalculationSubeventTest {
               }
             }
             """,
-            processedBonus.PrettyPrint()
+            simplifiedBonus.PrettyPrint()
         );
     }
 
@@ -202,7 +202,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -216,7 +216,7 @@ public class CalculationSubeventTest {
               }
             }
             """,
-            processedBonus.PrettyPrint()
+            simplifiedBonus.PrettyPrint()
         );
     }
 
@@ -245,7 +245,7 @@ public class CalculationSubeventTest {
             }
             """);
 
-        JsonObject processedBonus = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, formulaJson, context);
+        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
 
         Assert.Equal(
             """
@@ -259,7 +259,7 @@ public class CalculationSubeventTest {
               }
             }
             """,
-            processedBonus.PrettyPrint()
+            simplifiedBonus.PrettyPrint()
         );
     }
 

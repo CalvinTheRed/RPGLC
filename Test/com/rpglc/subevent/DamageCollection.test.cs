@@ -93,7 +93,7 @@ public class DamageCollectionTest {
         DamageCollection damageCollection = new DamageCollection()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new())
-            .AddDamage(CalculationSubevent.SimplifyCalculationFormulaJson(
+            .AddDamage(CalculationSubevent.SimplifyCalculationFormula(
                 new(),
                 new DummySubevent(),
                 new JsonObject().LoadFromString("""

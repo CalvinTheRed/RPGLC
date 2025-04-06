@@ -11,13 +11,13 @@ namespace com.rpglc.function;
 ///   {
 ///     "function": "add_bonus",
 ///     "bonus": [
-///       &lt;bonus formula&gt;
+///       &lt;calculation formula&gt;
 ///     ]
 ///   }
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>"bonus" is a list of bonus formulae to add to a calculation-type subevent.</item>
+///     <item>"bonus" is a list of calculation formulae to add to a calculation-type subevent.</item>
 ///   </list>
 ///   
 ///   <b>Compatible Subevents</b>
@@ -39,7 +39,7 @@ public class AddBonus : Function {
         if (subevent is CalculationSubevent calculationSubevent) {
             JsonArray bonusArray = functionJson.GetJsonArray("bonus");
             for (int i = 0; i < bonusArray.Count(); i++) {
-                calculationSubevent.AddBonus(CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, bonusArray.GetJsonObject(i), context));
+                calculationSubevent.AddBonus(CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, bonusArray.GetJsonObject(i), context));
             }
         }
     }

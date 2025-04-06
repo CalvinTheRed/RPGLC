@@ -124,7 +124,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
                     long roll = (long) typedDamageDie.GetLong("roll");
                     if (roll < upperBound && roll > lowerBound) {
                         typedDamageDie.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
-                            CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                            CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, functionJson.GetJsonObject("override"), context))
                         );
                     }
                 }

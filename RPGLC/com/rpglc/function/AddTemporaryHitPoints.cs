@@ -11,7 +11,7 @@ namespace com.rpglc.function;
 ///   {
 ///     "function": "add_healing",
 ///     "temporary_hit_points": [
-///       &lt;bonus formula&gt;
+///       &lt;calculation formula&gt;
 ///     ]
 ///   }
 ///   </code>
@@ -19,7 +19,7 @@ namespace com.rpglc.function;
 ///   <i>Note that this function should be paired with a condition checking for the subevent to have either the "base" or "target" tag. Neglecting this check will cause the bonus to be applied to a temporary hit point collection more than once.</i>
 ///   
 ///   <list type="bullet">
-///     <item>"temporary_hit_points" is a list of bonus formulae to add to a temporary hit point collection.</item>
+///     <item>"temporary_hit_points" is a list of calculation formulae to add to a temporary hit point collection.</item>
 ///   </list>
 ///   
 ///   <b>Compatible Subevents</b>
@@ -36,7 +36,7 @@ public class AddTemporaryHitPoints : Function {
         if (subevent is TemporaryHitPointCollection temporaryHitPointCollection) {
             JsonArray temporaryHitPointArray = functionJson.GetJsonArray("temporary_hit_points");
             for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
-                temporaryHitPointCollection.AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormulaJson(
+                temporaryHitPointCollection.AddTemporaryHitPoints(CalculationSubevent.SimplifyCalculationFormula(
                     rpglEffect,
                     subevent,
                     temporaryHitPointArray.GetJsonObject(i),

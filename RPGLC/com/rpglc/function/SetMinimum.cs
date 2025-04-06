@@ -10,12 +10,12 @@ namespace com.rpglc.function;
 ///   <code>
 ///   {
 ///     "function": "set_minimum",
-///     "minimum": &lt;set formula&gt;
+///     "minimum": &lt;calculation formula&gt;
 ///   }
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>"minimum" is a set formula that defines the minimum value for a calculation-type subevent. If the function's minimum formula provides a number less than the subevent's current minimum, nothing changes.</item>
+///     <item>"minimum" is a calculation formula that defines the minimum value for a calculation-type subevent. If the function's minimum formula provides a number less than the subevent's current minimum, nothing changes.</item>
 ///   </list>
 ///   
 ///   <b>Compatible Subevents</b>
@@ -36,7 +36,7 @@ public class SetMinimum : Function {
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CalculationSubevent calculationSubevent) {
             calculationSubevent.SetMinimum(CalculationSubevent.ProcessFormulaJson(
-                CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, subevent, functionJson.GetJsonObject("minimum"), context))
+                CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, functionJson.GetJsonObject("minimum"), context))
             );
         }
     }

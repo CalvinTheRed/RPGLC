@@ -14,8 +14,8 @@ public class RerollDamageDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls untyped, unbounded damage dice")]
-    public void RerollsUntypedUnboundedDamageDice() {
+    [Fact(DisplayName = "rerolls wild card unbounded damage dice")]
+    public void RerollsWildCardUnboundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -140,8 +140,8 @@ public class RerollDamageDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls untyped, bounded damage dice")]
-    public void RerollsUntypedBoundedDamageDice() {
+    [Fact(DisplayName = "rerolls wild card bounded damage dice")]
+    public void RerollsWildCardBoundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""

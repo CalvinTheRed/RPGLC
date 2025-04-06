@@ -103,7 +103,7 @@ public class HealingRoll : Subevent {
                 long roll = (long) die.GetLong("roll");
                 if (roll <= upperBound && roll >= lowerBound) {
                     die.PutLong("roll", CalculationSubevent.ProcessFormulaJson(
-                        CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, this, functionJson.GetJsonObject("override"), context))
+                        CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, functionJson.GetJsonObject("override"), context))
                     );
                 }
             }

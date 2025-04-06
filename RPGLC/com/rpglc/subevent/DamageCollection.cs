@@ -15,7 +15,7 @@ namespace com.rpglc.subevent;
 ///   <br /><br />
 ///   <b>Special Conditions</b>
 ///   <list type="bullet">
-///     <item></item>
+///     <item>IncludesDamageType</item>
 ///   </list>
 ///   
 ///   <b>Special Functions</b>
@@ -92,7 +92,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         rpglEffect.SetTarget(null);
         for (int i = 0; i < damageArray.Count(); i++) {
             JsonObject damageJson = damageArray.GetJsonObject(i);
-            JsonObject damage = CalculationSubevent.SimplifyCalculationFormulaJson(rpglEffect, this, damageJson, context);
+            JsonObject damage = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, this, damageJson, context);
             damage.PutString("damage_type", damageJson.GetString("damage_type"));
             AddDamage(damage);
         }
