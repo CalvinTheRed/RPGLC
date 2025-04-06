@@ -146,7 +146,7 @@ public class HealingRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        healingRoll.SetHealingDice(
+        healingRoll.OverrideHealingDice(
             new(),
             new JsonObject().LoadFromString("""
                 {

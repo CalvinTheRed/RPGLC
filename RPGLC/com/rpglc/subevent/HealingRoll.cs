@@ -14,8 +14,8 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>MaximizeHealing</item>
+///     <item>OverrideHealingDice</item>
 ///     <item>RerollHealingDice</item>
-///     <item>SetHealingDice</item>
 ///   </list>
 ///   
 /// </summary>
@@ -92,7 +92,7 @@ public class HealingRoll : Subevent {
         return this;
     }
 
-    public HealingRoll SetHealingDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+    public HealingRoll OverrideHealingDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
         long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
         long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         JsonArray healingArray = json.GetJsonArray("healing");

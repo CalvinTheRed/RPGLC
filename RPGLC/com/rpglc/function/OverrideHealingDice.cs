@@ -9,7 +9,7 @@ namespace com.rpglc.function;
 ///   
 ///   <code>
 ///   {
-///     "function": "set_damage_dice",
+///     "function": "override_damage_dice",
 ///     "set": &lt;set formula&gt;,
 ///     "lower_bound": &lt;long = 0&gt;,
 ///     "upper_bound": &lt;long = long.MaxValue&gt;
@@ -30,13 +30,13 @@ namespace com.rpglc.function;
 ///   </list>
 ///   
 /// </summary>
-public class SetHealingDice : Function {
+public class OverrideHealingDice : Function {
 
-    public SetHealingDice() : base("set_healing_dice") { }
+    public OverrideHealingDice() : base("override_healing_dice") { }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {
-            healingRoll.SetHealingDice(rpglEffect, functionJson, context);
+            healingRoll.OverrideHealingDice(rpglEffect, functionJson, context);
         }
     }
 

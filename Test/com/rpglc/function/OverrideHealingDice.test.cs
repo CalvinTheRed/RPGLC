@@ -9,13 +9,13 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-public class SetHealingDiceTest {
+public class OverrideHealingDiceTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets unbounded healing dice")]
-    public void SetsUnboundedHealingDice() {
+    [Fact(DisplayName = "overrides unbounded healing dice")]
+    public void OverridesUnboundedHealingDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -53,12 +53,12 @@ public class SetHealingDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetHealingDice().Execute(
+        new OverrideHealingDice().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_healing_dice",
+                    "function": "override_healing_dice",
                     "set": {
                         "formula": "number",
                         "number": 4
@@ -140,8 +140,8 @@ public class SetHealingDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets bounded healing dice")]
-    public void RerollsBoundedHealingDice() {
+    [Fact(DisplayName = "overrides bounded healing dice")]
+    public void OverridesBoundedHealingDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -179,12 +179,12 @@ public class SetHealingDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetHealingDice().Execute(
+        new OverrideHealingDice().Execute(
             new(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_healing_dice",
+                    "function": "override_healing_dice",
                     "set": {
                         "formula": "number",
                         "number": 4

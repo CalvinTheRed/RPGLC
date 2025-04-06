@@ -146,7 +146,7 @@ public class TemporaryHitPointRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        temporaryHitPointRoll.SetTemporaryHitPointDice(
+        temporaryHitPointRoll.OverrideTemporaryHitPointDice(
             new(),
             new JsonObject().LoadFromString("""
                 {

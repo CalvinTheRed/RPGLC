@@ -19,8 +19,8 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>MaximizeDamage</item>
+///     <item>OverrideDamageDice</item>    
 ///     <item>RerollDamageDice</item>
-///     <item>SetDamageDice</item>
 ///   </list>
 ///   
 /// </summary>
@@ -109,7 +109,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
-    public void SetDamageDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+    public void OverrideDamageDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
         string damageType = functionJson.GetString("damage_type") ?? "*";
         long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;

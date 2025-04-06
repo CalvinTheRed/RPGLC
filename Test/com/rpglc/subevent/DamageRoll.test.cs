@@ -271,7 +271,7 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.SetDamageDice(
+        damageRoll.OverrideDamageDice(
             new(),
             new JsonObject().LoadFromString("""
                 {
@@ -365,7 +365,7 @@ public class DamageRollTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        damageRoll.SetDamageDice(
+        damageRoll.OverrideDamageDice(
             new(),
             new JsonObject().LoadFromString("""
                 {

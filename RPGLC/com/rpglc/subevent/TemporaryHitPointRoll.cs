@@ -14,8 +14,8 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>MaximizeTemporaryHitPoints</item>
+///     <item>OverrideTemporaryHitPointDice</item>
 ///     <item>RerollTemporaryHitPointDice</item>
-///     <item>SetTemporaryHitPointDice</item>
 ///   </list>
 ///   
 /// </summary>
@@ -92,7 +92,7 @@ public class TemporaryHitPointRoll : Subevent {
         return this;
     }
 
-    public TemporaryHitPointRoll SetTemporaryHitPointDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
+    public TemporaryHitPointRoll OverrideTemporaryHitPointDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
         long upperBound = functionJson.GetLong("upper_bound") ?? long.MaxValue;
         long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
         JsonArray temporaryHitPointArray = json.GetJsonArray("temporary_hit_points");

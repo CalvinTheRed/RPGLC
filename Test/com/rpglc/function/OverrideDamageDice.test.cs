@@ -9,13 +9,13 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-public class SetDamageDiceTest {
+public class OverrideDamageDiceTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets untyped, unbounded damage dice")]
-    public void SetsUntypedUnboundedDamageDice() {
+    [Fact(DisplayName = "overrides wild card unbounded damage dice")]
+    public void OverridesWildCardUnboundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -55,12 +55,12 @@ public class SetDamageDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetDamageDice().Execute(
+        new OverrideDamageDice().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_damage_dice",
+                    "function": "override_damage_dice",
                     "set": {
                         "formula": "number",
                         "number": 4
@@ -144,8 +144,8 @@ public class SetDamageDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets untyped, bounded damage dice")]
-    public void RerollsUntypedBoundedDamageDice() {
+    [Fact(DisplayName = "overrides wild card bounded damage dice")]
+    public void OverridesWildCardBoundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -185,12 +185,12 @@ public class SetDamageDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetDamageDice().Execute(
+        new OverrideDamageDice().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_damage_dice",
+                    "function": "override_damage_dice",
                     "set": {
                         "formula": "number",
                         "number": 4
@@ -276,8 +276,8 @@ public class SetDamageDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets typed, unbounded damage dice")]
-    public void RerollsTypedUnboundedDamageDice() {
+    [Fact(DisplayName = "overrides typed unbounded damage dice")]
+    public void OverridesTypedUnboundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -317,12 +317,12 @@ public class SetDamageDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetDamageDice().Execute(
+        new OverrideDamageDice().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_damage_dice",
+                    "function": "override_damage_dice",
                     "damage_type": "fire",
                     "set": {
                         "formula": "number",
@@ -407,8 +407,8 @@ public class SetDamageDiceTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets typed, bounded damage dice")]
-    public void RerollsTypedBoundedDamageDice() {
+    [Fact(DisplayName = "overrides typed bounded damage dice")]
+    public void OverridesTypedBoundedDamageDice() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
@@ -448,12 +448,12 @@ public class SetDamageDiceTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        new SetDamageDice().Execute(
+        new OverrideDamageDice().Execute(
             new RPGLEffect(),
             subevent,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "set_damage_dice",
+                    "function": "override_damage_dice",
                     "damage_type": "fire",
                     "set": {
                       "formula": "number",
