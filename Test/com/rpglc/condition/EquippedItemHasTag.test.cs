@@ -41,7 +41,8 @@ public class EquippedItemHasTagTest {
                     "condition": "equipped_item_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "slot": "test_slot",
                     "tag": "test_tag"
@@ -72,7 +73,8 @@ public class EquippedItemHasTagTest {
                     "condition": "equipped_item_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "slot": "test_slot",
                     "tag": "test_tag"
@@ -104,7 +106,8 @@ public class EquippedItemHasTagTest {
                     "condition": "equipped_item_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "slot": "*",
                     "tag": "test_tag"
@@ -135,7 +138,8 @@ public class EquippedItemHasTagTest {
                     "condition": "equipped_item_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "slot": "*",
                     "tag": "test_tag"

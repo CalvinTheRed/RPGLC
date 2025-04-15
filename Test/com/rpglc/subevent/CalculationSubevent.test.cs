@@ -115,7 +115,8 @@ public class CalculationSubeventTest {
                 "ability": "cha",
                 "object": {
                     "from": "subevent",
-                    "object": "source"
+                    "object": "source",
+                    "as_origin": false
                 }
             }
             """);
@@ -158,7 +159,8 @@ public class CalculationSubeventTest {
                 "ability": "str",
                 "object": {
                     "from": "subevent",
-                    "object": "source"
+                    "object": "source",
+                    "as_origin": false
                 }
             }
             """);
@@ -197,7 +199,8 @@ public class CalculationSubeventTest {
                 "formula": "proficiency",
                 "object": {
                     "from": "subevent",
-                    "object": "source"
+                    "object": "source",
+                    "as_origin": false
                 }
             }
             """);
@@ -240,7 +243,8 @@ public class CalculationSubeventTest {
                 "class": "test:class_with_nested_class",
                 "object": {
                     "from": "subevent",
-                    "object": "source"
+                    "object": "source",
+                    "as_origin": false
                 }
             }
             """);

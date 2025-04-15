@@ -12,7 +12,8 @@ namespace com.rpglc.condition;
 ///     "condition": "object_has_tag",
 ///     "object": {
 ///       "from": "subevent" | "effect",
-///       "object": "source" | "target"
+///       "object": "source" | "target",
+///       "as_origin": &lt;bool = false&gt;
 ///     },
 ///     "tag": &lt;string&gt;
 ///   }

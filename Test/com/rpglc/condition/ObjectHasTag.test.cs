@@ -37,7 +37,8 @@ public class ObjectHasTagTest {
                     "condition": "object_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "tag": "test_tag"
                 }
@@ -63,7 +64,8 @@ public class ObjectHasTagTest {
                     "condition": "object_has_tag",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "tag": "test_tag"
                 }

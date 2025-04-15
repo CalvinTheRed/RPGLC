@@ -12,7 +12,8 @@ namespace com.rpglc.condition;
 ///     "condition": "check_ability_score",
 ///     "object": {
 ///       "from": "subevent" | "effect",
-///       "object": "source" | "target"
+///       "object": "source" | "target",
+///       "as_origin": &lt;bool = false&gt;
 ///     },
 ///     "ability": &lt;string&gt;,
 ///     "comparison": "&lt;" | "&lt;=" | "&gt;" | "&gt;=" | "=" | "!=",

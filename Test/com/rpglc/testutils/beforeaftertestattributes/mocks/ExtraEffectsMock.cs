@@ -57,8 +57,18 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                             "conditions": [
                                 {
                                     "condition": "objects_match",
-                                    "effect": "target",
-                                    "subevent": "target"
+                                    "objects": [
+                                        {
+                                            "from": "effect",
+                                            "object": "target",
+                                            "as_origin": false
+                                        },
+                                        {
+                                            "from": "subevent",
+                                            "object": "target",
+                                            "as_origin": false
+                                        }
+                                    ]
                                 }
                             ],
                             "functions": [
@@ -88,8 +98,18 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                             "conditions": [
                                 {
                                     "condition": "objects_match",
-                                    "effect": "target",
-                                    "subevent": "target"
+                                    "objects": [
+                                        {
+                                            "from": "effect",
+                                            "object": "target",
+                                            "as_origin": false
+                                        },
+                                        {
+                                            "from": "subevent",
+                                            "object": "target",
+                                            "as_origin": false
+                                        }
+                                    ]
                                 }
                             ],
                             "functions": [
@@ -119,8 +139,18 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                             "conditions": [
                                 {
                                     "condition": "objects_match",
-                                    "effect": "target",
-                                    "subevent": "target"
+                                    "objects": [
+                                        {
+                                            "from": "effect",
+                                            "object": "target",
+                                            "as_origin": false
+                                        },
+                                        {
+                                            "from": "subevent",
+                                            "object": "target",
+                                            "as_origin": false
+                                        }
+                                    ]
                                 }
                             ],
                             "functions": [

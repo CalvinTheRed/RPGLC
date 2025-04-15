@@ -85,14 +85,16 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
                         "ability": "{{GetAbility(context)}}",
                         "object": {
                             "from": "subevent",
-                            "object": "source"
+                            "object": "source",
+                            "as_origin": false
                         }
                     },
                     {
                         "formula": "proficiency",
                         "object": {
                             "from": "subevent",
-                            "object": "source"
+                            "object": "source",
+                            "as_origin": false
                         },
                         "scale": {
                             "numerator": {{proficiencyNumerator}},

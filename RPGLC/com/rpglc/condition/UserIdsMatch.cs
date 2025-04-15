@@ -9,14 +9,18 @@ namespace com.rpglc.condition;
 ///   <code>
 ///   {
 ///     "condition": "user_ids_match",
-///     "subevent": "source" | "target",
-///     "effect": "source" | "target"
+///     "objects": [
+///       {
+///         "from": "subevent" | "effect",
+///         "object": "source" | "target",
+///         "as_origin": &lt;bool = false&gt;
+///       }
+///     ]
 ///   }
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>"subevent" indicates which object's user id to use in the comparison, drawn from the subevent.</item>
-///     <item>"effect" indicates which object's user id to use in the comparison, drawn from the effect.</item>
+///     <item>"objects" indicates a list of objects from which to extract and compare user ids.</item>
 ///   </list>
 ///   
 /// </summary>
@@ -25,19 +29,12 @@ public class UserIdsMatch : Condition {
     public UserIdsMatch() : base("user_ids_match") { }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
-        RPGLObject effectObject = RPGLEffect.GetObject(rpglEffect, subevent, new JsonObject().LoadFromString($$"""
-            {
-                "from": "effect",
-                "object": "{{conditionJson.GetString("effect")}}"
-            }
-            """));
-        RPGLObject subeventObject = RPGLEffect.GetObject(rpglEffect, subevent, new JsonObject().LoadFromString($$"""
-            {
-                "from": "subevent",
-                "object": "{{conditionJson.GetString("subevent")}}"
-            }
-            """));
-        return Equals(effectObject.GetUserId(), subeventObject.GetUserId());
+        JsonArray objects = conditionJson.GetJsonArray("objects");
+        return objects
+            .AsList()
+            .Select(json => RPGLEffect.GetObject(rpglEffect, subevent, new JsonObject(json as Dictionary<string, object>)).GetUserId())
+            .Distinct()
+            .Count() == 1;
     }
 
 };
