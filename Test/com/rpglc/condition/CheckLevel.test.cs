@@ -39,7 +39,8 @@ public class CheckLevelTest {
                     "condition": "check_level",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "class": "*",
                     "comparison": "=",
@@ -70,7 +71,8 @@ public class CheckLevelTest {
                     "condition": "check_level",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "class": "*",
                     "comparison": "!=",
@@ -101,7 +103,8 @@ public class CheckLevelTest {
                     "condition": "check_level",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "class": "test:dummy",
                     "comparison": "=",
@@ -132,7 +135,8 @@ public class CheckLevelTest {
                     "condition": "check_level",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "class": "test:dummy",
                     "comparison": "!=",

@@ -61,7 +61,8 @@ public class CalculateDifficultyClass : CalculationSubevent {
                                 "formula": "proficiency",
                                 "object": {
                                     "from": "subevent",
-                                    "object": "source"
+                                    "object": "source",
+                                    "as_origin": false
                                 }
                             },
                             {
@@ -69,7 +70,8 @@ public class CalculateDifficultyClass : CalculationSubevent {
                                 "ability": "{{json.GetString("difficulty_class_ability")}}",
                                 "object": {
                                     "from": "subevent",
-                                    "object": "source"
+                                    "object": "source",
+                                    "as_origin": false
                                 }
                             }
                         ]

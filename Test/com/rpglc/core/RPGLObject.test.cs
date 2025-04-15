@@ -193,8 +193,18 @@ public class RPGLObjectTest {
                                 "conditions": [
                                     {
                                         "condition": "objects_match",
-                                        "effect": "target",
-                                        "subevent": "source"
+                                        "objects": [
+                                            {
+                                                "from": "effect",
+                                                "object": "target",
+                                                "as_origin": false
+                                            },
+                                            {
+                                                "from": "subevent",
+                                                "object": "source",
+                                                "as_origin": false
+                                            }
+                                        ]
                                     }
                                 ],
                                 "functions": [

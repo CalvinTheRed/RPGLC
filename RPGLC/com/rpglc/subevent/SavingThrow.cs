@@ -97,7 +97,8 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                             "ability": "{{GetAbility(context)}}",
                             "object": {
                                 "from": "subevent",
-                                "object": "target"
+                                "object": "target",
+                                "as_origin": false
                             }
                         }
                     ]

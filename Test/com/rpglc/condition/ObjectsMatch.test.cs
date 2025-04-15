@@ -34,8 +34,18 @@ public class ObjectsMatchTest {
             new JsonObject().LoadFromString("""
                 {
                     "condition": "objects_match",
-                    "effect": "source",
-                    "subevent": "source"
+                    "objects": [
+                        {
+                            "from": "effect",
+                            "object": "source",
+                            "as_origin": false
+                        },
+                        {
+                            "from": "subevent",
+                            "object": "source",
+                            "as_origin": false
+                        }
+                    ]
                 }
                 """),
             new DummyContext(),
@@ -58,8 +68,40 @@ public class ObjectsMatchTest {
             new JsonObject().LoadFromString("""
                 {
                     "condition": "objects_match",
-                    "effect": "source",
-                    "subevent": "source"
+                    "objects": [
+                        {
+                            "from": "effect",
+                            "object": "source",
+                            "as_origin": false
+                        },
+                        {
+                            "from": "subevent",
+                            "object": "source",
+                            "as_origin": false
+                        }
+                    ]
+                }
+                """),
+            new DummyContext(),
+            new()
+        );
+
+        Assert.False(result);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "defaults to false")]
+    public void DefaultsToFalse() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+
+        bool result = new ObjectsMatch().Evaluate(
+            new RPGLEffect().SetSource(rpglObject.GetUuid()),
+            new DummySubevent().SetSource(rpglObject),
+            new JsonObject().LoadFromString("""
+                {
+                    "condition": "objects_match",
+                    "objects": [ ]
                 }
                 """),
             new DummyContext(),

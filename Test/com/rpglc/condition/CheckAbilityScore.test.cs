@@ -36,7 +36,8 @@ public class CheckAbilityScoreTest {
                     "condition": "check_ability_score",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "ability": "str",
                     "comparison": "=",
@@ -64,7 +65,8 @@ public class CheckAbilityScoreTest {
                     "condition": "check_ability_score",
                     "object": {
                         "from": "subevent",
-                        "object": "source"
+                        "object": "source",
+                        "as_origin": false
                     },
                     "ability": "str",
                     "comparison": "!=",
