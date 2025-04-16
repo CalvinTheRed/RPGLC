@@ -5,6 +5,7 @@ using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.condition;
 
+[Collection("Serial")]
 public class CheckAbilityTest {
 
     [Fact(DisplayName = "condition mismatch")]

@@ -163,6 +163,31 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 }
             }
             """)));
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "No Crits",
+                "description": "This effect prevents critical hits from dealing critical damage in context.",
+                "datapack_id": "test:no_crits",
+                "allow_duplicates": true,
+                "optional": false,
+                "tags": [ ],
+                "subevent_filters": {
+                    "critical_damage_confirmation": [
+                        {
+                            "conditions": [ ],
+                            "functions": [
+                                {
+                                    "function": "suppress_critical_damage"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """)));
     }
 
 };

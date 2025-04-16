@@ -42,6 +42,7 @@ public abstract class Function(string functionId) {
             new RevokeVulnerability(),
             new SetBase(),
             new SetMinimum(),
+            new SuppressCriticalDamage(),
         ]);
     }
 
