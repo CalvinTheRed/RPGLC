@@ -19,7 +19,7 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CriticalDamageConfirmation : Subevent {
     
-    public CriticalDamageConfirmation() : base("critical_hit_coinfirmation") { }
+    public CriticalDamageConfirmation() : base("critical_damage_confirmation") { }
 
     public override Subevent Clone() {
         Subevent clone = new CriticalDamageConfirmation();

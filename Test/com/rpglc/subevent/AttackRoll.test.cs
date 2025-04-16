@@ -191,6 +191,63 @@ public class AttackRollTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [ExtraEffectsMock]
+    [DummyCounterManager]
+    [Fact(DisplayName = "critically hits with suppressed critical damage")]
+    public void CriticallyHitsWithSuppressedCriticalDamage() {
+        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:no_crits");
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .AddEffect(rpglEffect);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        AttackRoll attackRoll = new AttackRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "attack_type": "melee",
+                    "determined": [ 20 ],
+                    "damage": [
+                        {
+                            "formula": "dice",
+                            "damage_type": "fire",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                            ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
+                        }
+                    ],
+                    "hit": [
+                        {
+                            "subevent": "dummy_subevent"
+                        },
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ],
+                    "miss": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        Assert.Equal(2, DummySubevent.Counter);
+
+        Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
     [DummyCounterManager]
     [Fact(DisplayName = "critically misses")]
     public void CriticallyMisses() {
