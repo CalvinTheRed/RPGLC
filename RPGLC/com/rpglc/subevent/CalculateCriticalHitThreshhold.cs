@@ -46,11 +46,12 @@ public class CalculateCriticalHitThreshhold : CalculationSubevent {
 
     public override CalculateCriticalHitThreshhold Prepare(RPGLContext context, JsonArray originPoint) {
         base.Prepare(context, originPoint);
-        SetBase(20L);
+        json.PutIfAbsent("critical_hit_threshhold", 20L);
         return this;
     }
 
     public override CalculateCriticalHitThreshhold Run(RPGLContext context, JsonArray originPoint) {
+        SetBase((long) json.GetLong("critical_hit_threshhold"));
         return this;
     }
 

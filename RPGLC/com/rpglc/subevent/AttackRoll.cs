@@ -93,6 +93,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.PutIfAbsent("use_origin_ability", false);
         json.PutIfAbsent("damage", new JsonArray());
         json.PutIfAbsent("vampirism", new JsonArray());
+        json.PutIfAbsent("critical_hit_threshhold", 20L);
 
         // Add tag so nested subevents such as DamageCollection can know they
         // hail from an attack roll made using a particular attack ability.
@@ -134,7 +135,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.PutLong("target_armor_class", GetTarget().CalculateArmorClass(context, this));
         CalculateCriticalHitThreshhold(context, originPoint);
 
-        if (GetBase() >= GetCriticalHitThreshhold()) {
+        if (GetBase() >= GetCriticalHitThreshhold() && ConfirmCriticalDamage(context, originPoint)) {
             if (json.GetJsonArray("damage").Count() > 0) {
                 GetBaseDamage(context, originPoint);
                 GetTargetDamage(context, originPoint);
@@ -212,7 +213,8 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                                 "object": {
                                     "from": "subevent",
                                     "object": "source",
-                                    "as_origin": {{json.GetBool("use_origin_ability").ToString().ToLower()}}}
+                                    "as_origin": {{json.GetBool("use_origin_ability").ToString().ToLower()}}
+                                }
                             }
                         ]
                     }
@@ -247,6 +249,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     private void CalculateCriticalHitThreshhold(RPGLContext context, JsonArray originPoint) {
         CalculateCriticalHitThreshhold calculateCriticalHitThreshhold = new CalculateCriticalHitThreshhold()
             .JoinSubeventData(new JsonObject()
+                .PutLong("critical_hit_threshhold", json.GetLong("critical_hit_threshhold"))
                 .PutJsonArray("tags", GetTags().DeepClone())
             )
             .SetOriginItem(GetOriginItem())
@@ -266,9 +269,17 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return (long) json.GetLong("critical_hit_threshhold");
     }
 
-    private bool ConfirmCriticalDamage(RPGLContext context) {
-        // TODO come back to this later
-        return true;
+    private bool ConfirmCriticalDamage(RPGLContext context, JsonArray originPoint) {
+        return new CriticalDamageConfirmation()
+            .JoinSubeventData(new JsonObject()
+                .PutJsonArray("tags", GetTags().DeepClone())
+            )
+            .SetOriginItem(GetOriginItem())
+            .SetSource(GetSource())
+            .Prepare(context, originPoint)
+            .SetTarget(GetTarget())
+            .Invoke(context, originPoint)
+            .DealsCriticalDamage();
     }
 
     public bool IsCriticalMiss() {

@@ -18,7 +18,7 @@ public class CalculateCriticalHitThreshholdTest {
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        Assert.Equal(20L, calculateCriticalHitThreshhold.Get());
+        Assert.Equal(20L, calculateCriticalHitThreshhold.json.GetLong("critical_hit_threshhold"));
     }
 
 };
