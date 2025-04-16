@@ -28,7 +28,8 @@ namespace com.rpglc.subevent;
 ///     ],
 ///     "miss": [
 ///       &lt;nested_subevent&gt;
-///     ]
+///     ],
+///     "crtical_hit_threshhold": &lt;long = 20&gt;
 ///   }
 ///   </code>
 ///   
@@ -41,7 +42,8 @@ namespace com.rpglc.subevent;
 ///     <item>"withhold_damage_modifier" is an optional field and it will default to a value of false if left unspecified. If true, the subevent will not add the modifier of the attack's ability score to the subevent's base damage roll.</item>
 ///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
 ///     <item>"hit" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source hits the target. The damage defined by "damage" will be dealt on a hit.</item>
-///     <item>"miss" is an optional field and it will default to a vlaue of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source misses the target. The damage defined by "damage" will not be dealt on a miss.</item>
+///     <item>"miss" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source misses the target. The damage defined by "damage" will not be dealt on a miss.</item>
+///     <item>"critical_hit_threshhold" is an optional field and it will default to a value of 20 if left unspecified. This field indicates the default minimum number which must be rolled on the d20 to qualify the attack as a critical hit.</item>
 ///   </list>
 ///   
 ///   <br /><br />
