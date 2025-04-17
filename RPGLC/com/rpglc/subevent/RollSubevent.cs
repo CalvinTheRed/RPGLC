@@ -6,8 +6,8 @@ namespace com.rpglc.subevent;
 
 public abstract class RollSubevent(string subeventId) : CalculationSubevent(subeventId) {
     
-    public override RollSubevent Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override RollSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         json.PutIfAbsent("determined", new JsonArray());
         json.PutBool("has_advantage", false);
         json.PutBool("has_disadvantage", false);

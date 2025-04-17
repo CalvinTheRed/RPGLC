@@ -46,22 +46,22 @@ public class GiveTemporaryHitPoints : Subevent {
         return clone;
     }
 
-    public override GiveTemporaryHitPoints? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (GiveTemporaryHitPoints?) base.Invoke(context, originPoint);
+    public override GiveTemporaryHitPoints? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (GiveTemporaryHitPoints?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override GiveTemporaryHitPoints JoinSubeventData(JsonObject other) {
         return (GiveTemporaryHitPoints) base.JoinSubeventData(other);
     }
 
-    public override GiveTemporaryHitPoints Prepare(RPGLContext context, JsonArray originPoint) {
+    public override GiveTemporaryHitPoints Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("temporary_hit_points", new JsonArray());
         json.PutIfAbsent("rider_effects", new JsonArray());
         GetBaseTemporaryHitPoints(context, originPoint);
         return this;
     }
 
-    public override GiveTemporaryHitPoints Run(RPGLContext context, JsonArray originPoint) {
+    public override GiveTemporaryHitPoints Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         GetTargetTemporaryHitPoints(context, originPoint);
         DeliverTemporaryHitPoints(context, originPoint);
         return this;
@@ -79,7 +79,7 @@ public class GiveTemporaryHitPoints : Subevent {
         return (GiveTemporaryHitPoints) base.SetTarget(target);
     }
 
-    private void GetBaseTemporaryHitPoints(RPGLContext context, JsonArray originPoint) {
+    private void GetBaseTemporaryHitPoints(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
         
         TemporaryHitPointCollection baseTemporaryHitPointCollection = new TemporaryHitPointCollection()
@@ -91,9 +91,9 @@ public class GiveTemporaryHitPoints : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         TemporaryHitPointRoll baseTemporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -104,14 +104,14 @@ public class GiveTemporaryHitPoints : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.PutJsonArray("temporary_hit_points", baseTemporaryHitPointRoll.GetTemporaryHitPoints());
     }
 
-    private void GetTargetTemporaryHitPoints(RPGLContext context, JsonArray originPoint) {
+    private void GetTargetTemporaryHitPoints(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
         RPGLObject target = GetTarget();
 
@@ -123,9 +123,9 @@ public class GiveTemporaryHitPoints : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         TemporaryHitPointRoll targetTemporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -136,14 +136,14 @@ public class GiveTemporaryHitPoints : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.GetJsonArray("temporary_hit_points").AsList().AddRange(targetTemporaryHitPointRoll.GetTemporaryHitPoints().AsList());
     }
 
-    private void DeliverTemporaryHitPoints(RPGLContext context, JsonArray originPoint) {
+    private void DeliverTemporaryHitPoints(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject target = GetTarget();
 
         TemporaryHitPointDelivery temporaryHitPointDelivery = new TemporaryHitPointDelivery()
@@ -155,9 +155,9 @@ public class GiveTemporaryHitPoints : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         target.ReceiveTemporaryHitPoints(temporaryHitPointDelivery, json.GetJsonArray("rider_effects"));
     }

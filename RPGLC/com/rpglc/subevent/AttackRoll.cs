@@ -81,16 +81,16 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return clone;
     }
 
-    public override AttackRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (AttackRoll?) base.Invoke(context, originPoint);
+    public override AttackRoll? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (AttackRoll?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override AttackRoll JoinSubeventData(JsonObject other) {
         return (AttackRoll) base.JoinSubeventData(other);
     }
 
-    public override AttackRoll Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override AttackRoll Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         json.PutIfAbsent("withhold_damage_modifier", false);
         json.PutIfAbsent("use_origin_ability", false);
         json.PutIfAbsent("damage", new JsonArray());
@@ -131,29 +131,29 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return this;
     }
 
-    public override AttackRoll Run(RPGLContext context, JsonArray originPoint) {
+    public override AttackRoll Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Roll();
 
         json.PutLong("target_armor_class", GetTarget().CalculateArmorClass(context, this));
-        CalculateCriticalHitThreshhold(context, originPoint);
+        CalculateCriticalHitThreshhold(context, originPoint, invokingEffect);
 
-        if (GetBase() >= GetCriticalHitThreshhold() && ConfirmCriticalDamage(context, originPoint)) {
+        if (GetBase() >= GetCriticalHitThreshhold() && ConfirmCriticalDamage(context, originPoint, invokingEffect)) {
             if (json.GetJsonArray("damage").Count() > 0) {
-                GetBaseDamage(context, originPoint);
-                GetTargetDamage(context, originPoint);
-                GetCriticalHitDamage(context, originPoint);
-                ResolveDamage(context, originPoint);
+                GetBaseDamage(context, originPoint, invokingEffect);
+                GetTargetDamage(context, originPoint, invokingEffect);
+                GetCriticalHitDamage(context, originPoint, invokingEffect);
+                ResolveDamage(context, originPoint, invokingEffect);
             }
-            ResolveNestedSubevents("hit", context, originPoint);
+            ResolveNestedSubevents("hit", context, originPoint, invokingEffect);
         } else if (IsCriticalMiss() || Get() < GetTargetArmorClass()) {
-            ResolveNestedSubevents("miss", context, originPoint);
+            ResolveNestedSubevents("miss", context, originPoint, invokingEffect);
         } else {
             if (json.GetJsonArray("damage").Count() > 0) {
-                GetBaseDamage(context, originPoint);
-                GetTargetDamage(context, originPoint);
-                ResolveDamage(context, originPoint);
+                GetBaseDamage(context, originPoint, invokingEffect);
+                GetTargetDamage(context, originPoint, invokingEffect);
+                ResolveDamage(context, originPoint, invokingEffect);
             }
-            ResolveNestedSubevents("hit", context, originPoint);
+            ResolveNestedSubevents("hit", context, originPoint, invokingEffect);
         }
 
         return this;
@@ -183,7 +183,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return json.GetString("ability");
     }
 
-    private void GetBaseDamage(RPGLContext context, JsonArray originPoint) {
+    private void GetBaseDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         // Collect base typed damage dice and bonuses
         DamageCollection baseDamageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject()
@@ -194,9 +194,9 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         // Add damage modifier from attack ability, if applicable
         // TODO make a function for this stuff...
@@ -230,7 +230,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.PutJsonArray("damage", baseDamageCollection.GetDamageCollection());
     }
 
-    private void GetTargetDamage(RPGLContext context, JsonArray originPoint) {
+    private void GetTargetDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         // Collect target typed damage dice and bonuses
         DamageCollection targetDamageCollection = new DamageCollection()
             .JoinSubeventData(new JsonObject()
@@ -240,15 +240,15 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         // Add target damage collection to base damage collection
         json.GetJsonArray("damage").AsList().AddRange(targetDamageCollection.GetDamageCollection().AsList());
     }
 
-    private void CalculateCriticalHitThreshhold(RPGLContext context, JsonArray originPoint) {
+    private void CalculateCriticalHitThreshhold(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         CalculateCriticalHitThreshhold calculateCriticalHitThreshhold = new CalculateCriticalHitThreshhold()
             .JoinSubeventData(new JsonObject()
                 .PutLong("critical_hit_threshhold", json.GetLong("critical_hit_threshhold"))
@@ -256,9 +256,9 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.PutLong("critical_hit_threshhold", calculateCriticalHitThreshhold.Get());
     }
@@ -271,16 +271,16 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return (long) json.GetLong("critical_hit_threshhold");
     }
 
-    private bool ConfirmCriticalDamage(RPGLContext context, JsonArray originPoint) {
+    private bool ConfirmCriticalDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return new CriticalDamageConfirmation()
             .JoinSubeventData(new JsonObject()
                 .PutJsonArray("tags", GetTags().DeepClone())
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint)
+            .Invoke(context, originPoint, invokingEffect)
             .DealsCriticalDamage();
     }
 
@@ -288,7 +288,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return GetBase() == 1L;
     }
 
-    private void GetCriticalHitDamage(RPGLContext context, JsonArray originPoint) {
+    private void GetCriticalHitDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         // Get a copy of the attack damage with twice the number of dice
         JsonArray damageArray = json.GetJsonArray("damage").DeepClone();
         for (int i = 0; i < damageArray.Count(); i++) {
@@ -305,15 +305,15 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         // Set the attack damage to the critical hit damage collection
         json.PutJsonArray("damage", criticalHitDamageCollection.GetDamageCollection());
     }
 
-    private void ResolveDamage(RPGLContext context, JsonArray originPoint) {
+    private void ResolveDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData (new JsonObject()
                 .PutJsonArray("damage", json.GetJsonArray("damage"))
@@ -323,17 +323,17 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             )
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         // Store final damage by type to damage key
         json.PutJsonArray("damage", damageRoll.GetDamage());
 
-        DeliverDamage(context, originPoint);
+        DeliverDamage(context, originPoint, invokingEffect);
     }
 
-    private void ResolveNestedSubevents(string resolution, RPGLContext context, JsonArray originPoint) {
+    private void ResolveNestedSubevents(string resolution, RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         JsonArray subeventJsonArray = json.GetJsonArray(resolution) ?? new();
         for (int i = 0; i < subeventJsonArray.Count(); i++) {
             JsonObject nestedSubeventJson = subeventJsonArray.GetJsonObject(i);
@@ -341,13 +341,13 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 .Clone(nestedSubeventJson)
                 .SetOriginItem(GetOriginItem())
                 .SetSource(GetSource())
-                .Prepare(context, originPoint)
+                .Prepare(context, originPoint, invokingEffect)
                 .SetTarget(GetTarget())
-                .Invoke(context, originPoint);
+                .Invoke(context, originPoint, invokingEffect);
         }
     }
 
-    private void DeliverDamage(RPGLContext context, JsonArray originPoint) {
+    private void DeliverDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -357,9 +357,9 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         JsonObject damageByType = damageDelivery.GetDamage();
         if (json.AsDict().ContainsKey("vampirism")) {

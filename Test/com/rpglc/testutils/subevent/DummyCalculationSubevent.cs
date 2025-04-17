@@ -16,7 +16,7 @@ public class DummyCalculationSubevent : CalculationSubevent {
         return this;
     }
 
-    public override Subevent Run(RPGLContext context, JsonArray originPoint) {
+    public override Subevent Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

@@ -42,21 +42,21 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override DamageRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageRoll?) base.Invoke(context, originPoint);
+    public override DamageRoll? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DamageRoll?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DamageRoll JoinSubeventData(JsonObject other) {
         return (DamageRoll) base.JoinSubeventData(other);
     }
 
-    public override DamageRoll Prepare(RPGLContext context, JsonArray originPoint) {
+    public override DamageRoll Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("damage", new JsonArray());
         Roll();
         return this;
     }
 
-    public override DamageRoll Run(RPGLContext context, JsonArray originPoint) {
+    public override DamageRoll Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

@@ -34,20 +34,20 @@ public class HealingDelivery : Subevent {
         return clone;
     }
 
-    public override HealingDelivery? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (HealingDelivery?) base.Invoke(context, originPoint);
+    public override HealingDelivery? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (HealingDelivery?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override HealingDelivery JoinSubeventData(JsonObject other) {
         return (HealingDelivery) base.JoinSubeventData(other);
     }
 
-    public override HealingDelivery Prepare(RPGLContext context, JsonArray originPoint) {
+    public override HealingDelivery Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("healing", new JsonArray());
         return this;
     }
 
-    public override HealingDelivery Run(RPGLContext context, JsonArray originPoint) {
+    public override HealingDelivery Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

@@ -42,23 +42,23 @@ public class Heal : Subevent {
         return clone;
     }
 
-    public override Heal? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (Heal?) base.Invoke(context, originPoint);
+    public override Heal? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (Heal?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override Heal JoinSubeventData(JsonObject other) {
         return (Heal) base.JoinSubeventData(other);
     }
 
-    public override Heal Prepare(RPGLContext context, JsonArray originPoint) {
+    public override Heal Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("healing", new JsonArray());
-        GetBaseHealing(context, originPoint);
+        GetBaseHealing(context, originPoint, invokingEffect);
         return this;
     }
 
-    public override Heal Run(RPGLContext context, JsonArray originPoint) {
-        GetTargetHealing(context, originPoint);
-        DeliverHealing(context, originPoint);
+    public override Heal Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        GetTargetHealing(context, originPoint, invokingEffect);
+        DeliverHealing(context, originPoint, invokingEffect);
         return this;
     }
 
@@ -74,7 +74,7 @@ public class Heal : Subevent {
         return (Heal) base.SetTarget(target);
     }
 
-    private void GetBaseHealing(RPGLContext context, JsonArray originPoint) {
+    private void GetBaseHealing(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
 
         HealingCollection baseHealingCollection = new HealingCollection()
@@ -86,9 +86,9 @@ public class Heal : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         HealingRoll baseHealingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -99,14 +99,14 @@ public class Heal : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.PutJsonArray("healing", baseHealingRoll.GetHealing());
     }
 
-    private void GetTargetHealing(RPGLContext context, JsonArray originPoint) {
+    private void GetTargetHealing(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
         RPGLObject target = GetTarget();
 
@@ -118,9 +118,9 @@ public class Heal : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         HealingRoll targetHealingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -131,14 +131,14 @@ public class Heal : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.GetJsonArray("healing").AsList().AddRange(targetHealingRoll.GetHealing().AsList());
     }
 
-    private void DeliverHealing(RPGLContext context, JsonArray originPoint) {
+    private void DeliverHealing(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject target = GetTarget();
 
         HealingDelivery healingDelivery = new HealingDelivery()
@@ -150,9 +150,9 @@ public class Heal : Subevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         target.ReceiveHealing(healingDelivery, context);
     }

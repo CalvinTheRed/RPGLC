@@ -40,20 +40,20 @@ public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override CriticalHitDamageCollection? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CriticalHitDamageCollection?) base.Invoke(context, originPoint);
+    public override CriticalHitDamageCollection? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CriticalHitDamageCollection?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CriticalHitDamageCollection JoinSubeventData(JsonObject other) {
         return (CriticalHitDamageCollection) base.JoinSubeventData(other);
     }
 
-    public override CriticalHitDamageCollection Prepare(RPGLContext context, JsonArray originPoint) {
+    public override CriticalHitDamageCollection Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("damage", new JsonArray());
         return this;
     }
 
-    public override CriticalHitDamageCollection Run(RPGLContext context, JsonArray originPoint) {
+    public override CriticalHitDamageCollection Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

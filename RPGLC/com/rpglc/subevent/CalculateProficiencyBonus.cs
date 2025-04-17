@@ -36,21 +36,21 @@ public class CalculateProficiencyBonus : CalculationSubevent {
         return clone;
     }
 
-    public override CalculateProficiencyBonus? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateProficiencyBonus?) base.Invoke(context, originPoint);
+    public override CalculateProficiencyBonus? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateProficiencyBonus?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateProficiencyBonus JoinSubeventData(JsonObject other) {
         return (CalculateProficiencyBonus) base.JoinSubeventData(other);
     }
 
-    public override CalculateProficiencyBonus Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint)
+    public override CalculateProficiencyBonus Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect)
             .SetBase(GetSource().GetProficiencyBonus() ?? GetSource().GetProficiencyBonusByLevel());
         return this;
     }
 
-    public override CalculateProficiencyBonus Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateProficiencyBonus Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

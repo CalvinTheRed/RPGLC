@@ -24,19 +24,19 @@ public class DummySubevent : Subevent, IAbilitySubevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override DummySubevent? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DummySubevent?) base.Invoke(context, originPoint);
+    public override DummySubevent? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DummySubevent?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DummySubevent JoinSubeventData(JsonObject other) {
         return (DummySubevent) base.JoinSubeventData(other);
     }
 
-    public override DummySubevent Prepare(RPGLContext context, JsonArray originPoint) {
+    public override DummySubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 
-    public override DummySubevent Run(RPGLContext context, JsonArray originPoint) {
+    public override DummySubevent Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Counter++;
         return this;
     }

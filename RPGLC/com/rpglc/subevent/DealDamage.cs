@@ -46,20 +46,20 @@ public class DealDamage : Subevent, IVampiricSubevent {
         return clone;
     }
 
-    public override DealDamage? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DealDamage?) base.Invoke(context, originPoint);
+    public override DealDamage? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DealDamage?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DealDamage JoinSubeventData(JsonObject other) {
         return (DealDamage) base.JoinSubeventData(other);
     }
 
-    public override DealDamage Prepare(RPGLContext context, JsonArray originPoint) {
-        GetBaseDamage(context, originPoint);
+    public override DealDamage Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        GetBaseDamage(context, originPoint, invokingEffect);
         return this;
     }
 
-    public override DealDamage Run(RPGLContext context, JsonArray originPoint) {
+    public override DealDamage Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         GetTargetDamage(context, originPoint);
         DeliverDamage(context, originPoint);
         return this;
@@ -77,7 +77,7 @@ public class DealDamage : Subevent, IVampiricSubevent {
         return (DealDamage) base.SetTarget(target);
     }
 
-    private void GetBaseDamage(RPGLContext context, JsonArray originPoint) {
+    private void GetBaseDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
 
         DamageCollection baseDamageCollection = new DamageCollection()
@@ -89,9 +89,9 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         DamageRoll baseDamageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -102,14 +102,14 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(source)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.PutJsonArray("damage", baseDamageRoll.GetDamage());
     }
 
-    private void GetTargetDamage(RPGLContext context, JsonArray originPoint) {
+    private void GetTargetDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         RPGLObject source = GetSource();
         RPGLObject target = GetTarget();
 
@@ -121,9 +121,9 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         DamageRoll targetDamageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -134,14 +134,14 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(source)
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(target)
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         json.GetJsonArray("damage").AsList().AddRange(targetDamageRoll.GetDamage().AsList());
     }
 
-    private void DeliverDamage(RPGLContext context, JsonArray originPoint) {
+    private void DeliverDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -151,9 +151,9 @@ public class DealDamage : Subevent, IVampiricSubevent {
                 """))
             .SetOriginItem(GetOriginItem())
             .SetSource(GetSource())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         JsonObject damageByType = damageDelivery.GetDamage();
         if (json.AsDict().ContainsKey("vampirism")) {

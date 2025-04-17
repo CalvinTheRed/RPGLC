@@ -22,19 +22,19 @@ public class DummyRollSubevent : RollSubevent {
         return clone;
     }
 
-    public override DummyRollSubevent? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DummyRollSubevent?) base.Invoke(context, originPoint);
+    public override DummyRollSubevent? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DummyRollSubevent?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DummyRollSubevent JoinSubeventData(JsonObject other) {
         return (DummyRollSubevent) base.JoinSubeventData(other);
     }
 
-    public override DummyRollSubevent Prepare(RPGLContext context, JsonArray originPoint) {
-        return (DummyRollSubevent) base.Prepare(context, originPoint);
+    public override DummyRollSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DummyRollSubevent) base.Prepare(context, originPoint, invokingEffect);
     }
 
-    public override Subevent Run(RPGLContext context, JsonArray originPoint) {
+    public override Subevent Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

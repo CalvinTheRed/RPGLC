@@ -37,16 +37,16 @@ public class CalculateDifficultyClass : CalculationSubevent {
         return clone;
     }
 
-    public override CalculateDifficultyClass? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateDifficultyClass?) base.Invoke(context, originPoint);
+    public override CalculateDifficultyClass? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateDifficultyClass?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateDifficultyClass JoinSubeventData(JsonObject other) {
         return (CalculateDifficultyClass) base.JoinSubeventData(other);
     }
 
-    public override CalculateDifficultyClass Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override CalculateDifficultyClass Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         long? difficultyClass = json.GetLong("difficulty_class");
         if (difficultyClass is null) {
             SetBase(8L);
@@ -86,7 +86,7 @@ public class CalculateDifficultyClass : CalculationSubevent {
         return this;
     }
 
-    public override CalculateDifficultyClass Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateDifficultyClass Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

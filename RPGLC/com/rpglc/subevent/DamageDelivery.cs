@@ -39,21 +39,21 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override DamageDelivery? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageDelivery?) base.Invoke(context, originPoint);
+    public override DamageDelivery? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DamageDelivery?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DamageDelivery JoinSubeventData(JsonObject other) {
         return (DamageDelivery) base.JoinSubeventData(other);
     }
 
-    public override DamageDelivery Prepare(RPGLContext context, JsonArray originPoint) {
+    public override DamageDelivery Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("damage", new JsonArray());
         json.PutIfAbsent("damage_proportion", "all");
         return this;
     }
 
-    public override DamageDelivery Run(RPGLContext context, JsonArray originPoint) {
+    public override DamageDelivery Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         // Apply damage affinities
         CalculateRawDamage();
         JsonObject damageJson = json.RemoveJsonObject("damage");
@@ -72,7 +72,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
         
         damageAffinity
             .SetTarget(GetTarget())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         JsonObject damageWithAffinity = new();
         foreach (string key in damageJson.AsDict().Keys) {
@@ -88,7 +88,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
             }
         }
         json.PutJsonObject("damage", damageWithAffinity);
-        GetTarget().ReceiveDamage(this, context);
+        GetTarget().ReceiveDamage(this, context); // TODO bypass this if total damage is 0?
 
         return this;
     }

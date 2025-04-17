@@ -36,21 +36,21 @@ public class CalculateArmorClass : CalculationSubevent {
         return clone;
     }
 
-    public override CalculateArmorClass? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateArmorClass?) base.Invoke(context, originPoint);
+    public override CalculateArmorClass? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateArmorClass?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateArmorClass JoinSubeventData(JsonObject other) {
         return (CalculateArmorClass) base.JoinSubeventData(other);
     }
 
-    public override CalculateArmorClass Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override CalculateArmorClass Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         SetBase(10L);
         return this;
     }
 
-    public override CalculateArmorClass Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateArmorClass Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

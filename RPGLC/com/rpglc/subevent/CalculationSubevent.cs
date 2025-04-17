@@ -1,13 +1,12 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.math;
-using System.ComponentModel.DataAnnotations;
 
 namespace com.rpglc.subevent;
 
 public abstract class CalculationSubevent(string subeventId) : Subevent(subeventId) {
     
-    public override CalculationSubevent Prepare(RPGLContext context, JsonArray originPoint) {
+    public override CalculationSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this
             .PrepareBase(context)
             .PrepareBonuses(context)
