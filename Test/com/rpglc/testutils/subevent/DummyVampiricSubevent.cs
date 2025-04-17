@@ -16,20 +16,20 @@ public class DummyVampiricSubevent : Subevent, IVampiricSubevent {
         return this;
     }
 
-    public override DummyVampiricSubevent? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DummyVampiricSubevent?) base.Invoke(context, originPoint);
+    public override DummyVampiricSubevent? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DummyVampiricSubevent?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DummyVampiricSubevent JoinSubeventData(JsonObject other) {
         return (DummyVampiricSubevent) base.JoinSubeventData(other);
     }
 
-    public override DummyVampiricSubevent Prepare(RPGLContext context, JsonArray originPoint) {
+    public override DummyVampiricSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("vampirism", new JsonArray());
         return this;
     }
 
-    public override DummyVampiricSubevent Run(RPGLContext context, JsonArray originPoint) {
+    public override DummyVampiricSubevent Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

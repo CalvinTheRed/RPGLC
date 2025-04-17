@@ -37,21 +37,21 @@ public class TemporaryHitPointRoll : Subevent {
         return clone;
     }
 
-    public override TemporaryHitPointRoll? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (TemporaryHitPointRoll?) base.Invoke(context, originPoint);
+    public override TemporaryHitPointRoll? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (TemporaryHitPointRoll?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override TemporaryHitPointRoll JoinSubeventData(JsonObject other) {
         return (TemporaryHitPointRoll) base.JoinSubeventData(other);
     }
 
-    public override TemporaryHitPointRoll Prepare(RPGLContext context, JsonArray originPoint) {
+    public override TemporaryHitPointRoll Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("temporary_hit_points", new JsonArray());
         Roll();
         return this;
     }
 
-    public override TemporaryHitPointRoll Run(RPGLContext context, JsonArray originPoint) {
+    public override TemporaryHitPointRoll Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

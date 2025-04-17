@@ -21,7 +21,9 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "datapack_id": "test:complex_effect",
                 "allow_duplicates": true,
                 "optional": false,
-                "tags": [ ],
+                "tags": [
+                    "test_tag"
+                ],
                 "subevent_filters": {
                     "dummy_subevent": [
                         {

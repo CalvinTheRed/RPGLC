@@ -48,23 +48,23 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
         return clone;
     }
 
-    public override AbilityCheck? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (AbilityCheck?) base.Invoke(context, originPoint);
+    public override AbilityCheck? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (AbilityCheck?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override AbilityCheck JoinSubeventData(JsonObject other) {
         return (AbilityCheck) base.JoinSubeventData(other);
     }
 
-    public override AbilityCheck Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override AbilityCheck Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         json.PutIfAbsent("has_expertise", false);
         json.PutIfAbsent("has_proficiency", false);
         json.PutIfAbsent("has_half_proficiency", false);
         return this;
     }
 
-    public override AbilityCheck Run(RPGLContext context, JsonArray originPoint) {
+    public override AbilityCheck Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Roll();
         long proficiencyNumerator = 0L;
         long proficiencyDenominator = 1L;

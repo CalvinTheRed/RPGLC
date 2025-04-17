@@ -20,6 +20,8 @@ public abstract class Subevent {
             new AbilitySave(),
             new AttackRoll(),
             new DealDamage(),
+            new EndEffect(),
+            new GiveEffect(),
             new GiveTemporaryHitPoints(),
             new Heal(),
             new SavingThrow(),
@@ -67,19 +69,19 @@ public abstract class Subevent {
 
     public abstract Subevent Clone(JsonObject jsonData);
 
-    public abstract Subevent Prepare(RPGLContext context, JsonArray originPoint);
+    public abstract Subevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null);
 
-    public virtual Subevent? Invoke(RPGLContext context, JsonArray originPoint) {
+    public virtual Subevent? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         if (VerifySubevent(subeventId)) {
             context.ProcessSubevent(this, originPoint);
-            Run(context, originPoint);
+            Run(context, originPoint, invokingEffect);
             context.ViewCompletedSubevent(this);
             return this;
         }
         return null;
     }
 
-    public abstract Subevent Run(RPGLContext context, JsonArray originPoint);
+    public abstract Subevent Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect);
 
     public void AddModifyingEffect(RPGLEffect rpglEffect) {
         appliedEffects.Add(rpglEffect);

@@ -119,8 +119,8 @@ public class RPGLEffect : TaggableContent {
     }
 
     public static RPGLObject? GetObject(RPGLEffect rpglEffect, Subevent subevent, JsonObject instructions) {
-        string fromAlias = instructions.GetString("from");
-        string objectAlias = instructions.GetString("object");
+        string? fromAlias = instructions.GetString("from");
+        string? objectAlias = instructions.GetString("object");
         RPGLObject? rpglObject = null;
         if (fromAlias == "subevent") {
             if (objectAlias == "source") {

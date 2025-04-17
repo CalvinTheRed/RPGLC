@@ -41,21 +41,21 @@ public class CalculateAbilityScore : CalculationSubevent, IAbilitySubevent {
         return clone;
     }
 
-    public override CalculateAbilityScore? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateAbilityScore?) base.Invoke(context, originPoint);
+    public override CalculateAbilityScore? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateAbilityScore?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateAbilityScore JoinSubeventData(JsonObject other) {
         return (CalculateAbilityScore) base.JoinSubeventData(other);
     }
 
-    public override CalculateAbilityScore Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override CalculateAbilityScore Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         SetBase((long) GetSource().GetAbilityScores().GetLong(GetAbility(context)));
         return this;
     }
 
-    public override CalculateAbilityScore Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateAbilityScore Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

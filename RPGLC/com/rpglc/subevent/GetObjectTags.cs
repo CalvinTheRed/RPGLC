@@ -34,20 +34,20 @@ public class GetObjectTags : Subevent {
         return clone;
     }
 
-    public override GetObjectTags? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (GetObjectTags?) base.Invoke(context, originPoint);
+    public override GetObjectTags? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (GetObjectTags?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override GetObjectTags JoinSubeventData(JsonObject other) {
         return (GetObjectTags) base.JoinSubeventData(other);
     }
 
-    public override GetObjectTags Prepare(RPGLContext context, JsonArray originPoint) {
+    public override GetObjectTags Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("object_tags", new JsonArray());
         return this;
     }
 
-    public override GetObjectTags Run(RPGLContext context, JsonArray originPoint) {
+    public override GetObjectTags Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         JsonArray objectTags = json.GetJsonArray("object_tags");
         JsonArray tags = GetTarget().GetTags();
         for (int i = 0; i < tags.Count(); i++) {

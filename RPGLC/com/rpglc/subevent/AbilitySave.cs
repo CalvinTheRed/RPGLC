@@ -59,22 +59,22 @@ public class AbilitySave : Subevent {
         return clone;
     }
 
-    public override AbilitySave? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (AbilitySave?) base.Invoke(context, originPoint);
+    public override AbilitySave? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (AbilitySave?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override AbilitySave JoinSubeventData(JsonObject other) {
         return (AbilitySave) base.JoinSubeventData(other);
     }
 
-    public override AbilitySave Prepare(RPGLContext context, JsonArray originPoint) {
+    public override AbilitySave Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("determined", new JsonArray());
         json.PutIfAbsent("use_origin_difficulty_class_ability", false);
-        CalculateDifficultyClass(context);
+        CalculateDifficultyClass(context, invokingEffect);
         return this;
     }
 
-    public override AbilitySave Run(RPGLContext context, JsonArray originPoint) {
+    public override AbilitySave Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         AbilityCheck abilityCheck = new AbilityCheck()
             .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
@@ -85,14 +85,14 @@ public class AbilitySave : Subevent {
                 }
                 """))
             .SetSource(GetTarget())
-            .Prepare(context, originPoint)
+            .Prepare(context, originPoint, invokingEffect)
             .SetTarget(GetSource())
-            .Invoke(context, originPoint);
+            .Invoke(context, originPoint, invokingEffect);
 
         if (abilityCheck.Get() < GetDifficultyClass()) {
-            ResolveNestedSubevents("fail", context, originPoint);
+            ResolveNestedSubevents("fail", context, originPoint, invokingEffect);
         } else {
-            ResolveNestedSubevents("pass", context, originPoint);
+            ResolveNestedSubevents("pass", context, originPoint, invokingEffect);
         }
         return this;
     }
@@ -109,7 +109,7 @@ public class AbilitySave : Subevent {
         return (AbilitySave) base.SetTarget(target);
     }
 
-    private void CalculateDifficultyClass(RPGLContext context) {
+    private void CalculateDifficultyClass(RPGLContext context, RPGLEffect? invokingEffect = null) {
         long? difficultyClass = GetDifficultyClass();
 
         CalculateDifficultyClass calculateDifficultyClass = new CalculateDifficultyClass()
@@ -126,14 +126,14 @@ public class AbilitySave : Subevent {
                 ? RPGL.GetRPGLObject(GetSource().GetOriginObject())
                 : GetSource()
             )
-            .Prepare(context, GetSource().GetPosition())
+            .Prepare(context, GetSource().GetPosition(), invokingEffect)
             .SetTarget(GetSource())
-            .Invoke(context, GetSource().GetPosition());
+            .Invoke(context, GetSource().GetPosition(), invokingEffect);
 
         json.PutLong("difficulty_class", calculateDifficultyClass.Get());
     }
 
-    private void ResolveNestedSubevents(string resolution, RPGLContext context, JsonArray originPoint) {
+    private void ResolveNestedSubevents(string resolution, RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         JsonArray? subeventJsonArray = json.GetJsonArray(resolution);
         if (!subeventJsonArray.IsEmpty()) {
             for (int i = 0; i < subeventJsonArray.Count(); i++) {
@@ -141,9 +141,9 @@ public class AbilitySave : Subevent {
                 Subevent subevent = Subevent.Subevents[subeventJson.GetString("subevent")]
                     .Clone(subeventJson)
                     .SetSource(GetSource())
-                    .Prepare(context, originPoint)
+                    .Prepare(context, originPoint, invokingEffect)
                     .SetTarget(GetTarget())
-                    .Invoke(context, originPoint);
+                    .Invoke(context, originPoint, invokingEffect);
             }
         }
     }

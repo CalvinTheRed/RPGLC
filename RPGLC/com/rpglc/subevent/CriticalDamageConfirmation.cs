@@ -35,20 +35,20 @@ public class CriticalDamageConfirmation : Subevent {
         return clone;
     }
 
-    public override CriticalDamageConfirmation? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CriticalDamageConfirmation?) base.Invoke(context, originPoint);
+    public override CriticalDamageConfirmation? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CriticalDamageConfirmation?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CriticalDamageConfirmation JoinSubeventData(JsonObject other) {
         return (CriticalDamageConfirmation) base.JoinSubeventData(other);
     }
 
-    public override CriticalDamageConfirmation Prepare(RPGLContext context, JsonArray originPoint) {
+    public override CriticalDamageConfirmation Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("deals_critical_damage", true);
         return this;
     }
 
-    public override CriticalDamageConfirmation Run(RPGLContext context, JsonArray originPoint) {
+    public override CriticalDamageConfirmation Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

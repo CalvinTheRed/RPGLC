@@ -37,16 +37,16 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
         return clone;
     }
 
-    public override CalculateMaximumHitPoints? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateMaximumHitPoints?) base.Invoke(context, originPoint);
+    public override CalculateMaximumHitPoints? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateMaximumHitPoints?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateMaximumHitPoints JoinSubeventData(JsonObject other) {
         return (CalculateMaximumHitPoints) base.JoinSubeventData(other);
     }
 
-    public override CalculateMaximumHitPoints Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override CalculateMaximumHitPoints Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         RPGLObject source = GetSource();
 
         SetBase(source.GetHealthBase());
@@ -72,7 +72,7 @@ public class CalculateMaximumHitPoints : CalculationSubevent {
         return this;
     }
 
-    public override CalculateMaximumHitPoints Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateMaximumHitPoints Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

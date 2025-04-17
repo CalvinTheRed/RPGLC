@@ -36,21 +36,21 @@ public class CalculateCriticalHitThreshhold : CalculationSubevent {
         return clone;
     }
 
-    public override CalculateCriticalHitThreshhold? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (CalculateCriticalHitThreshhold?) base.Invoke(context, originPoint);
+    public override CalculateCriticalHitThreshhold? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (CalculateCriticalHitThreshhold?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override CalculateCriticalHitThreshhold JoinSubeventData(JsonObject other) {
         return (CalculateCriticalHitThreshhold) base.JoinSubeventData(other);
     }
 
-    public override CalculateCriticalHitThreshhold Prepare(RPGLContext context, JsonArray originPoint) {
-        base.Prepare(context, originPoint);
+    public override CalculateCriticalHitThreshhold Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        base.Prepare(context, originPoint, invokingEffect);
         json.PutIfAbsent("critical_hit_threshhold", 20L);
         return this;
     }
 
-    public override CalculateCriticalHitThreshhold Run(RPGLContext context, JsonArray originPoint) {
+    public override CalculateCriticalHitThreshhold Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         SetBase((long) json.GetLong("critical_hit_threshhold"));
         return this;
     }

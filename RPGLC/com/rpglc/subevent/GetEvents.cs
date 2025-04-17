@@ -34,20 +34,20 @@ public class GetEvents : Subevent {
         return clone;
     }
 
-    public override GetEvents? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (GetEvents?) base.Invoke(context, originPoint);
+    public override GetEvents? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (GetEvents?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override GetEvents JoinSubeventData(JsonObject other) {
         return (GetEvents) base.JoinSubeventData(other);
     }
 
-    public override GetEvents Prepare(RPGLContext context, JsonArray originPoint) {
+    public override GetEvents Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("events", new JsonArray());
         return this;
     }
 
-    public override GetEvents Run(RPGLContext context, JsonArray originPoint) {
+    public override GetEvents Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 

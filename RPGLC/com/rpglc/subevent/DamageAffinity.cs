@@ -44,20 +44,20 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override DamageAffinity? Invoke(RPGLContext context, JsonArray originPoint) {
-        return (DamageAffinity?) base.Invoke(context, originPoint);
+    public override DamageAffinity? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        return (DamageAffinity?) base.Invoke(context, originPoint, invokingEffect);
     }
 
     public override DamageAffinity JoinSubeventData(JsonObject other) {
         return (DamageAffinity) base.JoinSubeventData(other);
     }
 
-    public override DamageAffinity Prepare(RPGLContext context, JsonArray originPoint) {
+    public override DamageAffinity Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("affinities", new JsonArray());
         return this;
     }
 
-    public override DamageAffinity Run(RPGLContext context, JsonArray originPoint) {
+    public override DamageAffinity Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return this;
     }
 
