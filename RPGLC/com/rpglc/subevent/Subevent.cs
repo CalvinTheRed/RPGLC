@@ -20,6 +20,8 @@ public abstract class Subevent {
             new AbilitySave(),
             new AttackRoll(),
             new DealDamage(),
+            new EndEffect(),
+            new GiveEffect(),
             new GiveTemporaryHitPoints(),
             new Heal(),
             new SavingThrow(),

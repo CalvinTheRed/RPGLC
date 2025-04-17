@@ -225,6 +225,19 @@ public class RPGLEffectTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [Fact(DisplayName = "gets default object")]
+    public void GetsDefaultObject() {
+        Assert.Null(
+            RPGLEffect.GetObject(
+                new(),
+                new DummySubevent(),
+                new JsonObject()
+            )?.GetUuid()
+        );
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "gets origin object")]
     public void GetsOriginObject() {
         RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
