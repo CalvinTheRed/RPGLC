@@ -88,7 +88,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
             }
         }
         json.PutJsonObject("damage", damageWithAffinity);
-        GetTarget().ReceiveDamage(this, context); // TODO bypass this if total damage is 0?
+        GetTarget().ReceiveDamage(this, context);
 
         return this;
     }
