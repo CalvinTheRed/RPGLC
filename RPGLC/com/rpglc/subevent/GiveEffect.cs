@@ -47,10 +47,9 @@ public class GiveEffect : Subevent {
     }
 
     public override GiveEffect Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect(json.GetString("effect"))
+        GetTarget().AddEffect(RPGLFactory.NewEffect(json.GetString("effect"))
             .SetOriginItem(GetOriginItem())
-            .SetSource(GetSource().GetUuid());
-        GetTarget().AddEffect(rpglEffect);
+            .SetSource(GetSource().GetUuid()));
         return this;
     }
 
