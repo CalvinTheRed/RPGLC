@@ -15,13 +15,6 @@ namespace com.rpglc.subevent;
 ///     "effect": &lt;string&gt;
 ///   }
 ///   </code>
-///   
-///   <br /><br />
-///   <b>Special Functions</b>
-///   <list type="bullet">
-///     <item>_</item>
-///   </list>
-///   
 /// </summary>
 public class GiveEffect : Subevent {
     

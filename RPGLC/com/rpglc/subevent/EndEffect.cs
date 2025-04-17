@@ -23,13 +23,6 @@ namespace com.rpglc.subevent;
 ///     }
 ///   }
 ///   </code>
-///   
-///   <br /><br />
-///   <b>Special Functions</b>
-///   <list type="bullet">
-///     <item>_</item>
-///   </list>
-///   
 /// </summary>
 public class EndEffect : Subevent {
     

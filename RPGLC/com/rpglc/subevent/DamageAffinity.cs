@@ -44,7 +44,7 @@ public class DamageAffinity : Subevent, IDamageTypeSubevent {
         return clone;
     }
 
-    public override DamageAffinity? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect) {
+    public override DamageAffinity? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return (DamageAffinity?) base.Invoke(context, originPoint, invokingEffect);
     }
 

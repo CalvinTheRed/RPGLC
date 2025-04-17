@@ -57,13 +57,13 @@ public class GiveTemporaryHitPoints : Subevent {
     public override GiveTemporaryHitPoints Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("temporary_hit_points", new JsonArray());
         json.PutIfAbsent("rider_effects", new JsonArray());
-        GetBaseTemporaryHitPoints(context, originPoint);
+        GetBaseTemporaryHitPoints(context, originPoint, invokingEffect);
         return this;
     }
 
     public override GiveTemporaryHitPoints Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
-        GetTargetTemporaryHitPoints(context, originPoint);
-        DeliverTemporaryHitPoints(context, originPoint);
+        GetTargetTemporaryHitPoints(context, originPoint, invokingEffect);
+        DeliverTemporaryHitPoints(context, originPoint, invokingEffect);
         return this;
     }
 
