@@ -25,6 +25,7 @@ public abstract class Subevent {
             new GiveTemporaryHitPoints(),
             new Heal(),
             new SavingThrow(),
+            new SpawnObject(),
         ]);
     }
 

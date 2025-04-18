@@ -14,7 +14,10 @@ public class TaggableContent : PersistentContent {
     }
 
     public TaggableContent AddTag(string tag) {
-        GetTags().AddString(tag);
+        JsonArray tags = GetTags();
+        if (!tags.Contains(tag)) {
+            tags.AddString(tag);
+        }
         return this;
     }
 
