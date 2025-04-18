@@ -36,7 +36,22 @@ namespace com.rpglc.subevent;
 ///   </code>
 ///   
 ///   <list type="bullet">
-///     <item>_</item>
+///     <item>"object" is an RPGLObject datapack id.</item>
+///     <item>"controlled_by" indicates which object's user id will be inherited by the spawned object.</item>
+///     <item>"object_bonuses" is an optional field and it will default to a value of { } if left unspecified. This field stores any bonuses that apply to the object once it spawns.</item>
+///     <item>"extra_effects" is an optional field and it will default to a value of [ ] if left unspecified. This field stores any extra effects that will affect the object once it spawns.</item>
+///     <item>"extra_events" is an optional field and it will default to a value of [ ] if left unspecified. This field stores any extra events made available to the object once it spawns.</item>
+///     <item>"extra_tags" is an optional field and it will default to a value of [ ] if left unspecified. This field stores any extra tags that will be applied to the object once it spawns.</item>
+///     <item>"use_origin_proficiency" is an optional field and it will default to a value of false if left unspecified. The utility of this field is under scrutiny.</item>
+///     <item>"proxy" is an optional field and it will default to a value of false if left unspecified. This field indicates of the spawned object is a proxy for another object.</item>
+///   </list>
+///   
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddSpawnObjectBonus</item>
+///     <item>AddSpawnObjectEffect</item>
+///     <item>AddSpawnObjectEvent</item>
+///     <item>AddSpawnObjectTag</item>
 ///   </list>
 ///   
 /// </summary>

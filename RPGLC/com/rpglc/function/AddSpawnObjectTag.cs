@@ -5,7 +5,7 @@ using com.rpglc.subevent;
 namespace com.rpglc.function;
 
 /// <summary>
-///   Grants an event to a spawned object.
+///   Adds a tag to a spawned object.
 ///   
 ///   <code>
 ///   {

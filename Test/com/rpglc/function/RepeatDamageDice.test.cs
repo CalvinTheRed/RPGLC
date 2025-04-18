@@ -13,7 +13,6 @@ public class RepeatDamageDiceTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "repeats default dice (damage collection)")]
     public void RepeatsDefaultDice_DamageCollection() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
