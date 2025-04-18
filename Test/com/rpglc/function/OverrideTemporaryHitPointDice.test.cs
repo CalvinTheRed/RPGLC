@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +8,9 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class OverrideTemporaryHitPointDiceTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides unbounded temporary hit point dice")]
     public void OverridesUnboundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new TemporaryHitPointRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
@@ -50,12 +43,11 @@ public class OverrideTemporaryHitPointDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideTemporaryHitPointDice().Execute(
             new RPGLEffect(),
-            subevent,
+            temporaryHitPointRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_temporary_hit_point_dice",
@@ -134,16 +126,12 @@ public class OverrideTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
+            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides bounded temporary hit point dice")]
     public void OverridesBoundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new TemporaryHitPointRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
@@ -176,12 +164,11 @@ public class OverrideTemporaryHitPointDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideTemporaryHitPointDice().Execute(
             new RPGLEffect(),
-            subevent,
+            temporaryHitPointRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_temporary_hit_point_dice",
@@ -262,7 +249,7 @@ public class OverrideTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
+            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
     }
 
 };

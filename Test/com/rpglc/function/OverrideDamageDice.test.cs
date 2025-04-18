@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +8,9 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class OverrideDamageDiceTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides wild card unbounded damage dice")]
     public void OverridesWildCardUnboundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -52,12 +45,11 @@ public class OverrideDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
@@ -138,16 +130,12 @@ public class OverrideDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides wild card bounded damage dice")]
     public void OverridesWildCardBoundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -182,12 +170,11 @@ public class OverrideDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
@@ -270,16 +257,12 @@ public class OverrideDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides typed unbounded damage dice")]
     public void OverridesTypedUnboundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -314,12 +297,11 @@ public class OverrideDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
@@ -401,16 +383,12 @@ public class OverrideDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides typed bounded damage dice")]
     public void OverridesTypedBoundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -445,12 +423,11 @@ public class OverrideDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_damage_dice",
@@ -534,7 +511,7 @@ public class OverrideDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
 };
