@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +8,9 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class MaximizeDamageTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage roll)")]
     public void MaximizesSpecificDamageType_DamageRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -48,12 +41,11 @@ public class MaximizeDamageTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeDamage().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_damage",
@@ -99,16 +91,12 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes specified damage type (damage delivery)")]
     public void MaximizesSpecificDamageType_DamageDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageDelivery()
+        DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -139,12 +127,11 @@ public class MaximizeDamageTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeDamage().Execute(
             new RPGLEffect(),
-            subevent,
+            damageDelivery,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_damage",
@@ -155,25 +142,47 @@ public class MaximizeDamageTest {
             new()
         );
 
-        subevent
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
         Assert.Equal("""
-            {
-              "cold": 3,
-              "fire": 6
-            }
-            """, (subevent as DamageDelivery).GetDamage().PrettyPrint());
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 3,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, damageDelivery.json.GetJsonArray("damage").PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage roll)")]
     public void MaximizesEveryDamageType_DamageRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -204,12 +213,11 @@ public class MaximizeDamageTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeDamage().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_damage"
@@ -254,16 +262,12 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes every damage type (damage delivery)")]
     public void MaximizesEveryDamageType_DamageDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageDelivery()
+        DamageDelivery damageDelivery = new DamageDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -294,12 +298,11 @@ public class MaximizeDamageTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeDamage().Execute(
             new RPGLEffect(),
-            subevent,
+            damageDelivery,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_damage"
@@ -309,16 +312,42 @@ public class MaximizeDamageTest {
             new()
         );
 
-        subevent
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
         Assert.Equal("""
-            {
-              "cold": 6,
-              "fire": 6
-            }
-            """, (subevent as DamageDelivery).GetDamage().PrettyPrint());
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, damageDelivery.json.GetJsonArray("damage").PrettyPrint());
     }
 
 };

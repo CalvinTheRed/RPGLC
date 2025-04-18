@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +8,9 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class MaximizeHealingTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes healing roll")]
     public void MaximizesHealingRoll() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new HealingRoll()
+        HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "healing": [
@@ -46,12 +39,11 @@ public class MaximizeHealingTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeHealing().Execute(
             new RPGLEffect(),
-            subevent,
+            healingRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_healing"
@@ -94,16 +86,12 @@ public class MaximizeHealingTest {
                 }
               }
             ]
-            """, (subevent as HealingRoll).GetHealing().PrettyPrint());
+            """, healingRoll.GetHealing().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes healing delivery")]
     public void MaximizesHealingDelivery() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new HealingDelivery()
+        HealingDelivery healingDelivery = new HealingDelivery()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "healing": [
@@ -132,12 +120,11 @@ public class MaximizeHealingTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new MaximizeHealing().Execute(
             new RPGLEffect(),
-            subevent,
+            healingDelivery,
             new JsonObject().LoadFromString("""
                 {
                     "function": "maximize_healing"
@@ -147,11 +134,40 @@ public class MaximizeHealingTest {
             new()
         );
 
-        subevent
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(12, (subevent as HealingDelivery).GetHealing());
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "dice": [
+                  {
+                    "determined": [ ],
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, healingDelivery.json.GetJsonArray("healing").PrettyPrint());
     }
 
 };

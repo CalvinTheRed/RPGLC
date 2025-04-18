@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
 
@@ -12,11 +9,8 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddVampirismTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "adds vampirism")]
     public void AddsVampirism() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -24,7 +18,6 @@ public class AddVampirismTest {
                     "attack_type": "melee"
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new AddVampirism().Execute(
@@ -65,11 +58,8 @@ public class AddVampirismTest {
         );
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "adds default vampirism array")]
     public void AddsDefaultVampirismArray() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -77,7 +67,6 @@ public class AddVampirismTest {
                     "attack_type": "melee"
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new AddVampirism().Execute(
@@ -101,11 +90,8 @@ public class AddVampirismTest {
         );
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "adds default vampirism object")]
     public void AddsDefaultVampirismObject() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         Subevent subevent = new DummyVampiricSubevent()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
@@ -113,7 +99,6 @@ public class AddVampirismTest {
                     "attack_type": "melee"
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new AddVampirism().Execute(

@@ -1,9 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +9,10 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class RerollTemporaryHitPointDiceTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls unbounded temporary hit point dice")]
     public void RerollsUnboundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new TemporaryHitPointRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
@@ -50,12 +45,11 @@ public class RerollTemporaryHitPointDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollTemporaryHitPointDice().Execute(
             new RPGLEffect(),
-            subevent,
+            temporaryHitPointRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_temporary_hit_point_dice"
@@ -130,16 +124,13 @@ public class RerollTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
+            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls bounded temporary hit point dice")]
     public void RerollsBoundedTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new TemporaryHitPointRoll()
+        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
@@ -172,12 +163,11 @@ public class RerollTemporaryHitPointDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollTemporaryHitPointDice().Execute(
             new RPGLEffect(),
-            subevent,
+            temporaryHitPointRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_temporary_hit_point_dice",
@@ -254,7 +244,7 @@ public class RerollTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
+            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
     }
 
 };

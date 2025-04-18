@@ -118,7 +118,7 @@ public class RPGLEffect : TaggableContent {
         }
     }
 
-    public static RPGLObject? GetObject(RPGLEffect rpglEffect, Subevent subevent, JsonObject instructions) {
+    public static RPGLObject? GetObject(RPGLEffect? rpglEffect, Subevent subevent, JsonObject instructions) {
         string? fromAlias = instructions.GetString("from");
         string? objectAlias = instructions.GetString("object");
         RPGLObject? rpglObject = null;
@@ -130,9 +130,9 @@ public class RPGLEffect : TaggableContent {
             }
         } else if (fromAlias == "effect") {
             if (objectAlias == "source") {
-                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetSource());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect?.GetSource());
             } else if (objectAlias == "target") {
-                rpglObject = RPGL.GetRPGLObject(rpglEffect.GetTarget());
+                rpglObject = RPGL.GetRPGLObject(rpglEffect?.GetTarget());
             }
         }
         if (instructions.GetBool("as_origin") ?? false) {

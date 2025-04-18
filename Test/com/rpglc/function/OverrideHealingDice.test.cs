@@ -1,9 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +8,9 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class OverrideHealingDiceTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides unbounded healing dice")]
     public void OverridesUnboundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new HealingRoll()
+        HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "healing": [
@@ -50,12 +43,11 @@ public class OverrideHealingDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideHealingDice().Execute(
             new RPGLEffect(),
-            subevent,
+            healingRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_healing_dice",
@@ -134,16 +126,12 @@ public class OverrideHealingDiceTest {
                 }
               }
             ]
-            """, (subevent as HealingRoll).GetHealing().PrettyPrint());
+            """, healingRoll.GetHealing().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "overrides bounded healing dice")]
     public void OverridesBoundedHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new HealingRoll()
+        HealingRoll healingRoll = new HealingRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "healing": [
@@ -176,12 +164,11 @@ public class OverrideHealingDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new OverrideHealingDice().Execute(
             new(),
-            subevent,
+            healingRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "override_healing_dice",
@@ -262,7 +249,7 @@ public class OverrideHealingDiceTest {
                 }
               }
             ]
-            """, (subevent as HealingRoll).GetHealing().PrettyPrint());
+            """, healingRoll.GetHealing().PrettyPrint());
     }
 
 };

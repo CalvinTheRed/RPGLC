@@ -1,9 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -11,13 +9,10 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class RerollDamageDiceTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls wild card unbounded damage dice")]
     public void RerollsWildCardUnboundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -52,12 +47,11 @@ public class RerollDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_damage_dice"
@@ -134,16 +128,13 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls wild card bounded damage dice")]
     public void RerollsWildCardBoundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -178,12 +169,11 @@ public class RerollDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_damage_dice",
@@ -262,16 +252,13 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed, unbounded damage dice")]
     public void RerollsTypedUnboundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -306,12 +293,11 @@ public class RerollDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_damage_dice",
@@ -389,16 +375,13 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls typed, bounded damage dice")]
     public void RerollsTypedBoundedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Subevent subevent = new DamageRoll()
+        DamageRoll damageRoll = new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -433,12 +416,11 @@ public class RerollDamageDiceTest {
                     ]
                 }
                 """))
-            .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
         new RerollDamageDice().Execute(
             new RPGLEffect(),
-            subevent,
+            damageRoll,
             new JsonObject().LoadFromString("""
                 {
                     "function": "reroll_damage_dice",
@@ -518,7 +500,7 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+            """, damageRoll.GetDamage().PrettyPrint());
     }
 
 };

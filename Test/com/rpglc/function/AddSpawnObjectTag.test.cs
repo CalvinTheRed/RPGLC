@@ -2,24 +2,23 @@
 using com.rpglc.json;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-public class AddSubeventTagTest {
+public class AddSpawnObjectTagTest {
 
     [Fact(DisplayName = "adds tag")]
-    public void AddsBonus() {
-        Subevent subevent = new DummySubevent()
+    public void AddsTag() {
+        SpawnObject spawnObject = new SpawnObject()
             .Prepare(new DummyContext(), new());
 
-        new AddSubeventTag().Execute(
+        new AddSpawnObjectTag().Execute(
             new RPGLEffect(),
-            subevent,
+            spawnObject,
             new JsonObject().LoadFromString("""
                 {
-                    "function": "add_subevent_tag",
+                    "function": "add_spawn_object_tag",
                     "tag": "test_tag"
                 }
                 """),
@@ -27,7 +26,14 @@ public class AddSubeventTagTest {
             new()
         );
 
-        Assert.True(subevent.HasTag("test_tag"));
+        Assert.Equal(
+            """
+            [
+              "test_tag"
+            ]
+            """,
+            spawnObject.json.GetJsonArray("extra_tags").PrettyPrint()
+        );
     }
 
 };
