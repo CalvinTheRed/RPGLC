@@ -225,4 +225,76 @@ public class SavingThrowTest {
         Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
     }
 
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DieTestingMode]
+    [DummyCounterManager]
+    [Fact(DisplayName = "passes forcibly")]
+    public void PassesForcibly() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SavingThrow savingThrow = new SavingThrow()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "save_ability": "dex",
+                    "difficulty_class": 100,
+                    "damage": [ ],
+                    "damage_on_pass": "none",
+                    "pass": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ],
+                    "fail": [ ],
+                    "determined": [ 1 ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .Pass()
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        Assert.Equal(1, DummySubevent.Counter);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DieTestingMode]
+    [DummyCounterManager]
+    [Fact(DisplayName = "fails forcibly")]
+    public void FailsForcibly() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SavingThrow savingThrow = new SavingThrow()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "save_ability": "dex",
+                    "difficulty_class": 1,
+                    "damage": [ ],
+                    "damage_on_pass": "none",
+                    "pass": [ ],
+                    "fail": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ],
+                    "determined": [ 20 ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(context, new())
+            .Fail()
+            .SetTarget(rpglObject)
+            .Invoke(context, new());
+
+        Assert.Equal(1, DummySubevent.Counter);
+    }
+
 };

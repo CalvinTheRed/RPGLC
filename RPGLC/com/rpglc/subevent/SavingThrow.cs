@@ -55,6 +55,8 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>AddBonus</item>
+///     <item>FailSave</item>
+///     <item>PassSave</item>
 ///     <item>SetBase</item>
 ///     <item>SetMinimum</item>
 ///     <item>GrantAdvantage</item>
@@ -129,11 +131,12 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override SavingThrow Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Roll();
-        if (Get() < GetDifficultyClass()) {
+        string? determinedResolution = json.GetString("determined_resolution");
+        if (determinedResolution == "fail" || (Get() < GetDifficultyClass() && determinedResolution != "pass")) {
             GetTargetDamage(context, originPoint, invokingEffect);
             DeliverDamage("all", context, originPoint, invokingEffect);
             ResolveNestedSubevents("fail", context, originPoint, invokingEffect);
-        } else {
+        } else if (determinedResolution == "pass" || Get() >= GetDifficultyClass()) {
             GetTargetDamage(context, originPoint, invokingEffect);
             DeliverDamage(json.GetString("damage_on_pass"), context, originPoint, invokingEffect);
             ResolveNestedSubevents("pass", context, originPoint, invokingEffect);
@@ -167,6 +170,16 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public long? GetDifficultyClass() {
         return json.GetLong("difficulty_class");
+    }
+
+    public SavingThrow Fail() {
+        json.PutString("determined_resolution", "fail");
+        return this;
+    }
+
+    public SavingThrow Pass() {
+        json.PutString("determined_resolution", "pass");
+        return this;
     }
 
     private void CalculateDifficultyClass(RPGLContext context, RPGLEffect? invokingEffect = null) {
