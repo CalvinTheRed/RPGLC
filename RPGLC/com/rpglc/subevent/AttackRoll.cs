@@ -29,7 +29,7 @@ namespace com.rpglc.subevent;
 ///     "miss": [
 ///       &lt;nested_subevent&gt;
 ///     ],
-///     "crtical_hit_threshhold": &lt;long = 20&gt;
+///     "crtical_hit_threshold": &lt;long = 20&gt;
 ///   }
 ///   </code>
 ///   
@@ -43,7 +43,7 @@ namespace com.rpglc.subevent;
 ///     <item>"vampirism" is an optional field and it will default to a value of [ ] if left unspecified. This field indicates whether and to what extent the damage dealt by this subevent restores hit points to the source.</item>
 ///     <item>"hit" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source hits the target. The damage defined by "damage" will be dealt on a hit.</item>
 ///     <item>"miss" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the source misses the target. The damage defined by "damage" will not be dealt on a miss.</item>
-///     <item>"critical_hit_threshhold" is an optional field and it will default to a value of 20 if left unspecified. This field indicates the default minimum number which must be rolled on the d20 to qualify the attack as a critical hit.</item>
+///     <item>"critical_hit_threshold" is an optional field and it will default to a value of 20 if left unspecified. This field indicates the default minimum number which must be rolled on the d20 to qualify the attack as a critical hit.</item>
 ///   </list>
 ///   
 ///   <br /><br />
@@ -55,6 +55,7 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>AddBonus</item>
+///     <item>CritOnHit</item>
 ///     <item>SetBase</item>
 ///     <item>SetMinimum</item>
 ///     <item>GrantAdvantage</item>
@@ -95,7 +96,8 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.PutIfAbsent("use_origin_ability", false);
         json.PutIfAbsent("damage", new JsonArray());
         json.PutIfAbsent("vampirism", new JsonArray());
-        json.PutIfAbsent("critical_hit_threshhold", 20L);
+        json.PutIfAbsent("critical_hit_threshold", 20L);
+        json.PutIfAbsent("crit_on_hit", false);
 
         // Add tag so nested subevents such as DamageCollection can know they
         // hail from an attack roll made using a particular attack ability.
@@ -134,23 +136,20 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     public override AttackRoll Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Roll();
 
-        json.PutLong("target_armor_class", GetTarget().CalculateArmorClass(context, this));
-        CalculateCriticalHitThreshhold(context, originPoint, invokingEffect);
-
-        if (GetBase() >= GetCriticalHitThreshhold() && ConfirmCriticalDamage(context, originPoint, invokingEffect)) {
-            if (json.GetJsonArray("damage").Count() > 0) {
-                GetBaseDamage(context, originPoint, invokingEffect);
-                GetTargetDamage(context, originPoint, invokingEffect);
-                GetCriticalHitDamage(context, originPoint, invokingEffect);
-                ResolveDamage(context, originPoint, invokingEffect);
-            }
-            ResolveNestedSubevents("hit", context, originPoint, invokingEffect);
-        } else if (IsCriticalMiss() || Get() < GetTargetArmorClass()) {
+        long attackRollValue = Get();
+        long targetArmorClass = GetTarget().CalculateArmorClass(context, this);
+        bool wasCritRolled = GetBase() >= CalculateCriticalHitThreshold(context, originPoint, invokingEffect); ;
+        
+        if (IsCriticalMiss() || (attackRollValue < targetArmorClass && !wasCritRolled)) {
             ResolveNestedSubevents("miss", context, originPoint, invokingEffect);
         } else {
             if (json.GetJsonArray("damage").Count() > 0) {
                 GetBaseDamage(context, originPoint, invokingEffect);
                 GetTargetDamage(context, originPoint, invokingEffect);
+                if ((wasCritRolled || (attackRollValue >= targetArmorClass && DoesHitCrit()))
+                        && ConfirmCriticalDamage(context, originPoint, invokingEffect)) {
+                    GetCriticalHitDamage(context, originPoint, invokingEffect);
+                }
                 ResolveDamage(context, originPoint, invokingEffect);
             }
             ResolveNestedSubevents("hit", context, originPoint, invokingEffect);
@@ -181,6 +180,15 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public string GetAbility(RPGLContext context) {
         return json.GetString("ability");
+    }
+
+    public AttackRoll SetCritOnHit() {
+        json.PutBool("crit_on_hit", true);
+        return this;
+    }
+
+    private bool DoesHitCrit() {
+        return (bool) json.GetBool("crit_on_hit");
     }
 
     private void GetBaseDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
@@ -248,10 +256,10 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         json.GetJsonArray("damage").AsList().AddRange(targetDamageCollection.GetDamageCollection().AsList());
     }
 
-    private void CalculateCriticalHitThreshhold(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
-        CalculateCriticalHitThreshhold calculateCriticalHitThreshhold = new CalculateCriticalHitThreshhold()
+    private long CalculateCriticalHitThreshold(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
+        CalculateCriticalHitThreshold calculateCriticalHitThreshold = new CalculateCriticalHitThreshold()
             .JoinSubeventData(new JsonObject()
-                .PutLong("critical_hit_threshhold", json.GetLong("critical_hit_threshhold"))
+                .PutLong("critical_hit_threshold", json.GetLong("critical_hit_threshold"))
                 .PutJsonArray("tags", GetTags().DeepClone())
             )
             .SetOriginItem(GetOriginItem())
@@ -260,15 +268,15 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             .SetTarget(GetTarget())
             .Invoke(context, originPoint, invokingEffect);
 
-        json.PutLong("critical_hit_threshhold", calculateCriticalHitThreshhold.Get());
+        return calculateCriticalHitThreshold.Get();
     }
 
     public long GetTargetArmorClass() {
         return (long) json.GetLong("target_armor_class");
     }
 
-    public long GetCriticalHitThreshhold() {
-        return (long) json.GetLong("critical_hit_threshhold");
+    public long GetCriticalHitThreshold() {
+        return (long) json.GetLong("critical_hit_threshold");
     }
 
     private bool ConfirmCriticalDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {

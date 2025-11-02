@@ -25,6 +25,7 @@ public abstract class Function(string functionId) {
             new AddSpawnObjectTag(),
             new AddSubeventTag(),
             new AddVampirism(),
+            new CritOnHit(),
             new GrantAdvantage(),
             new GrantDisadvantage(),
             new GrantImmunity(),

@@ -7,18 +7,18 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
-public class CalculateCriticalHitThreshholdTest {
+public class CalculateCriticalHitThresholdTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        CalculateCriticalHitThreshhold calculateCriticalHitThreshhold = new CalculateCriticalHitThreshhold()
+        CalculateCriticalHitThreshold calculateCriticalHitThreshold = new CalculateCriticalHitThreshold()
             .SetSource(rpglObject)
             .Prepare(new DummyContext(), new());
 
-        Assert.Equal(20L, calculateCriticalHitThreshhold.json.GetLong("critical_hit_threshhold"));
+        Assert.Equal(20L, calculateCriticalHitThreshold.json.GetLong("critical_hit_threshold"));
     }
 
 };

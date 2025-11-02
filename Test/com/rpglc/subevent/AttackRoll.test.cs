@@ -30,6 +30,7 @@ public class AttackRollTest {
 
         Assert.False(attackRoll.json.GetBool("withhold_damage_modifier"));
         Assert.False(attackRoll.json.GetBool("use_origin_ability"));
+        Assert.False(attackRoll.json.GetBool("crit_on_hit"));
         Assert.True(attackRoll.HasTag("str"));
         Assert.True(attackRoll.HasTag("melee"));
         Assert.Equal("""[]""", attackRoll.json.GetJsonArray("damage").ToString());
@@ -164,19 +165,8 @@ public class AttackRollTest {
                             "number": 1
                         }
                     ],
-                    "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "miss": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ]
+                    "hit": [ ],
+                    "miss": [ ]
                 }
                 """))
             .SetSource(rpglObject)
@@ -184,7 +174,83 @@ public class AttackRollTest {
             .SetTarget(rpglObject)
             .Invoke(new DummyContext(), new());
 
-        Assert.Equal(2, DummySubevent.Counter);
+        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DummyCounterManager]
+    [Fact(DisplayName = "critically hits past armor")]
+    public void CriticallyHitsPastArmor() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("dex", 999L);
+        AttackRoll attackRoll = new AttackRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "attack_type": "melee",
+                    "determined": [ 20 ],
+                    "damage": [
+                        {
+                            "formula": "dice",
+                            "damage_type": "fire",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                            ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
+                        }
+                    ],
+                    "hit": [ ],
+                    "miss": [ ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new())
+            .SetTarget(rpglObject)
+            .Invoke(new DummyContext(), new());
+
+        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DummyCounterManager]
+    [Fact(DisplayName = "crits on hit")]
+    public void CritsOnHit() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        AttackRoll attackRoll = new AttackRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "attack_type": "melee",
+                    "determined": [ 19 ],
+                    "damage": [
+                        {
+                            "formula": "dice",
+                            "damage_type": "fire",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                            ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
+                        }
+                    ],
+                    "hit": [ ],
+                    "miss": [ ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new())
+            .SetCritOnHit()
+            .SetTarget(rpglObject)
+            .Invoke(new DummyContext(), new());
 
         Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
     }
@@ -193,8 +259,8 @@ public class AttackRollTest {
     [DefaultMock]
     [ExtraEffectsMock]
     [DummyCounterManager]
-    [Fact(DisplayName = "critically hits with suppressed critical damage")]
-    public void CriticallyHitsWithSuppressedCriticalDamage() {
+    [Fact(DisplayName = "suppresses critical damage")]
+    public void SuppressesCriticalDamage() {
         RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:no_crits");
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
             .AddEffect(rpglEffect);
@@ -221,27 +287,14 @@ public class AttackRollTest {
                             "number": 1
                         }
                     ],
-                    "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "miss": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ]
+                    "hit": [ ],
+                    "miss": [ ]
                 }
                 """))
             .SetSource(rpglObject)
             .Prepare(context, new())
             .SetTarget(rpglObject)
             .Invoke(context, new());
-
-        Assert.Equal(2, DummySubevent.Counter);
 
         Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
     }
@@ -252,6 +305,69 @@ public class AttackRollTest {
     [Fact(DisplayName = "critically misses")]
     public void CriticallyMisses() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        AttackRoll attackRoll = (AttackRoll) new AttackRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "attack_type": "melee",
+                    "determined": [ 1 ],
+                    "damage": [
+                        {
+                            "formula": "dice",
+                            "damage_type": "fire",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                            ]
+                        },
+                        {
+                            "formula": "number",
+                            "damage_type": "fire",
+                            "number": 1
+                        }
+                    ],
+                    "hit": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ],
+                    "miss": [
+                        {
+                            "subevent": "dummy_subevent"
+                        },
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """))
+            .SetSource(rpglObject)
+            .Prepare(new DummyContext(), new())
+            .AddBonus(new JsonObject().LoadFromString("""
+                {
+                    "bonus": 100,
+                    "dice": [ ],
+                    "scale": {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                }
+                """))
+            .SetTarget(rpglObject)
+            .Invoke(new DummyContext(), new());
+
+        Assert.Equal(2, DummySubevent.Counter);
+
+        Assert.Equal(1000, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [DummyCounterManager]
+    [Fact(DisplayName = "critically misses past armor")]
+    public void CriticallyMissesPastArmor() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", 999L);
         AttackRoll attackRoll = (AttackRoll) new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
