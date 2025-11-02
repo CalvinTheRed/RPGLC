@@ -31,6 +31,15 @@ public class RPGLEvent : DatabaseContent {
         return this;
     }
 
+    public string? GetGroup() {
+        return GetString("group");
+    }
+
+    public RPGLEvent SetGroup(string? group) {
+        PutString("group", group);
+        return this;
+    }
+
     public string? GetOriginItem() {
         return GetString("origin_item");
     }

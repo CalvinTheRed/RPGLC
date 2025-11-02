@@ -25,6 +25,8 @@ public abstract class Function(string functionId) {
             new AddSpawnObjectTag(),
             new AddSubeventTag(),
             new AddVampirism(),
+            new CritOnHit(),
+            new FailSave(),
             new GrantAdvantage(),
             new GrantDisadvantage(),
             new GrantImmunity(),
@@ -39,6 +41,7 @@ public abstract class Function(string functionId) {
             new OverrideDamageDice(),
             new OverrideHealingDice(),
             new OverrideTemporaryHitPointDice(),
+            new PassSave(),
             new RepeatDamageDice(),
             new RerollDamageDice(),
             new RerollHealingDice(),
@@ -48,6 +51,7 @@ public abstract class Function(string functionId) {
             new SetBase(),
             new SetMinimum(),
             new SuppressCriticalDamage(),
+            new SuppressEvents(),
         ]);
     }
 

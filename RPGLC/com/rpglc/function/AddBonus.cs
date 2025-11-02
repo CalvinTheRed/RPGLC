@@ -24,7 +24,7 @@ namespace com.rpglc.function;
 ///   <list type="bullet">
 ///     <item>CalculateAbilityScore</item>
 ///     <item>CalculateArmorClass</item>
-///     <item>CalculateCriticalHitThreshhold</item>
+///     <item>CalculateCriticalHitThreshold</item>
 ///     <item>CalculateDifficultyClass</item>
 ///     <item>CalculateMaximumHitPoints</item>
 ///     <item>CalculateProficiencyBonus</item>

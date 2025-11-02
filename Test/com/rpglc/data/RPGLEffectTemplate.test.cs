@@ -28,4 +28,33 @@ public class RPGLEffectTemplateTest {
         Assert.False(rpglEffect.GetOptional());
     }
 
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [ExtraEffectsMock]
+    [Fact(DisplayName = "inherits effects")]
+    public void InheritsEffects() {
+        string effectUuid = "uuid";
+        RPGLEffect rpglEffect = RPGL.GetRPGLEffectTemplate("test:inheriting_effect")
+            .NewInstance(effectUuid);
+
+        Assert.Equal(
+            """{"author":"Calvin Withun"}""",
+            rpglEffect.GetMetadata().ToString()
+        );
+        Assert.Equal("""
+            {
+              "critical_damage_confirmation": [
+                {
+                  "conditions": [ ],
+                  "functions": [
+                    {
+                      "function": "suppress_critical_damage"
+                    }
+                  ]
+                }
+              ]
+            }
+            """, rpglEffect.GetSubeventFilters().PrettyPrint());
+    }
+
 };

@@ -13,11 +13,12 @@ namespace com.rpglc.subevent;
 ///   <b>Special Functions</b>
 ///   <list type="bullet">
 ///     <item>AddEvent</item>
+///     <item>SuppressEvents</item>
 ///   </list>
 ///   
 /// </summary>
 public class GetEvents : Subevent {
-    
+
     public GetEvents() : base("get_events") { }
 
     public override Subevent Clone() {
@@ -44,6 +45,7 @@ public class GetEvents : Subevent {
 
     public override GetEvents Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         json.PutIfAbsent("events", new JsonArray());
+        json.PutBool("suppress_events", false);
         return this;
     }
 
@@ -68,7 +70,16 @@ public class GetEvents : Subevent {
         return this;
     }
 
+    public GetEvents SuppressEvents() {
+        json.PutBool("suppress_events", true);
+        return this;
+    }
+
     public List<RPGLEvent> Events() {
+        if ((bool) json.GetBool("suppress_events")) {
+            return [];
+        }
+
         List<RPGLEvent> events = [];
         JsonArray eventIds = json.GetJsonArray("events");
         for (int i = 0; i < eventIds.Count(); i++) {
