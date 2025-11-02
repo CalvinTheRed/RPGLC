@@ -206,7 +206,9 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
-                "inherited_effects": [ "test:no_crits" ],
+                "inherited_effects": [
+                    "test:no_crits"
+                ],
                 "subevent_filters": { }
             }
             """)));

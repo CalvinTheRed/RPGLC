@@ -271,14 +271,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return calculateCriticalHitThreshold.Get();
     }
 
-    public long GetTargetArmorClass() {
-        return (long) json.GetLong("target_armor_class");
-    }
-
-    public long GetCriticalHitThreshold() {
-        return (long) json.GetLong("critical_hit_threshold");
-    }
-
     private bool ConfirmCriticalDamage(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         return new CriticalDamageConfirmation()
             .JoinSubeventData(new JsonObject()
