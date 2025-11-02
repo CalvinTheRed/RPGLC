@@ -24,6 +24,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "tags": [
                     "test_tag"
                 ],
+                "inherited_effects": [ ],
                 "subevent_filters": {
                     "dummy_subevent": [
                         {
@@ -53,6 +54,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
+                "inherited_effects": [ ],
                 "subevent_filters": {
                     "damage_affinity": [
                         {
@@ -94,6 +96,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
+                "inherited_effects": [ ],
                 "subevent_filters": {
                     "damage_affinity": [
                         {
@@ -135,6 +138,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
+                "inherited_effects": [ ],
                 "subevent_filters": {
                     "damage_affinity": [
                         {
@@ -176,6 +180,7 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
+                "inherited_effects": [ ],
                 "subevent_filters": {
                     "critical_damage_confirmation": [
                         {
@@ -188,6 +193,21 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                         }
                     ]
                 }
+            }
+            """)));
+        RPGL.AddRPGLEffectTemplate(new RPGLEffectTemplate(new JsonObject().LoadFromString("""
+            {
+                "metadata": {
+                    "author": "Calvin Withun"
+                },
+                "name": "Inheriting Effect",
+                "description": "This effect Inherits from another effect.",
+                "datapack_id": "test:inheriting_effect",
+                "allow_duplicates": true,
+                "optional": false,
+                "tags": [ ],
+                "inherited_effects": [ "test:no_crits" ],
+                "subevent_filters": { }
             }
             """)));
     }

@@ -22,6 +22,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "allow_duplicates": true,
                 "optional": false,
                 "tags": [ ],
+                "inherited_effects": [ ],
                 "subevent_filters": { }
             }
             """)));
