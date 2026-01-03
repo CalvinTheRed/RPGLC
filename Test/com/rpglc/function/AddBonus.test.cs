@@ -102,7 +102,6 @@ public class AddBonusTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds bonus (modifier)")]
     public void AddsBonusModifier() {
         long strScore = 12L;
@@ -182,7 +181,6 @@ public class AddBonusTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds bonus (ability)")]
     public void AddsBonusAbility() {
         long strScore = 12L;
@@ -262,20 +260,9 @@ public class AddBonusTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds bonus (proficiency)")]
     public void AddsBonusProficiency() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        rpglObject.SetClasses(new JsonArray().LoadFromString("""
-            [
-                {
-                  "additional_nested_classes": { },
-                  "id": "test:dummy",
-                  "level": 1,
-                  "name": "Dummy"
-                }
-            ]
-            """));
         RPGLContext context = new DummyContext().Add(rpglObject);
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString(
@@ -345,7 +332,6 @@ public class AddBonusTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [ExtraClassesMock]
     [Fact(DisplayName = "adds bonus (level)")]
     public void AddsBonusLevel() {
@@ -417,16 +403,14 @@ public class AddBonusTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [ExtraClassesMock]
     [Fact(DisplayName = "skips invalid formula")]
     public void SkipsInvalidFormula() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString(
             """{ "bonuses": [ ] }"""
-        )).SetSource(rpglObject);
+        ));
 
         AddBonus addBonus = new();
 

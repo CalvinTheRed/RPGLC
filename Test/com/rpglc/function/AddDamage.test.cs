@@ -12,9 +12,6 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddDamageTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds damage (number)")]
     public void AddsDamageNumber() {
         RPGLContext context = new DummyContext();
@@ -117,8 +114,6 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "adds damage (dice)")]
     public void AddsDamageDice() {
@@ -263,7 +258,6 @@ public class AddDamageTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds damage (modifier)")]
     public void AddsDamageModifier() {
         long strScore = 12L;
@@ -417,7 +411,6 @@ public class AddDamageTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds damage (ability)")]
     public void AddsDamageAbility() {
         long strScore = 12L;
@@ -571,20 +564,9 @@ public class AddDamageTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "adds damage (proficiency)")]
     public void AddsDamageProficiency() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        rpglObject.SetClasses(new JsonArray().LoadFromString("""
-            [
-                {
-                  "additional_nested_classes": { },
-                  "id": "test:dummy",
-                  "level": 1,
-                  "name": "Dummy"
-                }
-            ]
-            """));
         RPGLContext context = new DummyContext().Add(rpglObject);
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DamageCollection().JoinSubeventData(new JsonObject().LoadFromString(
@@ -728,7 +710,6 @@ public class AddDamageTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [ExtraClassesMock]
     [Fact(DisplayName = "adds damage (level)")]
     public void AddsDamageLevel() {
