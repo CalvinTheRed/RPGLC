@@ -1,8 +1,6 @@
 ﻿using com.rpglc.core;
-using com.rpglc.data.TO;
 using com.rpglc.json;
 using com.rpglc.math;
-using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -40,7 +38,7 @@ public class AddBonus : Function {
 
     public AddBonus() : base("add_bonus") {
         functionSteps.AddRange([
-            (RPGLEffect rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+            (rpglEffect, subevent, functionJson, context) => {
                 if (subevent is CalculationSubevent calculationSubevent) {
                     JsonArray bonusArray = functionJson.GetJsonArray("bonus") ?? new();
                     if (bonusIndex < bonusArray.Count()) {

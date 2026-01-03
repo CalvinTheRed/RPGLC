@@ -54,7 +54,6 @@ public abstract class Function(string functionId) {
             new SetBase(),
             new SetMinimum(),
             new SuppressCriticalDamage(),
-            new SuppressEvents(),
         ]);
     }
 

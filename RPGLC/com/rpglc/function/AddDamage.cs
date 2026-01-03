@@ -36,7 +36,7 @@ public class AddDamage : Function {
 
     public AddDamage() : base("add_damage") {
         functionSteps.AddRange([
-            (RPGLEffect rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+            (rpglEffect, subevent, functionJson, context) => {
                 if (subevent is DamageCollection damageCollection) {
                     JsonArray damageArray = functionJson.GetJsonArray("bonus");
                     if (damageIndex < damageArray.Count()) {

@@ -11,21 +11,21 @@ public class DummyFunction : Function {
 
     public DummyFunction() : base("dummy_function") {
         functionSteps.AddRange([
-            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+            (rpglEffect, subevent, functionJson, context) => {
                 Counter = 1;
                 return new() {
                     dependency = null,
                     completed = true,
                 };
             },
-            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+            (rpglEffect, subevent, functionJson, context) => {
                 Counter = 2;
                 return new() {
                     dependency = null,
                     completed = true,
                 };
             },
-            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+            (rpglEffect, subevent, functionJson, context) => {
                 Counter = 3;
                 return new() {
                     dependency = null,
