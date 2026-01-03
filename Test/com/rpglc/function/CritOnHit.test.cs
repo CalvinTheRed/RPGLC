@@ -5,7 +5,6 @@ using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 

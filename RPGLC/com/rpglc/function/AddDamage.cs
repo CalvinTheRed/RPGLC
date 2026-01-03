@@ -364,7 +364,7 @@ public class AddDamage : Function {
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageCollection damageCollection) {
-            JsonArray damageArray = functionJson.GetJsonArray("bonus");
+            JsonArray damageArray = functionJson.GetJsonArray("damage");
             for (int i = 0; i < damageArray.Count(); i++) {
                 JsonObject damageElement = damageArray.GetJsonObject(i);
                 JsonObject damage = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, damageElement, context);
@@ -377,7 +377,7 @@ public class AddDamage : Function {
                 damageCollection.AddDamage(damage);
             }
         } else if (subevent is CriticalHitDamageCollection criticalHitDamageCollection) {
-            JsonArray damageArray = functionJson.GetJsonArray("bonus");
+            JsonArray damageArray = functionJson.GetJsonArray("damage");
             for (int i = 0; i < damageArray.Count(); i++) {
                 JsonObject damageElement = damageArray.GetJsonObject(i);
                 JsonObject damage = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, damageElement, context);
