@@ -9,7 +9,31 @@ public class DummyFunction : Function {
 
     public static long Counter = 0L;
 
-    public DummyFunction() : base("dummy_function") { }
+    public DummyFunction() : base("dummy_function") {
+        functionSteps.AddRange([
+            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+                Counter = 1;
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            },
+            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+                Counter = 2;
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            },
+            (RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context) => {
+                Counter = 3;
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         Counter++;
