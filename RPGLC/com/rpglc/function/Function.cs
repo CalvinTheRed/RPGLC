@@ -38,7 +38,7 @@ public abstract class Function(string functionId) {
             new GrantSkillHalfProficiency(),
             new GrantSkillProficiency(),
             new GrantVulnerability(),
-            new InvokeSubevents(),
+            // TODO InvokeSubevent?
             new MaximizeDamage(),
             new MaximizeHealing(),
             new OverrideDamageDice(),

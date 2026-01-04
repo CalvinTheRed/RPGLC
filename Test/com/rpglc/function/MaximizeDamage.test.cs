@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -8,54 +9,54 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class MaximizeDamageTest {
 
-    [Fact(DisplayName = "maximizes specified damage type (damage roll)")]
-    public void MaximizesSpecificDamageType_DamageRoll() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 3 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 3 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "maximizes damage roll (default)")]
+    public void MaximizesDamageRollDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new MaximizeDamage().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "maximize_damage",
-                    "damage_type": "fire"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        MaximizeDamage maximizeDamage = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "maximize_damage"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = maximizeDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -63,7 +64,6 @@ public class MaximizeDamageTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -79,8 +79,7 @@ public class MaximizeDamageTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [ ],
-                    "roll": 3,
+                    "roll": 6,
                     "size": 6
                   }
                 ],
@@ -91,57 +90,58 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [Fact(DisplayName = "maximizes specified damage type (damage delivery)")]
-    public void MaximizesSpecificDamageType_DamageDelivery() {
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "maximizes damage roll (customized)")]
+    public void MaximizesDamageRollCustomized() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new MaximizeDamage().Execute(
-            new RPGLEffect(),
-            damageDelivery,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "maximize_damage",
-                    "damage_type": "fire"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        MaximizeDamage maximizeDamage = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "maximize_damage",
+                "damage_type": "fire"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = maximizeDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -149,7 +149,6 @@ public class MaximizeDamageTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -165,8 +164,7 @@ public class MaximizeDamageTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [ ],
-                    "roll": 3,
+                    "roll": 1,
                     "size": 6
                   }
                 ],
@@ -177,56 +175,57 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, damageDelivery.json.GetJsonArray("damage").PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [Fact(DisplayName = "maximizes every damage type (damage roll)")]
-    public void MaximizesEveryDamageType_DamageRoll() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 3 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 3 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "maximizes damage delivery (default)")]
+    public void MaximizesDamageDeliveryDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageDelivery().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new MaximizeDamage().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "maximize_damage"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        MaximizeDamage maximizeDamage = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "maximize_damage"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = maximizeDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -234,7 +233,6 @@ public class MaximizeDamageTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -250,7 +248,6 @@ public class MaximizeDamageTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -262,56 +259,58 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageDelivery).json.GetJsonArray("damage").PrettyPrint());
     }
 
-    [Fact(DisplayName = "maximizes every damage type (damage delivery)")]
-    public void MaximizesEveryDamageType_DamageDelivery() {
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "maximizes damage delivery (customized)")]
+    public void MaximizesDamageDeliveryCustomized() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageDelivery().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new MaximizeDamage().Execute(
-            new RPGLEffect(),
-            damageDelivery,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "maximize_damage"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        MaximizeDamage maximizeDamage = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "maximize_damage",
+                "damage_type": "fire"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = maximizeDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -319,7 +318,6 @@ public class MaximizeDamageTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -335,8 +333,7 @@ public class MaximizeDamageTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],
@@ -347,7 +344,7 @@ public class MaximizeDamageTest {
                 }
               }
             ]
-            """, damageDelivery.json.GetJsonArray("damage").PrettyPrint());
+            """, (subevent as DamageDelivery).json.GetJsonArray("damage").PrettyPrint());
     }
 
 };
