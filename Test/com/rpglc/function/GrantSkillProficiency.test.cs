@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -10,24 +11,30 @@ public class GrantSkillProficiencyTest {
 
     [Fact(DisplayName = "grants proficiency")]
     public void GrantsProficiency() {
-        Subevent subevent = new AbilityCheck()
-            .Prepare(new DummyContext(), new());
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "has_expertise": false,
+                "has_half_proficiency": false,
+                "has_proficiency": false
+            }
+            """
+        ));
 
-        new GrantSkillProficiency().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "grant_skill_proficiency"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        GrantSkillProficiency grantSkillProficiency = new();
 
-        Assert.True(
-            (subevent as AbilityCheck).HasProficiency()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "grant_skill_proficiency"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = grantSkillProficiency.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.True((subevent as AbilityCheck).HasProficiency());
     }
 
 };
