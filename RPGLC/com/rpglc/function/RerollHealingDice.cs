@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.math;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -30,7 +31,49 @@ namespace com.rpglc.function;
 /// </summary>
 public class RerollHealingDice : Function {
 
-    public RerollHealingDice() : base("reroll_healing_dice") { }
+    public RerollHealingDice() : base("reroll_healing_dice") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is HealingRoll healingRoll) {
+                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString("""
+                        {
+                            "formula": "number",
+                            "number": 1
+                        }
+                        """));
+
+                    string formula = functionJson.SeekString("threshold.formula");
+                    if (formula == "number") {
+                        AdvanceNumber(healingRoll, functionJson);
+                    }
+                    return new() {
+                        dependency = this.dependency,
+                        stepCompleted = this.dependency == null,
+                    };
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public static void AdvanceNumber(HealingRoll healingRoll, JsonObject functionJson) {
+        JsonArray healingArray = healingRoll.json.GetJsonArray("healing");
+        for (int i = 0; i < healingArray.Count(); i++) {
+            JsonObject healingJson = healingArray.GetJsonObject(i);
+            JsonArray healingDieArray = healingJson.GetJsonArray("dice") ?? new();
+            for (int j = 0; j < healingDieArray.Count(); j++) {
+                JsonObject healingDie = healingDieArray.GetJsonObject(j);
+                long roll = (long) healingDie.GetLong("roll");
+                long overrideValue = (long) functionJson.SeekLong("threshold.number");
+                if (roll <= overrideValue) {
+                    Die.Roll(healingDie);
+                }
+            }
+        }
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {
