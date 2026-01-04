@@ -12,8 +12,8 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class OverrideHealingDiceTest {
 
-    [Fact(DisplayName = "overrides damage dice (number)")]
-    public void OverridesDamageDiceNumber() {
+    [Fact(DisplayName = "overrides healing dice (number)")]
+    public void OverridesHealingDiceNumber() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new HealingRoll().JoinSubeventData(new JsonObject().LoadFromString("""
@@ -108,8 +108,8 @@ public class OverrideHealingDiceTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "overrides damage dice (modifier)")]
-    public void OverridesDamageDiceModifier() {
+    [Fact(DisplayName = "overrides healing dice (modifier)")]
+    public void OverridesHealingDiceModifier() {
         long strScore = 16L;
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
