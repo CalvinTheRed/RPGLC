@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddSpawnObjectTag: Function {
 
-    public AddSpawnObjectTag() : base("add_spawn_object_tag") { }
+    public AddSpawnObjectTag() : base("add_spawn_object_tag") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is SpawnObject spawnObject) {
+                    spawnObject.AddObjectTag(functionJson.GetString("tag"));
+                }
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            }
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is SpawnObject spawnObject) {
