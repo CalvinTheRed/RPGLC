@@ -25,7 +25,21 @@ namespace com.rpglc.function;
 /// </summary>
 public class MaximizeTemporaryHitPoints : Function {
 
-    public MaximizeTemporaryHitPoints() : base("maximize_temporary_hit_points") { }
+    public MaximizeTemporaryHitPoints() : base("maximize_temporary_hit_points") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
+                    temporaryHitPointRoll.MaximizeTemporaryHitPointDice();
+                } else if (subevent is TemporaryHitPointDelivery temporaryHitPointDelivery) {
+                    temporaryHitPointDelivery.MaximizeTemporaryHitPointDice();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
