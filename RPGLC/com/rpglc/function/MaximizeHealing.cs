@@ -25,7 +25,21 @@ namespace com.rpglc.function;
 /// </summary>
 public class MaximizeHealing : Function {
 
-    public MaximizeHealing() : base("maximize_healing") { }
+    public MaximizeHealing() : base("maximize_healing") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is HealingRoll healingRoll) {
+                    healingRoll.MaximizeHealingDice();
+                } else if (subevent is HealingDelivery healingDelivery) {
+                    healingDelivery.MaximizeHealingDice();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {
