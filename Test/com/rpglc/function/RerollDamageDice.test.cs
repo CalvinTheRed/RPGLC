@@ -1,7 +1,10 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -10,57 +13,56 @@ namespace com.rpglc.function;
 public class RerollDamageDiceTest {
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls wild card unbounded damage dice")]
-    public void RerollsWildCardUnboundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, 3, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, 3, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, 3, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, 3, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "rerolls damage dice (default)")]
+    public void RerollsDamageDiceDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new RerollDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_damage_dice"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        RerollDamageDice rerollDamageDice = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "reroll_damage_dice"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = rerollDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -68,24 +70,13 @@ public class RerollDamageDiceTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   }
                 ],
@@ -100,24 +91,13 @@ public class RerollDamageDiceTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   }
                 ],
@@ -128,63 +108,64 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls wild card bounded damage dice")]
-    public void RerollsWildCardBoundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "rerolls damage dice (threshold)")]
+    public void RerollsDamageDiceThreshold() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 3 ] },
+                            { "roll": 6, "size": 6, "determined": [ 3 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 3 ] },
+                            { "roll": 6, "size": 6, "determined": [ 3 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new RerollDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_damage_dice",
-                    "lower_bound": 2,
-                    "upper_bound": 5
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        RerollDamageDice rerollDamageDice = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "reroll_damage_dice",
+                "threshold": {
+                    "formula": "number",
+                    "number": 2
+                }
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = rerollDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -192,22 +173,13 @@ public class RerollDamageDiceTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 3,
                     "size": 6
                   },
                   {
                     "determined": [
-                      -1
+                      3
                     ],
                     "roll": 6,
                     "size": 6
@@ -224,22 +196,13 @@ public class RerollDamageDiceTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 3,
                     "size": 6
                   },
                   {
                     "determined": [
-                      -1
+                      3
                     ],
                     "roll": 6,
                     "size": 6
@@ -252,62 +215,61 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls typed, unbounded damage dice")]
-    public void RerollsTypedUnboundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, 3, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, 3, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "rerolls damage dice (typed)")]
+    public void RerollsDamageDiceTyped() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new RerollDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_damage_dice",
-                    "damage_type": "fire"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        RerollDamageDice rerollDamageDice = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "reroll_damage_dice",
+                "damage_type": "fire"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = rerollDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -315,148 +277,12 @@ public class RerollDamageDiceTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 6,
                     "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, damageRoll.GetDamage().PrettyPrint());
-    }
-
-    [DieTestingMode]
-    [Fact(DisplayName = "rerolls typed, bounded damage dice")]
-    public void RerollsTypedBoundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new RerollDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_damage_dice",
-                    "damage_type": "fire",
-                    "lower_bound": 2,
-                    "upper_bound": 5
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 6,
                     "size": 6
                   }
@@ -473,23 +299,16 @@ public class RerollDamageDiceTest {
                 "dice": [
                   {
                     "determined": [
-                      -1
+                      6
                     ],
                     "roll": 1,
                     "size": 6
                   },
                   {
                     "determined": [
-                      -1
+                      6
                     ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],
@@ -500,7 +319,7 @@ public class RerollDamageDiceTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
 };
