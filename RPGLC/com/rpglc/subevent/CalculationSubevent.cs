@@ -18,16 +18,11 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     }
 
     public long GetBase() {
-        return (long) json.GetJsonObject("base").GetLong("value");
+        return json.GetLong("base") ?? 0L;
     }
 
     public CalculationSubevent SetBase(long baseValue) {
-        JsonObject baseJson = json.GetJsonObject("base");
-        if (baseJson is null) {
-            json.PutJsonObject("base", new JsonObject().PutLong("value", baseValue));
-        } else {
-            baseJson.PutLong("value", baseValue);
-        }
+        json.PutLong("base", baseValue);
         return this;
     }
 
@@ -57,13 +52,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     }
 
     public long GetMinimum() {
-        JsonObject? minimumJson = json.GetJsonObject("minimum");
-        if (minimumJson is null) {
-            json.PutJsonObject("minimum", new JsonObject().PutLong("value", 0L));
-            return 0L;
-        } else {
-            return minimumJson.GetLong("value") ?? 0L;
-        }
+        return json.GetLong("minimum") ?? long.MinValue;
     }
 
     public CalculationSubevent SetMinimum(long minimumValue) {
@@ -75,6 +64,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     }
 
     public CalculationSubevent PrepareBase(RPGLContext context) {
+        // TODO what is the purpose of this?
         JsonObject? baseJson = json.GetJsonObject("base");
         SetBase(0);
         if (baseJson is not null) {
@@ -102,6 +92,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     }
 
     public CalculationSubevent PrepareMinimum(RPGLContext context) {
+        // TODO what is the purpose of this?
         JsonObject? minimumJson = json.RemoveJsonObject("minimum");
         SetMinimum(long.MinValue);
         if (minimumJson is not null) {
