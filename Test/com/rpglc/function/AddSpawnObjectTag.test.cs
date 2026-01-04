@@ -9,8 +9,8 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddSpawnObjectTagTest {
 
-    [Fact(DisplayName = "adds event")]
-    public void AddsEvent() {
+    [Fact(DisplayName = "adds tag")]
+    public void AddsTag() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new SpawnObject().JoinSubeventData(new JsonObject().LoadFromString(

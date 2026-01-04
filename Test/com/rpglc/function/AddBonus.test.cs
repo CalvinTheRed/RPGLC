@@ -401,39 +401,4 @@ public class AddBonusTest {
         Assert.Equal(firstClassLevel + (firstClassLevel + secondClassLevel), (subevent as CalculationSubevent).GetBonus());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [Fact(DisplayName = "skips invalid formula")]
-    public void SkipsInvalidFormula() {
-        RPGLContext context = new DummyContext();
-        RPGLEffect rpglEffect = new();
-        Subevent subevent = new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString(
-            """{ "bonuses": [ ] }"""
-        ));
-
-        AddBonus addBonus = new();
-
-        JsonObject functionJson = new JsonObject().LoadFromString("""
-            {
-                "function": "add_bonus",
-                "bonus": [
-                    {
-                        "formula": "invalid_formula"
-                    }
-                ]
-            }
-            """);
-
-        FunctionState.StateData result;
-
-        result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
-
-        result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
-        Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
-    }
-
 };

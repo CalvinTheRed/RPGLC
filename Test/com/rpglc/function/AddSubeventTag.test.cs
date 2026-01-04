@@ -10,13 +10,11 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddSubeventTagTest {
 
-    [Fact(DisplayName = "adds event")]
-    public void AddsEvent() {
+    [Fact(DisplayName = "adds tag")]
+    public void AddsTag() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
-        Subevent subevent = new DummySubevent().JoinSubeventData(new JsonObject().LoadFromString(
-            """{ "tags": [ ] }"""
-        ));
+        Subevent subevent = new DummySubevent();
 
         AddSubeventTag addSubeventTag = new();
 

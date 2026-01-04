@@ -9,8 +9,8 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class GrantDisadvantageTest {
 
-    [Fact(DisplayName = "sets crit on hit")]
-    public void SetsCritOnHit() {
+    [Fact(DisplayName = "grants disadvantage")]
+    public void GrantsDisadvantage() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new AttackRoll();
