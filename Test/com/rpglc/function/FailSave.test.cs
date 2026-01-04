@@ -1,64 +1,33 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-[RPGLInitTesting]
 public class FailSaveTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "forcibly fails save")]
-    public void ForciblyFailsSave() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext()
-            .Add(rpglObject);
+    [Fact(DisplayName = "determines saving throw failure")]
+    public void DeterminesSavingThrowFailure() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new SavingThrow();
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "save_ability": "dex",
-                    "difficulty_class": 1,
-                    "damage": [ ],
-                    "damage_on_pass": "none",
-                    "pass": [ ],
-                    "fail": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "determined": [ 20 ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new());
+        FailSave failSave = new();
 
-        new FailSave().Execute(
-            new RPGLEffect(),
-            savingThrow,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "fail_save"
-                }
-                """),
-            context,
-            new()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "fail_save"
+            }
+            """);
 
-        savingThrow
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        FunctionState.StateData result;
 
-        Assert.Equal(1, DummySubevent.Counter);
+        result = failSave.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("fail", (subevent as SavingThrow).GetDeterminedResolution());
     }
 
 };
