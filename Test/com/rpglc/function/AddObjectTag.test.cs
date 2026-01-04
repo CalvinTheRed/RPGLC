@@ -29,7 +29,7 @@ public class AddObjectTagTest {
         FunctionState.StateData result;
 
         result = addObjectTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         List<string> objectTags = (subevent as GetObjectTags).ObjectTags();
         Assert.Single(objectTags);
         Assert.Contains("test_tag", objectTags);

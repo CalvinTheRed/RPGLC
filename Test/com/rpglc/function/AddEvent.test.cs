@@ -31,7 +31,7 @@ public class AddEventTest {
         FunctionState.StateData result;
 
         result = addEvent.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         List<RPGLEvent> events = (subevent as GetEvents).Events();
         Assert.Single(events);
         Assert.Equal("test:dummy", events[0].GetDatapackId());

@@ -41,7 +41,7 @@ public class AddTemporaryHitPointsTest {
         FunctionState.StateData result;
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -57,7 +57,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -82,7 +82,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -141,7 +141,7 @@ public class AddTemporaryHitPointsTest {
         FunctionState.StateData result;
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -164,7 +164,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -203,7 +203,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -288,7 +288,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -298,7 +298,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -315,7 +315,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -337,7 +337,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -362,7 +362,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -433,7 +433,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -443,7 +443,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -460,7 +460,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -482,7 +482,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -507,7 +507,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -571,7 +571,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateProficiencyBonus);
 
@@ -581,7 +581,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -598,7 +598,7 @@ public class AddTemporaryHitPointsTest {
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -620,7 +620,7 @@ public class AddTemporaryHitPointsTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -645,7 +645,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -729,7 +729,7 @@ public class AddTemporaryHitPointsTest {
         FunctionState.StateData result;
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal($$"""
             [
               {
@@ -745,7 +745,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal($$"""
             [
               {
@@ -770,7 +770,7 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
 
         result = addTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal($$"""
             [
               {

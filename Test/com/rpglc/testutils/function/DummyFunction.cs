@@ -15,21 +15,21 @@ public class DummyFunction : Function {
                 Counter = 1;
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
             (rpglEffect, subevent, functionJson, context) => {
                 Counter = 2;
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
             (rpglEffect, subevent, functionJson, context) => {
                 Counter = 3;
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
         ]);

@@ -62,7 +62,7 @@ public class AddDamage : Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            completed = false,
+                            stepCompleted = false,
                         };
                     }
                 } else if (subevent is CriticalHitDamageCollection criticalHitDamageCollection) {
@@ -87,13 +87,13 @@ public class AddDamage : Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            completed = false,
+                            stepCompleted = false,
                         };
                     }
                 }
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
         ]);

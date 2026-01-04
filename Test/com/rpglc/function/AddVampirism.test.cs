@@ -29,7 +29,7 @@ public class AddVampirismTest {
         FunctionState.StateData result;
 
         result = addVampirism.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -74,7 +74,7 @@ public class AddVampirismTest {
         FunctionState.StateData result;
 
         result = addVampirism.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {

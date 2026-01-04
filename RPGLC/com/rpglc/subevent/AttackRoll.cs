@@ -146,7 +146,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             if (json.GetJsonArray("damage").Count() > 0) {
                 GetBaseDamage(context, originPoint, invokingEffect);
                 GetTargetDamage(context, originPoint, invokingEffect);
-                if ((wasCritRolled || (attackRollValue >= targetArmorClass && DoesHitCrit()))
+                if ((wasCritRolled || (attackRollValue >= targetArmorClass && GetCritOnHit()))
                         && ConfirmCriticalDamage(context, originPoint, invokingEffect)) {
                     GetCriticalHitDamage(context, originPoint, invokingEffect);
                 }
@@ -187,7 +187,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return this;
     }
 
-    private bool DoesHitCrit() {
+    public bool GetCritOnHit() {
         return (bool) json.GetBool("crit_on_hit");
     }
 

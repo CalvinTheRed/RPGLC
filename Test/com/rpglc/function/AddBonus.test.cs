@@ -42,15 +42,15 @@ public class AddBonusTest {
         FunctionState.StateData result;
         
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -88,15 +88,15 @@ public class AddBonusTest {
         FunctionState.StateData result;
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -146,7 +146,7 @@ public class AddBonusTest {
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -156,12 +156,12 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(1, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -171,11 +171,11 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -225,7 +225,7 @@ public class AddBonusTest {
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -235,12 +235,12 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(12, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(12, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -250,11 +250,11 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(12 + 14, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(12 + 14, (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -297,7 +297,7 @@ public class AddBonusTest {
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateProficiencyBonus);
 
@@ -307,12 +307,12 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(2, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal(2, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateProficiencyBonus);
 
@@ -322,11 +322,11 @@ public class AddBonusTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(2 + 2, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(2 + 2, (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -389,15 +389,15 @@ public class AddBonusTest {
         FunctionState.StateData result;
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(firstClassLevel, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(firstClassLevel + (firstClassLevel + secondClassLevel), (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(firstClassLevel + (firstClassLevel + secondClassLevel), (subevent as CalculationSubevent).GetBonus());
     }
 
@@ -428,11 +428,11 @@ public class AddBonusTest {
         FunctionState.StateData result;
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
 
         result = addBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
     }
 

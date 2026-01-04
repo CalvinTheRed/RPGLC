@@ -27,7 +27,7 @@ public class AddSubeventTag : Function {
                 subevent.AddTag(functionJson.GetString("tag"));
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             }
         ]);

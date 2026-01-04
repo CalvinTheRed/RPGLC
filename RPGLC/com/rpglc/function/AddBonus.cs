@@ -63,13 +63,13 @@ public class AddBonus : Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            completed = false,
+                            stepCompleted = false,
                         };
                     }
                 }
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
         ]);

@@ -34,7 +34,7 @@ public class AddObjectTag : Function {
                 }
                 return new() {
                     dependency = null,
-                    completed = true,
+                    stepCompleted = true,
                 };
             },
         ]);

@@ -1,71 +1,35 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-[RPGLInitTesting]
 public class CritOnHitTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "crits on hit")]
-    public void CritsOnHit() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext()
-            .Add(rpglObject);
+    [Fact(DisplayName = "sets crit on hit")]
+    public void SetsCritOnHit() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new AttackRoll().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "crit_on_hit": false }"""
+        ));
 
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 19 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [ ],
-                    "miss": [ ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new());
+        CritOnHit critOnHit = new();
 
-        new CritOnHit().Execute(
-            new RPGLEffect(),
-            attackRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "crit_on_hit"
-                }
-                """),
-            context,
-            new()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "crit_on_hit"
+            }
+            """);
 
-        attackRoll
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        FunctionState.StateData result;
 
-        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
+        result = critOnHit.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.True((subevent as AttackRoll).GetCritOnHit());
     }
 
 };

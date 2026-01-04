@@ -9,7 +9,7 @@ public class FunctionState {
 
     public struct StateData {
         public Subevent? dependency;
-        public bool completed;
+        public bool stepCompleted;
     };
 
     private readonly RPGLEffect? rpglEffect;
@@ -29,7 +29,7 @@ public class FunctionState {
 
     public Subevent? AdvanceState() {
         StateData response = function.functionSteps[stepIndex](rpglEffect, subevent, functionJson, context);
-        if (response.completed) {
+        if (response.stepCompleted) {
             stepIndex++;
         }
         

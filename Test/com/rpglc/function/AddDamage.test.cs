@@ -43,7 +43,7 @@ public class AddDamageTest {
         FunctionState.StateData result;
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -60,7 +60,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -87,7 +87,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -150,7 +150,7 @@ public class AddDamageTest {
         FunctionState.StateData result;
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -174,7 +174,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -215,7 +215,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -304,7 +304,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -314,7 +314,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -332,7 +332,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -355,7 +355,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -382,7 +382,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -457,7 +457,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateAbilityScore);
 
@@ -467,7 +467,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -485,7 +485,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -508,7 +508,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -535,7 +535,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -603,7 +603,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
         Assert.True(result.dependency is CalculateProficiencyBonus);
 
@@ -613,7 +613,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -631,7 +631,7 @@ public class AddDamageTest {
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
-        Assert.False(result.completed);
+        Assert.False(result.stepCompleted);
         Assert.Equal("""
             [
               {
@@ -654,7 +654,7 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
               {
@@ -681,7 +681,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -769,7 +769,7 @@ public class AddDamageTest {
         FunctionState.StateData result;
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal($$"""
             [
               {
@@ -786,7 +786,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = false }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal($$"""
             [
               {
@@ -813,7 +813,7 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal($$"""
             [
               {
