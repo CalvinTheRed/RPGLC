@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.core;
@@ -10,79 +11,67 @@ namespace com.rpglc.function;
 public class RerollTemporaryHitPointDiceTest {
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls unbounded temporary hit point dice")]
-    public void RerollsUnboundedTemporaryHitPointDice() {
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "temporary_hit_points": [
-                        {
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, 3, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, 3, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, 3, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, 3, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "rerolls healing dice (default)")]
+    public void RerollsHealingDiceDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new TemporaryHitPointRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "temporary_hit_points": [
+                    {
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 6 ] },
+                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new RerollTemporaryHitPointDice().Execute(
-            new RPGLEffect(),
-            temporaryHitPointRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_temporary_hit_point_dice"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        RerollTemporaryHitPointDice rerollTemporaryHitPointDice = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "reroll_temporary_hit_point_dice"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = rerollTemporaryHitPointDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
                 "bonus": 0,
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   }
                 ],
@@ -96,24 +85,13 @@ public class RerollTemporaryHitPointDiceTest {
                 "bonus": 0,
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 3,
+                    "determined": [ ],
+                    "roll": 6,
                     "size": 6
                   }
                 ],
@@ -124,83 +102,75 @@ public class RerollTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
+            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls bounded temporary hit point dice")]
-    public void RerollsBoundedTemporaryHitPointDice() {
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "temporary_hit_points": [
-                        {
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "rerolls temporary hit point dice (threshold)")]
+    public void RerollsTemporaryHitPointDiceThreshold() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new TemporaryHitPointRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "temporary_hit_points": [
+                    {
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 3 ] },
+                            { "roll": 6, "size": 6, "determined": [ 3 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+                    },
+                    {
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6, "determined": [ 3 ] },
+                            { "roll": 6, "size": 6, "determined": [ 3 ] }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
 
-        new RerollTemporaryHitPointDice().Execute(
-            new RPGLEffect(),
-            temporaryHitPointRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "reroll_temporary_hit_point_dice",
-                    "lower_bound": 2,
-                    "upper_bound": 5
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        RerollTemporaryHitPointDice rerollTemporaryHitPointDice = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "reroll_temporary_hit_point_dice",
+                "threshold": {
+                    "formula": "number",
+                    "number": 2
+                }
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = rerollTemporaryHitPointDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
                 "bonus": 0,
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 3,
                     "size": 6
                   },
                   {
                     "determined": [
-                      -1
+                      3
                     ],
                     "roll": 6,
                     "size": 6
@@ -216,22 +186,13 @@ public class RerollTemporaryHitPointDiceTest {
                 "bonus": 0,
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
+                    "determined": [ ],
                     "roll": 3,
                     "size": 6
                   },
                   {
                     "determined": [
-                      -1
+                      3
                     ],
                     "roll": 6,
                     "size": 6
@@ -244,7 +205,7 @@ public class RerollTemporaryHitPointDiceTest {
                 }
               }
             ]
-            """, temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint());
+            """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
 };
