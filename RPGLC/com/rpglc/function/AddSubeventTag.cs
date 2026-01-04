@@ -21,7 +21,17 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddSubeventTag : Function {
 
-    public AddSubeventTag() : base("add_subevent_tag") { }
+    public AddSubeventTag() : base("add_subevent_tag") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                subevent.AddTag(functionJson.GetString("tag"));
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            }
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         subevent.AddTag(functionJson.GetString("tag"));

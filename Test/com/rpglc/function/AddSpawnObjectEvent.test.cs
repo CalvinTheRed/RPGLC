@@ -30,8 +30,7 @@ public class AddSpawnObjectEventTest {
 
         result = addSpawnObjectEvent.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
-        JsonArray effects = (subevent as SpawnObject).GetObjectEvents();
-        Assert.Equal("""["test:dummy"]""", effects.ToString());
+        Assert.Equal("""["test:dummy"]""", (subevent as SpawnObject).GetObjectEvents().ToString());
     }
 
 };
