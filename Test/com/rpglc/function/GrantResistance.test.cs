@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -8,85 +9,53 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class GrantResistanceTest {
 
-    [Fact(DisplayName = "grants particular resistance")]
-    public void GrantsParticularResistance() {
+    [Fact(DisplayName = "grants resistance (default)")]
+    public void GrantsResistanceDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
         Subevent subevent = new DamageAffinity()
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire");
-
-        new GrantResistance().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "grant_resistance",
-                    "damage_type": "fire"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "damage_type": "fire",
-                "immunity": false,
-                "immunity_revoked": false,
-                "resistance": true,
-                "resistance_revoked": false,
-                "vulnerability": false,
-                "vulnerability_revoked": false
-              }
-            ]
-            """,
-            (subevent as DamageAffinity).GetAffinities().PrettyPrint()
-        );
-    }
-
-    [Fact(DisplayName = "grants blanket resistance")]
-    public void GrantsBlanketResistance() {
-        Subevent subevent = new DamageAffinity()
-            .Prepare(new DummyContext(), new())
             .AddDamageType("fire")
             .AddDamageType("cold");
 
-        new GrantResistance().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "grant_resistance"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        GrantResistance grantResistance = new();
 
-        Assert.Equal("""
-            [
-              {
-                "damage_type": "fire",
-                "immunity": false,
-                "immunity_revoked": false,
-                "resistance": true,
-                "resistance_revoked": false,
-                "vulnerability": false,
-                "vulnerability_revoked": false
-              },
-              {
-                "damage_type": "cold",
-                "immunity": false,
-                "immunity_revoked": false,
-                "resistance": true,
-                "resistance_revoked": false,
-                "vulnerability": false,
-                "vulnerability_revoked": false
-              }
-            ]
-            """,
-            (subevent as DamageAffinity).GetAffinities().PrettyPrint()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "grant_resistance"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = grantResistance.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].resistance"));
+        Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[1].resistance"));
+    }
+
+    [Fact(DisplayName = "grants resistance (customized)")]
+    public void GrantsResistanceCustomized() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageAffinity()
+            .AddDamageType("fire")
+            .AddDamageType("cold");
+
+        GrantResistance grantResistance = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "grant_resistance",
+                "damage_type": "fire"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = grantResistance.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].resistance"));
+        Assert.False((subevent as DamageAffinity).json.SeekBool("affinities[1].resistance"));
     }
 
 };
