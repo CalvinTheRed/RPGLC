@@ -1,6 +1,8 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -8,32 +10,30 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddSpawnObjectEffectTest {
 
+    [DefaultMock]
     [Fact(DisplayName = "adds effect")]
     public void AddsEffect() {
-        SpawnObject spawnObject = new SpawnObject()
-            .Prepare(new DummyContext(), new());
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new SpawnObject().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "object_effects": [ ] }"""
+        ));
 
-        new AddSpawnObjectEffect().Execute(
-            new RPGLEffect(),
-            spawnObject,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_spawn_object_effect",
-                    "effect": "test:dummy"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddSpawnObjectEffect addSpawnObjectEffect = new();
 
-        Assert.Equal(
-            """
-            [
-              "test:dummy"
-            ]
-            """,
-            spawnObject.json.GetJsonArray("extra_effects").PrettyPrint()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_spawn_object_effect",
+                "effect": "test:dummy"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addSpawnObjectEffect.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        JsonArray effects = (subevent as SpawnObject).GetObjectEffects();
+        Assert.Equal("""["test:dummy"]""", effects.ToString());
     }
 
 };

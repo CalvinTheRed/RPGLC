@@ -148,4 +148,13 @@ public class SpawnObject : Subevent {
     public JsonArray GetObjectBonuses() {
         return json.GetJsonArray("object_bonuses");
     }
+
+    public SpawnObject AddObjectEffect(string effectId) {
+        GetObjectEffects().AddString(effectId);
+        return this;
+    }
+
+    public JsonArray GetObjectEffects() {
+        return json.GetJsonArray("object_effects");
+    }
 }

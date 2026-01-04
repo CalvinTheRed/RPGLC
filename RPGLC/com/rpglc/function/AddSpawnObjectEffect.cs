@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddSpawnObjectEffect: Function {
 
-    public AddSpawnObjectEffect() : base("add_spawn_object_effect") { }
+    public AddSpawnObjectEffect() : base("add_spawn_object_effect") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is SpawnObject spawnObject) {
+                    spawnObject.AddObjectEffect(functionJson.GetString("effect"));
+                }
+                return new() {
+                    dependency = null,
+                    completed = true
+                };
+            }
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is SpawnObject spawnObject) {
