@@ -12,7 +12,9 @@ namespace com.rpglc.function;
 ///   {
 ///     "function": "add_bonus",
 ///     "bonus": [
-///       &lt;calculation formula&gt;
+///       {
+///         &lt;bonus formula details&gt;
+///       }
 ///     ]
 ///   }
 ///   </code>

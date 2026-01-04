@@ -11,8 +11,11 @@ namespace com.rpglc.function;
 ///   <code>
 ///   {
 ///     "function": "add_damage",
-///     "damage": [
-///       &lt;calculation formula&gt;
+///     "bonus": [
+///       {
+///         &lt;bonus formula details&gt;
+///         "damage_type": &lt;string | "*"&gt;
+///       }
 ///     ]
 ///   }
 ///   </code>

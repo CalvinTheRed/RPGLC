@@ -9,9 +9,11 @@ namespace com.rpglc.function;
 ///   
 ///   <code>
 ///   {
-///     "function": "add_healing",
-///     "temporary_hit_points": [
-///       &lt;calculation formula&gt;
+///     "function": "add_temporary_hit_points",
+///     "bonus": [
+///       {
+///         &lt;bonus formula details&gt;
+///       }
 ///     ]
 ///   }
 ///   </code>

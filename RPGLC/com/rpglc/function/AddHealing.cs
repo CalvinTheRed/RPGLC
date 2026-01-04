@@ -11,8 +11,10 @@ namespace com.rpglc.function;
 ///   <code>
 ///   {
 ///     "function": "add_healing",
-///     "healing": [
-///       &lt;calculation formula&gt;
+///     "bonus": [
+///       {
+///         &lt;bonus formula details&gt;
+///       }
 ///     ]
 ///   }
 ///   </code>

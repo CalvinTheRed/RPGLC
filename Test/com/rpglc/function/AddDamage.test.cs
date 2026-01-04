@@ -720,16 +720,16 @@ public class AddDamageTest {
         rpglObject.SetClasses(new JsonArray().LoadFromString($$"""
             [
                 {
-                  "additional_nested_classes": { },
-                  "id": "test:dummy",
-                  "level": {{firstClassLevel}},
-                  "name": "Dummy"
+                    "additional_nested_classes": { },
+                    "id": "test:dummy",
+                    "level": {{firstClassLevel}},
+                    "name": "Dummy"
                 },
                 {
-                  "additional_nested_classes": { },
-                  "id": "test:nested_class",
-                  "level": {{secondClassLevel}},
-                  "name": "Nested Class"
+                    "additional_nested_classes": { },
+                    "id": "test:nested_class",
+                    "level": {{secondClassLevel}},
+                    "name": "Nested Class"
                 }
             ]
             """));

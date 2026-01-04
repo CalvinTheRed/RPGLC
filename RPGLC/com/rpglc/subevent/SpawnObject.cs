@@ -139,4 +139,13 @@ public class SpawnObject : Subevent {
     public override SpawnObject SetTarget(RPGLObject target) {
         return (SpawnObject) base.SetTarget(target);
     }
+
+    public SpawnObject AddObjectBonus(JsonObject bonusJson) {
+        GetObjectBonuses().AddJsonObject(bonusJson);
+        return this;
+    }
+
+    public JsonArray GetObjectBonuses() {
+        return json.GetJsonArray("object_bonuses");
+    }
 }
