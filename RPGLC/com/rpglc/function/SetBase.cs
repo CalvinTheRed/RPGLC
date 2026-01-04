@@ -105,14 +105,14 @@ public class SetBase : Function {
         }
     }
 
-    public void AdvanceAbility(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject bonusJson, RPGLContext context) {
-        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, bonusJson.GetJsonObject("object"));
+    public void AdvanceAbility(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject baseJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, baseJson.GetJsonObject("object"));
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags().DeepClone()}},
-                        "ability": "{{bonusJson.GetString("ability")}}"
+                        "ability": "{{baseJson.GetString("ability")}}"
                     }
                     """)
                 )
@@ -121,7 +121,7 @@ public class SetBase : Function {
         } else {
             calculationSubevent.SetBase(CalculationSubevent.Scale(
                 (dependency as CalculationSubevent).Get(),
-                bonusJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
+                baseJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
                     {
                         "numerator": 1,
                         "denominator": 1,
@@ -134,8 +134,8 @@ public class SetBase : Function {
         }
     }
 
-    public void AdvanceProficiency(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject bonusJson, RPGLContext context) {
-        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, bonusJson.GetJsonObject("object"));
+    public void AdvanceProficiency(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject baseJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, baseJson.GetJsonObject("object"));
         if (this.dependency is null) {
             this.dependency = new CalculateProficiencyBonus()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -149,7 +149,7 @@ public class SetBase : Function {
         } else {
             calculationSubevent.SetBase(CalculationSubevent.Scale(
                 (dependency as CalculationSubevent).Get(),
-                bonusJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
+                baseJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
                     {
                         "numerator": 1,
                         "denominator": 1,
@@ -162,13 +162,13 @@ public class SetBase : Function {
         }
     }
 
-    public static void AdvanceLevel(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject bonusJson) {
-        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, bonusJson.GetJsonObject("object"));
-        string classDatapackId = bonusJson.GetString("class") ?? "*";
+    public static void AdvanceLevel(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject baseJson) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, calculationSubevent, baseJson.GetJsonObject("object"));
+        string classDatapackId = baseJson.GetString("class") ?? "*";
 
         calculationSubevent.SetBase(CalculationSubevent.Scale(
             classDatapackId == "*" ? rpglObject.GetLevel() : rpglObject.GetLevel(classDatapackId),
-            bonusJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
+            baseJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
                 {
                     "numerator": 1,
                     "denominator": 1,

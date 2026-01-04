@@ -56,10 +56,7 @@ public abstract class CalculationSubevent(string subeventId) : Subevent(subevent
     }
 
     public CalculationSubevent SetMinimum(long minimumValue) {
-        long currentMinimum = GetMinimum();
-        if (minimumValue > currentMinimum) {
-            json.GetJsonObject("minimum").PutLong("value", minimumValue);
-        }
+        json.PutLong("minimum", minimumValue);
         return this;
     }
 
