@@ -47,7 +47,37 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddVampirism : Function {
 
-    public AddVampirism() : base("add_vampirism") { }
+    public AddVampirism() : base("add_vampirism") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is IVampiricSubevent vampiricSubevent) {
+                    JsonArray vampirismArray = functionJson.GetJsonArray("vampirism") ?? new JsonArray();
+                    if (vampirismArray.IsEmpty()) {
+                        vampirismArray.AddJsonObject(new());
+                    }
+                    for (int i = 0; i < vampirismArray.Count(); i++) {
+                        JsonObject vampirismJson = vampirismArray.GetJsonObject(i);
+                        vampiricSubevent.AddVampirism(subevent, new JsonObject().LoadFromString($$"""
+                            {
+                                "damage_type": "{{vampirismJson.GetString("damage_type") ?? "*"}}",
+                                "scale": {{vampirismJson.GetJsonObject("scale")?.ToString() ?? """
+                                {
+                                    "numerator": 1,
+                                    "denominator": 2,
+                                    "round_up": false
+                                }
+                                """}}
+                            }
+                            """));
+                    }
+                }
+                return new() {
+                    dependency = null,
+                    completed = true,
+                };
+            }
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IVampiricSubevent vampiricSubevent) {

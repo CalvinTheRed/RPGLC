@@ -108,8 +108,8 @@ public class AddTemporaryHitPointsTest {
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "adds healing (dice)")]
-    public void AddsHealingDice() {
+    [Fact(DisplayName = "adds temporary hit points (dice)")]
+    public void AddsTemporaryHitPointsDice() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new TemporaryHitPointCollection().JoinSubeventData(new JsonObject().LoadFromString(
@@ -244,8 +244,8 @@ public class AddTemporaryHitPointsTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "adds healing (modifier)")]
-    public void AddsHealingModifier() {
+    [Fact(DisplayName = "adds temporary hit points (modifier)")]
+    public void AddsTemporaryHitPointsModifier() {
         long strScore = 12L;
         long dexScore = 14L;
 
@@ -389,8 +389,8 @@ public class AddTemporaryHitPointsTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "adds healing (ability)")]
-    public void AddsHealingAbility() {
+    [Fact(DisplayName = "adds temporary hit points (ability)")]
+    public void AddsTemporaryHitPointsAbility() {
         long strScore = 12L;
         long dexScore = 14L;
 
@@ -534,8 +534,8 @@ public class AddTemporaryHitPointsTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "adds healing (proficiency)")]
-    public void AddsHealingProficiency() {
+    [Fact(DisplayName = "adds temporary hit points (proficiency)")]
+    public void AddsTemporaryHitPointsProficiency() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext().Add(rpglObject);
         RPGLEffect rpglEffect = new();
@@ -673,8 +673,8 @@ public class AddTemporaryHitPointsTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [ExtraClassesMock]
-    [Fact(DisplayName = "adds healing (level)")]
-    public void AddsHealingLevel() {
+    [Fact(DisplayName = "adds temporary hit points (level)")]
+    public void AddsTemporaryHitPointsLevel() {
         long firstClassLevel = 1;
         long secondClassLevel = 2;
 
