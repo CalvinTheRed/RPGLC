@@ -217,7 +217,7 @@ public class JsonObject {
         return Seek(path) is bool b ? b : null;
     }
 
-    private object Seek(string path) { // TODO might break if path ends with index
+    private object? Seek(string path) { // TODO might break if path ends with index
         object focus = AsDict();
         foreach (string key in path.Split('.')) {
             if (key.Contains('[')) {
@@ -230,8 +230,10 @@ public class JsonObject {
                 foreach (string index in indices) {
                     focus = ((List<object>) focus)[int.Parse(index)];
                 }
-            } else {
+            } else if (((Dictionary<string, object>) focus).ContainsKey(key)) {
                 focus = ((Dictionary<string, object>) focus)[key];
+            } else {
+                return null;
             }
         }
         return focus;

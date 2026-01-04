@@ -63,7 +63,7 @@ public class AddBonus : Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            stepCompleted = false,
+                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
                         };
                     }
                 }

@@ -57,31 +57,6 @@ public class AddHealingTest {
             """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
 
         result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -150,45 +125,6 @@ public class AddHealingTest {
                   {
                     "determined": [
                       1
-                    ],
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "dice": [
-                  {
-                    "determined": [
-                      1
-                    ],
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "dice": [
-                  {
-                    "determined": [
-                      2
                     ],
                     "size": 6
                   }
@@ -337,31 +273,6 @@ public class AddHealingTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -482,31 +393,6 @@ public class AddHealingTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 12,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 14,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -620,31 +506,6 @@ public class AddHealingTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 2,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -734,31 +595,6 @@ public class AddHealingTest {
             [
               {
                 "bonus": {{firstClassLevel}},
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
-
-        result = addHealing.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal($$"""
-            [
-              {
-                "bonus": {{firstClassLevel}},
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": {{firstClassLevel + secondClassLevel}},
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,

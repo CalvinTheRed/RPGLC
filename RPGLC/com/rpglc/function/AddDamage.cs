@@ -35,59 +35,59 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddDamage : Function {
 
-    public int damageIndex = 0;
+    public int bonusIndex = 0;
 
     public AddDamage() : base("add_damage") {
         functionSteps.AddRange([
             (rpglEffect, subevent, functionJson, context) => {
                 if (subevent is DamageCollection damageCollection) {
-                    JsonArray damageArray = functionJson.GetJsonArray("bonus");
-                    if (damageIndex < damageArray.Count()) {
-                        JsonObject damageJson = damageArray.GetJsonObject(damageIndex);
-                        damageIndex++;
+                    JsonArray bonusArray = functionJson.GetJsonArray("bonus");
+                    if (bonusIndex < bonusArray.Count()) {
+                        JsonObject bonusJson = bonusArray.GetJsonObject(bonusIndex);
+                        bonusIndex++;
 
-                        string formula = damageJson.GetString("formula");
+                        string formula = bonusJson.GetString("formula");
                         if (formula == "number") {
-                            AdvanceNumber(damageCollection, damageJson);
+                            AdvanceNumber(damageCollection, bonusJson);
                         } else if (formula == "dice") {
-                            AdvanceDice(damageCollection, damageJson);
+                            AdvanceDice(damageCollection, bonusJson);
                         } else if (formula == "modifier") {
-                            AdvanceModifier(rpglEffect, damageCollection, damageJson, context);
+                            AdvanceModifier(rpglEffect, damageCollection, bonusJson, context);
                         } else if (formula == "ability") {
-                            AdvanceAbility(rpglEffect, damageCollection, damageJson, context);
+                            AdvanceAbility(rpglEffect, damageCollection, bonusJson, context);
                         } else if (formula == "proficiency") {
-                            AdvanceProficiency(rpglEffect, damageCollection, damageJson, context);
+                            AdvanceProficiency(rpglEffect, damageCollection, bonusJson, context);
                         } else if (formula == "level") {
-                            AdvanceLevel(rpglEffect, damageCollection, damageJson);
+                            AdvanceLevel(rpglEffect, damageCollection, bonusJson);
                         }
                         return new() {
                             dependency = this.dependency,
-                            stepCompleted = false,
+                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
                         };
                     }
                 } else if (subevent is CriticalHitDamageCollection criticalHitDamageCollection) {
-                    JsonArray damageArray = functionJson.GetJsonArray("bonus");
-                    if (damageIndex < damageArray.Count()) {
-                        JsonObject damageJson = damageArray.GetJsonObject(damageIndex);
-                        damageIndex++;
+                    JsonArray bonusArray = functionJson.GetJsonArray("bonus");
+                    if (bonusIndex < bonusArray.Count()) {
+                        JsonObject bonusJson = bonusArray.GetJsonObject(bonusIndex);
+                        bonusIndex++;
 
-                        string formula = damageJson.GetString("formula");
+                        string formula = bonusJson.GetString("formula");
                         if (formula == "number") {
-                            AdvanceNumber(criticalHitDamageCollection, damageJson);
+                            AdvanceNumber(criticalHitDamageCollection, bonusJson);
                         } else if (formula == "dice") {
-                            AdvanceDice(criticalHitDamageCollection, damageJson);
+                            AdvanceDice(criticalHitDamageCollection, bonusJson);
                         } else if (formula == "modifier") {
-                            AdvanceModifier(rpglEffect, criticalHitDamageCollection, damageJson, context);
+                            AdvanceModifier(rpglEffect, criticalHitDamageCollection, bonusJson, context);
                         } else if (formula == "ability") {
-                            AdvanceAbility(rpglEffect, criticalHitDamageCollection, damageJson, context);
+                            AdvanceAbility(rpglEffect, criticalHitDamageCollection, bonusJson, context);
                         } else if (formula == "proficiency") {
-                            AdvanceProficiency(rpglEffect, criticalHitDamageCollection, damageJson, context);
+                            AdvanceProficiency(rpglEffect, criticalHitDamageCollection, bonusJson, context);
                         } else if (formula == "level") {
-                            AdvanceLevel(rpglEffect, criticalHitDamageCollection, damageJson);
+                            AdvanceLevel(rpglEffect, criticalHitDamageCollection, bonusJson);
                         }
                         return new() {
                             dependency = this.dependency,
-                            stepCompleted = false,
+                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
                         };
                     }
                 }
@@ -188,7 +188,7 @@ public class AddDamage : Function {
                 )
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
-            damageIndex--;
+            bonusIndex--;
         } else if (subevent is DamageCollection damageCollection) {
             damageType ??= damageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type");
             damageCollection.AddDamage(new JsonObject().LoadFromString($$"""
@@ -238,7 +238,7 @@ public class AddDamage : Function {
                 )
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
-            damageIndex--;
+            bonusIndex--;
         } else if (subevent is DamageCollection damageCollection) {
             damageType ??= damageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type");
             damageCollection.AddDamage(new JsonObject().LoadFromString($$"""
@@ -287,7 +287,7 @@ public class AddDamage : Function {
                 )
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
-            damageIndex--;
+            bonusIndex--;
         } else if (subevent is DamageCollection damageCollection) {
             damageType ??= damageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type");
             damageCollection.AddDamage(new JsonObject().LoadFromString($$"""

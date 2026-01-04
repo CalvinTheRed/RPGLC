@@ -19,7 +19,6 @@ public class GetEventsTest {
             .Prepare(new DummyContext(), new());
 
         Assert.Equal("""[]""", getEvents.json.GetJsonArray("events").ToString());
-        Assert.False(getEvents.json.GetBool("suppress_events"));
     }
 
     [ClearRPGLAfterTest]

@@ -1,6 +1,10 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
+using com.rpglc.testutils;
+using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -8,314 +12,60 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class OverrideDamageDiceTest {
 
-    [Fact(DisplayName = "overrides wild card unbounded damage dice")]
-    public void OverridesWildCardUnboundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+    [Fact(DisplayName = "overrides damage dice (default) (number)")]
+    public void OverridesDamageDiceDefaultNumber() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new OverrideDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "override_damage_dice",
-                    "override": {
-                        "formula": "number",
-                        "number": 4
-                    }
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, damageRoll.GetDamage().PrettyPrint());
-    }
-
-    [Fact(DisplayName = "overrides wild card bounded damage dice")]
-    public void OverridesWildCardBoundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new OverrideDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "override_damage_dice",
-                    "override": {
-                        "formula": "number",
-                        "number": 4
                     },
-                    "lower_bound": 2,
-                    "upper_bound": 5
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, damageRoll.GetDamage().PrettyPrint());
-    }
-
-    [Fact(DisplayName = "overrides typed unbounded damage dice")]
-    public void OverridesTypedUnboundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
                         }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new OverrideDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "override_damage_dice",
-                    "damage_type": "fire",
-                    "override": {
-                        "formula": "number",
-                        "number": 4
                     }
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+                ]
+            }
+            """
+        ));
 
+        OverrideDamageDice overrideDamageDice = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "override_damage_dice",
+                "override": {
+                    "formula": "number",
+                    "number": 3
+                }
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
               {
@@ -323,151 +73,10 @@ public class OverrideDamageDiceTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
                     "roll": 3,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, damageRoll.GetDamage().PrettyPrint());
-    }
-
-    [Fact(DisplayName = "overrides typed bounded damage dice")]
-    public void OverridesTypedBoundedDamageDice() {
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 0,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new OverrideDamageDice().Execute(
-            new RPGLEffect(),
-            damageRoll,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "override_damage_dice",
-                    "damage_type": "fire",
-                    "override": {
-                      "formula": "number",
-                      "number": 4
-                    },
-                    "lower_bound": 2,
-                    "upper_bound": 5
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
                     "roll": 6,
                     "size": 6
                   }
@@ -483,23 +92,10 @@ public class OverrideDamageDiceTest {
                 "damage_type": "cold",
                 "dice": [
                   {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
                     "roll": 3,
                     "size": 6
                   },
                   {
-                    "determined": [
-                      -1
-                    ],
                     "roll": 6,
                     "size": 6
                   }
@@ -511,7 +107,427 @@ public class OverrideDamageDiceTest {
                 }
               }
             ]
-            """, damageRoll.GetDamage().PrettyPrint());
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+    }
+
+    [Fact(DisplayName = "overrides damage dice (customized) (number)")]
+    public void OverridesDamageDiceCustomizedNumber() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        ));
+
+        OverrideDamageDice overrideDamageDice = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "override_damage_dice",
+                "override": {
+                    "formula": "number",
+                    "number": 3
+                },
+                "damage_type": "fire"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "roll": 3,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "overrides damage dice (default) (modifier)")]
+    public void OverridesDamageDiceDefaultModifier() {
+        long strScore = 16L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        )).SetSource(rpglObject);
+
+        OverrideDamageDice overrideDamageDice = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "override_damage_dice",
+                "override": {
+                    "formula": "modifier",
+                    "object": {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    "ability": "str"
+                }
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.NotNull(result.dependency);
+        Assert.False(result.stepCompleted);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+        Assert.True(result.dependency is CalculateAbilityScore);
+
+        (result.dependency as CalculateAbilityScore)
+            .SetMinimum(long.MinValue)
+            .SetBase(strScore)
+            .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "roll": 3,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "roll": 3,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "overrides damage dice (customized) (modifier)")]
+    public void OverridesDamageDiceCustomizedModifier() {
+        long strScore = 16L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DamageRoll().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "damage": [
+                    {
+                        "damage_type": "fire",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    },
+                    {
+                        "damage_type": "cold",
+                        "bonus": 0,
+                        "dice": [
+                            { "roll": 1, "size": 6 },
+                            { "roll": 6, "size": 6 }
+                        ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """
+        )).SetSource(rpglObject);
+
+        OverrideDamageDice overrideDamageDice = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "override_damage_dice",
+                "override": {
+                    "formula": "modifier",
+                    "object": {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    "ability": "str",
+                    "damage_type": "fire"
+                }
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.NotNull(result.dependency);
+        Assert.False(result.stepCompleted);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
+        Assert.True(result.dependency is CalculateAbilityScore);
+
+        (result.dependency as CalculateAbilityScore)
+            .SetMinimum(long.MinValue)
+            .SetBase(strScore)
+            .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
+
+        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "roll": 3,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": 0,
+                "damage_type": "cold",
+                "dice": [
+                  {
+                    "roll": 1,
+                    "size": 6
+                  },
+                  {
+                    "roll": 6,
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
 };

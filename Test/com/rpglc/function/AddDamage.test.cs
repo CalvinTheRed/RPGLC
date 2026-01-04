@@ -60,33 +60,6 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -160,47 +133,6 @@ public class AddDamageTest {
                   {
                     "determined": [
                       1
-                    ],
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      1
-                    ],
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 0,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      2
                     ],
                     "size": 6
                   }
@@ -355,33 +287,6 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -508,33 +413,6 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 12,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 14,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -654,33 +532,6 @@ public class AddDamageTest {
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
         result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal("""
-            [
-              {
-                "bonus": 2,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": 2,
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -774,33 +625,6 @@ public class AddDamageTest {
             [
               {
                 "bonus": {{firstClassLevel}},
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
-            ]
-            """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
-
-        result = addDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
-        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
-        Assert.Equal($$"""
-            [
-              {
-                "bonus": {{firstClassLevel}},
-                "damage_type": "fire",
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              },
-              {
-                "bonus": {{firstClassLevel + secondClassLevel}},
                 "damage_type": "fire",
                 "dice": [ ],
                 "scale": {

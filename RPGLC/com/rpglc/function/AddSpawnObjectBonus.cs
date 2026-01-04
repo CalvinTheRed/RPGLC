@@ -59,7 +59,7 @@ public class AddSpawnObjectBonus: Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            stepCompleted = false,
+                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
                         };
                     }
                 }
