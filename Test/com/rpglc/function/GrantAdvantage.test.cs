@@ -1,32 +1,33 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
 [Collection("Serial")]
 public class GrantAdvantageTest {
 
-    [Fact(DisplayName = "grants advantage")]
-    public void GrantsAdvantage() {
-        Subevent subevent = new DummyRollSubevent()
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "sets crit on hit")]
+    public void SetsCritOnHit() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new AttackRoll();
 
-        new GrantAdvantage().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "grant_advantage"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        GrantAdvantage grantAdvantage = new();
 
-        Assert.True(subevent.json.GetBool("has_advantage"));
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "grant_advantage"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = grantAdvantage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.True((subevent as AttackRoll).json.GetBool("has_advantage"));
     }
 
 };
