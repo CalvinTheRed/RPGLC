@@ -34,7 +34,7 @@ public class AddSpawnObjectEffect: Function {
                 }
                 return new() {
                     dependency = null,
-                    completed = true
+                    completed = true,
                 };
             }
         ]);

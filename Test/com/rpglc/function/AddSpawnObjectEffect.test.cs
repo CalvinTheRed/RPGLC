@@ -2,7 +2,6 @@
 using com.rpglc.json;
 using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.function;
@@ -10,7 +9,6 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddSpawnObjectEffectTest {
 
-    [DefaultMock]
     [Fact(DisplayName = "adds effect")]
     public void AddsEffect() {
         RPGLContext context = new DummyContext();

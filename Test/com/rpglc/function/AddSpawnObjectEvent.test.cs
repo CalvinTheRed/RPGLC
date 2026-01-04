@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -10,30 +11,27 @@ public class AddSpawnObjectEventTest {
 
     [Fact(DisplayName = "adds event")]
     public void AddsEvent() {
-        SpawnObject spawnObject = new SpawnObject()
-            .Prepare(new DummyContext(), new());
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new SpawnObject().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "object_events": [ ] }"""
+        ));
 
-        new AddSpawnObjectEvent().Execute(
-            new RPGLEffect(),
-            spawnObject,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_spawn_object_event",
-                    "event": "test:dummy"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddSpawnObjectEvent addSpawnObjectEvent= new();
 
-        Assert.Equal(
-            """
-            [
-              "test:dummy"
-            ]
-            """,
-            spawnObject.json.GetJsonArray("extra_events").PrettyPrint()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_spawn_object_event",
+                "event": "test:dummy"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addSpawnObjectEvent.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        JsonArray effects = (subevent as SpawnObject).GetObjectEvents();
+        Assert.Equal("""["test:dummy"]""", effects.ToString());
     }
 
 };
