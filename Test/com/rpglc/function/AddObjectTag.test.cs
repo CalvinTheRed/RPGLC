@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -10,23 +11,28 @@ public class AddObjectTagTest {
 
     [Fact(DisplayName = "adds object tag")]
     public void AddsObjectTag() {
-        Subevent subevent = new GetObjectTags()
-            .Prepare(new DummyContext(), new());
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new GetObjectTags().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "object_tags": [ ] }"""
+        ));
 
-        new AddObjectTag().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_object_tag",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddObjectTag addObjectTag = new();
 
-        Assert.Contains("test_tag", (subevent as GetObjectTags).ObjectTags());
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_object_tag",
+                "tag": "test_tag"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addObjectTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, completed = true }, result);
+        List<string> objectTags = (subevent as GetObjectTags).ObjectTags();
+        Assert.Single(objectTags);
+        Assert.Contains("test_tag", objectTags);
     }
 
 };

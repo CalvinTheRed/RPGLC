@@ -12,16 +12,14 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddEventTest {
 
-    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds event")]
     public void AddsEvent() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new GetEvents().JoinSubeventData(new JsonObject().LoadFromString(
             """{ "events": [ ] }"""
-        )).SetSource(rpglObject);
+        ));
 
         AddEvent addEvent = new();
 
