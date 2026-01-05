@@ -88,8 +88,7 @@ public class OverrideDamageDice : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{functionJson.SeekString("override.ability")}}"
                     }
-                    """)
-                )
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {

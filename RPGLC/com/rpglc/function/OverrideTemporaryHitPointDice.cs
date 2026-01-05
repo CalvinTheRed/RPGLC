@@ -82,8 +82,7 @@ public class OverrideTemporaryHitPointDice : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{functionJson.SeekString("override.ability")}}"
                     }
-                    """)
-                )
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {

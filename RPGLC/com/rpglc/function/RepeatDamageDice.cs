@@ -53,7 +53,7 @@ public class RepeatDamageDice : Function {
         }
     }
 
-    private void RepeatDice(JsonArray damageArray, JsonObject functionJson) {
+    private static void RepeatDice(JsonArray damageArray, JsonObject functionJson) {
         if (damageArray.Count() > 0) {
             JsonObject damageJson = damageArray.GetJsonObject(0);
             JsonArray dice = damageJson.GetJsonArray("dice");

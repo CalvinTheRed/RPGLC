@@ -70,8 +70,7 @@ public class SetMinimum : Function {
                         "denominator": 1,
                         "round_up": false
                     }
-                    """
-                )
+                    """)
             ));
     }
 
@@ -84,8 +83,7 @@ public class SetMinimum : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """
-                ))
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -97,8 +95,7 @@ public class SetMinimum : Function {
                         "denominator": 1,
                         "round_up": false
                     }
-                    """
-                )
+                    """)
             ));
             dependency = null;
         }
@@ -113,8 +110,7 @@ public class SetMinimum : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """
-                ))
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -126,8 +122,7 @@ public class SetMinimum : Function {
                         "denominator": 1,
                         "round_up": false
                     }
-                    """
-                )
+                    """)
             ));
             dependency = null;
         }
@@ -141,8 +136,7 @@ public class SetMinimum : Function {
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """
-                ))
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -154,8 +148,7 @@ public class SetMinimum : Function {
                         "denominator": 1,
                         "round_up": false
                     }
-                    """
-                )
+                    """)
             ));
             dependency = null;
         }
@@ -173,8 +166,7 @@ public class SetMinimum : Function {
                     "denominator": 1,
                     "round_up": false
                 }
-                """
-            )
+                """)
         ));
     }
 
