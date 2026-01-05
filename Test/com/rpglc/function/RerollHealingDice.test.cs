@@ -106,8 +106,8 @@ public class RerollHealingDiceTest {
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls healing dice (threshold)")]
-    public void RerollsHealingDiceThreshold() {
+    [Fact(DisplayName = "rerolls healing dice (customized)")]
+    public void RerollsHealingDiceCustomized() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new HealingRoll().JoinSubeventData(new JsonObject().LoadFromString("""

@@ -11,8 +11,8 @@ namespace com.rpglc.function;
 public class RerollTemporaryHitPointDiceTest {
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls healing dice (default)")]
-    public void RerollsHealingDiceDefault() {
+    [Fact(DisplayName = "rerolls temporary hit point dice (default)")]
+    public void RerollsTemporaryHitPointDiceDefault() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new TemporaryHitPointRoll().JoinSubeventData(new JsonObject().LoadFromString("""
@@ -106,8 +106,8 @@ public class RerollTemporaryHitPointDiceTest {
     }
 
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls temporary hit point dice (threshold)")]
-    public void RerollsTemporaryHitPointDiceThreshold() {
+    [Fact(DisplayName = "rerolls temporary hit point dice (customized)")]
+    public void RerollsTemporaryHitPointDiceCustomized() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
         Subevent subevent = new TemporaryHitPointRoll().JoinSubeventData(new JsonObject().LoadFromString("""
