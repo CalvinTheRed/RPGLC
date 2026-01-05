@@ -84,8 +84,8 @@ public class SetBase : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{baseJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
