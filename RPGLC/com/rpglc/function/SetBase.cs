@@ -63,16 +63,16 @@ public class SetBase : Function {
 
     public static void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject baseJson) {
         calculationSubevent.SetBase(CalculationSubevent.Scale(
-                (long) baseJson.GetLong("number"),
-                baseJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
-                    {
-                        "numerator": 1,
-                        "denominator": 1,
-                        "round_up": false
-                    }
-                    """
-                )
-            ));
+            (long) baseJson.GetLong("number"),
+            baseJson.GetJsonObject("scale") ?? new JsonObject().LoadFromString($$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """
+            )
+        ));
     }
 
     public void AdvanceModifier(RPGLEffect rpglEffect, CalculationSubevent calculationSubevent, JsonObject baseJson, RPGLContext context) {
@@ -113,8 +113,8 @@ public class SetBase : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{baseJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -141,8 +141,8 @@ public class SetBase : Function {
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
