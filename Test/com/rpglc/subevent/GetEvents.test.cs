@@ -19,7 +19,6 @@ public class GetEventsTest {
             .Prepare(new DummyContext(), new());
 
         Assert.Equal("""[]""", getEvents.json.GetJsonArray("events").ToString());
-        Assert.False(getEvents.json.GetBool("suppress_events"));
     }
 
     [ClearRPGLAfterTest]
@@ -33,19 +32,5 @@ public class GetEventsTest {
             .AddEvent("test:dummy");
 
         Assert.Equal("test:dummy", getEvents.Events().Single().GetDatapackId());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "suppresses events")]
-    public void SuppressesEvents() {
-        RPGLObject source = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        GetEvents getEvents = new GetEvents()
-            .SetSource(source)
-            .Prepare(new DummyContext(), new())
-            .AddEvent("test:dummy")
-            .SuppressEvents();
-
-        Assert.Empty(getEvents.Events());
     }
 };

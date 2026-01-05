@@ -21,7 +21,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class GrantSkillProficiency: Function {
 
-    public GrantSkillProficiency() : base("grant_skill_proficiency") { }
+    public GrantSkillProficiency() : base("grant_skill_proficiency") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is AbilityCheck abilityCheck) {
+                    abilityCheck.GrantProficiency();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is AbilityCheck abilityCheck) {

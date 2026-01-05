@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
@@ -9,41 +10,81 @@ namespace com.rpglc.function;
 [Collection("Serial")]
 public class AddVampirismTest {
 
-    [Fact(DisplayName = "adds vampirism")]
-    public void AddsVampirism() {
-        Subevent subevent = new DummyVampiricSubevent()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "attack_ability": "str",
-                    "attack_type": "melee"
-                }
-                """))
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "adds vampirism (default)")]
+    public void AddsVampirismDefault() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummyVampiricSubevent().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "vampirism": [ ] }"""
+        ));
 
-        new AddVampirism().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_vampirism",
-                    "vampirism": [
-                        {
-                            "damage_type": "necrotic",
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddVampirism addVampirism = new();
 
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_vampirism"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addVampirism.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
+              {
+                "damage_type": "*",
+                "scale": {
+                  "denominator": 2,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, IVampiricSubevent.GetVampirism(subevent).PrettyPrint());
+    }
+
+    [Fact(DisplayName = "adds vampirism (customized)")]
+    public void AddsVampirismCustomized() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummyVampiricSubevent().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "vampirism": [ ] }"""
+        ));
+
+        AddVampirism addVampirism = new();
+
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_vampirism",
+                "vampirism": [
+                    { },
+                    {
+                        "damage_type": "necrotic",
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                ]
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addVampirism.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""
+            [
+              {
+                "damage_type": "*",
+                "scale": {
+                  "denominator": 2,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
               {
                 "damage_type": "necrotic",
                 "scale": {
@@ -53,74 +94,7 @@ public class AddVampirismTest {
                 }
               }
             ]
-            """,
-            IVampiricSubevent.GetVampirism(subevent).PrettyPrint()
-        );
-    }
-
-    [Fact(DisplayName = "adds default vampirism array")]
-    public void AddsDefaultVampirismArray() {
-        Subevent subevent = new DummyVampiricSubevent()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "attack_ability": "str",
-                    "attack_type": "melee"
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new AddVampirism().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_vampirism"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              { }
-            ]
-            """,
-            IVampiricSubevent.GetVampirism(subevent).PrettyPrint()
-        );
-    }
-
-    [Fact(DisplayName = "adds default vampirism object")]
-    public void AddsDefaultVampirismObject() {
-        Subevent subevent = new DummyVampiricSubevent()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "attack_ability": "str",
-                    "attack_type": "melee"
-                }
-                """))
-            .Prepare(new DummyContext(), new());
-
-        new AddVampirism().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_vampirism",
-                    "vampirism": [ ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.Equal("""
-            [
-              { }
-            ]
-            """,
-            IVampiricSubevent.GetVampirism(subevent).PrettyPrint()
-        );
+            """, IVampiricSubevent.GetVampirism(subevent).PrettyPrint());
     }
 
 };

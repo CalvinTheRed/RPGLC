@@ -29,7 +29,21 @@ namespace com.rpglc.function;
 /// </summary>
 public class RepeatDamageDice : Function {
 
-    public RepeatDamageDice() : base("repeat_damage_dice") { }
+    public RepeatDamageDice() : base("repeat_damage_dice") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is DamageCollection damageCollection) {
+                    RepeatDice(damageCollection.GetDamageCollection(), functionJson);
+                } else if (subevent is CriticalHitDamageCollection criticalHitDamageCollection) {
+                    RepeatDice(criticalHitDamageCollection.GetDamageCollection(), functionJson);
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageCollection damageCollection) {
@@ -39,7 +53,7 @@ public class RepeatDamageDice : Function {
         }
     }
 
-    private void RepeatDice(JsonArray damageArray, JsonObject functionJson) {
+    private static void RepeatDice(JsonArray damageArray, JsonObject functionJson) {
         if (damageArray.Count() > 0) {
             JsonObject damageJson = damageArray.GetJsonObject(0);
             JsonArray dice = damageJson.GetJsonArray("dice");

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.math;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -30,7 +31,49 @@ namespace com.rpglc.function;
 /// </summary>
 public class RerollTemporaryHitPointDice : Function {
 
-    public RerollTemporaryHitPointDice() : base("reroll_temporary_hit_point_dice") { }
+    public RerollTemporaryHitPointDice() : base("reroll_temporary_hit_point_dice") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
+                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString($$"""
+                        {
+                            "formula": "number",
+                            "number": {{long.MaxValue}}
+                        }
+                        """));
+
+                    string formula = functionJson.SeekString("threshold.formula");
+                    if (formula == "number") {
+                        AdvanceNumber(temporaryHitPointRoll, functionJson);
+                    }
+                    return new() {
+                        dependency = this.dependency,
+                        stepCompleted = this.dependency == null,
+                    };
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public static void AdvanceNumber(TemporaryHitPointRoll temporaryHitPointRoll, JsonObject functionJson) {
+        JsonArray temporaryHitPointArray = temporaryHitPointRoll.json.GetJsonArray("temporary_hit_points");
+        for (int i = 0; i < temporaryHitPointArray.Count(); i++) {
+            JsonObject temporaryHitPointJson = temporaryHitPointArray.GetJsonObject(i);
+            JsonArray temporaryHitPointDieArray = temporaryHitPointJson.GetJsonArray("dice") ?? new();
+            for (int j = 0; j < temporaryHitPointDieArray.Count(); j++) {
+                JsonObject temporaryHitPointDie = temporaryHitPointDieArray.GetJsonObject(j);
+                long roll = (long) temporaryHitPointDie.GetLong("roll");
+                long overrideValue = (long) functionJson.SeekLong("threshold.number");
+                if (roll <= overrideValue) {
+                    Die.Roll(temporaryHitPointDie);
+                }
+            }
+        }
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {

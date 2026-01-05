@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.math;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -9,9 +10,11 @@ namespace com.rpglc.function;
 ///   
 ///   <code>
 ///   {
-///     "function": "add_healing",
-///     "temporary_hit_points": [
-///       &lt;calculation formula&gt;
+///     "function": "add_temporary_hit_points",
+///     "bonus": [
+///       {
+///         &lt;bonus formula details&gt;
+///       }
 ///     ]
 ///   }
 ///   </code>
@@ -30,7 +33,190 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddTemporaryHitPoints : Function {
 
-    public AddTemporaryHitPoints() : base("add_temporary_hit_points") { }
+    public int bonusIndex = 0;
+
+    public AddTemporaryHitPoints() : base("add_temporary_hit_points") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is TemporaryHitPointCollection temporaryHitPointCollection) {
+                    JsonArray bonusArray = functionJson.GetJsonArray("bonus") ?? new();
+                    if (bonusIndex < bonusArray.Count()) {
+                        JsonObject bonusJson = bonusArray.GetJsonObject(bonusIndex);
+                        bonusIndex++;
+
+                        string? formula = bonusJson.GetString("formula");
+                        if (formula == "number") {
+                            AdvanceNumber(temporaryHitPointCollection, bonusJson);
+                        } else if (formula == "dice") {
+                            AdvanceDice(temporaryHitPointCollection, bonusJson);
+                        } else if (formula == "modifier") {
+                            AdvanceModifier(rpglEffect, temporaryHitPointCollection, bonusJson, context);
+                        } else if (formula == "ability") {
+                            AdvanceAbility(rpglEffect, temporaryHitPointCollection, bonusJson, context);
+                        } else if (formula == "proficiency") {
+                            AdvanceProficiency(rpglEffect, temporaryHitPointCollection, bonusJson, context);
+                        } else if (formula == "level") {
+                            AdvanceLevel(rpglEffect, temporaryHitPointCollection, bonusJson);
+                        }
+                        return new() {
+                            dependency = this.dependency,
+                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
+                        };
+                    }
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public static void AdvanceNumber(TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson) {
+        temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{bonusJson.GetLong("number")}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+    }
+
+    public static void AdvanceDice(TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson) {
+        temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": 0,
+                "dice": {{Die.Unpack(bonusJson.GetJsonArray("dice"))}},
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+    }
+
+    public void AdvanceModifier(RPGLEffect rpglEffect, TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, temporaryHitPointCollection, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new CalculateAbilityScore()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{bonusJson.GetString("ability")}}"
+                    }
+                    """)
+                )
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject);
+            bonusIndex--;
+        } else {
+            temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get())}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+            dependency = null;
+        }
+    }
+
+    public void AdvanceAbility(RPGLEffect rpglEffect, TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, temporaryHitPointCollection, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new CalculateAbilityScore()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{bonusJson.GetString("ability")}}"
+                    }
+                    """)
+                )
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject);
+            bonusIndex--;
+        } else {
+            temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{(dependency as CalculationSubevent).Get()}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+            dependency = null;
+        }
+    }
+
+    public void AdvanceProficiency(RPGLEffect rpglEffect, TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, temporaryHitPointCollection, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new CalculateProficiencyBonus()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}}
+                    }
+                    """)
+                )
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject);
+            bonusIndex--;
+        } else {
+            temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{(dependency as CalculationSubevent).Get()}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+            dependency = null;
+        }
+    }
+
+    public static void AdvanceLevel(RPGLEffect rpglEffect, TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, temporaryHitPointCollection, bonusJson.GetJsonObject("object"));
+        string classDatapackId = bonusJson.GetString("class") ?? "*";
+
+        temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{(classDatapackId == "*" ? rpglObject.GetLevel() : rpglObject.GetLevel(classDatapackId))}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is TemporaryHitPointCollection temporaryHitPointCollection) {

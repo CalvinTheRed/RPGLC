@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -9,6 +10,8 @@ public abstract class Function(string functionId) {
     public static readonly Dictionary<string, Function> Functions = [];
 
     public readonly string functionId = functionId;
+    public readonly List<Func<RPGLEffect, Subevent, JsonObject, RPGLContext, FunctionState.StateData>> functionSteps = [];
+    public Subevent? dependency = null;
 
     public static void Initialize() {
         Functions.Clear();
@@ -35,7 +38,7 @@ public abstract class Function(string functionId) {
             new GrantSkillHalfProficiency(),
             new GrantSkillProficiency(),
             new GrantVulnerability(),
-            new InvokeSubevents(),
+            // TODO InvokeSubevent?
             new MaximizeDamage(),
             new MaximizeHealing(),
             new OverrideDamageDice(),
@@ -51,7 +54,6 @@ public abstract class Function(string functionId) {
             new SetBase(),
             new SetMinimum(),
             new SuppressCriticalDamage(),
-            new SuppressEvents(),
         ]);
     }
 

@@ -23,7 +23,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class GrantAdvantage : Function {
 
-    public GrantAdvantage() : base("grant_advantage") { }
+    public GrantAdvantage() : base("grant_advantage") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is RollSubevent rollSubevent) {
+                    rollSubevent.GrantAdvantage();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is RollSubevent rollSubevent) {

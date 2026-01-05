@@ -139,4 +139,40 @@ public class SpawnObject : Subevent {
     public override SpawnObject SetTarget(RPGLObject target) {
         return (SpawnObject) base.SetTarget(target);
     }
+
+    public SpawnObject AddObjectBonus(JsonObject bonusJson) {
+        GetObjectBonuses().AddJsonObject(bonusJson);
+        return this;
+    }
+
+    public JsonArray GetObjectBonuses() {
+        return json.GetJsonArray("object_bonuses");
+    }
+
+    public SpawnObject AddObjectEffect(string effectId) {
+        GetObjectEffects().AddString(effectId);
+        return this;
+    }
+
+    public JsonArray GetObjectEffects() {
+        return json.GetJsonArray("object_effects");
+    }
+
+    public SpawnObject AddObjectEvent(string eventId) {
+        GetObjectEvents().AddString(eventId);
+        return this;
+    }
+
+    public JsonArray GetObjectEvents() {
+        return json.GetJsonArray("object_events");
+    }
+
+    public SpawnObject AddObjectTag(string tag) {
+        GetObjectTags().AddString(tag);
+        return this;
+    }
+
+    public JsonArray GetObjectTags() {
+        return json.GetJsonArray("object_tags");
+    }
 }

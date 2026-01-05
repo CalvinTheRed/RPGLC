@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class AddEvent : Function {
 
-    public AddEvent() : base("add_event") { }
+    public AddEvent() : base("add_event") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is GetEvents getEvents) {
+                    getEvents.AddEvent(functionJson.GetString("event"));
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is GetEvents getEvents) {

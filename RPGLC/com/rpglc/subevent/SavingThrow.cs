@@ -131,7 +131,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override SavingThrow Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         Roll();
-        string? determinedResolution = json.GetString("determined_resolution");
+        string? determinedResolution = GetDeterminedResolution();
         if (determinedResolution == "fail" || (Get() < GetDifficultyClass() && determinedResolution != "pass")) {
             GetTargetDamage(context, originPoint, invokingEffect);
             DeliverDamage("all", context, originPoint, invokingEffect);
@@ -180,6 +180,10 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     public SavingThrow Pass() {
         json.PutString("determined_resolution", "pass");
         return this;
+    }
+
+    public string? GetDeterminedResolution() {
+        return json.GetString("determined_resolution");
     }
 
     private void CalculateDifficultyClass(RPGLContext context, RPGLEffect? invokingEffect = null) {

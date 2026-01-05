@@ -26,7 +26,7 @@ namespace com.rpglc.subevent;
 ///   </list>
 ///   
 /// </summary>
-public class DamageAffinity : Subevent, IDamageTypeSubevent {
+public class DamageAffinity : Subevent {
 
     public DamageAffinity() : base("damage_affinity") { }
 

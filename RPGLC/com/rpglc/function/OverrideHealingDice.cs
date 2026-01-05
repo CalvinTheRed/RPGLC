@@ -32,7 +32,76 @@ namespace com.rpglc.function;
 /// </summary>
 public class OverrideHealingDice : Function {
 
-    public OverrideHealingDice() : base("override_healing_dice") { }
+    public OverrideHealingDice() : base("override_healing_dice") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is HealingRoll healingRoll) {
+                    JsonObject overrideJson = functionJson.GetJsonObject("override");
+
+                    string formula = overrideJson.GetString("formula");
+                    if (formula == "number") {
+                        AdvanceNumber(healingRoll, functionJson);
+                    } else if (formula == "modifier") {
+                        AdvanceModifier(rpglEffect, healingRoll, functionJson, context);
+                    }
+                    return new() {
+                        dependency = this.dependency,
+                        stepCompleted = this.dependency == null,
+                    };
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public static void AdvanceNumber(HealingRoll healingRoll, JsonObject functionJson) {
+        JsonArray healingArray = healingRoll.json.GetJsonArray("healing");
+        for (int i = 0; i < healingArray.Count(); i++) {
+            JsonObject healingJson = healingArray.GetJsonObject(i);
+            JsonArray healingDieArray = healingJson.GetJsonArray("dice") ?? new();
+            for (int j = 0; j < healingDieArray.Count(); j++) {
+                JsonObject healingDie = healingDieArray.GetJsonObject(j);
+                long roll = (long) healingDie.GetLong("roll");
+                long overrideValue = (long) functionJson.SeekLong("override.number");
+                if (roll < overrideValue) {
+                    healingDie.PutLong("roll", overrideValue);
+                }
+            }
+        }
+    }
+
+    public void AdvanceModifier(RPGLEffect rpglEffect, HealingRoll healingRoll, JsonObject functionJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, healingRoll, functionJson.SeekJsonObject("override.object"));
+        if (this.dependency is null) {
+            this.dependency = new CalculateAbilityScore()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{functionJson.SeekString("override.ability")}}"
+                    }
+                    """))
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject);
+        } else {
+            JsonArray healingArray = healingRoll.json.GetJsonArray("healing");
+            for (int i = 0; i < healingArray.Count(); i++) {
+                JsonObject healingJson = healingArray.GetJsonObject(i);
+                JsonArray healingDieArray = healingJson.GetJsonArray("dice") ?? new();
+                for (int j = 0; j < healingDieArray.Count(); j++) {
+                    JsonObject healingDie = healingDieArray.GetJsonObject(j);
+                    long roll = (long) healingDie.GetLong("roll");
+                    long overrideValue = RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get());
+                    if (roll < overrideValue) {
+                        healingDie.PutLong("roll", overrideValue);
+                    }
+                }
+            }
+            dependency = null;
+        }
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {

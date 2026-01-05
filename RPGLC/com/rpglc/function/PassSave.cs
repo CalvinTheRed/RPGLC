@@ -21,7 +21,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class PassSave : Function {
 
-    public PassSave() : base("pass_save") { }
+    public PassSave() : base("pass_save") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is SavingThrow savingThrow) {
+                    savingThrow.Pass();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is SavingThrow savingThrow) {

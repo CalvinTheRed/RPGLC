@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.math;
 using com.rpglc.subevent;
 
 namespace com.rpglc.function;
@@ -32,7 +33,53 @@ namespace com.rpglc.function;
 /// </summary>
 public class RerollDamageDice : Function {
 
-    public RerollDamageDice() : base("reroll_damage_dice") { }
+    public RerollDamageDice() : base("reroll_damage_dice") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is DamageRoll damageRoll) {
+                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString($$"""
+                        {
+                            "formula": "number",
+                            "number": {{long.MaxValue}}
+                        }
+                        """));
+
+                    string formula = functionJson.SeekString("threshold.formula");
+                    if (formula == "number") {
+                        AdvanceNumber(damageRoll, functionJson);
+                    }
+                    return new() {
+                        dependency = this.dependency,
+                        stepCompleted = this.dependency == null,
+                    };
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public static void AdvanceNumber(DamageRoll damageRoll, JsonObject functionJson) {
+        string damageType = functionJson.GetString("damage_type") ?? "*";
+
+        JsonArray typedDamageArray = damageRoll.json.GetJsonArray("damage");
+        for (int i = 0; i < typedDamageArray.Count(); i++) {
+            JsonObject typedDamage = typedDamageArray.GetJsonObject(i);
+            if (damageType == "*" || damageType == typedDamage.GetString("damage_type")) {
+                JsonArray typedDamageDieArray = typedDamage.GetJsonArray("dice") ?? new();
+                for (int j = 0; j < typedDamageDieArray.Count(); j++) {
+                    JsonObject typedDamageDie = typedDamageDieArray.GetJsonObject(j);
+                    long roll = (long) typedDamageDie.GetLong("roll");
+                    long overrideValue = (long) functionJson.SeekLong("threshold.number");
+                    if (roll <= overrideValue) {
+                        Die.Roll(typedDamageDie);
+                    }
+                }
+            }
+        }
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageRoll damageRoll) {

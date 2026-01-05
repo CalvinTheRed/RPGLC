@@ -21,7 +21,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class CritOnHit : Function {
 
-    public CritOnHit() : base("crit_on_hit") { }
+    public CritOnHit() : base("crit_on_hit") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is AttackRoll attackRoll) {
+                    attackRoll.SetCritOnHit();
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is AttackRoll attackRoll) {

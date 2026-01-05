@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
@@ -10,24 +11,25 @@ namespace com.rpglc.function;
 public class AddSubeventTagTest {
 
     [Fact(DisplayName = "adds tag")]
-    public void AddsBonus() {
-        Subevent subevent = new DummySubevent()
-            .Prepare(new DummyContext(), new());
+    public void AddsTag() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        new AddSubeventTag().Execute(
-            new RPGLEffect(),
-            subevent,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_subevent_tag",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddSubeventTag addSubeventTag = new();
 
-        Assert.True(subevent.HasTag("test_tag"));
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_subevent_tag",
+                "tag": "test_tag"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addSubeventTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""["dummy_subevent","test_tag"]""", subevent.GetTags().ToString());
     }
 
 };

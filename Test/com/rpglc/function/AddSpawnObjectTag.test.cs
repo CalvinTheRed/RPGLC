@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 
@@ -10,30 +11,26 @@ public class AddSpawnObjectTagTest {
 
     [Fact(DisplayName = "adds tag")]
     public void AddsTag() {
-        SpawnObject spawnObject = new SpawnObject()
-            .Prepare(new DummyContext(), new());
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new SpawnObject().JoinSubeventData(new JsonObject().LoadFromString(
+            """{ "object_tags": [ ] }"""
+        ));
 
-        new AddSpawnObjectTag().Execute(
-            new RPGLEffect(),
-            spawnObject,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "add_spawn_object_tag",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        AddSpawnObjectTag addSpawnObjectTag = new();
 
-        Assert.Equal(
-            """
-            [
-              "test_tag"
-            ]
-            """,
-            spawnObject.json.GetJsonArray("extra_tags").PrettyPrint()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "add_spawn_object_tag",
+                "tag": "test_tag"
+            }
+            """);
+
+        FunctionState.StateData result;
+
+        result = addSpawnObjectTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("""["test_tag"]""", (subevent as SpawnObject).GetObjectTags().ToString());
     }
 
 };

@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class RevokeResistance : Function {
 
-    public RevokeResistance() : base("revoke_resistance") { }
+    public RevokeResistance() : base("revoke_resistance") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is DamageAffinity damageAffinity) {
+                    damageAffinity.RevokeResistance(functionJson.GetString("damage_type") ?? "*");
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {

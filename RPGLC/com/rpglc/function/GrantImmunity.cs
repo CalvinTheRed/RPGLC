@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class GrantImmunity : Function {
 
-    public GrantImmunity() : base("grant_immunity") { }
+    public GrantImmunity() : base("grant_immunity") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is DamageAffinity damageAffinity) {
+                    damageAffinity.GrantImmunity(functionJson.GetString("damage_type") ?? "*");
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {

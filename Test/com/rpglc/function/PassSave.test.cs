@@ -1,64 +1,33 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
 [Collection("Serial")]
-[RPGLInitTesting]
 public class PassSaveTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "forcibly passes save")]
-    public void ForciblyPassesSave() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext()
-            .Add(rpglObject);
+    [Fact(DisplayName = "determines saving throw success")]
+    public void DeterminesSavingThrowSuccess() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new SavingThrow();
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "save_ability": "dex",
-                    "difficulty_class": 100,
-                    "damage": [ ],
-                    "damage_on_pass": "none",
-                    "pass": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "fail": [ ],
-                    "determined": [ 1 ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new());
+        PassSave passSave = new();
 
-        new PassSave().Execute(
-            new RPGLEffect(),
-            savingThrow,
-            new JsonObject().LoadFromString("""
-                {
-                    "function": "pass_save"
-                }
-                """),
-            context,
-            new()
-        );
+        JsonObject functionJson = new JsonObject().LoadFromString("""
+            {
+                "function": "pass_save"
+            }
+            """);
 
-        savingThrow
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        FunctionState.StateData result;
 
-        Assert.Equal(1, DummySubevent.Counter);
+        result = passSave.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
+        Assert.Equal("pass", (subevent as SavingThrow).GetDeterminedResolution());
     }
 
 };

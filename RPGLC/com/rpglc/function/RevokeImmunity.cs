@@ -26,7 +26,19 @@ namespace com.rpglc.function;
 /// </summary>
 public class RevokeImmunity : Function {
 
-    public RevokeImmunity() : base("revoke_immunity") { }
+    public RevokeImmunity() : base("revoke_immunity") {
+        functionSteps.AddRange([
+            (rpglEffect, subevent, functionJson, context) => {
+                if (subevent is DamageAffinity damageAffinity) {
+                    damageAffinity.RevokeImmunity(functionJson.GetString("damage_type") ?? "*");
+                }
+                return new() {
+                    dependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {
