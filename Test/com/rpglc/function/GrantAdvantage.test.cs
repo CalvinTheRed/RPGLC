@@ -3,6 +3,7 @@ using com.rpglc.json;
 using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
+using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.function;
 
@@ -13,7 +14,7 @@ public class GrantAdvantageTest {
     public void GrantsAdvantage() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
-        Subevent subevent = new AttackRoll();
+        Subevent subevent = new DummyRollSubevent();
 
         GrantAdvantage grantAdvantage = new();
 
