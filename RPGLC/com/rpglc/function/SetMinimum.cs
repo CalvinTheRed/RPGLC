@@ -84,8 +84,8 @@ public class SetMinimum : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -113,8 +113,8 @@ public class SetMinimum : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
@@ -141,8 +141,8 @@ public class SetMinimum : Function {
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """)
-                )
+                    """
+                ))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
         } else {
