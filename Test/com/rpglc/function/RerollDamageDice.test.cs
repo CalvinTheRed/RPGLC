@@ -22,8 +22,8 @@ public class RerollDamageDiceTest {
                         "damage_type": "fire",
                         "bonus": 0,
                         "dice": [
-                            { "roll": 1, "size": 6, "determined": [ 6 ] },
-                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                            { "roll": 6, "size": 6, "determined": [ 1 ] },
+                            { "roll": 6, "size": 6, "determined": [ 1 ] }
                         ],
                         "scale": {
                             "numerator": 1,
@@ -35,8 +35,8 @@ public class RerollDamageDiceTest {
                         "damage_type": "cold",
                         "bonus": 0,
                         "dice": [
-                            { "roll": 1, "size": 6, "determined": [ 6 ] },
-                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                            { "roll": 6, "size": 6, "determined": [ 1 ] },
+                            { "roll": 6, "size": 6, "determined": [ 1 ] }
                         ],
                         "scale": {
                             "numerator": 1,
@@ -69,12 +69,12 @@ public class RerollDamageDiceTest {
                 "dice": [
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   },
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],
@@ -90,12 +90,12 @@ public class RerollDamageDiceTest {
                 "dice": [
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   },
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],

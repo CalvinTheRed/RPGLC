@@ -35,10 +35,10 @@ public class RerollTemporaryHitPointDice : Function {
         functionSteps.AddRange([
             (rpglEffect, subevent, functionJson, context) => {
                 if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
-                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString("""
+                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString($$"""
                         {
                             "formula": "number",
-                            "number": 1
+                            "number": {{long.MaxValue}}
                         }
                         """));
 

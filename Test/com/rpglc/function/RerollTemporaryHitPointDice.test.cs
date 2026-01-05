@@ -21,8 +21,8 @@ public class RerollTemporaryHitPointDiceTest {
                     {
                         "bonus": 0,
                         "dice": [
-                            { "roll": 1, "size": 6, "determined": [ 6 ] },
-                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                            { "roll": 6, "size": 6, "determined": [ 1 ] },
+                            { "roll": 6, "size": 6, "determined": [ 1 ] }
                         ],
                         "scale": {
                             "numerator": 1,
@@ -33,8 +33,8 @@ public class RerollTemporaryHitPointDiceTest {
                     {
                         "bonus": 0,
                         "dice": [
-                            { "roll": 1, "size": 6, "determined": [ 6 ] },
-                            { "roll": 1, "size": 6, "determined": [ 6 ] }
+                            { "roll": 6, "size": 6, "determined": [ 1 ] },
+                            { "roll": 6, "size": 6, "determined": [ 1 ] }
                         ],
                         "scale": {
                             "numerator": 1,
@@ -66,12 +66,12 @@ public class RerollTemporaryHitPointDiceTest {
                 "dice": [
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   },
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],
@@ -86,12 +86,12 @@ public class RerollTemporaryHitPointDiceTest {
                 "dice": [
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   },
                   {
                     "determined": [ ],
-                    "roll": 6,
+                    "roll": 1,
                     "size": 6
                   }
                 ],

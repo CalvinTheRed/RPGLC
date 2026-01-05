@@ -35,10 +35,10 @@ public class RerollHealingDice : Function {
         functionSteps.AddRange([
             (rpglEffect, subevent, functionJson, context) => {
                 if (subevent is HealingRoll healingRoll) {
-                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString("""
+                    functionJson.PutIfAbsent("threshold", new JsonObject().LoadFromString($$"""
                         {
                             "formula": "number",
-                            "number": 1
+                            "number": {{long.MaxValue}}
                         }
                         """));
 
