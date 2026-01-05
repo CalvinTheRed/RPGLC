@@ -110,7 +110,7 @@ public class AddHealing : Function {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}},
+                        "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
                     """)
@@ -142,7 +142,7 @@ public class AddHealing : Function {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}},
+                        "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
                     """)
@@ -174,7 +174,7 @@ public class AddHealing : Function {
             this.dependency = new CalculateProficiencyBonus()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}}
+                        "tags": {{rpglObject.GetTags()}}
                     }
                     """)
                 )

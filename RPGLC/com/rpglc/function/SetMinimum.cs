@@ -81,7 +81,7 @@ public class SetMinimum : Function {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}},
+                        "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
                     """)
@@ -110,7 +110,7 @@ public class SetMinimum : Function {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}},
+                        "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
                     """)
@@ -139,7 +139,7 @@ public class SetMinimum : Function {
             this.dependency = new CalculateProficiencyBonus()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}}
+                        "tags": {{rpglObject.GetTags()}}
                     }
                     """)
                 )

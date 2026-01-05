@@ -183,7 +183,7 @@ public class AddDamage : Function {
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags().DeepClone())
+                    .PutJsonArray("tags", rpglObject.GetTags())
                     .PutString("ability", damageJson.GetString("ability"))
                 )
                 .SetSource(rpglObject)
@@ -233,7 +233,7 @@ public class AddDamage : Function {
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags().DeepClone())
+                    .PutJsonArray("tags", rpglObject.GetTags())
                     .PutString("ability", damageJson.GetString("ability"))
                 )
                 .SetSource(rpglObject)
@@ -283,7 +283,7 @@ public class AddDamage : Function {
         if (this.dependency is null) {
             this.dependency = new CalculateProficiencyBonus()
                 .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags().DeepClone())
+                    .PutJsonArray("tags", rpglObject.GetTags())
                 )
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);

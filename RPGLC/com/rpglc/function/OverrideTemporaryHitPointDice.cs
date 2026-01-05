@@ -79,7 +79,7 @@ public class OverrideTemporaryHitPointDice : Function {
             this.dependency = new CalculateAbilityScore()
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
-                        "tags": {{rpglObject.GetTags().DeepClone()}},
+                        "tags": {{rpglObject.GetTags()}},
                         "ability": "{{functionJson.SeekString("override.ability")}}"
                     }
                     """)
