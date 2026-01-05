@@ -35,7 +35,6 @@ public class GrantAdvantage : Function {
                 };
             },
         ]);
-    
     }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {

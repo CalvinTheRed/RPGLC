@@ -36,7 +36,7 @@ public class AddSpawnObjectEffect: Function {
                     dependency = null,
                     stepCompleted = true,
                 };
-            }
+            },
         ]);
     }
 

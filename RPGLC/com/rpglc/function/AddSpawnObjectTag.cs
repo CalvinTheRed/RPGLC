@@ -36,7 +36,7 @@ public class AddSpawnObjectTag: Function {
                     dependency = null,
                     stepCompleted = true,
                 };
-            }
+            },
         ]);
     }
 

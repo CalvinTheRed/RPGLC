@@ -29,7 +29,7 @@ public class AddSubeventTag : Function {
                     dependency = null,
                     stepCompleted = true,
                 };
-            }
+            },
         ]);
     }
 

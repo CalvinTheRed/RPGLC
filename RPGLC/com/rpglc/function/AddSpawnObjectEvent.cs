@@ -36,7 +36,7 @@ public class AddSpawnObjectEvent : Function {
                     dependency = null,
                     stepCompleted = true,
                 };
-            }
+            },
         ]);
     }
 
