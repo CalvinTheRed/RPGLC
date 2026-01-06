@@ -29,6 +29,10 @@ public class ObjectHasTag : Condition {
 
     public ObjectHasTag() : base("object_has_tag") { }
 
+    public override ObjectHasTag Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         return rpglObject.GetObjectTags(context).Contains(conditionJson.GetString("tag"));

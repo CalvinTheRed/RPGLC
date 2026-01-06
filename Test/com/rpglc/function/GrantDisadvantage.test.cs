@@ -28,7 +28,7 @@ public class GrantDisadvantageTest {
 
         result = grantDisadvantage.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
-        Assert.True((subevent as AttackRoll).json.GetBool("has_disadvantage"));
+        Assert.True((subevent as DummyRollSubevent).json.GetBool("has_disadvantage"));
     }
 
 };

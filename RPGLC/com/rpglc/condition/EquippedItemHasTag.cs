@@ -31,6 +31,10 @@ public class EquippedItemHasTag : Condition {
 
     public EquippedItemHasTag() : base("equipped_item_has_tag") { }
 
+    public override EquippedItemHasTag Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         string slot = conditionJson.GetString("slot") ?? "*";

@@ -23,6 +23,10 @@ public class Invert : Condition {
 
     public Invert() : base("invert") { }
 
+    public override Invert Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonObject nestedConditionJson = conditionJson.GetJsonObject("invert");
         return !Conditions[nestedConditionJson.GetString("condition")]

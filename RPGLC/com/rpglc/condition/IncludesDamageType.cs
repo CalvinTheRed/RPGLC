@@ -32,6 +32,10 @@ public class IncludesDamageType : Condition {
 
     public IncludesDamageType() : base("includes_damage_type") { }
 
+    public override IncludesDamageType Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IDamageTypeSubevent damageTypeSubevent) {
             return damageTypeSubevent.IncludesDamageType(conditionJson.GetString("damage_type"));

@@ -29,6 +29,10 @@ public class ObjectsMatch : Condition {
 
     public ObjectsMatch() : base("objects_match") { }
 
+    public override ObjectsMatch Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonArray objects = conditionJson.GetJsonArray("objects");
         return objects

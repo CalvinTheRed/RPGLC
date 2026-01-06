@@ -24,6 +24,10 @@ public class Any : Condition {
 
     public Any() : base("any") { }
 
+    public override Any Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonArray nestedConditions = conditionJson.GetJsonArray("conditions");
         for (int i = 0; i < nestedConditions.Count(); i++) {

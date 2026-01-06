@@ -33,6 +33,10 @@ public class CheckAbilityScore : Condition {
 
     public CheckAbilityScore() : base("check_ability_score") { }
 
+    public override CheckAbilityScore Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         return CompareValues(

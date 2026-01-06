@@ -33,6 +33,10 @@ public class CheckLevel : Condition {
 
     public CheckLevel() : base("check_level") { }
 
+    public override CheckLevel Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
         string classDatapackId = conditionJson.GetString("class");

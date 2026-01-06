@@ -32,6 +32,10 @@ public class CheckAbility : Condition {
 
     public CheckAbility() : base("check_ability") { }
 
+    public override CheckAbility Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IAbilitySubevent abilitySubevent) {
             return Equals(abilitySubevent.GetAbility(context), conditionJson.GetString("ability"));

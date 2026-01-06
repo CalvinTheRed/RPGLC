@@ -28,6 +28,10 @@ public class UserIdsMatch : Condition {
 
     public UserIdsMatch() : base("user_ids_match") { }
 
+    public override UserIdsMatch Clone() {
+        return new();
+    }
+
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonArray objects = conditionJson.GetJsonArray("objects");
         return objects
