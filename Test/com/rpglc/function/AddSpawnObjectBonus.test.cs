@@ -20,7 +20,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         ));
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -42,7 +42,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
@@ -59,7 +59,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -95,7 +95,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         ));
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -121,7 +121,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
@@ -145,7 +145,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -203,7 +203,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         )).SetSource(rpglObject);
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -233,7 +233,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
@@ -244,7 +244,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
@@ -261,7 +261,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -285,7 +285,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(dexScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -329,7 +329,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         )).SetSource(rpglObject);
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -359,7 +359,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
@@ -370,7 +370,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
@@ -387,7 +387,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -411,7 +411,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(dexScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -450,7 +450,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         )).SetSource(rpglObject);
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -478,7 +478,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("[ ]", (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
@@ -489,7 +489,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(2)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal("""
             [
@@ -506,7 +506,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -530,7 +530,7 @@ public class AddSpawnObjectBonusTest {
             .SetBase(2)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -589,7 +589,7 @@ public class AddSpawnObjectBonusTest {
             """{ "object_bonuses": [ ] }"""
         )).SetSource(rpglObject);
 
-        AddSpawnObjectBonus addSpawnObjectBonus = new();
+        AddSpawnObjectBonus function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -618,7 +618,7 @@ public class AddSpawnObjectBonusTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);
         Assert.Equal($$"""
             [
@@ -635,7 +635,7 @@ public class AddSpawnObjectBonusTest {
             ]
             """, (subevent as SpawnObject).GetObjectBonuses().PrettyPrint());
 
-        result = addSpawnObjectBonus.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal($$"""
             [

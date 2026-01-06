@@ -22,7 +22,7 @@ public class GrantSkillExpertiseTest {
             """
         ));
 
-        GrantSkillExpertise grantSkillExpertise = new();
+        GrantSkillExpertise function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -32,7 +32,7 @@ public class GrantSkillExpertiseTest {
 
         FunctionState.StateData result;
 
-        result = grantSkillExpertise.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as AbilityCheck).HasExpertise());
     }

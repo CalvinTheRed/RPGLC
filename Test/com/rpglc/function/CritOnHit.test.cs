@@ -17,7 +17,7 @@ public class CritOnHitTest {
             """{ "crit_on_hit": false }"""
         ));
 
-        CritOnHit critOnHit = new();
+        CritOnHit function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -27,7 +27,7 @@ public class CritOnHitTest {
 
         FunctionState.StateData result;
 
-        result = critOnHit.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as AttackRoll).GetCritOnHit());
     }

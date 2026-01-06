@@ -50,7 +50,7 @@ public class OverrideDamageDiceTest {
             """
         ));
 
-        OverrideDamageDice overrideDamageDice = new();
+        OverrideDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -64,7 +64,7 @@ public class OverrideDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -148,7 +148,7 @@ public class OverrideDamageDiceTest {
             """
         ));
 
-        OverrideDamageDice overrideDamageDice = new();
+        OverrideDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -163,7 +163,7 @@ public class OverrideDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -253,7 +253,7 @@ public class OverrideDamageDiceTest {
             """
         )).SetSource(rpglObject);
 
-        OverrideDamageDice overrideDamageDice = new();
+        OverrideDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -271,7 +271,7 @@ public class OverrideDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -323,7 +323,7 @@ public class OverrideDamageDiceTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -413,7 +413,7 @@ public class OverrideDamageDiceTest {
             """
         )).SetSource(rpglObject);
 
-        OverrideDamageDice overrideDamageDice = new();
+        OverrideDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -432,7 +432,7 @@ public class OverrideDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -484,7 +484,7 @@ public class OverrideDamageDiceTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = overrideDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [

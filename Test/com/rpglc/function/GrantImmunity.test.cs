@@ -17,7 +17,7 @@ public class GrantImmunityTest {
             .AddDamageType("fire")
             .AddDamageType("cold");
 
-        GrantImmunity grantImmunity = new();
+        GrantImmunity function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -27,7 +27,7 @@ public class GrantImmunityTest {
 
         FunctionState.StateData result;
 
-        result = grantImmunity.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].immunity"));
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[1].immunity"));
@@ -41,7 +41,7 @@ public class GrantImmunityTest {
             .AddDamageType("fire")
             .AddDamageType("cold");
 
-        GrantImmunity grantImmunity = new();
+        GrantImmunity function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -52,7 +52,7 @@ public class GrantImmunityTest {
 
         FunctionState.StateData result;
 
-        result = grantImmunity.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].immunity"));
         Assert.False((subevent as DamageAffinity).json.SeekBool("affinities[1].immunity"));

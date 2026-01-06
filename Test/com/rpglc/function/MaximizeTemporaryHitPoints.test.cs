@@ -43,7 +43,7 @@ public class MaximizeTemporaryHitPointsTest {
             """
         ));
 
-        MaximizeTemporaryHitPoints maximizeTemporaryHitPoints = new();
+        MaximizeTemporaryHitPoints function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -53,7 +53,7 @@ public class MaximizeTemporaryHitPointsTest {
 
         FunctionState.StateData result;
 
-        result = maximizeTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -123,7 +123,7 @@ public class MaximizeTemporaryHitPointsTest {
             """
         ));
 
-        MaximizeTemporaryHitPoints maximizeTemporaryHitPoints = new();
+        MaximizeTemporaryHitPoints function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -133,7 +133,7 @@ public class MaximizeTemporaryHitPointsTest {
 
         FunctionState.StateData result;
 
-        result = maximizeTemporaryHitPoints.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [

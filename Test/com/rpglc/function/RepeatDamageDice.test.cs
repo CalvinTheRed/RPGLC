@@ -45,7 +45,7 @@ public class RepeatDamageDiceTest {
             """
         ));
 
-        RepeatDamageDice repeatDamageDice = new();
+        RepeatDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -55,7 +55,7 @@ public class RepeatDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = repeatDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -130,7 +130,7 @@ public class RepeatDamageDiceTest {
             """
         ));
 
-        RepeatDamageDice repeatDamageDice = new();
+        RepeatDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -141,7 +141,7 @@ public class RepeatDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = repeatDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -219,7 +219,7 @@ public class RepeatDamageDiceTest {
             """
         ));
 
-        RepeatDamageDice repeatDamageDice = new();
+        RepeatDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -229,7 +229,7 @@ public class RepeatDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = repeatDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -304,7 +304,7 @@ public class RepeatDamageDiceTest {
             """
         ));
 
-        RepeatDamageDice repeatDamageDice = new();
+        RepeatDamageDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -315,7 +315,7 @@ public class RepeatDamageDiceTest {
 
         FunctionState.StateData result;
 
-        result = repeatDamageDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [

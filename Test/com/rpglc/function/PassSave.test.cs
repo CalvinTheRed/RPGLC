@@ -15,7 +15,7 @@ public class PassSaveTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new SavingThrow();
 
-        PassSave passSave = new();
+        PassSave function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -25,7 +25,7 @@ public class PassSaveTest {
 
         FunctionState.StateData result;
 
-        result = passSave.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("pass", (subevent as SavingThrow).GetDeterminedResolution());
     }
