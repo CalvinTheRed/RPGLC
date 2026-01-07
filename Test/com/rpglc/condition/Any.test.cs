@@ -1,5 +1,9 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.core;
+using com.rpglc.json;
+using com.rpglc.runtime;
+using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
+using com.rpglc.testutils.condition;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
 
@@ -9,20 +13,15 @@ namespace com.rpglc.condition;
 [RPGLInitTesting]
 public class AnyTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new Any().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "not-a-condition"
-            }
-            """), new DummyContext(), new());
+    [Fact(DisplayName = "evaluates (all true)")]
+    public void EvaluatesAllTrue() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        Assert.False(result);
-    }
+        Any condition = new Any().Clone();
 
-    [Fact(DisplayName = "all true")]
-    public void AllTrue() {
-        bool result = new Any().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "any",
                 "conditions": [
@@ -34,17 +33,39 @@ public class AnyTest {
                     }
                 ]
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.True(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.NotNull(result.conditionDependency);
+        Assert.Null(result.subeventDependency);
+        Assert.False(result.stepCompleted);
+        Assert.True(result.conditionDependency is True);
+
+        result.conditionDependency.evaluation = true;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
-    [Fact(DisplayName = "some true")]
-    public void SomeTrue() {
-        bool result = new Any().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "evaluates (some true)")]
+    public void EvaluatesSomeTrue() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
+
+        Any condition = new Any().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "any",
                 "conditions": [
+                    {
+                        "condition": "false"
+                    },
                     {
                         "condition": "true"
                     },
@@ -53,14 +74,44 @@ public class AnyTest {
                     }
                 ]
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.True(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.NotNull(result.conditionDependency);
+        Assert.Null(result.subeventDependency);
+        Assert.False(result.stepCompleted);
+        Assert.True(result.conditionDependency is False);
+
+        result.conditionDependency.evaluation = false;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = false }, result);
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.NotNull(result.conditionDependency);
+        Assert.Null(result.subeventDependency);
+        Assert.False(result.stepCompleted);
+        Assert.True(result.conditionDependency is True);
+
+        result.conditionDependency.evaluation = true;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
-    [Fact(DisplayName = "none true")]
-    public void NoneTrue() {
-        bool result = new Any().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "evaluates (none true)")]
+    public void EvaluatesNoneTrue() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
+
+        Any condition = new Any().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "any",
                 "conditions": [
@@ -72,21 +123,33 @@ public class AnyTest {
                     }
                 ]
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
-    }
+        ConditionState.StateData result;
 
-    [Fact(DisplayName = "no nested conditions")]
-    public void NoNestedConditions() {
-        bool result = new Any().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "any",
-                "conditions": [ ]
-            }
-            """), new DummyContext(), new());
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.NotNull(result.conditionDependency);
+        Assert.Null(result.subeventDependency);
+        Assert.False(result.stepCompleted);
+        Assert.True(result.conditionDependency is False);
 
-        Assert.False(result);
+        result.conditionDependency.evaluation = false;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = false }, result);
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.NotNull(result.conditionDependency);
+        Assert.Null(result.subeventDependency);
+        Assert.False(result.stepCompleted);
+        Assert.True(result.conditionDependency is False);
+
+        result.conditionDependency.evaluation = false;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
 };

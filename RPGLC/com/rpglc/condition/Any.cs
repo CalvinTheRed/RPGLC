@@ -22,7 +22,35 @@ namespace com.rpglc.condition;
 /// </summary>
 public class Any : Condition {
 
-    public Any() : base("any") { }
+    public int conditionIndex = 0;
+
+    public Any() : base("any") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                JsonArray conditionArray = conditionJson.GetJsonArray("conditions");
+                if (conditionIndex < conditionArray.Count()) {
+                    if (conditionDependency is null) {
+                        JsonObject nestedConditionJson = conditionArray.GetJsonObject(conditionIndex);
+                        this.conditionDependency = Conditions[nestedConditionJson.GetString("condition")].Clone();
+                        return new() {
+                            conditionDependency = this.conditionDependency,
+                            subeventDependency = null,
+                            stepCompleted = false,
+                        };
+                    } else {
+                        this.evaluation |= this.conditionDependency.evaluation;
+                        this.conditionDependency = null;
+                        conditionIndex++;
+                    }
+                }
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = evaluation || (conditionIndex == conditionArray.Count()),
+                };
+            },
+        ]);
+    }
 
     public override Any Clone() {
         return new();
