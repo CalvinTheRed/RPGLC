@@ -1,5 +1,8 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.core;
+using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
+using com.rpglc.testutils.condition;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
 
@@ -8,51 +11,50 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class CheckAbilityTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new CheckAbility().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "not-a-condition"
-            }
-            """), new DummyContext(), new());
+    [Fact(DisplayName = "condition does match")]
+    public void ConditionDoesMatch() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        Assert.False(result);
-    }
+        CheckAbility condition = new CheckAbility().Clone();
 
-    [Fact(DisplayName = "inapplicable subevent")]
-    public void InapplicableSubevent() {
-        bool result = new CheckAbility().Evaluate(new(), new DamageAffinity(), new JsonObject().LoadFromString("""
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "check_ability",
                 "ability": "str"
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
-    [Fact(DisplayName = "ability match")]
-    public void AbilityMatch() {
-        bool result = new CheckAbility().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "check_ability",
-                "ability": "str"
-            }
-            """), new DummyContext(), new());
+    [Fact(DisplayName = "condition does not match")]
+    public void ConditionDoesNotMatch() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        Assert.True(result);
-    }
+        CheckAbility condition = new CheckAbility().Clone();
 
-    [Fact(DisplayName = "ability mismatch")]
-    public void AbilityMismatch() {
-        bool result = new CheckAbility().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "check_ability",
                 "ability": "dex"
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
 };

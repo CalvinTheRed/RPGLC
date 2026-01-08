@@ -30,7 +30,20 @@ namespace com.rpglc.condition;
 /// </summary>
 public class CheckAbility : Condition {
 
-    public CheckAbility() : base("check_ability") { }
+    public CheckAbility() : base("check_ability") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => { 
+                if (subevent is IAbilitySubevent abilitySubevent) {
+                    evaluation = Equals(abilitySubevent.GetAbility(context), conditionJson.GetString("ability"));
+                }
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override CheckAbility Clone() {
         return new();
