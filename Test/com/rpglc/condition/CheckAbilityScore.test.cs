@@ -15,8 +15,8 @@ public class CheckAbilityScoreTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "ability does meet requirement")]
-    public void AbilityDoesMeetRequirement() {
+    [Fact(DisplayName = "does meet requirement")]
+    public void DoesMeetRequirement() {
         long strScore = 12L;
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
@@ -62,8 +62,8 @@ public class CheckAbilityScoreTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "ability does not meet requirement")]
-    public void AbilityDoesNotMeetRequirement() {
+    [Fact(DisplayName = "does not meet requirement")]
+    public void DoesNotMeetRequirement() {
         long strScore = 12L;
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);

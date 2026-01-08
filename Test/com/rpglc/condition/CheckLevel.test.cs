@@ -15,8 +15,8 @@ public class CheckLevelTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "ability does meet requirement")]
-    public void AbilityDoesMeetRequirement() {
+    [Fact(DisplayName = "does meet requirement")]
+    public void DoesMeetRequirement() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         rpglObject.SetClasses(new JsonArray().LoadFromString("""
             [
@@ -58,8 +58,8 @@ public class CheckLevelTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "ability does not meet requirement")]
-    public void AbilityDoesNotMeetRequirement() {
+    [Fact(DisplayName = "does not meet requirement")]
+    public void DoesNotMeetRequirement() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         rpglObject.SetClasses(new JsonArray().LoadFromString("""
             [

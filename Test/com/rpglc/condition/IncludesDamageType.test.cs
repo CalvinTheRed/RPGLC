@@ -1,4 +1,6 @@
-﻿using com.rpglc.json;
+﻿using com.rpglc.core;
+using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
@@ -8,51 +10,50 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class IncludesDamageTypeTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new IncludesDamageType().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "not-a-condition"
-            }
-            """), new DummyContext(), new());
-
-        Assert.False(result);
-    }
-
-    [Fact(DisplayName = "inapplicable subevent")]
-    public void InapplicableSubevent() {
-        bool result = new IncludesDamageType().Evaluate(new(), new CalculateArmorClass(), new JsonObject().LoadFromString("""
-            {
-                "condition": "includes_damage_ttype",
-                "damage_type": "fire"
-            }
-            """), new DummyContext(), new());
-
-        Assert.False(result);
-    }
-
     [Fact(DisplayName = "does include damage type")]
     public void DoesIncludeDamageType() {
-        bool result = new IncludesDamageType().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
+
+        IncludesDamageType condition = new IncludesDamageType().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "includes_damage_type",
                 "damage_type": "fire"
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.True(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
     [Fact(DisplayName = "does not include damage type")]
     public void DoesNotIncludeDamageType() {
-        bool result = new IncludesDamageType().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
+
+        IncludesDamageType condition = new IncludesDamageType().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
                 "condition": "includes_damage_type",
                 "damage_type": "cold"
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
 };

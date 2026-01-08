@@ -2,19 +2,13 @@
 using com.rpglc.json;
 using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.condition;
 
 [Collection("Serial")]
 public class CheckSkillTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "ability check does use skill")]
     public void AbilityCheckDoesUseSkill() {
         RPGLContext context = new DummyContext();
@@ -42,8 +36,6 @@ public class CheckSkillTest {
         Assert.True(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "ability check does not use skill")]
     public void AbilityCheckDoesNotUseSkill() {
         RPGLContext context = new DummyContext();
