@@ -1,9 +1,11 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
+using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils;
 using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.condition;
@@ -11,143 +13,90 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class CheckLevelTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new CheckLevel().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "ability does meet requirement")]
+    public void AbilityDoesMeetRequirement() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.SetClasses(new JsonArray().LoadFromString("""
+            [
+                {
+                  "additional_nested_classes": { },
+                  "id": "test:dummy",
+                  "level": 5,
+                  "name": "Dummy"
+                }
+            ]
+            """));
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject);
+
+        CheckLevel condition = new CheckLevel().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
-                "condition": "not-a-condition"
+                "condition": "check_level",
+                "object": {
+                    "from": "subevent",
+                    "object": "source"
+                },
+                "class": "test:dummy",
+                "comparison": "=",
+                "compare_to": 5
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [ExtraClassesMock]
-    [Fact(DisplayName = "object level satisfied")]
-    public void ObjectLevelSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .LevelUp("test:dummy", new())
-            .LevelUp("test:nested_class", new());
-
-        bool result = new CheckLevel().Evaluate(
-            new(),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "ability does not meet requirement")]
+    public void AbilityDoesNotMeetRequirement() {
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.SetClasses(new JsonArray().LoadFromString("""
+            [
                 {
-                    "condition": "check_level",
-                    "object": {
-                        "from": "subevent",
-                        "object": "source",
-                        "as_origin": false
-                    },
-                    "class": "*",
-                    "comparison": "=",
-                    "compare_to": 2
+                  "additional_nested_classes": { },
+                  "id": "test:dummy",
+                  "level": 5,
+                  "name": "Dummy"
                 }
-                """),
-            new DummyContext(),
-            new()
-        );
+            ]
+            """));
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject);
 
-        Assert.True(result);
-    }
+        CheckLevel condition = new CheckLevel().Clone();
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [Fact(DisplayName = "object level not satisfied")]
-    public void ObjectLevelNotSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .LevelUp("test:dummy", new())
-            .LevelUp("test:nested_class", new());
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "check_level",
+                "object": {
+                    "from": "subevent",
+                    "object": "source"
+                },
+                "class": "test:dummy",
+                "comparison": "!=",
+                "compare_to": 5
+            }
+            """);
 
-        bool result = new CheckLevel().Evaluate(
-            new(),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_level",
-                    "object": {
-                        "from": "subevent",
-                        "object": "source",
-                        "as_origin": false
-                    },
-                    "class": "*",
-                    "comparison": "!=",
-                    "compare_to": 2
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        ConditionState.StateData result;
 
-        Assert.False(result);
-    }
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [Fact(DisplayName = "class level satisfied")]
-    public void ClassLevelSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .LevelUp("test:dummy", new())
-            .LevelUp("test:nested_class", new());
-
-        bool result = new CheckLevel().Evaluate(
-            new(),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_level",
-                    "object": {
-                        "from": "subevent",
-                        "object": "source",
-                        "as_origin": false
-                    },
-                    "class": "test:dummy",
-                    "comparison": "=",
-                    "compare_to": 1
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.True(result);
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [Fact(DisplayName = "class level not satisfied")]
-    public void ClassLevelNotSatisfied() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .LevelUp("test:dummy", new())
-            .LevelUp("test:nested_class", new());
-
-        bool result = new CheckLevel().Evaluate(
-            new(),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_level",
-                    "object": {
-                        "from": "subevent",
-                        "object": "source",
-                        "as_origin": false
-                    },
-                    "class": "test:dummy",
-                    "comparison": "!=",
-                    "compare_to": 1
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.False(result);
+        Assert.False(condition.evaluation);
     }
 
 };
