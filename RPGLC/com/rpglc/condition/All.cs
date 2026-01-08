@@ -28,14 +28,6 @@ public class All : Condition {
     public All() : base("all") {
         conditionSteps.AddRange([
             (rpglEffect, subevent, conditionJson, context) => {
-                evaluation = true;
-                return new() {
-                    conditionDependency = null,
-                    subeventDependency = null,
-                    stepCompleted = true,
-                };
-            },
-            (rpglEffect, subevent, conditionJson, context) => {
                 JsonArray conditionArray = conditionJson.GetJsonArray("conditions");
                 if (conditionIndex < conditionArray.Count()) {
                     if (conditionDependency is null) {
@@ -47,7 +39,7 @@ public class All : Condition {
                             stepCompleted = false,
                         };
                     } else {
-                        this.evaluation &= this.conditionDependency.evaluation;
+                        this.evaluation = this.conditionDependency.evaluation;
                         this.conditionDependency = null;
                         conditionIndex++;
                     }
