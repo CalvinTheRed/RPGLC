@@ -31,7 +31,37 @@ namespace com.rpglc.condition;
 /// </summary>
 public class CheckAbilityScore : Condition {
 
-    public CheckAbilityScore() : base("check_ability_score") { }
+    public CheckAbilityScore() : base("check_ability_score") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                if (this.subeventDependency is null) {
+                    RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
+                    this.subeventDependency = new CalculateAbilityScore()
+                        .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                            {
+                                "tags": {{rpglObject.GetTags()}},
+                                "ability": "{{conditionJson.GetString("ability")}}"
+                            }
+                            """)
+                        )
+                        .SetSource(rpglObject)
+                        .SetTarget(rpglObject);
+                } else {
+                    evaluation = CompareValues(
+                        (this.subeventDependency as CalculateAbilityScore).Get(),
+                        conditionJson.GetString("comparison"),
+                        (long) conditionJson.GetLong("compare_to")
+                    );
+                    this.subeventDependency = null;
+                }
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = this.subeventDependency,
+                    stepCompleted = this.subeventDependency is null,
+                };
+            },
+        ]);
+    }
 
     public override CheckAbilityScore Clone() {
         return new();

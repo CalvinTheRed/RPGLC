@@ -2,7 +2,6 @@
 using com.rpglc.json;
 using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils.condition;
 using com.rpglc.testutils.core;
 using com.rpglc.testutils.subevent;
 
@@ -11,7 +10,7 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class CheckAbilityTest {
 
-    [Fact(DisplayName = "condition does match")]
+    [Fact(DisplayName = "ability does match")]
     public void ConditionDoesMatch() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
@@ -34,7 +33,7 @@ public class CheckAbilityTest {
         Assert.True(condition.evaluation);
     }
 
-    [Fact(DisplayName = "condition does not match")]
+    [Fact(DisplayName = "ability does not match")]
     public void ConditionDoesNotMatch() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
