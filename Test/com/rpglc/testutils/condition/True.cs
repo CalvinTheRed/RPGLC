@@ -10,6 +10,7 @@ public class True : Condition {
     public True() : base("true") {
         conditionSteps.AddRange([
             (rpglEffect, subevent, conditionJson, context) => {
+                this.evaluation = true;
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,
