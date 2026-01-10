@@ -17,7 +17,7 @@ public class AddSpawnObjectEventTest {
             """{ "object_events": [ ] }"""
         ));
 
-        AddSpawnObjectEvent function= new();
+        AddSpawnObjectEvent function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
