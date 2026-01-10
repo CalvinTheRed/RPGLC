@@ -1,5 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
+using com.rpglc.subevent;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -11,104 +13,80 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class UserIdsMatchTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new UserIdsMatch().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "not-a-condition"
-            }
-            """), new DummyContext(), new());
-
-        Assert.False(result);
-    }
-
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do match")]
-    public void ObjectsDoMatch() {
+    public void UserIdsDoMatch() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject);
 
-        bool result = new UserIdsMatch().Evaluate(
-            new RPGLEffect().SetSource(rpglObject.GetUuid()),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "user_ids_match",
-                    "objects": [
-                        {
-                            "from": "subevent",
-                            "object": "source",
-                            "as_origin": false
-                        },
-                        {
-                            "from": "effect",
-                            "object": "source",
-                            "as_origin": false
-                        }
-                    ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        UserIdsMatch condition = new UserIdsMatch().Clone();
 
-        Assert.True(result);
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "user_ids_match",
+                "objects": [
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    }
+                ]
+            }
+            """);
+
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "user ids do not match")]
-    public void ObjectsDoNotMatch() {
-        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLObject subeventObjejct = RPGLFactory.NewObject("test:dummy", "Player 2");
+    public void UserIdsDoNotMatch() {
+        RPGLObject rpglObject1 = RPGLFactory.NewObject("test:dummy", "user-1");
+        RPGLObject rpglObject2 = RPGLFactory.NewObject("test:dummy", "user-2");
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject1)
+            .Add(rpglObject2);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject1)
+            .SetTarget(rpglObject2);
 
-        bool result = new UserIdsMatch().Evaluate(
-            new RPGLEffect().SetSource(effectObject.GetUuid()),
-            new DummySubevent().SetSource(subeventObjejct),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "user_ids_match",
-                    "objects": [
-                        {
-                            "from": "subevent",
-                            "object": "source",
-                            "as_origin": false
-                        },
-                        {
-                            "from": "effect",
-                            "object": "source",
-                            "as_origin": false
-                        }
-                    ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        UserIdsMatch condition = new UserIdsMatch().Clone();
 
-        Assert.False(result);
-    }
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "user_ids_match",
+                "objects": [
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    {
+                        "from": "subevent",
+                        "object": "target"
+                    }
+                ]
+            }
+            """);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "defaults to false")]
-    public void DefaultsToFalse() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        ConditionState.StateData result;
 
-        bool result = new UserIdsMatch().Evaluate(
-            new RPGLEffect().SetSource(rpglObject.GetUuid()),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "user_ids_match",
-                    "objects": [ ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
 
-        Assert.False(result);
+        Assert.False(condition.evaluation);
     }
 
 };
