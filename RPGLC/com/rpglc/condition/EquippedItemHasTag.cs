@@ -46,6 +46,7 @@ public class EquippedItemHasTag : Condition {
                     RPGLItem? rpglItem = RPGL.GetRPGLItem(rpglObject.GetEquippedItems().GetString(slot));
                     this.evaluation = rpglItem is not null && rpglItem.HasTag(conditionJson.GetString("tag"));
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,

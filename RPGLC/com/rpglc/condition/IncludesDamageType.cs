@@ -36,6 +36,7 @@ public class IncludesDamageType : Condition {
                 if (subevent is IDamageTypeSubevent damageTypeSubevent) {
                     evaluation = damageTypeSubevent.IncludesDamageType(conditionJson.GetString("damage_type"));
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,

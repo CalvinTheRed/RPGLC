@@ -42,8 +42,7 @@ public class CheckAbilityScore : Condition {
                                 "tags": {{rpglObject.GetTags()}},
                                 "ability": "{{conditionJson.GetString("ability")}}"
                             }
-                            """)
-                        )
+                            """))
                         .SetSource(rpglObject)
                         .SetTarget(rpglObject);
                 } else {
@@ -54,6 +53,7 @@ public class CheckAbilityScore : Condition {
                     );
                     this.subeventDependency = null;
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = this.subeventDependency,

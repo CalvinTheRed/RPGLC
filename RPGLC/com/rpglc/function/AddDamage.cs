@@ -182,10 +182,12 @@ public class AddDamage : Function {
 
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
-                .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags())
-                    .PutString("ability", damageJson.GetString("ability"))
-                )
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{damageJson.GetString("ability")}}"
+                    }
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;
@@ -232,10 +234,12 @@ public class AddDamage : Function {
 
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
-                .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags())
-                    .PutString("ability", damageJson.GetString("ability"))
-                )
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{damageJson.GetString("ability")}}"
+                    }
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;
@@ -282,9 +286,11 @@ public class AddDamage : Function {
 
         if (this.dependency is null) {
             this.dependency = new CalculateProficiencyBonus()
-                .JoinSubeventData(new JsonObject()
-                    .PutJsonArray("tags", rpglObject.GetTags())
-                )
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}}
+                    }
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;

@@ -31,6 +31,7 @@ public class Invert : Condition {
                     this.evaluation = !this.conditionDependency.evaluation;
                     this.conditionDependency = null;
                 }
+
                 return new() {
                     conditionDependency = this.conditionDependency,
                     subeventDependency = null,

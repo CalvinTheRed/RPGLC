@@ -36,6 +36,7 @@ public class CheckAbility : Condition {
                 if (subevent is IAbilitySubevent abilitySubevent) {
                     evaluation = Equals(abilitySubevent.GetAbility(context), conditionJson.GetString("ability"));
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,

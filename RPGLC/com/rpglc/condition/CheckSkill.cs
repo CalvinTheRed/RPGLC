@@ -32,6 +32,7 @@ public class CheckSkill: Condition {
                 if (subevent is AbilityCheck abilityCheck) {
                     evaluation = Equals(conditionJson.GetString("skill"), abilityCheck.GetSkill());
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,

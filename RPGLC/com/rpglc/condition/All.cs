@@ -44,6 +44,7 @@ public class All : Condition {
                         conditionIndex++;
                     }
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = null,

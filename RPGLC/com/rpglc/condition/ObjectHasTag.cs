@@ -45,6 +45,7 @@ public class ObjectHasTag : Condition {
                     this.evaluation = objectTags.Contains(conditionJson.GetString("tag"));
                     this.subeventDependency = null;
                 }
+
                 return new() {
                     conditionDependency = null,
                     subeventDependency = this.subeventDependency,
