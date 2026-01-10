@@ -23,7 +23,40 @@ namespace com.rpglc.condition;
 /// </summary>
 public class All : Condition {
 
-    public All() : base("all") { }
+    public int conditionIndex = 0;
+
+    public All() : base("all") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                JsonArray conditionArray = conditionJson.GetJsonArray("conditions");
+                if (conditionIndex < conditionArray.Count()) {
+                    if (conditionDependency is null) {
+                        JsonObject nestedConditionJson = conditionArray.GetJsonObject(conditionIndex);
+                        this.conditionDependency = Conditions[nestedConditionJson.GetString("condition")].Clone();
+                        return new() {
+                            conditionDependency = this.conditionDependency,
+                            subeventDependency = null,
+                            stepCompleted = false,
+                        };
+                    } else {
+                        this.evaluation = this.conditionDependency.evaluation;
+                        this.conditionDependency = null;
+                        conditionIndex++;
+                    }
+                }
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = (evaluation == false) || (conditionIndex == conditionArray.Count()),
+                };
+            },
+        ]);
+    }
+
+    public override All Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonArray nestedConditions = conditionJson.GetJsonArray("conditions");

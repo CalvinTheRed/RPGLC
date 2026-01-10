@@ -27,7 +27,37 @@ namespace com.rpglc.condition;
 /// </summary>
 public class ObjectHasTag : Condition {
 
-    public ObjectHasTag() : base("object_has_tag") { }
+    public ObjectHasTag() : base("object_has_tag") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
+                if (this.subeventDependency == null) {
+                    subeventDependency = new GetObjectTags()
+                        .JoinSubeventData(new JsonObject().LoadFromString("""
+                            {
+                                "object_tags": [ ]
+                            }
+                            """))
+                        .SetSource(rpglObject)
+                        .SetTarget(rpglObject);
+                } else {
+                    List<string> objectTags = (subeventDependency as GetObjectTags).ObjectTags();
+                    this.evaluation = objectTags.Contains(conditionJson.GetString("tag"));
+                    this.subeventDependency = null;
+                }
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = this.subeventDependency,
+                    stepCompleted = this.subeventDependency is null,
+                };
+            },
+        ]);
+    }
+
+    public override ObjectHasTag Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));

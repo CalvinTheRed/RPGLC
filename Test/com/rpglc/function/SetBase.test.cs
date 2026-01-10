@@ -19,7 +19,7 @@ public class SetBaseTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummyCalculationSubevent();
 
-        SetBase setBase = new();
+        SetBase function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -33,7 +33,7 @@ public class SetBaseTest {
 
         FunctionState.StateData result;
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(10, (subevent as CalculationSubevent).GetBase());
     }
@@ -51,7 +51,7 @@ public class SetBaseTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetBase setBase = new();
+        SetBase function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -69,7 +69,7 @@ public class SetBaseTest {
 
         FunctionState.StateData result;
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBase());
@@ -80,7 +80,7 @@ public class SetBaseTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(1, (subevent as CalculationSubevent).GetBase());
     }
@@ -98,7 +98,7 @@ public class SetBaseTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetBase setBase = new();
+        SetBase function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -116,7 +116,7 @@ public class SetBaseTest {
 
         FunctionState.StateData result;
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBase());
@@ -127,7 +127,7 @@ public class SetBaseTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(12, (subevent as CalculationSubevent).GetBase());
     }
@@ -142,7 +142,7 @@ public class SetBaseTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetBase setBase = new();
+        SetBase function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -159,7 +159,7 @@ public class SetBaseTest {
 
         FunctionState.StateData result;
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(0, (subevent as CalculationSubevent).GetBase());
@@ -170,7 +170,7 @@ public class SetBaseTest {
             .SetBase(2)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(2, (subevent as CalculationSubevent).GetBase());
     }
@@ -197,7 +197,7 @@ public class SetBaseTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetBase setBase = new();
+        SetBase function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -215,7 +215,7 @@ public class SetBaseTest {
 
         FunctionState.StateData result;
 
-        result = setBase.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(firstClassLevel, (subevent as CalculationSubevent).GetBase());
     }

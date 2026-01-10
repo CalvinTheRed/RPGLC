@@ -1,9 +1,10 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
+using com.rpglc.subevent;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils;
 using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.condition;
@@ -11,95 +12,85 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class OriginItemHasTagTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new OriginItemHasTag().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "origin item does have tag")]
+    public void OriginItemDoesHaveTag() {
+        RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy").AddTag("test_tag") as RPGLItem;
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetOriginItem(rpglItem.GetUuid());
+
+        OriginItemHasTag condition = new OriginItemHasTag().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
             {
-                "condition": "not-a-condition"
+                "condition": "origin_item_has_tag",
+                "origin_item": "subevent",
+                "tag": "test_tag"
             }
-            """), new DummyContext(), new());
+            """);
 
-        Assert.False(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "item does have tag")]
-    public void ItemDoesHaveTag() {
+    [Fact(DisplayName = "origin item does not have tag")]
+    public void OriginItemDoesNotHaveTag() {
         RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
-        rpglItem.AddTag("test_tag");
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetOriginItem(rpglItem.GetUuid());
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        OriginItemHasTag condition = new OriginItemHasTag().Clone();
 
-        bool result = new OriginItemHasTag().Evaluate(
-            new(),
-            new DummySubevent()
-                .SetOriginItem(rpglItem.GetUuid())
-                .SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "origin_item_has_tag",
-                    "origin_item": "subevent",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "origin_item_has_tag",
+                "origin_item": "subevent",
+                "tag": "test_tag"
+            }
+            """);
 
-        Assert.True(result);
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "item does not have tag")]
-    public void ItemDoesNotHaveTag() {
-        RPGLItem rpglItem = RPGLFactory.NewItem("test:dummy");
+    [Fact(DisplayName = "defaults to false")]
+    public void DefaultsToFalse() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        OriginItemHasTag condition = new OriginItemHasTag().Clone();
 
-        bool result = new OriginItemHasTag().Evaluate(
-            new(),
-            new DummySubevent()
-                .SetOriginItem(rpglItem.GetUuid())
-                .SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "origin_item_has_tag",
-                    "origin_item": "subevent",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "origin_item_has_tag",
+                "origin_item": "subevent",
+                "tag": "test_tag"
+            }
+            """);
 
-        Assert.False(result);
-    }
+        ConditionState.StateData result;
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "null item does not have tag")]
-    public void NullItemDoesNotHaveTag() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
 
-        bool result = new OriginItemHasTag().Evaluate(
-            new(),
-            new DummySubevent()
-                .SetOriginItem(null)
-                .SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "origin_item_has_tag",
-                    "origin_item": "subevent",
-                    "tag": "test_tag"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
-
-        Assert.False(result);
+        Assert.False(condition.evaluation);
     }
 
 };

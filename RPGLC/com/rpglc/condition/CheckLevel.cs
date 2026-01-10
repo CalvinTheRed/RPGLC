@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.subevent;
+using System.Reflection.Emit;
 
 namespace com.rpglc.condition;
 
@@ -31,7 +32,32 @@ namespace com.rpglc.condition;
 /// </summary>
 public class CheckLevel : Condition {
 
-    public CheckLevel() : base("check_level") { }
+    public CheckLevel() : base("check_level") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));
+                string classDatapackId = conditionJson.GetString("class");
+
+                this.evaluation = CompareValues(
+                    classDatapackId == "*"
+                        ? rpglObject.GetLevel()
+                        : rpglObject.GetLevel(classDatapackId),
+                    conditionJson.GetString("comparison"),
+                    (long) conditionJson.GetLong("compare_to")
+                );
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override CheckLevel Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, subevent, conditionJson.GetJsonObject("object"));

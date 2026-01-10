@@ -16,7 +16,7 @@ public class GrantAdvantageTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummyRollSubevent();
 
-        GrantAdvantage grantAdvantage = new();
+        GrantAdvantage function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -26,9 +26,9 @@ public class GrantAdvantageTest {
 
         FunctionState.StateData result;
 
-        result = grantAdvantage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
-        Assert.True((subevent as AttackRoll).json.GetBool("has_advantage"));
+        Assert.True((subevent as DummyRollSubevent).json.GetBool("has_advantage"));
     }
 
 };

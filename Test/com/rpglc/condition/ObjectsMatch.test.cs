@@ -1,9 +1,11 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
+using com.rpglc.subevent;
+using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
-using com.rpglc.testutils;
 using com.rpglc.testutils.subevent;
 
 namespace com.rpglc.condition;
@@ -11,104 +13,104 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class ObjectsMatchTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new ObjectsMatch().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
-            {
-                "condition": "not-a-condition"
-            }
-            """), new DummyContext(), new());
-
-        Assert.False(result);
-    }
-
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do match")]
     public void ObjectsDoMatch() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext().Add(rpglObject);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject);
 
-        bool result = new ObjectsMatch().Evaluate(
-            new RPGLEffect().SetSource(rpglObject.GetUuid()),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "objects_match",
-                    "objects": [
-                        {
-                            "from": "effect",
-                            "object": "source",
-                            "as_origin": false
-                        },
-                        {
-                            "from": "subevent",
-                            "object": "source",
-                            "as_origin": false
-                        }
-                    ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        ObjectsMatch condition = new ObjectsMatch().Clone();
 
-        Assert.True(result);
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "objects_match",
+                "objects": [
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    }
+                ]
+            }
+            """);
+
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "objects do not match")]
     public void ObjectsDoNotMatch() {
-        RPGLObject effectObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLObject subeventObjejct = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLObject rpglObject1 = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLObject rpglObject2 = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject1)
+            .Add(rpglObject2);
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent()
+            .SetSource(rpglObject1)
+            .SetTarget(rpglObject2);
 
-        bool result = new ObjectsMatch().Evaluate(
-            new RPGLEffect().SetSource(effectObject.GetUuid()),
-            new DummySubevent().SetSource(subeventObjejct),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "objects_match",
-                    "objects": [
-                        {
-                            "from": "effect",
-                            "object": "source",
-                            "as_origin": false
-                        },
-                        {
-                            "from": "subevent",
-                            "object": "source",
-                            "as_origin": false
-                        }
-                    ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        ObjectsMatch condition = new ObjectsMatch().Clone();
 
-        Assert.False(result);
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "objects_match",
+                "objects": [
+                    {
+                        "from": "subevent",
+                        "object": "source"
+                    },
+                    {
+                        "from": "subevent",
+                        "object": "target"
+                    }
+                ]
+            }
+            """);
+
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "defaults to false")]
     public void DefaultsToFalse() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new DummySubevent();
 
-        bool result = new ObjectsMatch().Evaluate(
-            new RPGLEffect().SetSource(rpglObject.GetUuid()),
-            new DummySubevent().SetSource(rpglObject),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "objects_match",
-                    "objects": [ ]
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        ObjectsMatch condition = new ObjectsMatch().Clone();
 
-        Assert.False(result);
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "objects_match",
+                "objects": [ ]
+            }
+            """);
+
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.False(condition.evaluation);
     }
 
 };

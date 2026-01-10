@@ -116,8 +116,7 @@ public class AddBonus : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;
@@ -148,8 +147,7 @@ public class AddBonus : Function {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """)
-                )
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;
@@ -179,8 +177,7 @@ public class AddBonus : Function {
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """)
-                )
+                    """))
                 .SetSource(rpglObject)
                 .SetTarget(rpglObject);
             bonusIndex--;

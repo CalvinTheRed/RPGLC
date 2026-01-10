@@ -15,7 +15,7 @@ public class FailSaveTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new SavingThrow();
 
-        FailSave failSave = new();
+        FailSave function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -25,7 +25,7 @@ public class FailSaveTest {
 
         FunctionState.StateData result;
 
-        result = failSave.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("fail", (subevent as SavingThrow).GetDeterminedResolution());
     }

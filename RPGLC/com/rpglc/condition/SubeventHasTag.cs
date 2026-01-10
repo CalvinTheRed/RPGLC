@@ -21,7 +21,23 @@ namespace com.rpglc.condition;
 /// </summary>
 public class SubeventHasTag : Condition {
 
-    public SubeventHasTag() : base("subevent_has_tag") { }
+    public SubeventHasTag() : base("subevent_has_tag") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                this.evaluation = subevent.HasTag(conditionJson.GetString("tag"));
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override SubeventHasTag Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         return subevent.HasTag(conditionJson.GetString("tag"));

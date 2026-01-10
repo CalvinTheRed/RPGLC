@@ -19,7 +19,7 @@ public class SetMinimumTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummyCalculationSubevent();
 
-        SetMinimum setMinimum = new();
+        SetMinimum function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -33,7 +33,7 @@ public class SetMinimumTest {
 
         FunctionState.StateData result;
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(10, (subevent as CalculationSubevent).GetMinimum());
     }
@@ -51,7 +51,7 @@ public class SetMinimumTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetMinimum setMinimum = new();
+        SetMinimum function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -69,7 +69,7 @@ public class SetMinimumTest {
 
         FunctionState.StateData result;
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(long.MinValue, (subevent as CalculationSubevent).GetMinimum());
@@ -80,7 +80,7 @@ public class SetMinimumTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(1, (subevent as CalculationSubevent).GetMinimum());
     }
@@ -98,7 +98,7 @@ public class SetMinimumTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetMinimum setMinimum = new();
+        SetMinimum function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -116,7 +116,7 @@ public class SetMinimumTest {
 
         FunctionState.StateData result;
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(long.MinValue, (subevent as CalculationSubevent).GetMinimum());
@@ -127,7 +127,7 @@ public class SetMinimumTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(12, (subevent as CalculationSubevent).GetMinimum());
     }
@@ -142,7 +142,7 @@ public class SetMinimumTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetMinimum setMinimum = new();
+        SetMinimum function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -159,7 +159,7 @@ public class SetMinimumTest {
 
         FunctionState.StateData result;
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal(long.MinValue, (subevent as CalculationSubevent).GetMinimum());
@@ -170,7 +170,7 @@ public class SetMinimumTest {
             .SetBase(2)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(2, (subevent as CalculationSubevent).GetMinimum());
     }
@@ -197,7 +197,7 @@ public class SetMinimumTest {
         Subevent subevent = new DummyCalculationSubevent()
             .SetSource(rpglObject);
 
-        SetMinimum setMinimum = new();
+        SetMinimum function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -215,7 +215,7 @@ public class SetMinimumTest {
 
         FunctionState.StateData result;
 
-        result = setMinimum.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal(firstClassLevel, (subevent as CalculationSubevent).GetMinimum());
     }

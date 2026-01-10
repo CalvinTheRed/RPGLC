@@ -19,7 +19,7 @@ public class AddEventTest {
             """{ "events": [ ] }"""
         ));
 
-        AddEvent addEvent = new();
+        AddEvent function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -30,7 +30,7 @@ public class AddEventTest {
 
         FunctionState.StateData result;
 
-        result = addEvent.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         List<RPGLEvent> events = (subevent as GetEvents).Events();
         Assert.Single(events);

@@ -16,7 +16,25 @@ namespace com.rpglc.condition;
 /// </summary>
 public class OriginItemsMatch : Condition {
 
-    public OriginItemsMatch() : base("origin_items_match") { }
+    public OriginItemsMatch() : base("origin_items_match") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                string effectOriginItem = rpglEffect.GetOriginItem();
+                string subeventOriginItem = subevent.GetOriginItem();
+                this.evaluation = effectOriginItem is not null && Equals(effectOriginItem, subeventOriginItem);
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override OriginItemsMatch Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         string effectOriginItem = rpglEffect.GetOriginItem();

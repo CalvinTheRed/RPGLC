@@ -22,7 +22,7 @@ public class GrantSkillHalfProficiencyTest {
             """
         ));
 
-        GrantSkillHalfProficiency grantSkillHalfProficiency = new();
+        GrantSkillHalfProficiency function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -32,7 +32,7 @@ public class GrantSkillHalfProficiencyTest {
 
         FunctionState.StateData result;
 
-        result = grantSkillHalfProficiency.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as AbilityCheck).HasHalfProficiency());
     }

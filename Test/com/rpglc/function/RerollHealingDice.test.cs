@@ -47,7 +47,7 @@ public class RerollHealingDiceTest {
             """
         ));
 
-        RerollHealingDice rerollHealingDice = new();
+        RerollHealingDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -57,7 +57,7 @@ public class RerollHealingDiceTest {
 
         FunctionState.StateData result;
 
-        result = rerollHealingDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -142,7 +142,7 @@ public class RerollHealingDiceTest {
             """
         ));
 
-        RerollHealingDice rerollHealingDice = new();
+        RerollHealingDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -156,7 +156,7 @@ public class RerollHealingDiceTest {
 
         FunctionState.StateData result;
 
-        result = rerollHealingDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [

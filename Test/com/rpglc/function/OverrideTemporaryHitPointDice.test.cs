@@ -48,7 +48,7 @@ public class OverrideTemporaryHitPointDiceTest {
             """
         ));
 
-        OverrideTemporaryHitPointDice overrideTemporaryHitPointDice = new();
+        OverrideTemporaryHitPointDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -62,7 +62,7 @@ public class OverrideTemporaryHitPointDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideTemporaryHitPointDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [
@@ -148,7 +148,7 @@ public class OverrideTemporaryHitPointDiceTest {
             """
         )).SetSource(rpglObject);
 
-        OverrideTemporaryHitPointDice overrideTemporaryHitPointDice = new();
+        OverrideTemporaryHitPointDice function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -166,7 +166,7 @@ public class OverrideTemporaryHitPointDiceTest {
 
         FunctionState.StateData result;
 
-        result = overrideTemporaryHitPointDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.NotNull(result.dependency);
         Assert.False(result.stepCompleted);
         Assert.Equal("""
@@ -216,7 +216,7 @@ public class OverrideTemporaryHitPointDiceTest {
             .SetBase(strScore)
             .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
 
-        result = overrideTemporaryHitPointDice.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""
             [

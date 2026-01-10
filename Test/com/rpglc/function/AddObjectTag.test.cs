@@ -17,7 +17,7 @@ public class AddObjectTagTest {
             """{ "object_tags": [ ] }"""
         ));
 
-        AddObjectTag addObjectTag = new();
+        AddObjectTag function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -28,7 +28,7 @@ public class AddObjectTagTest {
 
         FunctionState.StateData result;
 
-        result = addObjectTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         List<string> objectTags = (subevent as GetObjectTags).ObjectTags();
         Assert.Single(objectTags);

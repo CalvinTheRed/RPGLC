@@ -26,7 +26,28 @@ namespace com.rpglc.condition;
 /// </summary>
 public class UserIdsMatch : Condition {
 
-    public UserIdsMatch() : base("user_ids_match") { }
+    public UserIdsMatch() : base("user_ids_match") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                JsonArray objects = conditionJson.GetJsonArray("objects");
+                this.evaluation = objects.Count() > 1 && objects
+                    .AsList()
+                    .Select(json => RPGLEffect.GetObject(rpglEffect, subevent, new JsonObject(json as Dictionary<string, object>)).GetUserId())
+                    .Distinct()
+                    .Count() == 1;
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override UserIdsMatch Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         JsonArray objects = conditionJson.GetJsonArray("objects");

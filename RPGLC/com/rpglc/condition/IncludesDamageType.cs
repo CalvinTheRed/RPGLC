@@ -30,7 +30,25 @@ namespace com.rpglc.condition;
 /// </summary>
 public class IncludesDamageType : Condition {
 
-    public IncludesDamageType() : base("includes_damage_type") { }
+    public IncludesDamageType() : base("includes_damage_type") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                if (subevent is IDamageTypeSubevent damageTypeSubevent) {
+                    evaluation = damageTypeSubevent.IncludesDamageType(conditionJson.GetString("damage_type"));
+                }
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override IncludesDamageType Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IDamageTypeSubevent damageTypeSubevent) {

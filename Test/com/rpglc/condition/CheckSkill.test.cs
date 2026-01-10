@@ -1,92 +1,66 @@
-﻿using com.rpglc.json;
-using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
-using com.rpglc.testutils.core;
-using com.rpglc.testutils.subevent;
+﻿using com.rpglc.core;
+using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
+using com.rpglc.testutils.core;
 
 namespace com.rpglc.condition;
 
 [Collection("Serial")]
 public class CheckSkillTest {
 
-    [Fact(DisplayName = "condition mismatch")]
-    public void ConditionMismatch() {
-        bool result = new CheckSkill().Evaluate(new(), new DummySubevent(), new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "ability check does use skill")]
+    public void AbilityCheckDoesUseSkill() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
             {
-                "condition": "not-a-condition"
+                "skill": "athletics"
             }
-            """), new DummyContext(), new());
+            """));
 
-        Assert.False(result);
+        CheckSkill condition = new CheckSkill().Clone();
+
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "check_skill",
+                "skill": "athletics"
+            }
+            """);
+
+        ConditionState.StateData result;
+
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
+
+        Assert.True(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "check uses same skill")]
-    public void CheckUsesSameSkill() {
-        bool result = new CheckSkill().Evaluate(
-            new(),
-            new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "skill": "athletics"
-                }
-                """)),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_skill",
-                    "skill": "athletics"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+    [Fact(DisplayName = "ability check does not use skill")]
+    public void AbilityCheckDoesNotUseSkill() {
+        RPGLContext context = new DummyContext();
+        RPGLEffect rpglEffect = new();
+        Subevent subevent = new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "skill": "athletics"
+            }
+            """));
 
-        Assert.True(result);
-    }
+        CheckSkill condition = new CheckSkill().Clone();
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "check uses different skill")]
-    public void CheckUsesDifferentSkill() {
-        bool result = new CheckSkill().Evaluate(
-            new(),
-            new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "skill": "not-athletics"
-                }
-                """)),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_skill",
-                    "skill": "athletics"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        JsonObject conditionJson = new JsonObject().LoadFromString("""
+            {
+                "condition": "check_skill",
+                "skill": "acrobatics"
+            }
+            """);
 
-        Assert.False(result);
-    }
+        ConditionState.StateData result;
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "check uses no skill")]
-    public void CheckUsesNoSkill() {
-        bool result = new CheckSkill().Evaluate(
-            new(),
-            new AbilityCheck(),
-            new JsonObject().LoadFromString("""
-                {
-                    "condition": "check_skill",
-                    "skill": "athletics"
-                }
-                """),
-            new DummyContext(),
-            new()
-        );
+        result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
+        Assert.Equal(new ConditionState.StateData() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
 
-        Assert.False(result);
+        Assert.False(condition.evaluation);
     }
 
 };

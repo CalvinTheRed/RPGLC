@@ -23,7 +23,30 @@ namespace com.rpglc.condition;
 /// </summary>
 public class OriginItemHasTag : Condition {
 
-    public OriginItemHasTag() : base("origin_item_has_tag") { }
+    public OriginItemHasTag() : base("origin_item_has_tag") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                string originItemAlias = conditionJson.GetString("origin_item");
+                RPGLItem? originItem = null;
+                if (Equals(originItemAlias, "subevent") && subevent.GetOriginItem() is not null) {
+                    originItem = RPGL.GetRPGLItem(subevent.GetOriginItem());
+                } else if (Equals(originItemAlias, "effect") && rpglEffect.GetOriginItem() is not null) {
+                    originItem = RPGL.GetRPGLItem(rpglEffect.GetOriginItem());
+                }
+                this.evaluation = originItem is not null && originItem.HasTag(conditionJson.GetString("tag"));
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override OriginItemHasTag Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         string originItemAlias = conditionJson.GetString("origin_item");

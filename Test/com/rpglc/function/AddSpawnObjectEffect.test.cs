@@ -17,7 +17,7 @@ public class AddSpawnObjectEffectTest {
             """{ "object_effects": [ ] }"""
         ));
 
-        AddSpawnObjectEffect addSpawnObjectEffect = new();
+        AddSpawnObjectEffect function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -28,7 +28,7 @@ public class AddSpawnObjectEffectTest {
 
         FunctionState.StateData result;
 
-        result = addSpawnObjectEffect.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""["test:dummy"]""", (subevent as SpawnObject).GetObjectEffects().ToString());
     }

@@ -16,7 +16,7 @@ public class AddSubeventTagTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new DummySubevent();
 
-        AddSubeventTag addSubeventTag = new();
+        AddSubeventTag function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -27,7 +27,7 @@ public class AddSubeventTagTest {
 
         FunctionState.StateData result;
 
-        result = addSubeventTag.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.Equal("""["dummy_subevent","test_tag"]""", subevent.GetTags().ToString());
     }

@@ -26,7 +26,25 @@ namespace com.rpglc.condition;
 /// </summary>
 public class CheckSkill: Condition {
 
-    public CheckSkill() : base("check_skill") { }
+    public CheckSkill() : base("check_skill") {
+        conditionSteps.AddRange([
+            (rpglEffect, subevent, conditionJson, context) => {
+                if (subevent is AbilityCheck abilityCheck) {
+                    evaluation = Equals(conditionJson.GetString("skill"), abilityCheck.GetSkill());
+                }
+
+                return new() {
+                    conditionDependency = null,
+                    subeventDependency = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public override CheckSkill Clone() {
+        return new();
+    }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is AbilityCheck abilityCheck) {

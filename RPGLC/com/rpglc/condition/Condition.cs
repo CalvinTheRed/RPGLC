@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.condition;
@@ -13,6 +14,10 @@ public abstract class Condition(string conditionId) {
     private static JsonObject? loopedConditionJson = null;
 
     private readonly string conditionId = conditionId;
+    public readonly List<Func<RPGLEffect, Subevent, JsonObject, RPGLContext, ConditionState.StateData>> conditionSteps = [];
+    public Condition? conditionDependency = null;
+    public Subevent? subeventDependency = null;
+    public bool evaluation = false;
 
     public static void Initialize() {
         Conditions.Clear();
@@ -42,6 +47,7 @@ public abstract class Condition(string conditionId) {
         }
     }
 
+    public abstract Condition Clone();
 
     private bool VerifyCondition(JsonObject conditionJson) {
         return conditionId == conditionJson.GetString("condition");

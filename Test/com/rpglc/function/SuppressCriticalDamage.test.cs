@@ -15,7 +15,7 @@ public class SuppressCriticalDamageTest {
         RPGLEffect rpglEffect = new();
         Subevent subevent = new CriticalDamageConfirmation();
 
-        SuppressCriticalDamage suppressCriticalDamage = new();
+        SuppressCriticalDamage function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -25,7 +25,7 @@ public class SuppressCriticalDamageTest {
 
         FunctionState.StateData result;
 
-        result = suppressCriticalDamage.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.False((subevent as CriticalDamageConfirmation).DealsCriticalDamage());
     }

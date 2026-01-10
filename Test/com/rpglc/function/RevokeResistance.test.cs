@@ -17,7 +17,7 @@ public class RevokeResistanceTest {
             .AddDamageType("fire")
             .AddDamageType("cold");
 
-        RevokeResistance revokeResistance = new();
+        RevokeResistance function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -27,7 +27,7 @@ public class RevokeResistanceTest {
 
         FunctionState.StateData result;
 
-        result = revokeResistance.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].resistance_revoked"));
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[1].resistance_revoked"));
@@ -41,7 +41,7 @@ public class RevokeResistanceTest {
             .AddDamageType("fire")
             .AddDamageType("cold");
 
-        RevokeResistance revokeResistance = new();
+        RevokeResistance function = new();
 
         JsonObject functionJson = new JsonObject().LoadFromString("""
             {
@@ -52,7 +52,7 @@ public class RevokeResistanceTest {
 
         FunctionState.StateData result;
 
-        result = revokeResistance.functionSteps[0](rpglEffect, subevent, functionJson, context);
+        result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = true }, result);
         Assert.True((subevent as DamageAffinity).json.SeekBool("affinities[0].resistance_revoked"));
         Assert.False((subevent as DamageAffinity).json.SeekBool("affinities[1].resistance_revoked"));
