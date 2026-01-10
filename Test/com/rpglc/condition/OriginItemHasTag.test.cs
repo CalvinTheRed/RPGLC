@@ -2,7 +2,6 @@
 using com.rpglc.json;
 using com.rpglc.runtime;
 using com.rpglc.subevent;
-using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -69,7 +68,6 @@ public class OriginItemHasTagTest {
         Assert.False(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "defaults to false")]
     public void DefaultsToFalse() {

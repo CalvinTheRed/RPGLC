@@ -89,7 +89,6 @@ public class ObjectsMatchTest {
         Assert.False(condition.evaluation);
     }
 
-    [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "defaults to false")]
     public void DefaultsToFalse() {
