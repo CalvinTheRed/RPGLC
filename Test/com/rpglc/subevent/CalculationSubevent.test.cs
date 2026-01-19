@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -12,454 +13,689 @@ namespace com.rpglc.subevent;
 [DieTestingMode]
 public class CalculationSubeventTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "simplifies number formula")]
-    public void SimplifiesNumberFormula() {
+    [Fact(DisplayName = "defaults values")]
+    public void DefaultsValues() {
+        SubeventState subevent = new(new DummyCalculationSubevent());
         RPGLContext context = new DummyContext();
 
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "number",
-                "number": 1
-            }
-            """);
-
-        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": 1,
-              "dice": [ ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedFormula.PrettyPrint()
-        );
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(0, (subevent.subevent as DummyCalculationSubevent).GetBase());
+        Assert.Empty((subevent.subevent as DummyCalculationSubevent).GetBonuses().AsList());
+        Assert.Equal(long.MinValue, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "simplifies dice formula")]
-    public void SimplifiesDiceFormula() {
-        RPGLContext context = new DummyContext();
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "sets base number")]
+    public void SetsBaseNumber() {
+        SubeventState subevent = new(new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString("""
             {
-                "formula": "dice",
-                "dice": [
-                    { "count": 2, "size": 6, "determined": [ 3 ] }
-                ]
-            }
-            """);
-
-        JsonObject simplifiedFormula = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": 0,
-              "dice": [
-                {
-                  "determined": [
-                    3
-                  ],
-                  "size": 6
-                },
-                {
-                  "determined": [
-                    3
-                  ],
-                  "size": 6
+                "base": {
+                    "formula": "number",
+                    "number": 10
                 }
-              ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedFormula.PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "simplifies modifier formula")]
-    public void SimplifiesModifierFormula() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "modifier",
-                "ability": "cha",
-                "object": {
-                    "from": "subevent",
-                    "object": "source",
-                    "as_origin": false
-                }
-            }
-            """);
-
-        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": -2,
-              "dice": [ ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedBonus.PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "simplifies ability formula")]
-    public void SimplifiesAbilityFormula() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "ability",
-                "ability": "str",
-                "object": {
-                    "from": "subevent",
-                    "object": "source",
-                    "as_origin": false
-                }
-            }
-            """);
-
-        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": 13,
-              "dice": [ ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedBonus.PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "simplifies proficiency formula")]
-    public void SimplifiesProficiencyFormula() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "proficiency",
-                "object": {
-                    "from": "subevent",
-                    "object": "source",
-                    "as_origin": false
-                }
-            }
-            """);
-
-        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": 2,
-              "dice": [ ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedBonus.PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraClassesMock]
-    [ExtraEffectsMock]
-    [ExtraObjectsMock]
-    [Fact(DisplayName = "simplifies level formula")]
-    public void SimplifiesLevelFormula() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:complex_object", TestUtils.USER_ID);
-        RPGLContext context = new DummyContext().Add(rpglObject);
-
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:dummy");
-        Subevent subevent = new DummySubevent();
-        subevent.SetSource(rpglObject);
-
-        JsonObject formulaJson = new JsonObject().LoadFromString("""
-            {
-                "formula": "level",
-                "class": "test:class_with_nested_class",
-                "object": {
-                    "from": "subevent",
-                    "object": "source",
-                    "as_origin": false
-                }
-            }
-            """);
-
-        JsonObject simplifiedBonus = CalculationSubevent.SimplifyCalculationFormula(rpglEffect, subevent, formulaJson, context);
-
-        Assert.Equal(
-            """
-            {
-              "bonus": 1,
-              "dice": [ ],
-              "scale": {
-                "denominator": 1,
-                "numerator": 1,
-                "round_up": false
-              }
-            }
-            """,
-            simplifiedBonus.PrettyPrint()
-        );
-    }
-
-    [Fact(DisplayName = "scales with defaults")]
-    public void ScalesWithDefaults() {
-        Assert.Equal(10, CalculationSubevent.Scale(10, new()));
-
-        Assert.Equal(8, CalculationSubevent.Scale(5, new JsonObject().LoadFromString("""
-            {
-                "numerator": 3,
-                "denominator": 2,
-                "round_up": true
             }
             """)));
+        RPGLContext context = new DummyContext();
+
+        // skip past default step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares base")]
-    public void PreparesBase() {
+    [Fact(DisplayName = "sets base modifier")]
+    public void SetsBaseModifier() {
+        long strScore = 12;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DummyCalculationSubevent dummyCalculationSubevent = (DummyCalculationSubevent) new DummyCalculationSubevent()
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
             .SetSource(rpglObject)
-            .SetTarget(rpglObject);
-        dummyCalculationSubevent.JoinSubeventData(new JsonObject().LoadFromString("""
-            {
-                "base": {
-                    "formula": "number",
-                    "number": 2
-                }
-            }
-            """));
-        dummyCalculationSubevent.PrepareBase(new DummyContext());
-
-        Assert.Equal(2, dummyCalculationSubevent.GetBase());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares minimum")]
-    public void PreparesMinimum() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
-            .SetSource(rpglObject)
-            .SetTarget(rpglObject);
-        dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
-            {
-                "subevent": "dummy_calculation",
-                "minimum": {
-                    "formula": "number",
-                    "number": 2
-                }
-            }
-            """));
-        dummyCalculation.PrepareMinimum(new DummyContext());
-
-        Assert.Equal(2, dummyCalculation.GetMinimum());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares bonuses")]
-    public void PreparesBonuses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
-            .SetSource(rpglObject)
-            .SetTarget(rpglObject);
-        dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
-            {
-                "subevent": "dummy_calculation",
-                "bonuses": [
-                    {
-                        "formula": "dice",
-                        "dice": [
-                            { "count": 2, "size": 6, "determined": [ 3 ] }
-                        ]
-                    },
-                    {
-                        "formula": "number",
-                        "number": 2
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "base": {
+                        "formula": "modifier",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "ability": "str"
                     }
-                ]
+                }
+                """)));
+        
+
+        // skip past default step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
             }
             """));
-        dummyCalculation.PrepareBonuses(new DummyContext());
 
-        Assert.Equal(
-            """
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetBase());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets base ability")]
+    public void SetsBaseAbility() {
+        long strScore = 12;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "base": {
+                        "formula": "ability",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "ability": "str"
+                    }
+                }
+                """)));
+
+
+        // skip past default step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetBase());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets base proficiency")]
+    public void SetsBaseProficiency() {
+        long proficiencyBonus = 2;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "base": {
+                        "formula": "proficiency",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        }
+                    }
+                }
+                """)));
+
+
+        // skip past default step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{proficiencyBonus}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetBase());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets base level")]
+    public void SetsBaseLevel() {
+        long classLevel = 1;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.SetClasses(new JsonArray().LoadFromString($$"""
             [
-              {
-                "bonus": 0,
-                "dice": [
-                  {
-                    "determined": [
-                      3
-                    ],
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      3
-                    ],
-                    "size": 6
-                  }
-                ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
+                {
+                  "additional_nested_classes": { },
+                  "id": "test:dummy",
+                  "level": {{classLevel}},
+                  "name": "Nested Class"
                 }
-              },
-              {
-                "bonus": 2,
-                "dice": [ ],
-                "scale": {
-                  "denominator": 1,
-                  "numerator": 1,
-                  "round_up": false
-                }
-              }
             ]
-            """, dummyCalculation.GetBonuses().PrettyPrint());
+            """));
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
 
-        Assert.Equal(3 + 3 + 2, dummyCalculation.GetBonus());
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "base": {
+                        "formula": "level",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "class": "test:dummy"
+                    }
+                }
+                """)));
+
+
+        // skip past default step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "gets")]
-    public void Gets() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
-            .SetSource(rpglObject)
-            .SetTarget(rpglObject);
-        dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "adds bonus number")]
+    public void AddsBonusNumber() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString("""
             {
-                "subevent": "dummy_calculation",
-                "base": {
-                    "formula": "number",
-                    "number": 2
-                },
                 "bonuses": [
                     {
-                        "formula": "dice",
-                        "dice": [
-                            { "count": 2, "size": 6, "determined": [ 3 ] }
-                        ]
-                    },
-                    {
                         "formula": "number",
-                        "number": 2
+                        "number": 10
                     }
                 ]
             }
-            """));
-        dummyCalculation.Prepare(new DummyContext(), new());
+            """)));
 
-        Assert.Equal(10, dummyCalculation.Get());
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "gets minimum")]
-    public void GetsMinimum() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DummyCalculationSubevent dummyCalculation = (DummyCalculationSubevent) new DummyCalculationSubevent()
-            .SetSource(rpglObject)
-            .SetTarget(rpglObject);
-        dummyCalculation.JoinSubeventData(new JsonObject().LoadFromString("""
+    [DieTestingMode]
+    [Fact(DisplayName = "adds bonus dice")]
+    public void AddsBonusDice() {
+        long dieRoll = 3;
+
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
-                "subevent": "dummy_calculation",
-                "base": {
-                    "formula": "number",
-                    "number": 2
-                },
                 "bonuses": [
                     {
                         "formula": "dice",
                         "dice": [
-                            { "count": 2, "size": 6, "determined": [ 3 ] }
+                            { "count": 1, "size": 6, "determined": [ {{dieRoll}} ] }
                         ]
-                    },
-                    {
-                        "formula": "number",
-                        "number": 2
                     }
-                ],
-                "minimum": {
-                    "formula": "number",
-                    "number": 25
+                ]
+            }
+            """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(dieRoll, (subevent.subevent as DummyCalculationSubevent).GetBonus());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds bonus modifier")]
+    public void AddsBonusModifier() {
+        long strScore = 12;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "bonuses": [
+                        {
+                            "formula": "modifier",
+                            "object": {
+                                "from": "subevent",
+                                "object": "source"
+                            },
+                            "ability": "str"
+                        }
+                    ]
                 }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
             }
             """));
-        dummyCalculation.Prepare(new DummyContext(), new());
 
-        Assert.Equal(25, dummyCalculation.Get());
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetBonus());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds bonus ability")]
+    public void AddsBonusAbility() {
+        long strScore = 12;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "bonuses": [
+                        {
+                            "formula": "ability",
+                            "object": {
+                                "from": "subevent",
+                                "object": "source"
+                            },
+                            "ability": "str"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetBonus());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds bonus proficiency")]
+    public void AddsBonusProficiency() {
+        long proficiencyBonus = 2;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "bonuses": [
+                        {
+                            "formula": "proficiency",
+                            "object": {
+                                "from": "subevent",
+                                "object": "source"
+                            }
+                        }
+                    ]
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{proficiencyBonus}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetBonus());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "adds bonus level")]
+    public void AddsBonusLevel() {
+        long classLevel = 1;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.SetClasses(new JsonArray().LoadFromString($$"""
+            [
+                {
+                  "additional_nested_classes": { },
+                  "id": "test:dummy",
+                  "level": {{classLevel}},
+                  "name": "Nested Class"
+                }
+            ]
+            """));
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "bonuses": [
+                        {
+                            "formula": "level",
+                            "object": {
+                                "from": "subevent",
+                                "object": "source"
+                            },
+                            "class": "test:dummy"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, false), result);
+        Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetBonus());
+    }
+
+    [Fact(DisplayName = "sets minimum number")]
+    public void SetsMinimumNumber() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DummyCalculationSubevent().JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "minimum": {
+                    "formula": "number",
+                    "number": 10
+                }
+            }
+            """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+        // skip past bonuses step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, true), result);
+        Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets minimum modifier")]
+    public void SetsMinimumModifier() {
+        long strScore = 12;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "minimum": {
+                        "formula": "modifier",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "ability": "str"
+                    }
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+        // skip past bonuses step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, true), result);
+        Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets minimum ability")]
+    public void SetsMinimumAbility() {
+        long strScore = 12;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "minimum": {
+                        "formula": "ability",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "ability": "str"
+                    }
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+        // skip past bonuses step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+        (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{strScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, true), result);
+        Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets minimum proficiency")]
+    public void SetsMinimumProficiency() {
+        long proficiencyBonus = 2;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "minimum": {
+                        "formula": "proficiency",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        }
+                    }
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+        // skip past bonuses step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
+        Assert.False(result.canProceed);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{proficiencyBonus}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true, true), result);
+        Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "sets minimum level")]
+    public void SetsMinimumLevel() {
+        long classLevel = 1;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.SetClasses(new JsonArray().LoadFromString($$"""
+            [
+                {
+                  "additional_nested_classes": { },
+                  "id": "test:dummy",
+                  "level": {{classLevel}},
+                  "name": "Nested Class"
+                }
+            ]
+            """));
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new DummyCalculationSubevent()
+            .SetSource(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "minimum": {
+                        "formula": "level",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source"
+                        },
+                        "class": "test:dummy"
+                    }
+                }
+                """)));
+
+        // skip past default step
+        _ = subevent.Advance(context);
+        // skip past base step
+        _ = subevent.Advance(context);
+        // skip past bonuses step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true, true), result);
+        Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
 };
