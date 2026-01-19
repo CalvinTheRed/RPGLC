@@ -23,7 +23,7 @@ public class ConditionStateTest {
         Subevent subevent = new DummySubevent();
         RPGLContext context = new DummyContext();
 
-        Assert.Equal((null, null, true), conditionState.AdvanceState(rpglEffect, subevent, context));
+        Assert.Equal((null, null, true), conditionState.Advance(rpglEffect, subevent, context));
     }
 
 };

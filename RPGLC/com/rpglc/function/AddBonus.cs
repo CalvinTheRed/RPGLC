@@ -63,7 +63,7 @@ public class AddBonus : Function {
                         }
                         return new() {
                             dependency = this.dependency,
-                            stepCompleted = this.dependency == null && bonusIndex == bonusArray.Count(),
+                            stepCompleted = this.dependency is null && bonusIndex == bonusArray.Count(),
                         };
                     }
                 }
@@ -79,7 +79,7 @@ public class AddBonus : Function {
         return new();
     }
 
-    public static void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject bonusJson) {
+    public void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject bonusJson) {
         calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
             {
                 "bonus": {{bonusJson.GetLong("number")}},
@@ -95,7 +95,7 @@ public class AddBonus : Function {
             """));
     }
 
-    public static void AdvanceDice(CalculationSubevent calculationSubevent, JsonObject bonusJson) {
+    public void AdvanceDice(CalculationSubevent calculationSubevent, JsonObject bonusJson) {
         calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
             {
                 "bonus": 0,
@@ -126,18 +126,18 @@ public class AddBonus : Function {
             bonusIndex--;
         } else {
             calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get())}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get())}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }
@@ -157,18 +157,18 @@ public class AddBonus : Function {
             bonusIndex--;
         } else {
             calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{(dependency as CalculationSubevent).Get()}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{(dependency as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }
@@ -187,18 +187,18 @@ public class AddBonus : Function {
             bonusIndex--;
         } else {
             calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{(dependency as CalculationSubevent).Get()}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{(dependency as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }

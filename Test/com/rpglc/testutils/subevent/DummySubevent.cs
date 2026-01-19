@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.testutils.subevent;
@@ -8,7 +9,34 @@ public class DummySubevent : Subevent, IAbilitySubevent, IDamageTypeSubevent {
 
     public static long Counter = 0L;
 
-    public DummySubevent() : base("dummy_subevent") { }
+    public DummySubevent() : base("dummy_subevent") {
+        subeventSteps.AddRange([
+            (context) => {
+                Counter = 1;
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                Counter = 2;
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                Counter = 3;
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DummySubevent();

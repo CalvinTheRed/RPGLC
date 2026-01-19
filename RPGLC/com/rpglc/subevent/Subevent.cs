@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -11,7 +12,9 @@ public abstract class Subevent {
 
     public List<RPGLEffect> appliedEffects = [];
 
-    readonly string subeventId;
+    public readonly string subeventId;
+    public readonly List<Func<RPGLContext, SubeventState.StateData>> subeventSteps = [];
+    public SubeventState? dependency = null;
 
     public static void Initialize() {
         Subevents.Clear();

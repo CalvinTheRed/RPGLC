@@ -17,7 +17,7 @@ public class ConditionState(Condition condition, JsonObject conditionJson) {
     public readonly JsonObject conditionJson = conditionJson;
     public int stepIndex = 0;
 
-    public (ConditionState? condition, Subevent? subevent, bool completed) AdvanceState(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
+    public (ConditionState? condition, Subevent? subevent, bool completed) Advance(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
         StateData response = condition.conditionSteps[stepIndex](rpglEffect, subevent, conditionJson, context);
         if (response.stepCompleted) {
             stepIndex++;

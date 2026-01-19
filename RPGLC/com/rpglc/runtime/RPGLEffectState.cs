@@ -65,7 +65,7 @@ public class RPGLEffectState {
     }
 
     public (Subevent? subevent, bool canProceed) Advance(Subevent subevent, RPGLContext context) {
-        switch (this.phase) {
+        switch (phase) {
             case Phase.EvaluatingConditions:
                 return AdvanceConditions(subevent, context);
             case Phase.RequestingUserInput:
@@ -83,7 +83,7 @@ public class RPGLEffectState {
         if (subeventFilterIndex < (subeventFilter?.Count ?? 0)) {
             SubeventFilterBehavior subeventFilterBehavior = subeventFilter[subeventFilterIndex];
             ConditionState condition = subeventFilterBehavior.conditions.Peek();
-            result = condition.AdvanceState(this.rpglEffect, subevent, context);
+            result = condition.Advance(this.rpglEffect, subevent, context);
             
             if (result.completed) {
                 // pop completed condition from stack
@@ -134,7 +134,7 @@ public class RPGLEffectState {
         SubeventFilterBehavior subeventFilterBehavior = subeventFilter[subeventFilterIndex];
         if (subeventFilterBehavior.functions.Count > 0) {
             FunctionState function = subeventFilterBehavior.functions.Peek();
-            var result = function.AdvanceState(this.rpglEffect, subevent, context);
+            var result = function.Advance(this.rpglEffect, subevent, context);
 
             if (result.isCompleted) {
                 subeventFilterBehavior.functions.Pop();

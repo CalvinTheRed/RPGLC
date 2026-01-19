@@ -285,10 +285,13 @@ public class AddBonusTest {
         Assert.Equal(0, (subevent as CalculationSubevent).GetBonus());
         Assert.True(result.dependency is CalculateProficiencyBonus);
 
-        (result.dependency as CalculationSubevent)
-            .SetMinimum(long.MinValue)
-            .SetBase(2)
-            .JoinSubeventData(new JsonObject().LoadFromString("""{ "bonuses": [ ] }"""));
+        (result.dependency as CalculationSubevent).JoinSubeventData(new JsonObject().LoadFromString("""
+            {
+                "base": 2,
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
 
         result = function.functionSteps[0](rpglEffect, subevent, functionJson, context);
         Assert.Equal(new FunctionState.StateData() { dependency = null, stepCompleted = false }, result);

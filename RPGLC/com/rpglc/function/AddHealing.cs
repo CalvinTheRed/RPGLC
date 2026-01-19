@@ -123,18 +123,18 @@ public class AddHealing : Function {
             bonusIndex--;
         } else {
             healingCollection.AddHealing(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get())}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency as CalculationSubevent).Get())}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }
@@ -154,18 +154,18 @@ public class AddHealing : Function {
             bonusIndex--;
         } else {
             healingCollection.AddHealing(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{(dependency as CalculationSubevent).Get()}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{(dependency as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }
@@ -184,18 +184,18 @@ public class AddHealing : Function {
             bonusIndex--;
         } else {
             healingCollection.AddHealing(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{(dependency as CalculationSubevent).Get()}},
-                "dice": [ ],
-                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{(dependency as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
             dependency = null;
         }
     }

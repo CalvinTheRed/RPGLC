@@ -125,19 +125,19 @@ public class AddDamage : Function {
         } else if (subevent is CriticalHitDamageCollection criticalHitDamageCollection) {
             damageType ??= criticalHitDamageCollection.GetDamageCollection().GetJsonObject(0).GetString("damage_type");
             criticalHitDamageCollection.AddDamage(new JsonObject().LoadFromString($$"""
-            {
-                "bonus": {{damageJson.GetLong("number")}},
-                "dice": [ ],
-                "damage_type": "{{damageType}}",
-                "scale": {{damageJson.GetJsonObject("scale")?.ToString() ?? $$"""
                 {
-                    "numerator": 1,
-                    "denominator": 1,
-                    "round_up": false
+                    "bonus": {{damageJson.GetLong("number")}},
+                    "dice": [ ],
+                    "damage_type": "{{damageType}}",
+                    "scale": {{damageJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
                 }
-                """}}
-            }
-            """));
+                """));
         }
         
     }

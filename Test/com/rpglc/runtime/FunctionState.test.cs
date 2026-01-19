@@ -23,13 +23,13 @@ public class FunctionStateTest {
         Subevent subevent = new DummySubevent();
         RPGLContext context = new DummyContext();
 
-        Assert.Equal((null, false), functionState.AdvanceState(rpglEffect, subevent, context));
+        Assert.Equal((null, false), functionState.Advance(rpglEffect, subevent, context));
         Assert.Equal(1, DummyFunction.Counter);
 
-        Assert.Equal((null, false), functionState.AdvanceState(rpglEffect, subevent, context));
+        Assert.Equal((null, false), functionState.Advance(rpglEffect, subevent, context));
         Assert.Equal(2, DummyFunction.Counter);
 
-        Assert.Equal((null, true), functionState.AdvanceState(rpglEffect, subevent, context));
+        Assert.Equal((null, true), functionState.Advance(rpglEffect, subevent, context));
         Assert.Equal(3, DummyFunction.Counter);
     }
 

@@ -21,7 +21,7 @@ public class FunctionState {
         this.functionJson = functionJson;
     }
 
-    public (Subevent? subevent, bool isCompleted) AdvanceState(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
+    public (Subevent? subevent, bool isCompleted) Advance(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
         StateData response = function.functionSteps[stepIndex](rpglEffect, subevent, functionJson, context);
         if (response.stepCompleted) {
             stepIndex++;
