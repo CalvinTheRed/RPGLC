@@ -5,28 +5,25 @@ using com.rpglc.subevent;
 
 namespace com.rpglc.runtime;
 
-public class ConditionState(RPGLEffect? rpglEffect, Subevent subevent, Condition condition, JsonObject conditionJson, RPGLContext context) {
+public class ConditionState(Condition condition, JsonObject conditionJson) {
 
     public struct StateData {
-        public Condition? conditionDependency;
+        public ConditionState? conditionDependency;
         public Subevent? subeventDependency;
         public bool stepCompleted;
     };
 
-    private readonly RPGLEffect? rpglEffect = rpglEffect;
-    private readonly Subevent subevent = subevent;
-    private readonly Condition condition = condition;
-    private readonly JsonObject conditionJson = conditionJson;
-    private readonly RPGLContext context = context;
-    private int stepIndex = 0;
+    public readonly Condition condition = condition;
+    public readonly JsonObject conditionJson = conditionJson;
+    public int stepIndex = 0;
 
-    public (Condition? condition, Subevent? subevent) AdvanceState() {
+    public (ConditionState? condition, Subevent? subevent, bool completed) AdvanceState(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
         StateData response = condition.conditionSteps[stepIndex](rpglEffect, subevent, conditionJson, context);
         if (response.stepCompleted) {
             stepIndex++;
         }
 
-        return (response.conditionDependency, response.subeventDependency);
+        return (response.conditionDependency, response.subeventDependency, stepIndex == condition.conditionSteps.Count);
     }
 
 };

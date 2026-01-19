@@ -40,6 +40,10 @@ public class AddObjectTag : Function {
         ]);
     }
 
+    public override AddObjectTag Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is GetObjectTags getObjectTags) {
             getObjectTags.AddObjectTag(functionJson.GetString("tag"));

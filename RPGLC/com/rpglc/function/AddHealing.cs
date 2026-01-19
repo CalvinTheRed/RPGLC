@@ -72,6 +72,10 @@ public class AddHealing : Function {
         ]);
     }
 
+    public override AddHealing Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(HealingCollection healingCollection, JsonObject bonusJson) {
         healingCollection.AddHealing(new JsonObject().LoadFromString($$"""
             {

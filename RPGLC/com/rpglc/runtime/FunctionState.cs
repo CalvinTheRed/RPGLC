@@ -12,28 +12,22 @@ public class FunctionState {
         public bool stepCompleted;
     };
 
-    private readonly RPGLEffect? rpglEffect;
-    private readonly Subevent subevent;
-    private readonly Function function;
-    private readonly JsonObject functionJson;
-    private readonly RPGLContext context;
-    private int stepIndex = 0;
+    public readonly Function function;
+    public readonly JsonObject functionJson;
+    public int stepIndex = 0;
 
-    public FunctionState(RPGLEffect? rpglEffect, Subevent subevent, Function function, JsonObject functionJson, RPGLContext context) {
-        this.rpglEffect = rpglEffect;
-        this.subevent = subevent;
+    public FunctionState(Function function, JsonObject functionJson) {
         this.function = function;
         this.functionJson = functionJson;
-        this.context = context;
     }
 
-    public Subevent? AdvanceState() {
+    public (Subevent? subevent, bool isCompleted) AdvanceState(RPGLEffect rpglEffect, Subevent subevent, RPGLContext context) {
         StateData response = function.functionSteps[stepIndex](rpglEffect, subevent, functionJson, context);
         if (response.stepCompleted) {
             stepIndex++;
         }
         
-        return response.dependency;
+        return (response.dependency, stepIndex == function.functionSteps.Count);
     }
 
 };

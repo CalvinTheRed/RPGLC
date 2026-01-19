@@ -41,6 +41,10 @@ public class MaximizeHealing : Function {
         ]);
     }
 
+    public override MaximizeHealing Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is HealingRoll healingRoll) {
             healingRoll.MaximizeHealingDice();

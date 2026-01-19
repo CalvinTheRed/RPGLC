@@ -35,6 +35,10 @@ public class GrantSkillProficiency: Function {
         ]);
     }
 
+    public override GrantSkillProficiency Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is AbilityCheck abilityCheck) {
             abilityCheck.GrantProficiency();

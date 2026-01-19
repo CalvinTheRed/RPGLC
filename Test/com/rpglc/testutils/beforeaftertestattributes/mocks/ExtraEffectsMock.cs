@@ -30,7 +30,15 @@ public class ExtraEffectsMock : BeforeAfterTestAttribute {
                         {
                             "conditions": [
                                 {
-                                    "condition": "true"
+                                    "condition": "all",
+                                    "conditions": [
+                                        {
+                                            "condition": "true"
+                                        },
+                                        {
+                                            "condition": "true"
+                                        }
+                                    ]
                                 }
                             ],
                             "functions": [

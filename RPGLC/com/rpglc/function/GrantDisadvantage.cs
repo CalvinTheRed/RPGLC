@@ -37,6 +37,10 @@ public class GrantDisadvantage : Function {
         ]);
     }
 
+    public override GrantDisadvantage Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is RollSubevent rollSubevent) {
             rollSubevent.GrantDisadvantage();

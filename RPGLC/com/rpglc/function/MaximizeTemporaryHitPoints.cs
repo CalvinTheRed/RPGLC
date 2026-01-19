@@ -41,6 +41,10 @@ public class MaximizeTemporaryHitPoints : Function {
         ]);
     }
 
+    public override MaximizeTemporaryHitPoints Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is TemporaryHitPointRoll temporaryHitPointRoll) {
             temporaryHitPointRoll.MaximizeTemporaryHitPointDice();

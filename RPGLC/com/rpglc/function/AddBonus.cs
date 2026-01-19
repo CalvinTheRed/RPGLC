@@ -75,6 +75,10 @@ public class AddBonus : Function {
         ]);
     }
 
+    public override AddBonus Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject bonusJson) {
         calculationSubevent.AddBonus(new JsonObject().LoadFromString($$"""
             {

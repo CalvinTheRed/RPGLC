@@ -40,6 +40,10 @@ public class AddSpawnObjectEvent : Function {
         ]);
     }
 
+    public override AddSpawnObjectEvent Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is SpawnObject spawnObject) {
             spawnObject.json.GetJsonArray("extra_events").AddString(functionJson.GetString("event"));

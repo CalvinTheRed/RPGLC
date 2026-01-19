@@ -41,9 +41,9 @@ public class AllTest {
         Assert.NotNull(result.conditionDependency);
         Assert.Null(result.subeventDependency);
         Assert.False(result.stepCompleted);
-        Assert.True(result.conditionDependency is True);
+        Assert.True(result.conditionDependency.condition is True);
 
-        result.conditionDependency.evaluation = true;
+        result.conditionDependency.condition.evaluation = true;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
         Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = false }, result);
@@ -52,9 +52,9 @@ public class AllTest {
         Assert.NotNull(result.conditionDependency);
         Assert.Null(result.subeventDependency);
         Assert.False(result.stepCompleted);
-        Assert.True(result.conditionDependency is True);
+        Assert.True(result.conditionDependency.condition is True);
 
-        result.conditionDependency.evaluation = true;
+        result.conditionDependency.condition.evaluation = true;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
         Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
@@ -87,23 +87,23 @@ public class AllTest {
         ConditionState.StateData result;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
-        Assert.NotNull(result.conditionDependency);
+        Assert.NotNull(result.conditionDependency.condition);
         Assert.Null(result.subeventDependency);
         Assert.False(result.stepCompleted);
-        Assert.True(result.conditionDependency is True);
+        Assert.True(result.conditionDependency.condition is True);
 
-        result.conditionDependency.evaluation = true;
+        result.conditionDependency.condition.evaluation = true;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
         Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = false }, result);
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
-        Assert.NotNull(result.conditionDependency);
+        Assert.NotNull(result.conditionDependency.condition);
         Assert.Null(result.subeventDependency);
         Assert.False(result.stepCompleted);
-        Assert.True(result.conditionDependency is False);
+        Assert.True(result.conditionDependency.condition is False);
 
-        result.conditionDependency.evaluation = false;
+        result.conditionDependency.condition.evaluation = false;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
         Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);
@@ -136,12 +136,12 @@ public class AllTest {
         ConditionState.StateData result;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
-        Assert.NotNull(result.conditionDependency);
+        Assert.NotNull(result.conditionDependency.condition);
         Assert.Null(result.subeventDependency);
         Assert.False(result.stepCompleted);
-        Assert.True(result.conditionDependency is False);
+        Assert.True(result.conditionDependency.condition is False);
 
-        result.conditionDependency.evaluation = false;
+        result.conditionDependency.condition.evaluation = false;
 
         result = condition.conditionSteps[0](rpglEffect, subevent, conditionJson, context);
         Assert.Equal(new() { conditionDependency = null, subeventDependency = null, stepCompleted = true }, result);

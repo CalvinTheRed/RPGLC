@@ -79,6 +79,10 @@ public class AddVampirism : Function {
         ]);
     }
 
+    public override AddVampirism Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is IVampiricSubevent vampiricSubevent) {
             JsonArray vampirismArray = functionJson.GetJsonArray("vampirism") ?? new JsonArray().AddJsonObject(new());

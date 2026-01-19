@@ -40,6 +40,10 @@ public class AddEvent : Function {
         ]);
     }
 
+    public override AddEvent Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is GetEvents getEvents) {
             getEvents.AddEvent(functionJson.GetString("event"));
