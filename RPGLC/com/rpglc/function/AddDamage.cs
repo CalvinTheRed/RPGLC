@@ -99,6 +99,10 @@ public class AddDamage : Function {
         ]);
     }
 
+    public override AddDamage Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(Subevent subevent, JsonObject damageJson) {
         string? damageType = damageJson.GetString("damage_type");
 

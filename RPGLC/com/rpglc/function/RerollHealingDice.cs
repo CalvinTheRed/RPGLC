@@ -59,6 +59,10 @@ public class RerollHealingDice : Function {
         ]);
     }
 
+    public override RerollHealingDice Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(HealingRoll healingRoll, JsonObject functionJson) {
         JsonArray healingArray = healingRoll.json.GetJsonArray("healing");
         for (int i = 0; i < healingArray.Count(); i++) {

@@ -35,6 +35,10 @@ public class DummyFunction : Function {
         ]);
     }
 
+    public override DummyFunction Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         Counter++;
     }

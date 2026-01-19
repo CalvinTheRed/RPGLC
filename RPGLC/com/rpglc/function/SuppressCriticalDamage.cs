@@ -35,6 +35,10 @@ public class SuppressCriticalDamage : Function {
         ]);
     }
 
+    public override SuppressCriticalDamage Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is CriticalDamageConfirmation criticalDamageConfirmation) {
             criticalDamageConfirmation.SuppressCriticalDamage();

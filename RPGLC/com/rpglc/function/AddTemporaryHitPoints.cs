@@ -72,6 +72,10 @@ public class AddTemporaryHitPoints : Function {
         ]);
     }
 
+    public override AddTemporaryHitPoints Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(TemporaryHitPointCollection temporaryHitPointCollection, JsonObject bonusJson) {
         temporaryHitPointCollection.AddTemporaryHitPoints(new JsonObject().LoadFromString($$"""
             {

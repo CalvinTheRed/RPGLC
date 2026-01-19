@@ -59,6 +59,10 @@ public class OverrideDamageDice : Function {
         ]);
     }
 
+    public override OverrideDamageDice Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(DamageRoll damageRoll, JsonObject functionJson) {
         string damageType = functionJson.GetString("damage_type") ?? "*";
 

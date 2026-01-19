@@ -45,6 +45,10 @@ public class MaximizeDamage : Function {
         ]);
     }
 
+    public override MaximizeDamage Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageRoll damageRoll) {
             damageRoll.MaximizeDamageDice(functionJson.GetString("damage_type") ?? "*");

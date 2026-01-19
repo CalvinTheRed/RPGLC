@@ -61,6 +61,10 @@ public class SetMinimum : Function {
         ]);
     }
 
+    public override SetMinimum Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject minimumJson) {
         calculationSubevent.SetMinimum(CalculationSubevent.Scale(
                 (long) minimumJson.GetLong("number"),

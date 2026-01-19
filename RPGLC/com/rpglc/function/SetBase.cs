@@ -61,6 +61,10 @@ public class SetBase : Function {
         ]);
     }
 
+    public override SetBase Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(CalculationSubevent calculationSubevent, JsonObject baseJson) {
         calculationSubevent.SetBase(CalculationSubevent.Scale(
             (long) baseJson.GetLong("number"),

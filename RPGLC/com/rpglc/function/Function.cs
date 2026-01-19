@@ -63,6 +63,8 @@ public abstract class Function(string functionId) {
         }
     }
 
+    public abstract Function Clone();
+
     private bool VerifyFunction(JsonObject functionJson) {
         return functionId == functionJson.GetString("function");
     }

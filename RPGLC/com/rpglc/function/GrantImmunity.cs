@@ -40,6 +40,10 @@ public class GrantImmunity : Function {
         ]);
     }
 
+    public override GrantImmunity Clone() {
+        return new();
+    }
+
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is DamageAffinity damageAffinity) {
             damageAffinity.GrantImmunity(functionJson.GetString("damage_type") ?? "*");

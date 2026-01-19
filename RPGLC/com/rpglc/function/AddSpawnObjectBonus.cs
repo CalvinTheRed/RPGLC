@@ -71,6 +71,10 @@ public class AddSpawnObjectBonus: Function {
         ]);
     }
 
+    public override AddSpawnObjectBonus Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(SpawnObject spawnObject, JsonObject bonusJson) {
         spawnObject.AddObjectBonus(new JsonObject().LoadFromString($$"""
             {

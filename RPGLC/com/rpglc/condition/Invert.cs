@@ -27,16 +27,20 @@ public class Invert : Condition {
                 if (this.conditionDependency is null) {
                     JsonObject nestedConditionJson = conditionJson.GetJsonObject("invert");
                     this.conditionDependency = Conditions[nestedConditionJson.GetString("condition")].Clone();
+                    return new() {
+                        conditionDependency = new(this.conditionDependency, nestedConditionJson),
+                        subeventDependency = null,
+                        stepCompleted = false,
+                    };
                 } else {
                     this.evaluation = !this.conditionDependency.evaluation;
                     this.conditionDependency = null;
+                    return new() {
+                        conditionDependency = null,
+                        subeventDependency = null,
+                        stepCompleted = true,
+                    };
                 }
-
-                return new() {
-                    conditionDependency = this.conditionDependency,
-                    subeventDependency = null,
-                    stepCompleted = conditionDependency is null,
-                };
             },
         ]);
     }

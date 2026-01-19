@@ -57,6 +57,10 @@ public class OverrideTemporaryHitPointDice : Function {
         ]);
     }
 
+    public override OverrideTemporaryHitPointDice Clone() {
+        return new();
+    }
+
     public static void AdvanceNumber(TemporaryHitPointRoll temporaryHitPointRoll, JsonObject functionJson) {
         JsonArray temporaryHitPointArray = temporaryHitPointRoll.json.GetJsonArray("temporary_hit_points");
         for (int i = 0; i < temporaryHitPointArray.Count(); i++) {

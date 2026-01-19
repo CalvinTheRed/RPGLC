@@ -33,7 +33,7 @@ public class Any : Condition {
                         JsonObject nestedConditionJson = conditionArray.GetJsonObject(conditionIndex);
                         this.conditionDependency = Conditions[nestedConditionJson.GetString("condition")].Clone();
                         return new() {
-                            conditionDependency = this.conditionDependency,
+                            conditionDependency = new(this.conditionDependency, nestedConditionJson),
                             subeventDependency = null,
                             stepCompleted = false,
                         };
