@@ -4,7 +4,22 @@ using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
-public abstract class RollSubevent(string subeventId) : CalculationSubevent(subeventId) {
+public abstract class RollSubevent : CalculationSubevent {
+
+    public RollSubevent(string subeventId) : base(subeventId) {
+        this.subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("determined", new JsonArray());
+                json.PutBool("has_advantage", false);
+                json.PutBool("has_disadvantage", false);
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
     
     public override RollSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         base.Prepare(context, originPoint, invokingEffect);
@@ -40,12 +55,12 @@ public abstract class RollSubevent(string subeventId) : CalculationSubevent(sube
         JsonArray determined = json.GetJsonArray("determined");
         long baseDieRoll = Die.Roll(20L, determined);
         if (IsAdvantageRoll()) {
-            long advantageRoll = Die.Roll(10L, determined);
+            long advantageRoll = Die.Roll(20L, determined);
             if (advantageRoll > baseDieRoll) {
                 baseDieRoll = advantageRoll;
             }
         } else if (IsDisadvantageRoll()) {
-            long disadvantageRoll = Die.Roll(10L, determined);
+            long disadvantageRoll = Die.Roll(20L, determined);
             if (disadvantageRoll < baseDieRoll) {
                 baseDieRoll = disadvantageRoll;
             }

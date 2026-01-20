@@ -1,12 +1,23 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.testutils.subevent;
 
 public class DummyRollSubevent : RollSubevent {
 
-    public DummyRollSubevent() : base("dummy_roll_subevent") { }
+    public DummyRollSubevent() : base("dummy_roll_subevent") {
+        subeventSteps.AddRange([
+            (ContextBoundObject) => {
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         DummyRollSubevent clone = new DummyRollSubevent();
