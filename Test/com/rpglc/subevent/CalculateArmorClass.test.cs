@@ -1,4 +1,6 @@
 ﻿using com.rpglc.core;
+using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -11,14 +13,40 @@ public class CalculateArmorClassTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        CalculateArmorClass calculateArmorClass = new CalculateArmorClass()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "calculates default")]
+    public void CalculatesDefault() {
+        long dexScore = 12L;
 
-        Assert.Equal(10L, calculateArmorClass.Get());
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("dex", dexScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new CalculateArmorClass()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject));
+
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(dexScore)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "bonuses": [ ]
+                }
+                """));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        Assert.Equal(11L, (subevent.subevent as CalculateArmorClass).Get());
     }
 
 };

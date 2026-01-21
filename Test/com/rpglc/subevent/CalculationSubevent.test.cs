@@ -19,7 +19,7 @@ public class CalculationSubeventTest {
         RPGLContext context = new DummyContext();
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(0, (subevent.subevent as DummyCalculationSubevent).GetBase());
         Assert.Empty((subevent.subevent as DummyCalculationSubevent).GetBonuses().AsList());
         Assert.Equal(long.MinValue, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
@@ -41,7 +41,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
@@ -77,7 +77,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -88,7 +87,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
@@ -124,7 +123,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -135,7 +133,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
@@ -169,7 +167,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -181,7 +178,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
@@ -225,7 +222,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetBase());
     }
 
@@ -249,7 +246,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -278,7 +275,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(dieRoll, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -317,7 +314,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -328,7 +324,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -367,7 +363,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -378,7 +373,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -415,7 +410,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -427,7 +421,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -474,7 +468,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
@@ -498,7 +492,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
         Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
@@ -537,7 +531,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -548,7 +541,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
         Assert.Equal(1, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
@@ -587,7 +580,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
         (result.subevent.subevent as CalculateAbilityScore).JoinSubeventData(new JsonObject().LoadFromString($$"""
             {
@@ -598,7 +590,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
         Assert.Equal(strScore, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
@@ -635,7 +627,6 @@ public class CalculationSubeventTest {
 
         var result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
-        Assert.False(result.canProceed);
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateProficiencyBonus).JoinSubeventData(new JsonObject().LoadFromString($$"""
@@ -647,7 +638,7 @@ public class CalculationSubeventTest {
             """));
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
         Assert.Equal(proficiencyBonus, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 
@@ -694,7 +685,7 @@ public class CalculationSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
         Assert.Equal(classLevel, (subevent.subevent as DummyCalculationSubevent).GetMinimum());
     }
 

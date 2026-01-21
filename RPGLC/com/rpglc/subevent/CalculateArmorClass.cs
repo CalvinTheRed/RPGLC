@@ -20,7 +20,36 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CalculateArmorClass : CalculationSubevent {
 
-    public CalculateArmorClass() : base("calculate_armor_class") { }
+    public CalculateArmorClass() : base("calculate_armor_class") {
+        subeventSteps.AddRange([
+            (context) => {
+                RPGLObject rpglObject = GetTarget();
+                dependency = new(new CalculateAbilityScore()
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString("""
+                        {
+                            "subevent": "calculate_ability_score",
+                            "ability": "dex"
+                        }
+                        """)));
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                SetBase(10L + RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculateAbilityScore).Get()));
+                dependency = null;
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateArmorClass();

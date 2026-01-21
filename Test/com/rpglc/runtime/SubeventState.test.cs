@@ -21,19 +21,19 @@ public class SubeventStateTest {
         SubeventState subevent = new(new DummySubevent().SetSource(rpglObject));
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(1, subevent.stepIndex);
         Assert.Equal(1, DummySubevent.Counter);
 
         result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
         Assert.Equal(2, subevent.stepIndex);
         Assert.Equal(2, DummySubevent.Counter);
         Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
 
         // cannot advance without targets being assigned
         result = subevent.Advance(context);
-        Assert.Equal((null, false, false), result);
+        Assert.Equal((null, false), result);
 
         // set targets
         subevent.SetTargets([rpglObject]);
@@ -43,7 +43,6 @@ public class SubeventStateTest {
         Assert.Equal("dummy_subevent", result.subevent.subevent.subeventId);
         Assert.Equal(rpglObject, result.subevent.subevent.GetTarget());
         Assert.Equal(SubeventState.Phase.Running, result.subevent.phase);
-        Assert.True(result.canProceed);
         Assert.True(result.completed);
     }
 

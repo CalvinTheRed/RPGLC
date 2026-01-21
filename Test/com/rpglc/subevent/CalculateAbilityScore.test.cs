@@ -27,7 +27,6 @@ public class CalculateAbilityScoreTest {
                 }
                 """)));
 
-
         // skip over inherited steps
         _ = subevent.Advance(context);
         _ = subevent.Advance(context);
@@ -35,7 +34,7 @@ public class CalculateAbilityScoreTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, true), result);
+        Assert.Equal((null, true), result);
 
         Assert.Equal(10L, (subevent.subevent as CalculateAbilityScore).Get());
     }

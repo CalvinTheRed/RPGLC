@@ -24,7 +24,7 @@ public class SubeventState(Subevent subevent) {
 
     private readonly Stack<RPGLObject> targets = [];
 
-    public (SubeventState? subevent, bool canProceed, bool completed) Advance(RPGLContext context) {
+    public (SubeventState? subevent, bool completed) Advance(RPGLContext context) {
         switch(phase) {
             case Phase.Preparing:
                 return AdvancePreparing(context);
@@ -33,7 +33,7 @@ public class SubeventState(Subevent subevent) {
             case Phase.Running:
                 return AdvanceRunning(context);
             default:
-                return (null, true, true);
+                return (null, true);
         }
     }
 
@@ -41,7 +41,7 @@ public class SubeventState(Subevent subevent) {
         targets.ForEach(this.targets.Push);
     }
 
-    public (SubeventState? subevent, bool canProceed, bool completed) AdvancePreparing(RPGLContext context) {
+    public (SubeventState? subevent, bool completed) AdvancePreparing(RPGLContext context) {
         StateData response = subevent.subeventSteps[stepIndex](context);
         if (response.stepCompleted) {
             stepIndex++;
@@ -52,23 +52,23 @@ public class SubeventState(Subevent subevent) {
         if (stepIndex == subevent.subeventSteps.Count) {
             phase = Phase.Completed;
         }
-        return (response.dependency, response.dependency is null, stepIndex == subevent.subeventSteps.Count);
+        return (response.dependency, phase == Phase.Completed);
     }
 
-    public (SubeventState? subevent, bool canProceed, bool completed) AdvanceTargeting(RPGLContext context) {
+    public (SubeventState? subevent, bool completed) AdvanceTargeting(RPGLContext context) {
         if (targets.Count == 0) {
-            return (null, false, false);
+            return (null, false);
         } else {
             SubeventState dependencySubevent = new(subevent.Clone());
             dependencySubevent.subevent.SetTarget(targets.Pop());
             dependencySubevent.phase = Phase.Running;
             dependencySubevent.stepIndex = stepIndex;
 
-            return (dependencySubevent, true, targets.Count == 0);
+            return (dependencySubevent, targets.Count == 0);
         }
     }
 
-    public (SubeventState? subevent, bool canProceed, bool completed) AdvanceRunning(RPGLContext context) {
+    public (SubeventState? subevent, bool completed) AdvanceRunning(RPGLContext context) {
         StateData response = subevent.subeventSteps[stepIndex](context);
         if (response.stepCompleted) {
             stepIndex++;
@@ -77,7 +77,7 @@ public class SubeventState(Subevent subevent) {
             phase = Phase.Completed;
         }
 
-        return (response.dependency, response.dependency is null, stepIndex == subevent.subeventSteps.Count);
+        return (response.dependency, phase == Phase.Completed);
     }
 
 };

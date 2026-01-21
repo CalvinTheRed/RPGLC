@@ -22,7 +22,7 @@ public class RollSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
 
         Assert.False(subevent.subevent.json.GetBool("has_advantage"));
         Assert.False(subevent.subevent.json.GetBool("has_disadvantage"));
@@ -46,7 +46,7 @@ public class RollSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
 
         (subevent.subevent as DummyRollSubevent).GrantAdvantage();
 
@@ -79,7 +79,7 @@ public class RollSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
 
         (subevent.subevent as DummyRollSubevent).GrantDisadvantage();
 
@@ -112,7 +112,7 @@ public class RollSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
 
         (subevent.subevent as DummyRollSubevent).GrantAdvantage();
         (subevent.subevent as DummyRollSubevent).GrantDisadvantage();
@@ -146,7 +146,7 @@ public class RollSubeventTest {
         _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
-        Assert.Equal((null, true, false), result);
+        Assert.Equal((null, false), result);
 
         Assert.False(subevent.subevent.json.GetBool("has_advantage"));
         Assert.False(subevent.subevent.json.GetBool("has_disadvantage"));
