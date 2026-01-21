@@ -49,7 +49,9 @@ public class SubeventState(Subevent subevent) {
         if (response.nextPhase is not null) {
             phase = (Phase) response.nextPhase;
         }
-
+        if (stepIndex == subevent.subeventSteps.Count) {
+            phase = Phase.Completed;
+        }
         return (response.dependency, response.dependency is null, stepIndex == subevent.subeventSteps.Count);
     }
 

@@ -25,7 +25,18 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CalculateAbilityScore : CalculationSubevent, IAbilitySubevent {
     
-    public CalculateAbilityScore() : base("calculate_ability_score") { }
+    public CalculateAbilityScore() : base("calculate_ability_score") {
+        subeventSteps.AddRange([
+            (context) => {
+                SetBase((long) GetSource().GetAbilityScores().GetLong(GetAbility(context)));
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateAbilityScore();
