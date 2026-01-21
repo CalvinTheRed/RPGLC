@@ -1,5 +1,5 @@
 ﻿using com.rpglc.core;
-using com.rpglc.testutils;
+using com.rpglc.runtime;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
@@ -11,14 +11,21 @@ public class CalculateCriticalHitThresholdTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        CalculateCriticalHitThreshold calculateCriticalHitThreshold = new CalculateCriticalHitThreshold()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "calculates default")]
+    public void CalculatesDefault() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new CalculateCriticalHitThreshold());
 
-        Assert.Equal(20L, calculateCriticalHitThreshold.json.GetLong("critical_hit_threshold"));
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        Assert.Equal(20L, (subevent.subevent as CalculateCriticalHitThreshold).Get());
     }
 
 };

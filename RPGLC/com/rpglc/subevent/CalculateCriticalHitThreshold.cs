@@ -20,7 +20,18 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CalculateCriticalHitThreshold : CalculationSubevent {
 
-    public CalculateCriticalHitThreshold() : base("calculate_critical_hit_threshold") { }
+    public CalculateCriticalHitThreshold() : base("calculate_critical_hit_threshold") {
+        subeventSteps.AddRange([
+            (context) => {
+                SetBase(20L);
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateCriticalHitThreshold();
