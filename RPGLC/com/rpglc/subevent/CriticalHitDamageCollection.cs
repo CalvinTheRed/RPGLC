@@ -24,7 +24,19 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
 
-    public CriticalHitDamageCollection() : base("critical_hit_damage_collection") { }
+    public CriticalHitDamageCollection() : base("critical_hit_damage_collection") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("damage", new JsonArray());
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CriticalHitDamageCollection();
