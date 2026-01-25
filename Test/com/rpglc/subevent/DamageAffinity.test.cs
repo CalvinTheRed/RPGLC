@@ -1,4 +1,5 @@
 ﻿using com.rpglc.core;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -11,41 +12,39 @@ public class DamageAffinityTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
-        Assert.Equal("""[]""", damageAffinity.GetAffinities().ToString());
-    }
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "includes damage type")]
-    public void IncludesDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire");
-
-        Assert.True(damageAffinity.IncludesDamageType("fire"));
-        Assert.False(damageAffinity.IncludesDamageType("cold"));
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Empty((subevent.subevent as DamageAffinity).GetAffinities().AsList());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "adds damage type")]
     public void AddsDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .AddDamageType("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
         Assert.Equal("""
             [
               {
@@ -58,21 +57,65 @@ public class DamageAffinityTest {
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "does include damage type")]
+    public void DoesIncludeDamageType() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
+
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        Assert.True((subevent.subevent as DamageAffinity).IncludesDamageType("fire"));
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "does not include damage type")]
+    public void DoesNotIncludeDamageType() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
+
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.False((subevent.subevent as DamageAffinity).IncludesDamageType("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants immunity")]
     public void GrantsImmunity() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantImmunity("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).GrantImmunity("fire");
         Assert.Equal("""
             [
               {
@@ -85,29 +128,33 @@ public class DamageAffinityTest {
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
-        
-        Assert.True(damageAffinity.IsImmune("fire"));
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
+        Assert.True((subevent.subevent as DamageAffinity).IsImmune("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes immunity")]
     public void RevokesImmunity() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantImmunity("fire")
-            .RevokeImmunity("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).RevokeImmunity("fire");
         Assert.Equal("""
             [
               {
                 "damage_type": "fire",
-                "immunity": true,
+                "immunity": false,
                 "immunity_revoked": true,
                 "resistance": false,
                 "resistance_revoked": false,
@@ -115,23 +162,30 @@ public class DamageAffinityTest {
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
 
-        Assert.False(damageAffinity.IsImmune("fire"));
+        (subevent.subevent as DamageAffinity).GrantImmunity("fire");
+        Assert.False((subevent.subevent as DamageAffinity).IsImmune("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants resistance")]
     public void GrantsResistance() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantResistance("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).GrantResistance("fire");
         Assert.Equal("""
             [
               {
@@ -144,53 +198,64 @@ public class DamageAffinityTest {
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
-
-        Assert.True(damageAffinity.IsResistant("fire"));
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
+        Assert.True((subevent.subevent as DamageAffinity).IsResistant("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes resistance")]
     public void RevokesResistance() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantResistance("fire")
-            .RevokeResistance("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).RevokeResistance("fire");
         Assert.Equal("""
             [
               {
                 "damage_type": "fire",
                 "immunity": false,
                 "immunity_revoked": false,
-                "resistance": true,
+                "resistance": false,
                 "resistance_revoked": true,
                 "vulnerability": false,
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
 
-        Assert.False(damageAffinity.IsResistant("fire"));
+        (subevent.subevent as DamageAffinity).GrantResistance("fire");
+        Assert.False((subevent.subevent as DamageAffinity).IsResistant("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "grants vulnerability")]
     public void GrantsVulnerability() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantVulnerability("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).GrantVulnerability("fire");
         Assert.Equal("""
             [
               {
@@ -203,24 +268,28 @@ public class DamageAffinityTest {
                 "vulnerability_revoked": false
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
-
-        Assert.True(damageAffinity.IsVulnerable("fire"));
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
+        Assert.True((subevent.subevent as DamageAffinity).IsVulnerable("fire"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "revokes vulnerability")]
     public void RevokesVulnerability() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageAffinity damageAffinity = new DamageAffinity()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddDamageType("fire")
-            .GrantVulnerability("fire")
-            .RevokeVulnerability("fire");
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageAffinity());
 
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageAffinity).AddDamageType("fire");
+        (subevent.subevent as DamageAffinity).RevokeVulnerability("fire");
         Assert.Equal("""
             [
               {
@@ -229,14 +298,14 @@ public class DamageAffinityTest {
                 "immunity_revoked": false,
                 "resistance": false,
                 "resistance_revoked": false,
-                "vulnerability": true,
+                "vulnerability": false,
                 "vulnerability_revoked": true
               }
             ]
-            """,
-            damageAffinity.GetAffinities().PrettyPrint());
+            """, (subevent.subevent as DamageAffinity).GetAffinities().PrettyPrint());
 
-        Assert.False(damageAffinity.IsVulnerable("fire"));
+        (subevent.subevent as DamageAffinity).GrantVulnerability("fire");
+        Assert.False((subevent.subevent as DamageAffinity).IsVulnerable("fire"));
     }
 
 };

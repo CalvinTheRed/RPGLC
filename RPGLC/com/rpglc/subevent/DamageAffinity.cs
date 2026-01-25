@@ -28,7 +28,19 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DamageAffinity : Subevent {
 
-    public DamageAffinity() : base("damage_affinity") { }
+    public DamageAffinity() : base("damage_affinity") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("affinities", new JsonArray());
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DamageAffinity();
