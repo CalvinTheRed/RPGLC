@@ -19,7 +19,19 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CriticalDamageConfirmation : Subevent {
     
-    public CriticalDamageConfirmation() : base("critical_damage_confirmation") { }
+    public CriticalDamageConfirmation() : base("critical_damage_confirmation") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("deals_critical_damage", true);
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CriticalDamageConfirmation();

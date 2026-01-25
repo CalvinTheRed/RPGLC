@@ -1,4 +1,5 @@
 ﻿using com.rpglc.core;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -9,29 +10,38 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class CriticalDamageConfirmationTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void PreparesAssignedProficiencyBonus() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        CriticalDamageConfirmation criticalDamageConfirmation = new CriticalDamageConfirmation()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new CriticalDamageConfirmation());
 
-        Assert.True(criticalDamageConfirmation.DealsCriticalDamage());
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.True((subevent.subevent as CriticalDamageConfirmation).DealsCriticalDamage());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [Fact(DisplayName = "suppresses critical damage")]
     public void SuppressesCriticalDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        CriticalDamageConfirmation criticalDamageConfirmation = new CriticalDamageConfirmation()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SuppressCriticalDamage();
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new CriticalDamageConfirmation());
 
-        Assert.False(criticalDamageConfirmation.DealsCriticalDamage());
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as CriticalDamageConfirmation).SuppressCriticalDamage();
+        Assert.False((subevent.subevent as CriticalDamageConfirmation).DealsCriticalDamage());
     }
 
 };
