@@ -13,6 +13,33 @@ public class CalculateDifficultyClassTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
+    [Fact(DisplayName = "uses assigned difficulty class")]
+    public void UsesAssignedDifficultyClass() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new CalculateDifficultyClass()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "difficulty_class": 15
+                }
+                """)));
+
+        // skip over inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        // picks correct fork
+        _ = subevent.Advance(context);
+        Assert.Equal(6, subevent.subevent.subeventSteps.Count);
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(15L, (subevent.subevent as CalculateDifficultyClass).Get());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "uses generated difficulty class")]
     public void UsesGeneratedDifficultyClass() {
         long wisScore = 12L;
@@ -69,33 +96,6 @@ public class CalculateDifficultyClassTest {
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);
         Assert.Equal(8L + 1L + 2L, (subevent.subevent as CalculateDifficultyClass).Get());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "uses assigned difficulty class")]
-    public void UsesAssignedDifficultyClass() {
-        RPGLContext context = new DummyContext();
-        SubeventState subevent = new(new CalculateDifficultyClass()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "difficulty_class": 15
-                }
-                """)));
-
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
-        // picks correct fork
-        _ = subevent.Advance(context);
-        Assert.Equal(6, subevent.subevent.subeventSteps.Count);
-
-        var result = subevent.Advance(context);
-        Assert.Equal((null, true), result);
-        Assert.Equal(15L, (subevent.subevent as CalculateDifficultyClass).Get());
     }
 
 };

@@ -21,7 +21,56 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CalculateMaximumHitPoints : CalculationSubevent {
 
-    public CalculateMaximumHitPoints() : base("calculate_maximum_hit_points") { }
+    public CalculateMaximumHitPoints() : base("calculate_maximum_hit_points") {
+        subeventSteps.AddRange([
+            (context) => {
+                RPGLObject rpglObject = GetTarget();
+                
+                SetBase(rpglObject.GetHealthBase());
+
+                dependency = new(new CalculateAbilityScore()
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString("""
+                        {
+                            "subevent": "calculate_ability_score",
+                            "object": {
+                                "from": "subevent",
+                                "object": "target"
+                            },
+                            "ability": "con"
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculateAbilityScore).Get())}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": {{GetTarget().GetLevel()}},
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+
+                dependency = null;
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateMaximumHitPoints();
