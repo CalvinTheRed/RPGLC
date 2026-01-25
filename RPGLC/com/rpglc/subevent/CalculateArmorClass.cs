@@ -30,6 +30,10 @@ public class CalculateArmorClass : CalculationSubevent {
                     .JoinSubeventData(new JsonObject().LoadFromString("""
                         {
                             "subevent": "calculate_ability_score",
+                            "object": {
+                                "from": "subevent",
+                                "object": "target"
+                            },
                             "ability": "dex"
                         }
                         """)));

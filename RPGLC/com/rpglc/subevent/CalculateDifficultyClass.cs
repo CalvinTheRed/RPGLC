@@ -20,9 +20,120 @@ namespace com.rpglc.subevent;
 ///   
 /// </summary>
 public class CalculateDifficultyClass : CalculationSubevent {
-    
-    public CalculateDifficultyClass() : base("calculate_difficulty_class") { }
 
+    public CalculateDifficultyClass() : base("calculate_difficulty_class") {
+        subeventSteps.AddRange([
+            (context) => {
+                if (json.AsDict().ContainsKey("difficulty_class")) {
+                    AddAssignedDifficultyClassSteps();
+                } else {
+                    AddCalculatedDifficultyClassSteps();
+                }
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    private void AddAssignedDifficultyClassSteps() {
+        subeventSteps.AddRange([
+            (context) => {
+                SetBase((long) json.GetLong("difficulty_class"));
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    private void AddCalculatedDifficultyClassSteps() {
+        subeventSteps.AddRange([
+            (context) => {
+                SetBase(8L);
+
+                RPGLObject rpglObject = GetTarget();
+                dependency = new(new CalculateAbilityScore()
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "subevent": "calculate_ability_score",
+                            "object": {
+                                "from": "subevent",
+                                "object": "target"
+                            },
+                            "ability": "{{json.GetString("difficulty_class_ability")}}"
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculateAbilityScore).Get())}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+
+                RPGLObject rpglObject = GetTarget();
+                dependency = new(new CalculateProficiencyBonus()
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString("""
+                        {
+                            "subevent": "calculate_proficiency_bonus",
+                            "object": {
+                                "from": "subevent",
+                                "object": "target"
+                            }
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+
+                dependency = null;
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+    
     public override Subevent Clone() {
         Subevent clone = new CalculateDifficultyClass();
         clone.JoinSubeventData(json);
