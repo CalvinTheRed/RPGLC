@@ -35,12 +35,6 @@ public class DamageAffinityTest {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
 
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
 
@@ -67,12 +61,6 @@ public class DamageAffinityTest {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
 
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
 
@@ -87,12 +75,6 @@ public class DamageAffinityTest {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
 
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
         Assert.False((subevent.subevent as DamageAffinity).IncludesDamageType("fire"));
@@ -104,12 +86,6 @@ public class DamageAffinityTest {
     public void GrantsImmunity() {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
-
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -138,12 +114,6 @@ public class DamageAffinityTest {
     public void RevokesImmunity() {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
-
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -175,12 +145,6 @@ public class DamageAffinityTest {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
 
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
 
@@ -208,12 +172,6 @@ public class DamageAffinityTest {
     public void RevokesResistance() {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
-
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -245,12 +203,6 @@ public class DamageAffinityTest {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
 
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);
 
@@ -278,12 +230,6 @@ public class DamageAffinityTest {
     public void RevokesVulnerability() {
         RPGLContext context = new DummyContext();
         SubeventState subevent = new(new DamageAffinity());
-
-        // skip over inherited steps
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
-        _ = subevent.Advance(context);
 
         var result = subevent.Advance(context);
         Assert.Equal((null, true), result);

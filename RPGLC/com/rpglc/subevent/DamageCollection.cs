@@ -1,5 +1,7 @@
 ﻿using com.rpglc.core;
+using com.rpglc.data.TO;
 using com.rpglc.json;
+using com.rpglc.math;
 
 namespace com.rpglc.subevent;
 
@@ -27,7 +29,54 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DamageCollection : Subevent, IDamageTypeSubevent {
 
-    public DamageCollection() : base("damage_collection") { }
+    int damageIndex = 0;
+
+    public DamageCollection() : base("damage_collection") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutJsonArray("damage_formulas", json.RemoveJsonArray("damage") ?? new());
+                json.PutJsonArray("damage", new());
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                JsonArray damageArray = json.GetJsonArray("damage_formulas") ?? new();
+                if (damageIndex < damageArray.Count()) {
+                    JsonObject damageJson = damageArray.GetJsonObject(damageIndex);
+                    damageIndex++;
+
+                    string? formula = damageJson.GetString("formula");
+                    if (formula == "number") {
+                        AdvanceNumber(damageJson);
+                    } else if (formula == "dice") {
+                        AdvanceDice(damageJson);
+                    } else if (formula == "modifier") {
+                        AdvanceModifier(damageJson, context);
+                    } else if (formula == "ability") {
+                        AdvanceAbility(damageJson, context);
+                    } else if (formula == "proficiency") {
+                        AdvanceProficiency(damageJson, context);
+                    } else if (formula == "level") {
+                        AdvanceLevel(damageJson);
+                    }
+                    return new() {
+                        dependency = this.dependency,
+                        stepCompleted = this.dependency is null && damageIndex == damageArray.Count(),
+                    };
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DamageCollection();
@@ -41,6 +90,149 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         clone.JoinSubeventData(jsonData);
         clone.appliedEffects.AddRange(appliedEffects);
         return clone;
+    }
+
+    public void AdvanceNumber(JsonObject bonusJson) {
+        AddDamage(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{bonusJson.GetLong("number")}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+    }
+
+    public void AdvanceDice(JsonObject bonusJson) {
+        AddDamage(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": 0,
+                "dice": {{Die.Unpack(bonusJson.GetJsonArray("dice"))}},
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
+    }
+
+    public void AdvanceModifier(JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new(new CalculateAbilityScore()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{bonusJson.GetString("ability")}}"
+                    }
+                    """))
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject));
+            damageIndex--;
+        } else {
+            AddDamage(new JsonObject().LoadFromString($$"""
+                {
+                    "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculationSubevent).Get())}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
+                }
+                """));
+            dependency = null;
+        }
+    }
+
+    public void AdvanceAbility(JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new(new CalculateAbilityScore()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}},
+                        "ability": "{{bonusJson.GetString("ability")}}"
+                    }
+                    """))
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject));
+            damageIndex--;
+        } else {
+            AddDamage(new JsonObject().LoadFromString($$"""
+                {
+                    "bonus": {{(dependency.subevent as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
+                }
+                """));
+            dependency = null;
+        }
+    }
+
+    public void AdvanceProficiency(JsonObject bonusJson, RPGLContext context) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
+        if (this.dependency is null) {
+            this.dependency = new(new CalculateProficiencyBonus()
+                .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                    {
+                        "tags": {{rpglObject.GetTags()}}
+                    }
+                    """))
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject));
+            damageIndex--;
+        } else {
+            AddDamage(new JsonObject().LoadFromString($$"""
+                {
+                    "bonus": {{(dependency.subevent as CalculationSubevent).Get()}},
+                    "dice": [ ],
+                    "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                    {
+                        "numerator": 1,
+                        "denominator": 1,
+                        "round_up": false
+                    }
+                    """}}
+                }
+                """));
+            dependency = null;
+        }
+    }
+
+    public void AdvanceLevel(JsonObject bonusJson) {
+        RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
+        string classDatapackId = bonusJson.GetString("class") ?? "*";
+
+        AddDamage(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{(classDatapackId == "*" ? rpglObject.GetLevel() : rpglObject.GetLevel(classDatapackId))}},
+                "dice": [ ],
+                "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
+                {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
+                }
+                """}}
+            }
+            """));
     }
 
     public override DamageCollection? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
