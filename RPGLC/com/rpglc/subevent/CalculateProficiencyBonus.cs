@@ -20,7 +20,19 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CalculateProficiencyBonus : CalculationSubevent {
     
-    public CalculateProficiencyBonus() : base("calculate_proficiency_bonus") { }
+    public CalculateProficiencyBonus() : base("calculate_proficiency_bonus") {
+        subeventSteps.AddRange([
+            (context) => {
+                SetBase(GetTarget().GetProficiencyBonus() ?? GetSource().GetProficiencyBonusByLevel());
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new CalculateProficiencyBonus();
