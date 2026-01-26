@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -18,7 +19,46 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class HealingDelivery : Subevent {
 
-    public HealingDelivery() : base("healing_delivery") { }
+    public HealingDelivery() : base("healing_delivery") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("healing", new JsonArray());
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Running,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetTarget();
+                dependency = new(new CalculateMaximumHitPoints()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetTarget();
+                long health = rpglObject.GetHealthCurrent() + GetHealing();
+                long maximumHitPoints = (dependency.subevent as CalculateMaximumHitPoints).Get();
+                rpglObject.SetHealthCurrent(Math.Min(health, maximumHitPoints));
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new HealingDelivery();

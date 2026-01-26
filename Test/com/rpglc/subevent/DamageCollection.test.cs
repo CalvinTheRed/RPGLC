@@ -145,12 +145,7 @@ public class DamageCollectionTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateAbilityScore)
-            .SetBase(strScore)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(strScore);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -207,12 +202,7 @@ public class DamageCollectionTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateAbilityScore)
-            .SetBase(strScore)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(strScore);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -268,12 +258,7 @@ public class DamageCollectionTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateProficiencyBonus)
-            .SetBase(proficiencyBonus)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(proficiencyBonus);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);

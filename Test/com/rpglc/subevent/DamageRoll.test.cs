@@ -1,9 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.runtime;
-using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
@@ -33,7 +31,7 @@ public class DamageRollTest {
                             "damage_type": "fire",
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 3 ] }
+                                { "size": 6, "determined": [ 3, -1 ] }
                             ]
                         }
                     ]
@@ -49,7 +47,9 @@ public class DamageRollTest {
                 "damage_type": "fire",
                 "dice": [
                   {
-                    "determined": [ ],
+                    "determined": [
+                      -1
+                    ],
                     "roll": 3,
                     "size": 6
                   }

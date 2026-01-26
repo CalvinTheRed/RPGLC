@@ -36,12 +36,7 @@ public class CalculateArmorClassTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateAbilityScore)
-            .SetBase(dexScore)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(dexScore);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);

@@ -73,12 +73,7 @@ public class CalculateDifficultyClassTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateAbilityScore)
-            .SetBase(wisScore)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(wisScore);
 
         result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateProficiencyBonus);
@@ -86,12 +81,7 @@ public class CalculateDifficultyClassTest {
         Assert.Equal(8L + 1L, (subevent.subevent as CalculateDifficultyClass).Get());
 
         (result.subevent.subevent as CalculateProficiencyBonus)
-            .SetBase(proficiencyBonus)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(proficiencyBonus);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);

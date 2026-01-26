@@ -10,6 +10,7 @@ public abstract class CalculationSubevent : Subevent {
     private int bonusIndex = 0;
 
     public CalculationSubevent(string subeventId) : base(subeventId) {
+        json.PutIfAbsent("bonuses", new JsonArray());
         this.subeventSteps.AddRange([
             (context) => {
                 json.PutIfAbsent("base", new JsonObject().LoadFromString("""

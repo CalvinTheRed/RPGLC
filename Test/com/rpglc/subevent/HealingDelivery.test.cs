@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -10,110 +11,108 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class HealingDeliveryTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        HealingDelivery healingDelivery = new HealingDelivery()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new HealingDelivery());
 
-        Assert.Equal("""[]""", healingDelivery.json.GetJsonArray("healing").ToString());
+        var result = subevent.Advance(context);
+        Assert.Equal((null, false), result);
+        Assert.Empty(subevent.subevent.json.GetJsonArray("healing").AsList());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "maximizes healing dice")]
-    public void MaximizesHealingDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        HealingDelivery healingDelivery = new HealingDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "delivers healing (all)")]
+    public void DeliversHealingAll() {
+        long healing = 10L;
+        long maximumHitPoints = 100L;
+        long currentHitPoints = 50L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetHealthBase(maximumHitPoints)
+            .SetHealthCurrent(currentHitPoints);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new HealingDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "healing": [
                         {
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ -1 ] }
-                            ]
-                        },
-                        {
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ -1 ] }
-                            ]
+                            "bonus": {{healing}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        healingDelivery.MaximizeHealingDice();
+        // skip over preparatory step
+        _ = subevent.Advance(context);
 
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ]
-              },
-              {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ]
-              }
-            ]
-            """,
-            healingDelivery.json.GetJsonArray("healing").PrettyPrint()
-        );
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateMaximumHitPoints);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateMaximumHitPoints)
+            .SetBase(maximumHitPoints));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(currentHitPoints + healing, rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "gets healing")]
-    public void GetsHealing() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        HealingDelivery healingDelivery = new HealingDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "delivers healing (some)")]
+    public void DeliversHealingSome() {
+        long healing = 100L;
+        long maximumHitPoints = 100L;
+        long currentHitPoints = 50L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetHealthBase(maximumHitPoints)
+            .SetHealthCurrent(currentHitPoints);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new HealingDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "healing": [
                         {
-                            "bonus": 1,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] },
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ]
-                        },
-                        {
-                            "bonus": 1,
-                            "dice": [
-                                { "roll": 3, "size": 6, "determined": [ ] }
-                            ]
+                            "bonus": {{healing}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.Equal(1 + 3 + 3 + 1 + 3, healingDelivery.GetHealing());
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateMaximumHitPoints);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateMaximumHitPoints)
+            .SetBase(maximumHitPoints));
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(maximumHitPoints, rpglObject.GetHealthCurrent());
     }
 
 };

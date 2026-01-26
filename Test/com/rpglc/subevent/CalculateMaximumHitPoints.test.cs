@@ -48,12 +48,7 @@ public class CalculateMaximumHitPointsTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateAbilityScore)
-            .SetBase(conScore)
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "bonuses": [ ]
-                }
-                """));
+            .SetBase(conScore);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);
