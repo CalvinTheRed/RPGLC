@@ -78,7 +78,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
                     }
                 }
                 json.PutJsonObject("damage", damageWithAffinity);
-                GetTarget().ReceiveDamage(this, context);
+                GetTarget().ReceiveDamage(this);
 
                 dependency = null;
 
@@ -154,7 +154,7 @@ public class DamageDelivery : Subevent, IDamageTypeSubevent {
             }
         }
         json.PutJsonObject("damage", damageWithAffinity);
-        GetTarget().ReceiveDamage(this, context);
+        GetTarget().ReceiveDamage(this);
 
         return this;
     }

@@ -29,7 +29,7 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DamageCollection : Subevent, IDamageTypeSubevent {
 
-    int damageIndex = 0;
+    private int damageIndex = 0;
 
     public DamageCollection() : base("damage_collection") {
         subeventSteps.AddRange([
@@ -95,6 +95,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
     public void AdvanceNumber(JsonObject bonusJson) {
         AddDamage(new JsonObject().LoadFromString($$"""
             {
+                "damage_type": "{{bonusJson.GetString("damage_type")}}",
                 "bonus": {{bonusJson.GetLong("number")}},
                 "dice": [ ],
                 "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
@@ -111,6 +112,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
     public void AdvanceDice(JsonObject bonusJson) {
         AddDamage(new JsonObject().LoadFromString($$"""
             {
+                "damage_type": "{{bonusJson.GetString("damage_type")}}",
                 "bonus": 0,
                 "dice": {{Die.Unpack(bonusJson.GetJsonArray("dice"))}},
                 "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
@@ -141,6 +143,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""
                 {
+                    "damage_type": "{{bonusJson.GetString("damage_type")}}",
                     "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculationSubevent).Get())}},
                     "dice": [ ],
                     "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
@@ -173,6 +176,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""
                 {
+                    "damage_type": "{{bonusJson.GetString("damage_type")}}",
                     "bonus": {{(dependency.subevent as CalculationSubevent).Get()}},
                     "dice": [ ],
                     "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
@@ -204,6 +208,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""
                 {
+                    "damage_type": "{{bonusJson.GetString("damage_type")}}",
                     "bonus": {{(dependency.subevent as CalculationSubevent).Get()}},
                     "dice": [ ],
                     "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""
@@ -225,6 +230,7 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
 
         AddDamage(new JsonObject().LoadFromString($$"""
             {
+                "damage_type": "{{bonusJson.GetString("damage_type")}}",
                 "bonus": {{(classDatapackId == "*" ? rpglObject.GetLevel() : rpglObject.GetLevel(classDatapackId))}},
                 "dice": [ ],
                 "scale": {{bonusJson.GetJsonObject("scale")?.ToString() ?? $$"""

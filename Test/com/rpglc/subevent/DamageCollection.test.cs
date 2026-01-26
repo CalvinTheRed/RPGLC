@@ -33,6 +33,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "number",
                             "number": 10
                         }
@@ -49,6 +50,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": 10,
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -68,6 +70,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "dice",
                             "dice": [
                                 { "count": 1, "size": 6, "determined": [ 3 ] }
@@ -86,6 +89,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": 0,
+                "damage_type": "fire",
                 "dice": [
                   {
                     "determined": [
@@ -119,6 +123,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "modifier",
                             "object": {
                                 "from": "subevent",
@@ -153,6 +158,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": 1,
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -179,6 +185,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "ability",
                             "object": {
                                 "from": "subevent",
@@ -213,6 +220,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": {{strScore}},
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -239,6 +247,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "proficiency",
                             "object": {
                                 "from": "subevent",
@@ -272,6 +281,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": {{proficiencyBonus}},
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -315,6 +325,7 @@ public class DamageCollectionTest {
                 {
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "level",
                             "object": {
                                 "from": "subevent",
@@ -323,6 +334,7 @@ public class DamageCollectionTest {
                             "class": "test:dummy"
                         },
                         {
+                            "damage_type": "fire",
                             "formula": "level",
                             "object": {
                                 "from": "subevent",
@@ -344,6 +356,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": {{firstClassLevel}},
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -360,6 +373,7 @@ public class DamageCollectionTest {
             [
               {
                 "bonus": {{firstClassLevel}},
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -369,6 +383,7 @@ public class DamageCollectionTest {
               },
               {
                 "bonus": {{firstClassLevel + secondClassLevel}},
+                "damage_type": "fire",
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,

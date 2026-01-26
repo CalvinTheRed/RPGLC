@@ -635,16 +635,16 @@ public class RPGLObject : TaggableContent {
             .Get();
     }
 
-    public void ReceiveDamage(DamageDelivery damageDelivery, RPGLContext context) {
+    public void ReceiveDamage(DamageDelivery damageDelivery) {
         JsonObject damageJson = damageDelivery.GetDamage();
         long damage = 0L;
         foreach (string key in damageJson.AsDict().Keys) {
             damage += (long) damageJson.GetLong(key);
         }
-        ReduceHitPoints(damage, context);
+        ReduceHitPoints(damage);
     }
 
-    private void ReduceHitPoints(long damage, RPGLContext context) {
+    private void ReduceHitPoints(long damage) {
         long temporaryHitPoints = GetTemporaryHitPoints();
         long currentHitPoints = GetHealthCurrent();
         if (damage >= temporaryHitPoints) {

@@ -66,6 +66,9 @@ public abstract class Subevent {
 
     public virtual Subevent JoinSubeventData(JsonObject other) {
         json.Join(other);
+        if (!GetTags().Contains(subeventId)) {
+            AddTag(subeventId);
+        }
         return this;
     }
 
