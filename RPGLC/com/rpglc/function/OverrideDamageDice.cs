@@ -87,14 +87,15 @@ public class OverrideDamageDice : Function {
         RPGLObject rpglObject = RPGLEffect.GetObject(rpglEffect, damageRoll, functionJson.SeekJsonObject("override.object"));
         if (this.dependency is null) {
             this.dependency = new CalculateAbilityScore()
+                .SetOriginItem(rpglEffect.GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{functionJson.SeekString("override.ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject);
+                    """));
         } else {
             string damageType = functionJson.SeekString("override.damage_type") ?? "*";
 

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -10,25 +11,21 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class DamageRollTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares default")]
-    public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll());
 
-        Assert.Equal("""[]""", damageRoll.GetDamage().ToString());
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Empty((subevent.subevent as DamageRoll).GetDamage().AsList());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "prepares damage")]
-    public void PreparesDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "rolls damage")]
+    public void RollsDamage() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -41,10 +38,10 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
         Assert.Equal("""
             [
               {
@@ -59,18 +56,14 @@ public class DamageRollTest {
                 ]
               }
             ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
+            """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "includes damage type")]
-    public void IncludesDamageType() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "does include damage type")]
+    public void DoesIncludeDamageType() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -83,21 +76,18 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.True(damageRoll.IncludesDamageType("fire"));
-        Assert.False(damageRoll.IncludesDamageType("cold"));
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.True((subevent.subevent as DamageRoll).IncludesDamageType("fire"));
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls typed damage dice")]
-    public void RerollsTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "does not include damage type")]
+    public void DoesNotIncludeDamageType() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -105,9 +95,32 @@ public class DamageRollTest {
                             "damage_type": "fire",
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 4, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
+                                { "size": 6, "determined": [ 3 ] }
+                            ]
+                        }
+                    ]
+                }
+                """)));
+
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.False((subevent.subevent as DamageRoll).IncludesDamageType("cold"));
+    }
+
+    [DieTestingMode]
+    [Fact(DisplayName = "rerolls damage dice (typed)")]
+    public void RerollsDamageDiceTyped() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "bonus": 1,
+                            "dice": [
+                                { "size": 6, "determined": [ 3, 6, -1 ] },
+                                { "size": 6, "determined": [ 3, 6, -1 ] }
                             ]
                         },
                         {
@@ -119,11 +132,12 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        damageRoll.RerollDamageDice("fire", 2, 5);
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageRoll).RerollDamageDice("fire", 1, 6);
 
         Assert.Equal("""
             [
@@ -135,14 +149,7 @@ public class DamageRollTest {
                     "determined": [
                       -1
                     ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
+                    "roll": 6,
                     "size": 6
                   },
                   {
@@ -168,18 +175,14 @@ public class DamageRollTest {
                 ]
               }
             ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
+            """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "rerolls wild card damage dice")]
-    public void RerollsWildCardDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "rerolls damage dice (untyped)")]
+    public void RerollsDamageDiceUntyped() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -187,6 +190,7 @@ public class DamageRollTest {
                             "damage_type": "fire",
                             "bonus": 1,
                             "dice": [
+                                { "size": 6, "determined": [ 3, 6, -1 ] },
                                 { "size": 6, "determined": [ 3, 6, -1 ] }
                             ]
                         },
@@ -199,11 +203,12 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        damageRoll.RerollDamageDice("*", 1, 6);
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageRoll).RerollDamageDice("*", 1, 6);
 
         Assert.Equal("""
             [
@@ -211,6 +216,13 @@ public class DamageRollTest {
                 "bonus": 1,
                 "damage_type": "fire",
                 "dice": [
+                  {
+                    "determined": [
+                      -1
+                    ],
+                    "roll": 6,
+                    "size": 6
+                  },
                   {
                     "determined": [
                       -1
@@ -234,18 +246,14 @@ public class DamageRollTest {
                 ]
               }
             ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
+            """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets typed damage dice")]
-    public void SetsTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "maximizes damage dice (typed)")]
+    public void MaximizesDamageDiceTyped() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -253,9 +261,8 @@ public class DamageRollTest {
                             "damage_type": "fire",
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
                                 { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
+                                { "size": 6, "determined": [ 3, -1 ] }
                             ]
                         },
                         {
@@ -267,25 +274,12 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        damageRoll.OverrideDamageDice(
-            new(),
-            new JsonObject().LoadFromString("""
-                {
-                    "damage_type": "fire",
-                    "lower_bound": 2,
-                    "upper_bound": 5,
-                    "override": {
-                        "formula": "number",
-                        "number": 6
-                    }
-                }
-                """),
-            new DummyContext()
-        );
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as DamageRoll).MaximizeDamageDice("fire");
 
         Assert.Equal("""
             [
@@ -293,13 +287,6 @@ public class DamageRollTest {
                 "bonus": 1,
                 "damage_type": "fire",
                 "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
                   {
                     "determined": [
                       -1
@@ -330,18 +317,14 @@ public class DamageRollTest {
                 ]
               }
             ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
+            """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "sets wild card damage dice")]
-    public void SetsWildCardDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
+    [Fact(DisplayName = "maximizes damage dice (untyped)")]
+    public void MaximizesDamageDiceUntyped() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "damage": [
@@ -349,6 +332,7 @@ public class DamageRollTest {
                             "damage_type": "fire",
                             "bonus": 1,
                             "dice": [
+                                { "size": 6, "determined": [ 3, -1 ] },
                                 { "size": 6, "determined": [ 3, -1 ] }
                             ]
                         },
@@ -361,91 +345,12 @@ public class DamageRollTest {
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        damageRoll.OverrideDamageDice(
-            new(),
-            new JsonObject().LoadFromString("""
-                {
-                    "damage_type": "*",
-                    "lower_bound": 1,
-                    "upper_bound": 6,
-                    "override": {
-                        "formula": "number",
-                        "number": 5
-                    }
-                }
-                """),
-            new DummyContext()
-        );
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
 
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "damage_type": "fire",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 5,
-                    "size": 6
-                  }
-                ]
-              },
-              {
-                "bonus": 1,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 5,
-                    "size": 6
-                  }
-                ]
-              }
-            ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "maximizes typed damage dice")]
-    public void MaximizesTypedDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] }
-                            ]
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] }
-                            ]
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
-
-        damageRoll.MaximizeDamageDice("fire");
+        (subevent.subevent as DamageRoll).MaximizeDamageDice("*");
 
         Assert.Equal("""
             [
@@ -459,66 +364,7 @@ public class DamageRollTest {
                     ],
                     "roll": 6,
                     "size": 6
-                  }
-                ]
-              },
-              {
-                "bonus": 1,
-                "damage_type": "cold",
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  }
-                ]
-              }
-            ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "maximizes wild card damage dice")]
-    public void MaximizesWildCardDamageDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageRoll damageRoll = new DamageRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] }
-                            ]
-                        },
-                        {
-                            "damage_type": "cold",
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] }
-                            ]
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
-
-        damageRoll.MaximizeDamageDice("*");
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "damage_type": "fire",
-                "dice": [
+                  },
                   {
                     "determined": [
                       -1
@@ -542,9 +388,7 @@ public class DamageRollTest {
                 ]
               }
             ]
-            """,
-            damageRoll.GetDamage().PrettyPrint()
-        );
+            """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
 };

@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.math;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -26,7 +27,20 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DamageRoll : Subevent, IDamageTypeSubevent {
 
-    public DamageRoll() : base("damage_roll") { }
+    public DamageRoll() : base("damage_roll") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("damage", new JsonArray());
+                Roll();
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Running,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DamageRoll();
@@ -109,6 +123,7 @@ public class DamageRoll : Subevent, IDamageTypeSubevent {
         }
     }
 
+    // TODO deprecated
     public void OverrideDamageDice(RPGLEffect rpglEffect, JsonObject functionJson, RPGLContext context) {
         string damageType = functionJson.GetString("damage_type") ?? "*";
         long lowerBound = functionJson.GetLong("lower_bound") ?? 0L;
