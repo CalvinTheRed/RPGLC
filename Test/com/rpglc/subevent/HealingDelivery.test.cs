@@ -61,7 +61,7 @@ public class HealingDeliveryTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateMaximumHitPoints)
-            .SetBase(maximumHitPoints));
+            .SetBase(maximumHitPoints);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);
@@ -108,7 +108,7 @@ public class HealingDeliveryTest {
         Assert.False(result.completed);
 
         (result.subevent.subevent as CalculateMaximumHitPoints)
-            .SetBase(maximumHitPoints));
+            .SetBase(maximumHitPoints);
 
         result = subevent.Advance(context);
         Assert.Equal((null, true), result);

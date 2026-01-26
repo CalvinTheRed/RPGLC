@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -40,6 +41,96 @@ public interface IVampiricSubevent {
         if (subevent is IVampiricSubevent) {
             GetVampirism(subevent).AddJsonObject(vampirismJson);
         }
+    }
+
+    // TODO do not allow vampirism from overkill damage
+    public static void AddVampirismSteps(Subevent subevent) {
+        subevent.subeventSteps.AddRange([
+            (context) => {
+                long vampiricHealing = 0L;
+
+                JsonArray vampirismArray = GetVampirism(subevent);
+                for (int i = 0; i < vampirismArray.Count(); i++) {
+                    JsonObject vampirismJson = vampirismArray.GetJsonObject(i);
+                    string vampiricDamageType = vampirismJson.GetString("damage_type") ?? "*";
+
+                    JsonObject damageByType = (subevent.dependency.subevent as DamageDelivery).GetDamage();
+                    vampiricHealing += CalculationSubevent.Scale(
+                        GetVampiricDamage(damageByType, vampiricDamageType),
+                        vampirismJson.GetJsonObject("scale") ?? new()
+                    );
+                }
+
+                RPGLObject rpglObject = subevent.GetSource();
+                subevent.dependency = new(new HealingCollection()
+                    .SetOriginItem(subevent.GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{subevent.GetTags()}},
+                            "healing": [
+                                {
+                                    "bonus": {{vampiricHealing}},
+                                    "dice": [ ],
+                                    "scale": {
+                                        "denominator": 1,
+                                        "numerator": 1,
+                                        "round_up": false
+                                    }
+                                }
+                            ]
+                        }
+                        """))
+                    .AddTag("vampiric"));
+
+                return new() {
+                    dependency = subevent.dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = subevent.GetSource();
+                subevent.dependency = new(new HealingRoll()
+                    .SetOriginItem(subevent.GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{subevent.GetTags()}},
+                            "healing": {{(subevent.dependency.subevent as HealingCollection).GetHealingCollection()}}
+                        }
+                        """))
+                    .AddTag("vampiric"));
+
+                return new() {
+                    dependency = subevent.dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = subevent.GetSource();
+                subevent.dependency = new(new HealingDelivery()
+                    .SetOriginItem(subevent.GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{subevent.GetTags()}},
+                            "healing": {{(subevent.dependency.subevent as HealingRoll).GetHealing()}}
+                        }
+                        """))
+                    .AddTag("vampiric"));
+
+                return new() {
+                    dependency = subevent.dependency,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
     }
 
     public static void HandleVampirism(Subevent subevent, JsonObject damageByType, RPGLContext context, JsonArray originPoint) {

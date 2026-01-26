@@ -1,12 +1,43 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.subevent;
 
 namespace com.rpglc.testutils.subevent;
 
 public class DummyVampiricSubevent : Subevent, IVampiricSubevent {
 
-    public DummyVampiricSubevent() : base("dummy_vampiric_subevent") { }
+    public DummyVampiricSubevent() : base("dummy_vampiric_subevent") {
+        subeventSteps.AddRange([
+            (context) => {
+                dependency = new(new DamageDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget()));
+                
+                json.PutIfAbsent("vampirism", new JsonArray().LoadFromString("""
+                    [
+                        {
+                            "damage_type": "necrotic",
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 2,
+                                "round_up": false
+                            }
+                        }
+                    ]
+                    """));
+
+                IVampiricSubevent.AddVampirismSteps(this);
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = SubeventState.Phase.Running,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         return this;
