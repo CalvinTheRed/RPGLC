@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -11,131 +12,35 @@ namespace com.rpglc.subevent;
 [RPGLInitTesting]
 public class DamageDeliveryTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new DamageDelivery());
 
-        Assert.Equal("""[]""", damageDelivery.json.GetJsonArray("damage").ToString());
-        Assert.Equal("all", damageDelivery.json.GetString("damage_proportion"));
+        var result = subevent.Advance(context);
+        Assert.Equal((null, false), result);
+        Assert.Empty(subevent.subevent.json.GetJsonArray("damage").AsList());
+        Assert.Equal("all", subevent.subevent.json.GetString("damage_proportion"));
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "delivers all damage")]
-    public void DeliversAllDamage() {
+    [Fact(DisplayName = "delivers damage (all)")]
+    public void DeliversDamageAll() {
+        long damage = 10L;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 10,
-                            "dice": [ ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "delivers half damage")]
-    public void DeliversHalfDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage_proportion": "half",
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 10,
-                            "dice": [ ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "delivers no damage")]
-    public void DeliversNoDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "damage_proportion": "none",
-                    "damage": [
-                        {
-                            "damage_type": "fire",
-                            "bonus": 10,
-                            "dice": [ ],
-                            "scale": {
-                                "numerator": 1,
-                                "denominator": 1,
-                                "round_up": false
-                            }
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraEffectsMock]
-    [Fact(DisplayName = "delivers immune damage")]
-    public void DeliversImmuneDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-
-        RPGLEffect damageImmunity = RPGLFactory.NewEffect("test:damage_immunity");
-        rpglObject.AddEffect(damageImmunity);
-
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
-
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": [
                         {
                             "damage_type": "fire",
-                            "bonus": 10,
+                            "bonus": {{damage}},
                             "dice": [ ],
                             "scale": {
                                 "numerator": 1,
@@ -143,37 +48,43 @@ public class DamageDeliveryTest {
                                 "round_up": false
                             }
                         }
-                    ]
+                    ],
+                    "damage_proportion": "all"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        // use default affinities
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - damage, rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [ExtraEffectsMock]
-    [Fact(DisplayName = "delivers resistance damage")]
-    public void DeliversResistanceDamage() {
+    [Fact(DisplayName = "delivers damage (half)")]
+    public void DeliversDamageHalf() {
+        long damage = 10L;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-
-        RPGLEffect damageResistance = RPGLFactory.NewEffect("test:damage_resistance");
-        rpglObject.AddEffect(damageResistance);
-
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
-
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": [
                         {
                             "damage_type": "fire",
-                            "bonus": 11,
+                            "bonus": {{damage}},
                             "dice": [ ],
                             "scale": {
                                 "numerator": 1,
@@ -181,37 +92,43 @@ public class DamageDeliveryTest {
                                 "round_up": false
                             }
                         }
-                    ]
+                    ],
+                    "damage_proportion": "half"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        // use default affinities
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - (damage / 2), rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [ExtraEffectsMock]
-    [Fact(DisplayName = "delivers vulnerability damage")]
-    public void DeliversVulnerabilityDamage() {
+    [Fact(DisplayName = "delivers damage (none)")]
+    public void DeliversDamageNone() {
+        long damage = 10L;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-
-        RPGLEffect damageResistance = RPGLFactory.NewEffect("test:damage_vulnerability");
-        rpglObject.AddEffect(damageResistance);
-
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
-
-        DamageDelivery damageDelivery = new DamageDelivery()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "damage": [
                         {
                             "damage_type": "fire",
-                            "bonus": 10,
+                            "bonus": {{damage}},
                             "dice": [ ],
                             "scale": {
                                 "numerator": 1,
@@ -219,15 +136,203 @@ public class DamageDeliveryTest {
                                 "round_up": false
                             }
                         }
-                    ]
+                    ],
+                    "damage_proportion": "none"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(1000 - 20, rpglObject.GetHealthCurrent());
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        // use default affinities
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - 0L, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "delivers damage (resisted)")]
+    public void DeliversDamageResisted() {
+        long damage = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "bonus": {{damage}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
+                        }
+                    ],
+                    "damage_proportion": "all"
+                }
+                """)));
+
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as DamageAffinity)
+            .GrantResistance("fire");
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - (damage / 2), rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "delivers damage (vulnerable)")]
+    public void DeliversDamageVulnerable() {
+        long damage = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "bonus": {{damage}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
+                        }
+                    ],
+                    "damage_proportion": "all"
+                }
+                """)));
+
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as DamageAffinity)
+            .GrantVulnerability("fire");
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - (damage * 2), rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "delivers damage (immune)")]
+    public void DeliversDamageImmune() {
+        long damage = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "bonus": {{damage}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
+                        }
+                    ],
+                    "damage_proportion": "all"
+                }
+                """)));
+
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as DamageAffinity)
+            .GrantImmunity("fire");
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - 0L, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "delivers damage (resisted, halved)")]
+    public void DeliversDamageResistedHalved() {
+        long damage = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+        SubeventState subevent = new(new DamageDelivery()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "bonus": {{damage}},
+                            "dice": [ ],
+                            "scale": {
+                                "numerator": 1,
+                                "denominator": 1,
+                                "round_up": false
+                            }
+                        }
+                    ],
+                    "damage_proportion": "half"
+                }
+                """)));
+
+        // skip over preparatory step
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageAffinity);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as DamageAffinity)
+            .GrantResistance("fire");
+
+        result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Equal(1000L - (damage / 2 / 2), rpglObject.GetHealthCurrent());
     }
 
 };

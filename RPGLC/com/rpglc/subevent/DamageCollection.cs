@@ -128,14 +128,15 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (this.dependency is null) {
             this.dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             damageIndex--;
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""
@@ -159,14 +160,15 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (this.dependency is null) {
             this.dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             damageIndex--;
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""
@@ -190,13 +192,14 @@ public class DamageCollection : Subevent, IDamageTypeSubevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (this.dependency is null) {
             this.dependency = new(new CalculateProficiencyBonus()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             damageIndex--;
         } else {
             AddDamage(new JsonObject().LoadFromString($$"""

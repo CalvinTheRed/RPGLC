@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -23,7 +24,72 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DamageDelivery : Subevent, IDamageTypeSubevent {
 
-    public DamageDelivery() : base("damage_delivery") { }
+    public DamageDelivery() : base("damage_delivery") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("damage", new JsonArray());
+                json.PutIfAbsent("damage_proportion", "all");
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Running,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                CalculateRawDamage();
+
+                dependency = new(new DamageAffinity()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """)
+                    ));
+
+                JsonObject damageJson = json.GetJsonObject("damage");
+                foreach (string key in damageJson.AsDict().Keys) {
+                    (dependency.subevent as DamageAffinity).AddDamageType(key);
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                DamageAffinity damageAffinity = dependency.subevent as DamageAffinity;
+                JsonObject damageJson = json.RemoveJsonObject("damage");
+                JsonObject damageWithAffinity = new();
+                foreach (string key in damageJson.AsDict().Keys) {
+                    if (!damageAffinity.IsImmune(key)) {
+                        long typedDamage = (long) damageJson.GetLong(key);
+                        if (damageAffinity.IsResistant(key)) {
+                            typedDamage /= 2;
+                        }
+                        if (damageAffinity.IsVulnerable(key)) {
+                            typedDamage *= 2;
+                        }
+                        damageWithAffinity.PutLong(key, typedDamage);
+                    }
+                }
+                json.PutJsonObject("damage", damageWithAffinity);
+                GetTarget().ReceiveDamage(this, context);
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DamageDelivery();

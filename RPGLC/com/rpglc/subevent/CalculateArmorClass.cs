@@ -25,11 +25,11 @@ public class CalculateArmorClass : CalculationSubevent {
             (context) => {
                 RPGLObject rpglObject = GetTarget();
                 dependency = new(new CalculateAbilityScore()
+                    .SetOriginItem(GetOriginItem())
                     .SetSource(rpglObject)
                     .SetTarget(rpglObject)
                     .JoinSubeventData(new JsonObject().LoadFromString("""
                         {
-                            "subevent": "calculate_ability_score",
                             "object": {
                                 "from": "subevent",
                                 "object": "target"

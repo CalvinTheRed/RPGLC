@@ -58,11 +58,11 @@ public class CalculateDifficultyClass : CalculationSubevent {
 
                 RPGLObject rpglObject = GetTarget();
                 dependency = new(new CalculateAbilityScore()
+                    .SetOriginItem(GetOriginItem())
                     .SetSource(rpglObject)
                     .SetTarget(rpglObject)
                     .JoinSubeventData(new JsonObject().LoadFromString($$"""
                         {
-                            "subevent": "calculate_ability_score",
                             "object": {
                                 "from": "subevent",
                                 "object": "target"
@@ -92,11 +92,11 @@ public class CalculateDifficultyClass : CalculationSubevent {
 
                 RPGLObject rpglObject = GetTarget();
                 dependency = new(new CalculateProficiencyBonus()
+                    .SetOriginItem(GetOriginItem())
                     .SetSource(rpglObject)
                     .SetTarget(rpglObject)
                     .JoinSubeventData(new JsonObject().LoadFromString("""
                         {
-                            "subevent": "calculate_proficiency_bonus",
                             "object": {
                                 "from": "subevent",
                                 "object": "target"
@@ -126,7 +126,7 @@ public class CalculateDifficultyClass : CalculationSubevent {
                 dependency = null;
 
                 return new() {
-                    dependency = dependency,
+                    dependency = null,
                     nextPhase = null,
                     stepCompleted = true,
                 };

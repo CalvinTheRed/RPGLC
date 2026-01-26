@@ -74,14 +74,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, baseJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{baseJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetBase(Scale(
                 RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculationSubevent).Get()),
@@ -102,14 +103,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, baseJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{baseJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetBase(Scale(
                 (dependency.subevent as CalculationSubevent).Get(),
@@ -130,13 +132,14 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, baseJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateProficiencyBonus()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetBase(Scale(
                 (dependency.subevent as CalculateProficiencyBonus).Get(),
@@ -237,14 +240,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             bonusIndex--;
         } else {
             AddBonus(new JsonObject().LoadFromString($$"""
@@ -268,14 +272,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{bonusJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             bonusIndex--;
         } else {
             AddBonus(new JsonObject().LoadFromString($$"""
@@ -299,13 +304,14 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, bonusJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateProficiencyBonus()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
             bonusIndex--;
         } else {
             AddBonus(new JsonObject().LoadFromString($$"""
@@ -373,14 +379,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, minimumJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetMinimum(Scale(
                 RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculationSubevent).Get()),
@@ -401,14 +408,15 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, minimumJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateAbilityScore()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}},
                         "ability": "{{minimumJson.GetString("ability")}}"
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetMinimum(Scale(
                 (dependency.subevent as CalculationSubevent).Get(),
@@ -429,13 +437,14 @@ public abstract class CalculationSubevent : Subevent {
         RPGLObject rpglObject = RPGLEffect.GetObject(null, this, minimumJson.GetJsonObject("object"));
         if (dependency is null) {
             dependency = new(new CalculateProficiencyBonus()
+                .SetOriginItem(GetOriginItem())
+                .SetSource(rpglObject)
+                .SetTarget(rpglObject)
                 .JoinSubeventData(new JsonObject().LoadFromString($$"""
                     {
                         "tags": {{rpglObject.GetTags()}}
                     }
-                    """))
-                .SetSource(rpglObject)
-                .SetTarget(rpglObject));
+                    """)));
         } else {
             SetMinimum(Scale(
                 (dependency.subevent as CalculateProficiencyBonus).Get(),
