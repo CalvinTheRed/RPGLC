@@ -217,7 +217,7 @@ public class HealingCollectionTest {
     [ClearRPGLAfterTest]
     [DefaultMock]
     [Fact(DisplayName = "uses healing (proficiency)")]
-    public void UseshealingProficiency() {
+    public void UsesHealingProficiency() {
         long proficiencyBonus = 6L;
 
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
