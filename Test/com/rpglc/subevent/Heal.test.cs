@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -12,28 +13,56 @@ public class HealTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        Heal heal = new Heal()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+    [Fact(DisplayName = "heals")]
+    public void Heals() {
+        long healing = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
+            .SetHealthCurrent(0L);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new Heal()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
                     "healing": [
                         {
                             "formula": "number",
-                            "number": 10
+                            "number": {{healing}}
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.Equal("""
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is HealingCollection);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_healing_collection"));
+        Assert.False(result.completed);
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is HealingRoll);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_healing_roll"));
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        Assert.Equal($$"""
             [
               {
-                "bonus": 10,
+                "bonus": {{healing}},
                 "dice": [ ],
                 "scale": {
                   "denominator": 1,
@@ -42,35 +71,66 @@ public class HealTest {
                 }
               }
             ]
-            """,
-            heal.json.GetJsonArray("healing").PrettyPrint());
-    }
+            """, subevent.subevent.json.GetJsonArray("healing").PrettyPrint());
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "heals")]
-    public void Heals() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .SetHealthCurrent(0L);
+        subevent.SetTargets([rpglObject]);
 
-        Heal heal = new Heal()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "healing": [
-                        {
-                            "formula": "number",
-                            "number": 10
-                        }
-                    ]
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is HealingCollection);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_healing_collection"));
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+        (dependency.subevent as HealingCollection).AddHealing(new JsonObject().LoadFromString($$"""
+            {
+                "bonus": {{healing}},
+                "dice": [ ],
+                "scale": {
+                    "numerator": 1,
+                    "denominator": 1,
+                    "round_up": false
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
+            }
+            """));
 
-        Assert.Equal(0 + 10, rpglObject.GetHealthCurrent());
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is HealingRoll);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_healing_roll"));
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is HealingDelivery);
+        Assert.True(result.completed);
+        Assert.Equal($$"""
+            [
+              {
+                "bonus": {{healing}},
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              },
+              {
+                "bonus": {{healing}},
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, subevent.subevent.json.GetJsonArray("healing").PrettyPrint());
     }
 
 };

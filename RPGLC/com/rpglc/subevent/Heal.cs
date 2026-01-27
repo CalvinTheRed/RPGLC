@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -26,7 +27,124 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class Heal : Subevent {
 
-    public Heal() : base("heal") { }
+    public Heal() : base("heal") {
+        subeventSteps.AddRange([
+            //
+            // pre-targeting steps
+            //
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new HealingCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "healing": {{json.GetJsonArray("healing")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_healing_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new HealingRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "healing": {{(dependency.subevent as HealingCollection).GetHealingCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_healing_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutJsonArray("healing", (dependency.subevent as HealingRoll).GetHealing());
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            //
+            // post-targeting steps
+            //
+            (context) => {
+                dependency = new(new HealingCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_healing_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                dependency = new(new HealingRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "healing": {{(dependency.subevent as HealingCollection).GetHealingCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_healing_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.GetJsonArray("healing").AsList().AddRange((dependency.subevent as HealingRoll).GetHealing().AsList());
+
+                dependency = new(new HealingDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "healing": {{json.GetJsonArray("healing")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new Heal();
