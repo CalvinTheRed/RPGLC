@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.math;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -21,7 +22,20 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class TemporaryHitPointRoll : Subevent {
 
-    public TemporaryHitPointRoll() : base("temporary_hit_point_roll") { }
+    public TemporaryHitPointRoll() : base("temporary_hit_point_roll") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("temporary_hit_points", new JsonArray());
+                Roll();
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Running,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new TemporaryHitPointRoll();

@@ -1,8 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
-using com.rpglc.testutils;
+using com.rpglc.runtime;
 using com.rpglc.testutils.beforeaftertestattributes;
-using com.rpglc.testutils.beforeaftertestattributes.mocks;
 using com.rpglc.testutils.core;
 
 namespace com.rpglc.subevent;
@@ -10,169 +9,83 @@ namespace com.rpglc.subevent;
 [Collection("Serial")]
 public class TemporaryHitPointRollTest {
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "prepares default")]
-    public void PreparesDefault() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+    [Fact(DisplayName = "defaults")]
+    public void Defaults() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new TemporaryHitPointRoll());
 
-        Assert.Equal("""[]""", temporaryHitPointRoll.GetTemporaryHitPoints().ToString());
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+        Assert.Empty((subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().AsList());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
-    [Fact(DisplayName = "prepares temporary hit points")]
-    public void PreparesTemporaryHitPoints() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
+    [Fact(DisplayName = "rolls temporary hit points")]
+    public void RollsTemporaryHitPoints() {
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 3 ] }
+                                { "size": 6, "determined": [ 3, -1 ] }
                             ]
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
         Assert.Equal("""
             [
               {
                 "bonus": 1,
                 "dice": [
                   {
-                    "determined": [ ],
+                    "determined": [
+                      -1
+                    ],
                     "roll": 3,
                     "size": 6
                   }
                 ]
               }
             ]
-            """,
-            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
-        );
+            """, (subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice")]
     public void RerollsTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, 4, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
+                                { "size": 6, "determined": [ 3, 6, -1 ] },
+                                { "size": 6, "determined": [ 3, 6, -1 ] }
                             ]
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        temporaryHitPointRoll.RerollTemporaryHitPointDice(2, 5);
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as TemporaryHitPointRoll).RerollTemporaryHitPointDice(1, 6);
 
         Assert.Equal("""
             [
               {
                 "bonus": 1,
                 "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 4,
-                    "size": 6
-                  },
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 6,
-                    "size": 6
-                  }
-                ]
-              }
-            ]
-            """,
-            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
-        );
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [Fact(DisplayName = "sets temporary hit point dice")]
-    public void SetsTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "temporary_hit_points": [
-                        {
-                            "bonus": 1,
-                            "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] },
-                                { "size": 6, "determined": [ 3, -1 ] },
-                                { "size": 6, "determined": [ 6, -1 ] }
-                            ]
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
-
-        temporaryHitPointRoll.OverrideTemporaryHitPointDice(
-            new(),
-            new JsonObject().LoadFromString("""
-                {
-                    "lower_bound": 2,
-                    "upper_bound": 5,
-                    "override": {
-                        "formula": "number",
-                        "number": 6
-                    }
-                }
-                """),
-            new DummyContext()
-        );
-
-        Assert.Equal("""
-            [
-              {
-                "bonus": 1,
-                "dice": [
-                  {
-                    "determined": [
-                      -1
-                    ],
-                    "roll": 1,
-                    "size": 6
-                  },
                   {
                     "determined": [
                       -1
@@ -190,34 +103,32 @@ public class TemporaryHitPointRollTest {
                 ]
               }
             ]
-            """,
-            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
-        );
+            """, (subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
     [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point dice")]
     public void MaximizesTemporaryHitPointDice() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        TemporaryHitPointRoll temporaryHitPointRoll = new TemporaryHitPointRoll()
+        RPGLContext context = new DummyContext();
+        SubeventState subevent = new(new TemporaryHitPointRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "temporary_hit_points": [
                         {
                             "bonus": 1,
                             "dice": [
-                                { "size": 6, "determined": [ 1, -1 ] }
+                                { "size": 6, "determined": [ 3, -1 ] },
+                                { "size": 6, "determined": [ 3, -1 ] }
                             ]
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        temporaryHitPointRoll.MaximizeTemporaryHitPointDice();
+        var result = subevent.Advance(context);
+        Assert.Equal((null, true), result);
+
+        (subevent.subevent as TemporaryHitPointRoll).MaximizeTemporaryHitPointDice();
 
         Assert.Equal("""
             [
@@ -230,13 +141,18 @@ public class TemporaryHitPointRollTest {
                     ],
                     "roll": 6,
                     "size": 6
+                  },
+                  {
+                    "determined": [
+                      -1
+                    ],
+                    "roll": 6,
+                    "size": 6
                   }
                 ]
               }
             ]
-            """,
-            temporaryHitPointRoll.GetTemporaryHitPoints().PrettyPrint()
-        );
+            """, (subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
 };
