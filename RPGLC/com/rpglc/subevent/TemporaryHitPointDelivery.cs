@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -18,7 +19,24 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class TemporaryHitPointDelivery : Subevent {
 
-    public TemporaryHitPointDelivery() : base("temporary_hit_point_delivery") { }
+    public TemporaryHitPointDelivery() : base("temporary_hit_point_delivery") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("temporary_hit_points", new JsonArray());
+                RPGLObject rpglObject = GetTarget();
+                long temporaryHitPoints = GetTemporaryHitPoints();
+                if (temporaryHitPoints > 0) {
+                    rpglObject.SetTemporaryHitPoints(temporaryHitPoints);
+                }
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new TemporaryHitPointDelivery();
