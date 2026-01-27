@@ -36,14 +36,20 @@ public class SubeventStateTest {
         Assert.Equal((null, false), result);
 
         // set targets
-        subevent.SetTargets([rpglObject]);
+        subevent.SetTargets([rpglObject, rpglObject]);
 
-        // spawn subevent clone per target
+        // spawn subevent clone for target
         result = subevent.Advance(context);
         Assert.Equal("dummy_subevent", result.subevent.subevent.subeventId);
         Assert.Equal(rpglObject, result.subevent.subevent.GetTarget());
         Assert.Equal(SubeventState.Phase.Running, result.subevent.phase);
-        Assert.True(result.completed);
+        Assert.False(result.completed);
+
+        // resume as running when one target remaining
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = true }, result);
+        Assert.Equal(rpglObject, subevent.subevent.GetTarget());
+        Assert.Equal(SubeventState.Phase.Completed, subevent.phase);
     }
 
 };

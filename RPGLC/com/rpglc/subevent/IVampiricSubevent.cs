@@ -223,8 +223,11 @@ public interface IVampiricSubevent {
                 vampiricDamage += (long) damageByType.GetLong(key);
             }
             return vampiricDamage;
+        } else if (damageByType.AsDict().ContainsKey(vampiricDamageType)) {
+            return (long) damageByType.GetLong(vampiricDamageType);
+        } else {
+            return 0L;
         }
-        return (long) damageByType.GetLong(vampiricDamageType);
     }
 
 };

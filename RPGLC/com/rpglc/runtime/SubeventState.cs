@@ -58,13 +58,17 @@ public class SubeventState(Subevent subevent) {
     public (SubeventState? subevent, bool completed) AdvanceTargeting(RPGLContext context) {
         if (targets.Count == 0) {
             return (null, false);
+        } else if (targets.Count == 1) {
+            subevent.SetTarget(targets.Pop());
+            phase = Phase.Running;
+            return AdvanceRunning(context);
         } else {
             SubeventState dependencySubevent = new(subevent.Clone());
             dependencySubevent.subevent.SetTarget(targets.Pop());
             dependencySubevent.phase = Phase.Running;
             dependencySubevent.stepIndex = stepIndex;
 
-            return (dependencySubevent, targets.Count == 0);
+            return (dependencySubevent, false);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -30,7 +31,128 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class DealDamage : Subevent, IVampiricSubevent {
 
-    public DealDamage() : base("deal_damage") { }
+    public DealDamage() : base("deal_damage") {
+        subeventSteps.AddRange([
+            //
+            // pre-targeting steps
+            //
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{(dependency.subevent as DamageCollection).GetDamageCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutJsonArray("damage", (dependency.subevent as DamageRoll).GetDamage());
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            //
+            // post-targeting steps
+            //
+            (context) => {
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                dependency = new(new DamageRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{(dependency.subevent as DamageCollection).GetDamageCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_damage_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.GetJsonArray("damage").AsList().AddRange((dependency.subevent as DamageRoll).GetDamage().AsList());
+
+                dependency = new(new DamageDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                if (json.AsDict().ContainsKey("vampirism")) {
+                    IVampiricSubevent.AddVampirismSteps(this);
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new DealDamage();
