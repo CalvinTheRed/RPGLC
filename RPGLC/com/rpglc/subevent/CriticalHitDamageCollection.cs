@@ -24,6 +24,8 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class CriticalHitDamageCollection : Subevent, IDamageTypeSubevent {
 
+    // TODO this class deprecated
+
     public CriticalHitDamageCollection() : base("critical_hit_damage_collection") {
         subeventSteps.AddRange([
             (context) => {

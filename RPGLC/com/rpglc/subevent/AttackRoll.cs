@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.function;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -19,7 +20,7 @@ namespace com.rpglc.subevent;
 ///     "damage": [
 ///       &lt;bonus formula&gt;
 ///     ],
-///     "withhold_damage_modifier": &lt;bool = false&gt;,
+///     "withhold_damage_modifier": &lt;bool = false&gt;, // TODO deprecated feature
 ///     "vampirism": [
 ///       &lt;vampirism formula&gt;
 ///     ],
@@ -66,7 +67,102 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
-    public AttackRoll() : base("attack_roll") { }
+    private int nestedSubeventIndex = 0;
+
+    public AttackRoll() : base("attack_roll") {
+        
+        // define bonuses and defaults before inherited steps
+        subeventSteps.Insert(0, (context) => {
+            json.PutIfAbsent("use_origin_ability", false);
+            json.PutIfAbsent("damage", new JsonArray());
+            json.PutIfAbsent("vampirism", new JsonArray());
+            json.PutIfAbsent("critical_hit_threshold", 20L);
+            json.PutIfAbsent("crit_on_hit", false);
+            json.PutIfAbsent("hit", new JsonArray());
+            json.PutIfAbsent("miss", new JsonArray());
+
+            // Add tag so nested subevents such as DamageCollection can know they
+            // hail from an attack roll made using a particular attack ability.
+            AddTag(GetAbility(context));
+
+            // Add tag so nested subevents such as DamageCollection can know they
+            // hail from an attack roll of a particular attack type.
+            AddTag(json.GetString("attack_type"));
+
+            // add bonuses for attack ability
+            // TODO add dependency step for attack ability
+            string asOrigin = json.GetBool("use_origin_ability")?.ToString().ToLower();
+            GetBonuses()
+                .AddJsonObject(new JsonObject().LoadFromString($$"""
+                    {
+                        "formula": "modifier",
+                        "ability": "{{GetAbility(context)}}",
+                        "object": {
+                            "from": "subevent",
+                            "object": "source",
+                            "as_origin": {{asOrigin}}
+                        }
+                    }
+                    """));
+
+            return new() {
+                dependency = null,
+                nextPhase = null,
+                stepCompleted = true,
+            };
+        });
+
+        subeventSteps.AddRange([
+            (context) => {
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                dependency = new(new CalculateCriticalHitThreshold()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "base": {
+                                "formula": "number",
+                                "number": {{json.GetLong("critical_hit_threshold")}}
+                            }
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                Roll();
+
+                bool isCriticalHit = GetBase() >= (dependency.subevent as CalculateCriticalHitThreshold).Get();
+                bool isCriticalMiss = GetBase() == 1L;
+                if (isCriticalHit) {
+                    AddCriticalConfirmationSteps();
+                } else if (isCriticalMiss) {
+                    AddNestedSubeventSteps("miss");
+                } else {
+                    AddArmorComparisonStep();
+                }
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new AttackRoll();
@@ -80,6 +176,231 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         clone.JoinSubeventData(jsonData);
         clone.appliedEffects.AddRange(appliedEffects);
         return clone;
+    }
+
+    public void AddArmorComparisonStep() {
+        subeventSteps.AddRange([
+            (context) => {
+                if (dependency is null) {
+                    dependency = new(new CalculateArmorClass()
+                        .SetOriginItem(GetOriginItem())
+                        .SetSource(GetSource())
+                        .SetTarget(GetTarget()));
+                } else {
+                    long armorClass = (dependency.subevent as CalculateArmorClass).Get();
+                    if (Get() < armorClass) {
+                        AddNestedSubeventSteps("miss");
+                    } else if (GetCritOnHit()) {
+                        AddCriticalConfirmationSteps();
+                    } else {
+                        AddHitSteps();
+                    }
+
+                    dependency = null;
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = dependency is null,
+                };
+            },
+        ]);
+    }
+
+    public void AddCriticalConfirmationSteps() {
+        subeventSteps.AddRange([
+            (context) => {
+                if (dependency is null) {
+                    dependency = new(new CriticalDamageConfirmation()
+                        .SetOriginItem(GetOriginItem())
+                        .SetSource(GetSource())
+                        .SetTarget(GetTarget()));
+                } else {
+                    AddHitSteps((dependency.subevent as CriticalDamageConfirmation).DealsCriticalDamage());
+                
+                    dependency = null;
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = dependency is null,
+                };
+            },
+        ]);
+    }
+
+    public void AddHitSteps(bool dealsCriticalDamage = false) {
+        subeventSteps.AddRange([
+            (context) => {
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutJsonArray("damage", (dependency.subevent as DamageCollection).GetDamageCollection());
+
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.GetJsonArray("damage").AsList().AddRange((dependency.subevent as DamageCollection).GetDamageCollection().AsList());
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+
+        if (dealsCriticalDamage) {
+            subeventSteps.AddRange([
+                (context) => {
+                    dependency = new(new DamageCollection()
+                        .SetOriginItem(GetOriginItem())
+                        .SetSource(GetSource())
+                        .SetTarget(GetTarget())
+                        .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                            {
+                                "tags": {{GetTags()}}
+                            }
+                            """))
+                        .AddTag("critical_damage_collection"));
+
+                    return new() {
+                        dependency = dependency,
+                        nextPhase = null,
+                        stepCompleted = true,
+                    };
+                },
+                (context) => {
+                    // double all dice in the existing recorded damage collection to reflect critical damage
+                    JsonArray damageArray = json.GetJsonArray("damage");
+                    for (int i = 0; i < damageArray.Count(); i++) {
+                        JsonObject damageJson = damageArray.GetJsonObject(i);
+                        JsonArray damageDice = damageJson.GetJsonArray("dice");
+                        damageDice.AsList().AddRange(damageDice.DeepClone().AsList());
+                    }
+
+                    json.GetJsonArray("damage").AsList().AddRange((dependency.subevent as DamageCollection).GetDamageCollection().AsList());
+
+                    dependency = null;
+
+                    return new() {
+                        dependency = null,
+                        nextPhase = null,
+                        stepCompleted = true,
+                    };
+                },
+            ]);
+        }
+
+        subeventSteps.AddRange([
+            (context) => {
+                dependency = new(new DamageRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                dependency = new(new DamageDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{(dependency.subevent as DamageRoll).GetDamage()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                bool isVampiric = !json.GetJsonArray("vampirism").IsEmpty();
+                if (isVampiric) {
+                    IVampiricSubevent.AddVampirismSteps(this);
+                }
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = isVampiric ? null : SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+
+        AddNestedSubeventSteps("hit");
+    }
+
+    public void AddNestedSubeventSteps(string resolution) {
+        if (!json.GetJsonArray(resolution).IsEmpty()) {
+            subeventSteps.AddRange([
+                (context) => {
+                    JsonArray nestedSubeventArray = json.GetJsonArray(resolution) ?? new();
+                    bool completed = nestedSubeventIndex == nestedSubeventArray.Count();
+
+                    if (!completed) {
+                        JsonObject nestedSubeventJson = nestedSubeventArray.GetJsonObject(nestedSubeventIndex);
+                        nestedSubeventIndex++;
+
+                        dependency = new(Subevent.Subevents[nestedSubeventJson.GetString("subevent")]
+                            .Clone(nestedSubeventJson)
+                            .SetOriginItem(GetOriginItem())
+                            .SetSource(GetSource())
+                            .SetTarget(GetTarget()));
+                    }
+
+                    return new() {
+                        dependency = dependency,
+                        nextPhase = nestedSubeventIndex == nestedSubeventArray.Count() ? SubeventState.Phase.Completed : null,
+                        stepCompleted = nestedSubeventIndex == nestedSubeventArray.Count(),
+                    };
+                }
+            ]);
+        }
     }
 
     public override AttackRoll? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {

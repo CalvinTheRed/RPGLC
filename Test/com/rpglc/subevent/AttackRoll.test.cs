@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -15,455 +16,858 @@ public class AttackRollTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares")]
-    public void Prepares() {
+    [Fact(DisplayName = "hits (does not deal critical damage)")]
+    public void HitsDoesNotDealCriticalDamage() {
+        long strScore = 12L;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee"
-                }
-                """))
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new AttackRoll()
             .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
-
-        Assert.False(attackRoll.json.GetBool("withhold_damage_modifier"));
-        Assert.False(attackRoll.json.GetBool("use_origin_ability"));
-        Assert.False(attackRoll.json.GetBool("crit_on_hit"));
-        Assert.True(attackRoll.HasTag("str"));
-        Assert.True(attackRoll.HasTag("melee"));
-        Assert.Equal("""[]""", attackRoll.json.GetJsonArray("damage").ToString());
-        Assert.Equal("""[]""", attackRoll.json.GetJsonArray("vampirism").ToString());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "hits")]
-    [DummyCounterManager]
-    public void Hits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = new AttackRoll()
+            .SetTarget(rpglObject)
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 19 ],
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "dice",
-                            "damage_type": "fire",
                             "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
                             ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
                         }
                     ],
+                    "determined": [ 19, -1 ],
                     "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "miss": [
                         {
                             "subevent": "dummy_subevent"
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
+                """)));
 
-        Assert.Equal(2, DummySubevent.Counter);
+        var result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.False(subevent.subevent.json.GetBool("use_origin_ability"));
+        Assert.Empty(subevent.subevent.json.GetJsonArray("vampirism").AsList());
+        Assert.Equal(20L, subevent.subevent.json.GetLong("critical_hit_threshold"));
+        Assert.False(subevent.subevent.json.GetBool("crit_on_hit"));
 
-        Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
+        // skip calculationsubevent default
+        _ = subevent.Advance(context);
+        
+        // skip advancebase
+        _ = subevent.Advance(context);
+        
+        // advancebonuses
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(strScore);
+        
+        _ = subevent.Advance(context);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 1,
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent.subevent as AttackRoll).GetBonuses().PrettyPrint());
+
+        // advanceminimum
+        _ = subevent.Advance(context);
+
+        // skip rollsubevent defaults
+        _ = subevent.Advance(context);
+
+        // enter targeting phase
+        _ = subevent.Advance(context);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateCriticalHitThreshold);
+        Assert.False(result.completed);
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(19L, (subevent.subevent as AttackRoll).GetBase());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateArmorClass);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, subevent.subevent.json.GetJsonArray("damage").PrettyPrint());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
+
+        Assert.Equal(1000L - 3L, rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DummyCounterManager]
+    [Fact(DisplayName = "hits (does deal critical damage)")]
+    public void HitsDoesDealCriticalDamage() {
+        long strScore = 12L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new AttackRoll()
+            .SetCritOnHit()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "formula": "dice",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
+                            ]
+                        }
+                    ],
+                    "determined": [ 19, -1 ]
+                }
+                """)));
+
+        var result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.False(subevent.subevent.json.GetBool("use_origin_ability"));
+        Assert.Empty(subevent.subevent.json.GetJsonArray("vampirism").AsList());
+        Assert.Equal(20L, subevent.subevent.json.GetLong("critical_hit_threshold"));
+        Assert.True(subevent.subevent.json.GetBool("crit_on_hit"));
+
+        // skip calculationsubevent default
+        _ = subevent.Advance(context);
+
+        // skip advancebase
+        _ = subevent.Advance(context);
+
+        // advancebonuses
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(strScore);
+
+        _ = subevent.Advance(context);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 1,
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent.subevent as AttackRoll).GetBonuses().PrettyPrint());
+
+        // advanceminimum
+        _ = subevent.Advance(context);
+
+        // skip rollsubevent defaults
+        _ = subevent.Advance(context);
+
+        // enter targeting phase
+        _ = subevent.Advance(context);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateCriticalHitThreshold);
+        Assert.False(result.completed);
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(19L, (subevent.subevent as AttackRoll).GetBase());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateArmorClass);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CriticalDamageConfirmation);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+        
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("critical_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  },
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, subevent.subevent.json.GetJsonArray("damage").PrettyPrint());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.True(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        Assert.Equal(1000L - 3L - 3L, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "crits (does deal critical damage)")]
+    public void CritsDoesDealCriticalDamage() {
+        long strScore = 12L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new AttackRoll()
+            .SetCritOnHit()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "formula": "dice",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
+                            ]
+                        }
+                    ],
+                    "determined": [ 20, -1 ]
+                }
+                """)));
+
+        var result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.False(subevent.subevent.json.GetBool("use_origin_ability"));
+        Assert.Empty(subevent.subevent.json.GetJsonArray("vampirism").AsList());
+        Assert.Equal(20L, subevent.subevent.json.GetLong("critical_hit_threshold"));
+        Assert.True(subevent.subevent.json.GetBool("crit_on_hit"));
+
+        // skip calculationsubevent default
+        _ = subevent.Advance(context);
+
+        // skip advancebase
+        _ = subevent.Advance(context);
+
+        // advancebonuses
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(strScore);
+
+        _ = subevent.Advance(context);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 1,
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent.subevent as AttackRoll).GetBonuses().PrettyPrint());
+
+        // advanceminimum
+        _ = subevent.Advance(context);
+
+        // skip rollsubevent defaults
+        _ = subevent.Advance(context);
+
+        // enter targeting phase
+        _ = subevent.Advance(context);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateCriticalHitThreshold);
+        Assert.False(result.completed);
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(20L, (subevent.subevent as AttackRoll).GetBase());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CriticalDamageConfirmation);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("critical_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  },
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, subevent.subevent.json.GetJsonArray("damage").PrettyPrint());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.True(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        Assert.Equal(1000L - 3L - 3L, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "crits (does not deal critical damage)")]
+    public void CritsDoesNotDealCriticalDamage() {
+        long strScore = 12L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new AttackRoll()
+            .SetCritOnHit()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str",
+                    "damage": [
+                        {
+                            "damage_type": "fire",
+                            "formula": "dice",
+                            "dice": [
+                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
+                            ]
+                        }
+                    ],
+                    "determined": [ 20, -1 ]
+                }
+                """)));
+
+        var result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.False(subevent.subevent.json.GetBool("use_origin_ability"));
+        Assert.Empty(subevent.subevent.json.GetJsonArray("vampirism").AsList());
+        Assert.Equal(20L, subevent.subevent.json.GetLong("critical_hit_threshold"));
+        Assert.True(subevent.subevent.json.GetBool("crit_on_hit"));
+
+        // skip calculationsubevent default
+        _ = subevent.Advance(context);
+
+        // skip advancebase
+        _ = subevent.Advance(context);
+
+        // advancebonuses
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(strScore);
+
+        _ = subevent.Advance(context);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 1,
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, (subevent.subevent as AttackRoll).GetBonuses().PrettyPrint());
+
+        // advanceminimum
+        _ = subevent.Advance(context);
+
+        // skip rollsubevent defaults
+        _ = subevent.Advance(context);
+
+        // enter targeting phase
+        _ = subevent.Advance(context);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateCriticalHitThreshold);
+        Assert.False(result.completed);
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(20L, (subevent.subevent as AttackRoll).GetBase());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CriticalDamageConfirmation);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+        (dependency.subevent as CriticalDamageConfirmation).SuppressCriticalDamage();
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("base_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.True(result.subevent.subevent.GetTags().Contains("target_damage_collection"));
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 0,
+                "damage_type": "fire",
+                "dice": [
+                  {
+                    "determined": [
+                      3,
+                      -1
+                    ],
+                    "size": 6
+                  }
+                ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
+                }
+              }
+            ]
+            """, subevent.subevent.json.GetJsonArray("damage").PrettyPrint());
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.True(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        Assert.Equal(1000L - 3L, rpglObject.GetHealthCurrent());
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
     [Fact(DisplayName = "misses")]
     public void Misses() {
+        long strScore = 12L;
+
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 2 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "miss": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(2, DummySubevent.Counter);
-
-        Assert.Equal(1000, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "critically hits")]
-    public void CriticallyHits() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 20 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [ ],
-                    "miss": [ ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "critically hits past armor")]
-    public void CriticallyHitsPastArmor() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        rpglObject.GetAbilityScores().PutLong("dex", 999L);
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 20 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [ ],
-                    "miss": [ ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "crits on hit")]
-    public void CritsOnHit() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 19 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [ ],
-                    "miss": [ ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .SetCritOnHit()
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
-
-        Assert.Equal(1000 - 1 - 3 - 3, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [ExtraEffectsMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "suppresses critical damage")]
-    public void SuppressesCriticalDamage() {
-        RPGLEffect rpglEffect = RPGLFactory.NewEffect("test:no_crits");
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .AddEffect(rpglEffect);
+        rpglObject.GetAbilityScores().PutLong("str", strScore);
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
 
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 20 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [ ],
-                    "miss": [ ]
-                }
-                """))
+        SubeventState subevent = new(new AttackRoll()
             .SetSource(rpglObject)
-            .Prepare(context, new())
             .SetTarget(rpglObject)
-            .Invoke(context, new());
-
-        Assert.Equal(1000 - 1 - 3, rpglObject.GetHealthCurrent());
-    }
-
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "critically misses")]
-    public void CriticallyMisses() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        AttackRoll attackRoll = (AttackRoll) new AttackRoll()
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
                     "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 1 ],
                     "damage": [
                         {
+                            "damage_type": "fire",
                             "formula": "dice",
-                            "damage_type": "fire",
                             "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
+                                { "count": 1, "size": 6, "determined": [ 3, -1 ] }
                             ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
                         }
                     ],
-                    "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
+                    "determined": [ 2, -1 ],
                     "miss": [
                         {
                             "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
                         }
                     ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddBonus(new JsonObject().LoadFromString("""
-                {
-                    "bonus": 100,
-                    "dice": [ ],
-                    "scale": {
-                        "numerator": 1,
-                        "denominator": 1,
-                        "round_up": false
-                    }
+                """)));
+
+        var result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.False(subevent.subevent.json.GetBool("use_origin_ability"));
+        Assert.Empty(subevent.subevent.json.GetJsonArray("vampirism").AsList());
+        Assert.Equal(20L, subevent.subevent.json.GetLong("critical_hit_threshold"));
+        Assert.False(subevent.subevent.json.GetBool("crit_on_hit"));
+
+        // skip calculationsubevent default
+        _ = subevent.Advance(context);
+
+        // skip advancebase
+        _ = subevent.Advance(context);
+
+        // advancebonuses
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        (result.subevent.subevent as CalculateAbilityScore)
+            .SetBase(strScore);
+
+        _ = subevent.Advance(context);
+        Assert.Equal("""
+            [
+              {
+                "bonus": 1,
+                "dice": [ ],
+                "scale": {
+                  "denominator": 1,
+                  "numerator": 1,
+                  "round_up": false
                 }
-                """))
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
+              }
+            ]
+            """, (subevent.subevent as AttackRoll).GetBonuses().PrettyPrint());
 
-        Assert.Equal(2, DummySubevent.Counter);
+        // advanceminimum
+        _ = subevent.Advance(context);
 
-        Assert.Equal(1000, rpglObject.GetHealthCurrent());
-    }
+        // skip rollsubevent defaults
+        _ = subevent.Advance(context);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DummyCounterManager]
-    [Fact(DisplayName = "critically misses past armor")]
-    public void CriticallyMissesPastArmor() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        rpglObject.GetAbilityScores().PutLong("str", 999L);
-        AttackRoll attackRoll = (AttackRoll) new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "str",
-                    "attack_type": "melee",
-                    "determined": [ 1 ],
-                    "damage": [
-                        {
-                            "formula": "dice",
-                            "damage_type": "fire",
-                            "dice": [
-                                { "count": 1, "size": 6, "determined": [ 3 ] }
-                            ]
-                        },
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ],
-                    "hit": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "miss": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new())
-            .AddBonus(new JsonObject().LoadFromString("""
-                {
-                    "bonus": 100,
-                    "dice": [ ],
-                    "scale": {
-                        "numerator": 1,
-                        "denominator": 1,
-                        "round_up": false
-                    }
-                }
-                """))
-            .SetTarget(rpglObject)
-            .Invoke(new DummyContext(), new());
+        // enter targeting phase
+        _ = subevent.Advance(context);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
 
-        Assert.Equal(2, DummySubevent.Counter);
+        subevent.SetTargets([rpglObject]);
 
-        Assert.Equal(1000, rpglObject.GetHealthCurrent());
-    }
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateCriticalHitThreshold);
+        Assert.False(result.completed);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [Fact(DisplayName = "uses origin attack ability")]
-    public void UsesOriginAttackAbility() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        originObject.GetAbilityScores().PutLong("int", 20);
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
 
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .SetOriginObject(originObject.GetUuid());
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(2L, (subevent.subevent as AttackRoll).GetBase());
 
-        RPGLContext context = new DummyContext()
-            .Add(originObject)
-            .Add(rpglObject);
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateArmorClass);
+        Assert.False(result.completed);
 
-        AttackRoll attackRoll = new AttackRoll()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "ability": "int",
-                    "attack_type": "melee",
-                    "use_origin_ability": true,
-                    "determined": [ 19 ],
-                    "damage": [
-                        {
-                            "formula": "number",
-                            "damage_type": "fire",
-                            "number": 1
-                        }
-                    ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new());
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
 
-        Assert.Equal(5, attackRoll.GetBonus());
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
 
-        attackRoll
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
 
-        Assert.Equal(1000 - 1 - 5, rpglObject.GetHealthCurrent());
+        Assert.Equal(1000L, rpglObject.GetHealthCurrent());
     }
 
 };
