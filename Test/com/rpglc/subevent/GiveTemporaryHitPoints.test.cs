@@ -8,11 +8,11 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class GiveTemporaryHitPointsTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "prepares")]
     public void Prepares() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
@@ -48,7 +48,6 @@ public class GiveTemporaryHitPointsTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "gives temporary hit points")]
     public void GivesTemporaryHitPoints() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);

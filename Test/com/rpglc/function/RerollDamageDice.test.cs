@@ -8,9 +8,9 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class RerollDamageDiceTest {
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls damage dice (default)")]
     public void RerollsDamageDiceDefault() {
         RPGLContext context = new DummyContext();
@@ -109,7 +109,6 @@ public class RerollDamageDiceTest {
             """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls damage dice (threshold)")]
     public void RerollsDamageDiceThreshold() {
         RPGLContext context = new DummyContext();
@@ -216,7 +215,6 @@ public class RerollDamageDiceTest {
             """, (subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls damage dice (typed)")]
     public void RerollsDamageDiceTyped() {
         RPGLContext context = new DummyContext();

@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.function;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -67,7 +68,205 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
-    public SavingThrow() : base("saving_throw") { }
+    int nestedSubeventIndex = 0;
+
+    public SavingThrow() : base("saving_throw") {
+        subeventSteps.AddRange([
+            //
+            // pre-targeting steps
+            //
+            (context) => {
+                json.PutIfAbsent("damage", new JsonArray());
+                json.PutIfAbsent("use_origin_difficulty_class_ability", false);
+                json.PutIfAbsent("pass", new JsonArray());
+                json.PutIfAbsent("fail", new JsonArray());
+
+                RPGLObject rpglObject = (bool) json.GetBool("use_origin_difficulty_class_ability")
+                        ? RPGL.GetRPGLObject(GetSource().GetOriginObject())
+                        : GetSource();
+                long? difficultyClass = GetDifficultyClass();
+                dependency = new(new CalculateDifficultyClass()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString(difficultyClass is null
+                        ? $$"""
+                        {
+                            "difficulty_class_ability": "{{json.GetString("difficulty_class_ability")}}",
+                            "tags": {{GetTags()}}
+                        }
+                        """
+                        : $$"""
+                        {
+                            "difficulty_class": {{difficultyClass}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutLong("difficulty_class", (dependency.subevent as CalculateDifficultyClass).Get());
+
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{(dependency.subevent as DamageCollection).GetDamageCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_damage_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutJsonArray("damage", (dependency.subevent as DamageRoll).GetDamage());
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            //
+            // post-targeting steps
+            //
+            (context) => {
+                RPGLObject rpglObject = GetTarget();
+                dependency = new(new CalculateAbilityScore()
+                    .SetOriginItem (GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData (new JsonObject().LoadFromString($$"""
+                        {
+                            "ability": "{{GetAbility(context)}}",
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{RPGLObject.GetAbilityModifierFromAbilityScore((dependency.subevent as CalculateAbilityScore).Get())}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_damage_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new DamageRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{(dependency.subevent as DamageCollection).GetDamageCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_damage_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                Roll();
+                string? resolution = GetDeterminedResolution();
+                long roll = Get();
+                long dc = (long) json.GetLong("difficulty_class");
+
+                bool pass;
+                if (resolution == "pass") {
+                    pass = true;
+                } else if (resolution == "fail") {
+                    pass = false;
+                } else {
+                    pass = roll >= dc;
+                }
+
+                if (pass) {
+                    AddPassSteps();
+                } else {
+                    AddFailSteps();
+                }
+
+                json.GetJsonArray("damage").AsList().AddRange((dependency.subevent as DamageRoll).GetDamage().AsList());
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new SavingThrow();
@@ -81,6 +280,99 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         clone.JoinSubeventData(jsonData);
         clone.appliedEffects.AddRange(appliedEffects);
         return clone;
+    }
+
+    public void AddPassSteps() {
+        subeventSteps.AddRange([
+            (context) => {
+                string damageProportion = json.GetString("damage_on_pass");
+                bool dealsVampiricDamage = false;
+                if (!Equals(damageProportion, "none")) {
+                    dependency = new(new DamageDelivery()
+                        .SetOriginItem(GetOriginItem())
+                        .SetSource(GetSource())
+                        .SetTarget(GetTarget())
+                        .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                            {
+                                "damage": {{json.GetJsonArray("damage")}},
+                                "damage_proportion": "{{damageProportion}}",
+                                "tags": {{GetTags()}}
+                            }
+                            """)));
+
+                    dealsVampiricDamage = json.AsDict().ContainsKey("vampirism");
+                    if (dealsVampiricDamage) {
+                        IVampiricSubevent.AddVampirismSteps(this);
+                    }
+                }
+
+                AddNestedSubeventSteps("pass");
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = dealsVampiricDamage || !json.GetJsonArray("pass").IsEmpty() ? null : SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+
+    public void AddFailSteps() {
+        subeventSteps.AddRange([
+            (context) => {
+                dependency = new(new DamageDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "damage": {{json.GetJsonArray("damage")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                bool isVampiric = json.AsDict().ContainsKey("vampirism");
+                if (isVampiric) {
+                    IVampiricSubevent.AddVampirismSteps(this);
+                }
+
+                AddNestedSubeventSteps("fail");
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = isVampiric || !json.GetJsonArray("fail").IsEmpty() ? null : SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
+    
+    public void AddNestedSubeventSteps(string resolution) {
+        if (!json.GetJsonArray(resolution).IsEmpty()) {
+            subeventSteps.AddRange([
+                (context) => {
+                    JsonArray nestedSubeventArray = json.GetJsonArray(resolution) ?? new();
+                    bool completed = nestedSubeventIndex == nestedSubeventArray.Count();
+
+                    if (!completed) {
+                        JsonObject nestedSubeventJson = nestedSubeventArray.GetJsonObject(nestedSubeventIndex);
+                        nestedSubeventIndex++;
+
+                        dependency = new(Subevent.Subevents[nestedSubeventJson.GetString("subevent")]
+                            .Clone(nestedSubeventJson)
+                            .SetOriginItem(GetOriginItem())
+                            .SetSource(GetSource())
+                            .SetTarget(GetTarget()));
+                    }
+
+                    return new() {
+                        dependency = dependency,
+                        nextPhase = nestedSubeventIndex == nestedSubeventArray.Count() ? SubeventState.Phase.Completed : null,
+                        stepCompleted = nestedSubeventIndex == nestedSubeventArray.Count(),
+                    };
+                }
+            ]);
+        }
     }
 
     public override SavingThrow? Invoke(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
@@ -168,6 +460,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
         return json.GetString("save_ability");
     }
 
+    // TODO function deprecated
     public long? GetDifficultyClass() {
         return json.GetLong("difficulty_class");
     }

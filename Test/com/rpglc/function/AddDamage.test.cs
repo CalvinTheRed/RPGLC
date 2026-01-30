@@ -10,6 +10,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class AddDamageTest {
 
     [Fact(DisplayName = "adds damage (number)")]
@@ -87,7 +88,6 @@ public class AddDamageTest {
             """, (subevent as DamageCollection).GetDamageCollection().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "adds damage (dice)")]
     public void AddsDamageDice() {
         RPGLContext context = new DummyContext();

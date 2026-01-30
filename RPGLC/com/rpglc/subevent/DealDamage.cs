@@ -141,13 +141,14 @@ public class DealDamage : Subevent, IVampiricSubevent {
                         }
                         """)));
 
-                if (json.AsDict().ContainsKey("vampirism")) {
+                bool isVampiric = json.AsDict().ContainsKey("vampirism");
+                if (isVampiric) {
                     IVampiricSubevent.AddVampirismSteps(this);
                 }
 
                 return new() {
                     dependency = dependency,
-                    nextPhase = null,
+                    nextPhase = isVampiric ? null : SubeventState.Phase.Completed,
                     stepCompleted = true,
                 };
             },

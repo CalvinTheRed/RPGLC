@@ -7,6 +7,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class DamageRollTest {
 
     [Fact(DisplayName = "defaults")]
@@ -19,7 +20,6 @@ public class DamageRollTest {
         Assert.Empty((subevent.subevent as DamageRoll).GetDamage().AsList());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls damage")]
     public void RollsDamage() {
         RPGLContext context = new DummyContext();
@@ -59,7 +59,6 @@ public class DamageRollTest {
             """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "does include damage type")]
     public void DoesIncludeDamageType() {
         RPGLContext context = new DummyContext();
@@ -83,7 +82,6 @@ public class DamageRollTest {
         Assert.True((subevent.subevent as DamageRoll).IncludesDamageType("fire"));
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "does not include damage type")]
     public void DoesNotIncludeDamageType() {
         RPGLContext context = new DummyContext();
@@ -107,7 +105,6 @@ public class DamageRollTest {
         Assert.False((subevent.subevent as DamageRoll).IncludesDamageType("cold"));
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls damage dice (typed)")]
     public void RerollsDamageDiceTyped() {
         RPGLContext context = new DummyContext();
@@ -178,7 +175,6 @@ public class DamageRollTest {
             """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls damage dice (untyped)")]
     public void RerollsDamageDiceUntyped() {
         RPGLContext context = new DummyContext();
@@ -249,7 +245,6 @@ public class DamageRollTest {
             """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes damage dice (typed)")]
     public void MaximizesDamageDiceTyped() {
         RPGLContext context = new DummyContext();
@@ -320,7 +315,6 @@ public class DamageRollTest {
             """, (subevent.subevent as DamageRoll).GetDamage().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes damage dice (untyped)")]
     public void MaximizesDamageDiceUntyped() {
         RPGLContext context = new DummyContext();

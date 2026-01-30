@@ -8,11 +8,11 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class GiveEffectTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
     [Fact(DisplayName = "gives effect")]
     public void GivesEffect() {
         RPGLObject source = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);

@@ -7,6 +7,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class HealingRollTest {
 
     [Fact(DisplayName = "defaults")]
@@ -19,7 +20,6 @@ public class HealingRollTest {
         Assert.Empty((subevent.subevent as HealingRoll).GetHealing().AsList());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls healing")]
     public void RollsHealing() {
         RPGLContext context = new DummyContext();
@@ -57,7 +57,6 @@ public class HealingRollTest {
             """, (subevent.subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice")]
     public void RerollsHealingDice() {
         RPGLContext context = new DummyContext();
@@ -106,7 +105,6 @@ public class HealingRollTest {
             """, (subevent.subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes healing dice")]
     public void MaximizesHealingDice() {
         RPGLContext context = new DummyContext();

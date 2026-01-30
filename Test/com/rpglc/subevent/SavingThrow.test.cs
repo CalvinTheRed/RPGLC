@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 using com.rpglc.testutils;
 using com.rpglc.testutils.beforeaftertestattributes;
 using com.rpglc.testutils.beforeaftertestattributes.mocks;
@@ -9,292 +10,940 @@ using com.rpglc.testutils.subevent;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 [RPGLInitTesting]
 public class SavingThrowTest {
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares generated difficulty class")]
-    public void PreparesGeneratedDifficultyClass() {
+    [Fact(DisplayName = "uses difficulty class (calculated)")]
+    public void UsesDifficultyClassCalculated() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "save_ability": "dex",
                     "difficulty_class_ability": "int"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.Equal("""[]""", savingThrow.json.GetJsonArray("damage").ToString());
-        Assert.False(savingThrow.json.GetBool("use_origin_difficulty_class_ability"));
-        Assert.Equal(8 + 2 + 0, savingThrow.GetDifficultyClass());
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.Equal($$"""
+            {
+              "bonuses": [ ],
+              "difficulty_class_ability": "int",
+              "source": "{{rpglObject.GetUuid()}}",
+              "subevent": "calculate_difficulty_class",
+              "tags": [
+                "calculate_difficulty_class",
+                "saving_throw"
+              ],
+              "target": "{{rpglObject.GetUuid()}}"
+            }
+            """, result.subevent.subevent.PrettyPrint());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares assigned difficulty class")]
-    public void PreparesAssignedDifficultyClass() {
+    [Fact(DisplayName = "uses difficulty class (assigned)")]
+    public void UsesDifficultyClassAssigned() {
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "save_ability": "dex",
-                    "difficulty_class": 15
+                    "difficulty_class": 12
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.Equal("""[]""", savingThrow.json.GetJsonArray("damage").ToString());
-        Assert.False(savingThrow.json.GetBool("use_origin_difficulty_class_ability"));
-        Assert.Equal(15, savingThrow.GetDifficultyClass());
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.Equal($$"""
+            {
+              "bonuses": [ ],
+              "difficulty_class": 12,
+              "source": "{{rpglObject.GetUuid()}}",
+              "subevent": "calculate_difficulty_class",
+              "tags": [
+                "calculate_difficulty_class",
+                "saving_throw"
+              ],
+              "target": "{{rpglObject.GetUuid()}}"
+            }
+            """, result.subevent.subevent.PrettyPrint());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [Fact(DisplayName = "prepares origin difficulty class")]
-    public void PreparesOriginDifficultyClass() {
-        RPGLObject originObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-        originObject.GetAbilityScores().PutLong("int", 20L);
-
+    [Fact(DisplayName = "uses difficulty class (as origin)")]
+    public void UsesDifficultyClassAsOrigin() {
+        RPGLObject origin = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID)
-            .SetOriginObject(originObject.GetUuid());
+            .SetOriginObject(origin.GetUuid());
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
             .JoinSubeventData(new JsonObject().LoadFromString("""
                 {
-                    "save_ability": "dex",
                     "difficulty_class_ability": "int",
                     "use_origin_difficulty_class_ability": true
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(new DummyContext(), new());
+                """)));
 
-        Assert.Equal("""[]""", savingThrow.json.GetJsonArray("damage").ToString());
-        Assert.Equal(8 + 2 + 5, savingThrow.GetDifficultyClass());
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.Equal($$"""
+            {
+              "bonuses": [ ],
+              "difficulty_class_ability": "int",
+              "source": "{{origin.GetUuid()}}",
+              "subevent": "calculate_difficulty_class",
+              "tags": [
+                "calculate_difficulty_class",
+                "saving_throw"
+              ],
+              "target": "{{origin.GetUuid()}}"
+            }
+            """, result.subevent.subevent.PrettyPrint());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "passes with half damage")]
-    public void PassesWithHalfDamage() {
+    [Fact(DisplayName = "passes (resolution determined)")]
+    public void PassesResolutionDetermined() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 1L;
+        long abilityScore = 10L;
+        
         RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
-
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "save_ability": "dex",
-                    "difficulty_class_ability": "int",
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "determined_resolution": "pass",
+                    "ability": "dex",
+                    "damage_on_pass": "all",
+                    "pass": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+        
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.False(result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "passes (resolution not determined)")]
+    public void PassesResolutionNotDetermined() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 20L;
+        long abilityScore = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "ability": "dex",
+                    "damage_on_pass": "all",
+                    "pass": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.False(result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "fails (resolution determined)")]
+    public void FailsResolutionDetermined() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 20L;
+        long abilityScore = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "determined_resolution": "fail",
+                    "ability": "dex",
+                    "fail": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.False(result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "fails (resolution not determined)")]
+    public void FailsResolutionNotDetermined() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 1L;
+        long abilityScore = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "ability": "dex",
+                    "fail": [
+                        {
+                            "subevent": "dummy_subevent"
+                        }
+                    ]
+                }
+                """)));
+
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.False(result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DummySubevent);
+        Assert.True(result.completed);
+    }
+
+    [ClearRPGLAfterTest]
+    [DefaultMock]
+    [Fact(DisplayName = "deals damage (all on fail)")]
+    public void DealsDamageAllOnFail() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 1L;
+        long abilityScore = 10L;
+        long damage = 10L;
+
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        RPGLContext context = new DummyContext()
+            .Add(rpglObject);
+
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                {
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "ability": "dex",
                     "damage": [
                         {
                             "formula": "number",
-                            "damage_type": "fire",
-                            "number": 10
+                            "number": {{damage}}
                         }
-                    ],
-                    "damage_on_pass": "half",
-                    "pass": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "fail": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "determined": [ 20 ]
+                    ]
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(2, DummySubevent.Counter);
-        Assert.Equal(1000 - 5, rpglObject.GetHealthCurrent());
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.True(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        Assert.Equal(1000L - damage, rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "passes with no damage")]
-    public void PassesWithNoDamage() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+    [Fact(DisplayName = "deals damage (half on pass)")]
+    public void DealsDamageHalfOnPass() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 20L;
+        long abilityScore = 10L;
+        long damage = 10L;
 
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "save_ability": "dex",
-                    "difficulty_class_ability": "int",
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "ability": "dex",
                     "damage": [
                         {
                             "formula": "number",
-                            "damage_type": "fire",
-                            "number": 10
+                            "number": {{damage}}
                         }
                     ],
-                    "damage_on_pass": "none",
-                    "pass": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "fail": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "determined": [ 20 ]
+                    "damage_on_pass": "half"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(2, DummySubevent.Counter);
-        Assert.Equal(1000 - 0, rpglObject.GetHealthCurrent());
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
+
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageDelivery);
+        Assert.True(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        Assert.Equal(1000L - (damage / 2), rpglObject.GetHealthCurrent());
     }
 
     [ClearRPGLAfterTest]
     [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "fails")]
-    public void Fails() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+    [Fact(DisplayName = "deals damage (none on pass)")]
+    public void DealsDamageNoneOnPass() {
+        long difficultyClass = 10L;
+        long savingThrowRoll = 20L;
+        long abilityScore = 10L;
+        long damage = 10L;
 
+        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
         RPGLContext context = new DummyContext()
             .Add(rpglObject);
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
+        SubeventState subevent = new(new SavingThrow()
+            .SetSource(rpglObject)
+            .SetTarget(rpglObject)
+            .JoinSubeventData(new JsonObject().LoadFromString($$"""
                 {
-                    "save_ability": "dex",
-                    "difficulty_class_ability": "int",
+                    "difficulty_class": {{difficultyClass}},
+                    "determined": [ {{savingThrowRoll}} ],
+                    "ability": "dex",
                     "damage": [
                         {
                             "formula": "number",
-                            "damage_type": "fire",
-                            "number": 10
+                            "number": {{damage}}
                         }
                     ],
-                    "pass": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "fail": [
-                        {
-                            "subevent": "dummy_subevent"
-                        },
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "determined": [ 1 ]
+                    "damage_on_pass": "none"
                 }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+                """)));
 
-        Assert.Equal(2, DummySubevent.Counter);
-        Assert.Equal(1000 - 10, rpglObject.GetHealthCurrent());
-    }
+        // skip inherited steps
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
+        _ = subevent.Advance(context);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "passes forcibly")]
-    public void PassesForcibly() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        var result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateDifficultyClass);
+        Assert.False(result.completed);
 
-        RPGLContext context = new DummyContext()
-            .Add(rpglObject);
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{difficultyClass}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "save_ability": "dex",
-                    "difficulty_class": 100,
-                    "damage": [ ],
-                    "damage_on_pass": "none",
-                    "pass": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "fail": [ ],
-                    "determined": [ 1 ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .Pass()
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+        Assert.Equal(difficultyClass, subevent.subevent.json.GetLong("difficulty_class"));
 
-        Assert.Equal(1, DummySubevent.Counter);
-    }
+        SubeventState dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
 
-    [ClearRPGLAfterTest]
-    [DefaultMock]
-    [DieTestingMode]
-    [DummyCounterManager]
-    [Fact(DisplayName = "fails forcibly")]
-    public void FailsForcibly() {
-        RPGLObject rpglObject = RPGLFactory.NewObject("test:dummy", TestUtils.USER_ID);
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
 
-        RPGLContext context = new DummyContext()
-            .Add(rpglObject);
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
 
-        SavingThrow savingThrow = new SavingThrow()
-            .JoinSubeventData(new JsonObject().LoadFromString("""
-                {
-                    "save_ability": "dex",
-                    "difficulty_class": 1,
-                    "damage": [ ],
-                    "damage_on_pass": "none",
-                    "pass": [ ],
-                    "fail": [
-                        {
-                            "subevent": "dummy_subevent"
-                        }
-                    ],
-                    "determined": [ 20 ]
-                }
-                """))
-            .SetSource(rpglObject)
-            .Prepare(context, new())
-            .Fail()
-            .SetTarget(rpglObject)
-            .Invoke(context, new());
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+        Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
+        subevent.SetTargets([rpglObject]);
 
-        Assert.Equal(1, DummySubevent.Counter);
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is CalculateAbilityScore);
+        Assert.False(result.completed);
+
+        result.subevent.subevent.JoinSubeventData(new JsonObject().LoadFromString($$"""
+            {
+                "base": {{abilityScore}},
+                "bonuses": [ ],
+                "minimum": 0
+            }
+            """));
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageCollection);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.True(result.subevent.subevent is DamageRoll);
+        Assert.False(result.completed);
+
+        dependency = result.subevent;
+        do {
+            result = dependency.Advance(context);
+        } while (!result.completed);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = true }, result);
+
+        Assert.Equal(1000L - 0L, rpglObject.GetHealthCurrent());
     }
 
 };

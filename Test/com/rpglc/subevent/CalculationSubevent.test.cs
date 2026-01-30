@@ -250,7 +250,6 @@ public class CalculationSubeventTest {
         Assert.Equal(10, (subevent.subevent as DummyCalculationSubevent).GetBonus());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "adds bonus dice")]
     public void AddsBonusDice() {
         long dieRoll = 3;

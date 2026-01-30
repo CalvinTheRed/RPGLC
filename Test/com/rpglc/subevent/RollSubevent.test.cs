@@ -8,6 +8,7 @@ using com.rpglc.testutils.subevent;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class RollSubeventTest {
 
     [Fact(DisplayName = "sets defaults")]
@@ -29,7 +30,6 @@ public class RollSubeventTest {
         Assert.Empty(subevent.subevent.json.GetJsonArray("determined").AsList());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls with advantage")]
     public void RollsWithAdvantage() {
         RPGLContext context = new DummyContext();
@@ -62,7 +62,6 @@ public class RollSubeventTest {
         Assert.Equal(-1L, subevent.subevent.json.GetJsonArray("determined").GetLong(0));
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls with disadvantage")]
     public void RollsWithDisadvantage() {
         RPGLContext context = new DummyContext();
@@ -95,7 +94,6 @@ public class RollSubeventTest {
         Assert.Equal(-1L, subevent.subevent.json.GetJsonArray("determined").GetLong(0));
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls with both advantage and disadvantage")]
     public void RollsWithBothAdvantageAndDisadvantage() {
         RPGLContext context = new DummyContext();
@@ -129,7 +127,6 @@ public class RollSubeventTest {
         Assert.Equal(-1L, subevent.subevent.json.GetJsonArray("determined").GetLong(0));
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls with neither advantage nor disadvantage")]
     public void RollsWithNeitherAdvantageNorDisadvantage() {
         RPGLContext context = new DummyContext();

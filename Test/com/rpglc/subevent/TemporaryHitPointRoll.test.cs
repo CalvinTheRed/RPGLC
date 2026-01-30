@@ -7,6 +7,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.subevent;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class TemporaryHitPointRollTest {
 
     [Fact(DisplayName = "defaults")]
@@ -19,7 +20,6 @@ public class TemporaryHitPointRollTest {
         Assert.Empty((subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().AsList());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rolls temporary hit points")]
     public void RollsTemporaryHitPoints() {
         RPGLContext context = new DummyContext();
@@ -57,7 +57,6 @@ public class TemporaryHitPointRollTest {
             """, (subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice")]
     public void RerollsTemporaryHitPointDice() {
         RPGLContext context = new DummyContext();
@@ -106,7 +105,6 @@ public class TemporaryHitPointRollTest {
             """, (subevent.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "maximizes temporary hit point dice")]
     public void MaximizesTemporaryHitPointDice() {
         RPGLContext context = new DummyContext();

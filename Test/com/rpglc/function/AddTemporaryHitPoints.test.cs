@@ -10,6 +10,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class AddTemporaryHitPointsTest {
 
     [Fact(DisplayName = "adds temporary hit points (number)")]
@@ -82,7 +83,6 @@ public class AddTemporaryHitPointsTest {
             """, (subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "adds temporary hit points (dice)")]
     public void AddsTemporaryHitPointsDice() {
         RPGLContext context = new DummyContext();

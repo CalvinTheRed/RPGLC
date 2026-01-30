@@ -10,6 +10,7 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class AddHealingTest {
 
     [Fact(DisplayName = "adds healing (number)")]
@@ -82,7 +83,6 @@ public class AddHealingTest {
             """, (subevent as HealingCollection).GetHealingCollection().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "adds healing (dice)")]
     public void AddsHealingDice() {
         RPGLContext context = new DummyContext();

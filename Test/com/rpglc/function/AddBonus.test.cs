@@ -11,6 +11,7 @@ using com.rpglc.testutils.subevent;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class AddBonusTest {
 
     [Fact(DisplayName = "adds bonus (number)")]
@@ -50,7 +51,6 @@ public class AddBonusTest {
         Assert.Equal(1 + 2, (subevent as CalculationSubevent).GetBonus());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "adds bonus (dice)")]
     public void AddsBonusDice() {
         RPGLContext context = new DummyContext();

@@ -234,10 +234,11 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
     public void AddHitSteps(bool dealsCriticalDamage = false) {
         subeventSteps.AddRange([
             (context) => {
+                RPGLObject rpglObject = GetSource();
                 dependency = new(new DamageCollection()
                     .SetOriginItem(GetOriginItem())
-                    .SetSource(GetSource())
-                    .SetTarget(GetTarget())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
                     .JoinSubeventData(new JsonObject().LoadFromString($$"""
                         {
                             "damage": {{json.GetJsonArray("damage")}},

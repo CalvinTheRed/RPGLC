@@ -8,9 +8,9 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class RerollHealingDiceTest {
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice (default)")]
     public void RerollsHealingDiceDefault() {
         RPGLContext context = new DummyContext();
@@ -105,7 +105,6 @@ public class RerollHealingDiceTest {
             """, (subevent as HealingRoll).GetHealing().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls healing dice (customized)")]
     public void RerollsHealingDiceCustomized() {
         RPGLContext context = new DummyContext();

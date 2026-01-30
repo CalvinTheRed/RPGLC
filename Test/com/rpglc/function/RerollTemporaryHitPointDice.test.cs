@@ -8,9 +8,9 @@ using com.rpglc.testutils.core;
 namespace com.rpglc.function;
 
 [Collection("Serial")]
+[DieTestingMode]
 public class RerollTemporaryHitPointDiceTest {
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice (default)")]
     public void RerollsTemporaryHitPointDiceDefault() {
         RPGLContext context = new DummyContext();
@@ -105,7 +105,6 @@ public class RerollTemporaryHitPointDiceTest {
             """, (subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().PrettyPrint());
     }
 
-    [DieTestingMode]
     [Fact(DisplayName = "rerolls temporary hit point dice (customized)")]
     public void RerollsTemporaryHitPointDiceCustomized() {
         RPGLContext context = new DummyContext();
