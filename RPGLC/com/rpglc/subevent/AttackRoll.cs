@@ -68,7 +68,7 @@ namespace com.rpglc.subevent;
 ///   </list>
 ///   
 /// </summary>
-public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
+public class AttackRoll : RollSubevent, IVampiricSubevent {
 
     private int nestedSubeventIndex = 0;
 
@@ -84,12 +84,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             json.PutIfAbsent("hit", new JsonArray());
             json.PutIfAbsent("miss", new JsonArray());
 
-            // Add tag so nested subevents such as DamageCollection can know they
-            // hail from an attack roll made using a particular attack ability.
-            AddTag(GetAbility(context));
-
-            // Add tag so nested subevents such as DamageCollection can know they
-            // hail from an attack roll of a particular attack type.
             AddTag(json.GetString("attack_type"));
 
             // add bonuses for attack ability
@@ -494,10 +488,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override AttackRoll SetTarget(RPGLObject target) {
         return (AttackRoll) base.SetTarget(target);
-    }
-
-    public string GetAbility(RPGLContext context) {
-        return json.GetString("ability");
     }
 
     public AttackRoll SetCritOnHit() {

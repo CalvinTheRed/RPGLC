@@ -16,7 +16,12 @@ public class RollSubeventTest {
     [Fact(DisplayName = "sets defaults")]
     public void SetsDefaults() {
         RPGLContext context = new DummyContext();
-        SubeventState subevent = new(new DummyRollSubevent());
+        SubeventState subevent = new(new DummyRollSubevent()
+            .JoinSubeventData(new JsonObject().LoadFromString("""
+                {
+                    "ability": "str"
+                }
+                """)));
 
         // skip over inherited steps
         _ = subevent.Advance(context);
@@ -30,6 +35,7 @@ public class RollSubeventTest {
         Assert.False(subevent.subevent.json.GetBool("has_advantage"));
         Assert.False(subevent.subevent.json.GetBool("has_disadvantage"));
         Assert.Empty(subevent.subevent.json.GetJsonArray("determined").AsList());
+        Assert.Contains("str", subevent.subevent.GetTags().AsList());
     }
 
     [Fact(DisplayName = "rolls with advantage")]

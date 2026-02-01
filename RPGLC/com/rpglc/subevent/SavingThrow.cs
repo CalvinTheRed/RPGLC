@@ -69,7 +69,7 @@ namespace com.rpglc.subevent;
 ///   </list>
 ///   
 /// </summary>
-public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
+public class SavingThrow : RollSubevent, IVampiricSubevent {
 
     int nestedSubeventIndex = 0;
 
@@ -450,10 +450,6 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override SavingThrow SetTarget(RPGLObject target) {
         return (SavingThrow) base.SetTarget(target);
-    }
-
-    public string GetAbility(RPGLContext context) {
-        return json.GetString("save_ability");
     }
 
     // TODO function deprecated

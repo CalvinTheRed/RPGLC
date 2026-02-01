@@ -5,14 +5,19 @@ using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
-public abstract class RollSubevent : CalculationSubevent {
+public abstract class RollSubevent : CalculationSubevent, IAbilitySubevent {
 
     public RollSubevent(string subeventId) : base(subeventId) {
         this.subeventSteps.AddRange([
             (context) => {
                 json.PutIfAbsent("determined", new JsonArray());
-                json.PutBool("has_advantage", false);
-                json.PutBool("has_disadvantage", false);
+                json.PutIfAbsent("has_advantage", false);
+                json.PutIfAbsent("has_disadvantage", false);
+                json.PutIfAbsent("has_expertise", false);
+                json.PutIfAbsent("has_half_proficiency", false);
+                json.PutIfAbsent("has_proficiency", false);
+
+                AddTag(GetAbility(context));
 
                 return new() {
                     dependency = null,
@@ -195,6 +200,10 @@ public abstract class RollSubevent : CalculationSubevent {
             }
         }
         return (RollSubevent) SetBase(baseDieRoll);
+    }
+
+    public string GetAbility(RPGLContext context) {
+        return json.GetString("ability");
     }
 
 };

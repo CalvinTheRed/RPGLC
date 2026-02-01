@@ -55,7 +55,7 @@ namespace com.rpglc.subevent;
 ///   </list>
 ///   
 /// </summary>
-public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
+public class AbilitySave : RollSubevent, IVampiricSubevent {
 
     int nestedSubeventIndex = 0;
 
@@ -65,9 +65,6 @@ public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             // pre-targeting steps
             //
             (context) => {
-                json.PutIfAbsent("has_expertise", false);
-                json.PutIfAbsent("has_proficiency", false);
-                json.PutIfAbsent("has_half_proficiency", false);
                 json.PutIfAbsent("damage", new JsonArray());
                 json.PutIfAbsent("use_origin_difficulty_class_ability", false);
                 json.PutIfAbsent("pass", new JsonArray());
@@ -443,10 +440,6 @@ public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                     .Invoke(context, originPoint, invokingEffect);
             }
         }
-    }
-
-    public string GetAbility(RPGLContext context) {
-        return json.GetString("save_ability");
     }
 
     private long? GetDifficultyClass() {

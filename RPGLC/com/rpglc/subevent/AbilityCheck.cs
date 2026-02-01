@@ -30,9 +30,13 @@ namespace com.rpglc.subevent;
 ///   </list>
 ///   
 /// </summary>
-public class AbilityCheck : RollSubevent, IAbilitySubevent {
+public class AbilityCheck : RollSubevent {
 
-    public AbilityCheck() : base("ability_check") { }
+    public AbilityCheck() : base("ability_check") {
+        subeventSteps.AddRange([
+            
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new AttackRoll();
@@ -157,10 +161,6 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
 
     public bool HasHalfProficiency() {
         return !GetExpertise() && !GetProficiency() && GetHalfProficiency();
-    }
-
-    public string GetAbility(RPGLContext context) {
-        return json.GetString("ability");
     }
 
     public string? GetSkill() {
