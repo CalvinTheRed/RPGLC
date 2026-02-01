@@ -5,27 +5,30 @@ using com.rpglc.subevent;
 namespace com.rpglc.function;
 
 /// <summary>
-///   Grants half proficiency to an ability check.
+///   Grants expertise to a roll subevent.
 ///   
 ///   <code>
 ///   {
-///     "function": "grant_skill_proficiency"
+///     "function": "grant_roll_expertise"
 ///   }
 ///   </code>
 ///   
 ///   <b>Compatible Subevents</b>
 ///   <list type="bullet">
 ///     <item>AbilityCheck</item>
+///     <item>AbilitySave</item>
+///     <item>AttackRoll</item>
+///     <item>SavingThrow</item>
 ///   </list>
 ///   
 /// </summary>
-public class GrantSkillProficiency: Function {
+public class GrantRollExpertise : Function {
 
-    public GrantSkillProficiency() : base("grant_skill_proficiency") {
+    public GrantRollExpertise() : base("grant_roll_expertise") {
         functionSteps.AddRange([
             (rpglEffect, subevent, functionJson, context) => {
-                if (subevent is AbilityCheck abilityCheck) {
-                    abilityCheck.GrantProficiency();
+                if (subevent is RollSubevent rollSubevent) {
+                    rollSubevent.GrantExpertise();
                 }
                 return new() {
                     dependency = null,
@@ -35,13 +38,13 @@ public class GrantSkillProficiency: Function {
         ]);
     }
 
-    public override GrantSkillProficiency Clone() {
+    public override GrantRollExpertise Clone() {
         return new();
     }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
         if (subevent is AbilityCheck abilityCheck) {
-            abilityCheck.GrantProficiency();
+            abilityCheck.GrantExpertise();
         }
     }
 

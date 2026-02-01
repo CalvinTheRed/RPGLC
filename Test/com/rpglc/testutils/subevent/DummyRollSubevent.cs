@@ -16,18 +16,19 @@ public class DummyRollSubevent : RollSubevent {
                     stepCompleted = true,
                 };
             },
+            AddProficiencyStep,
         ]);
     }
 
     public override Subevent Clone() {
-        DummyRollSubevent clone = new DummyRollSubevent();
+        Subevent clone = new DummyRollSubevent();
         clone.JoinSubeventData(json);
         clone.appliedEffects.AddRange(appliedEffects);
         return clone;
     }
 
     public override Subevent Clone(JsonObject jsonData) {
-        DummyRollSubevent clone = new DummyRollSubevent();
+        Subevent clone = new DummyRollSubevent();
         clone.JoinSubeventData(jsonData);
         clone.appliedEffects.AddRange(appliedEffects);
         return clone;

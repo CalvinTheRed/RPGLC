@@ -34,9 +34,9 @@ public abstract class Function(string functionId) {
             new GrantDisadvantage(),
             new GrantImmunity(),
             new GrantResistance(),
-            new GrantSkillExpertise(),
-            new GrantSkillHalfProficiency(),
-            new GrantSkillProficiency(),
+            new GrantRollExpertise(),
+            new GrantRollHalfProficiency(),
+            new GrantRollProficiency(),
             new GrantVulnerability(),
             // TODO InvokeSubevent?
             new MaximizeDamage(),

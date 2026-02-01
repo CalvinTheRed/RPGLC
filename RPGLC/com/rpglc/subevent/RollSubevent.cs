@@ -1,6 +1,7 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
 using com.rpglc.math;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -12,6 +13,7 @@ public abstract class RollSubevent : CalculationSubevent {
                 json.PutIfAbsent("determined", new JsonArray());
                 json.PutBool("has_advantage", false);
                 json.PutBool("has_disadvantage", false);
+
                 return new() {
                     dependency = null,
                     nextPhase = null,
@@ -20,7 +22,119 @@ public abstract class RollSubevent : CalculationSubevent {
             },
         ]);
     }
-    
+
+    public SubeventState.StateData AddProficiencyStep(RPGLContext context) {
+        if (json.GetBool("has_expertise") == true || json.GetBool("has_proficiency") == true || json.GetBool("has_half_proficiency") == true) {
+            if (dependency is null) {
+                dependency = new(new CalculateProficiencyBonus()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget()));
+            } else if (json.GetBool("has_expertise") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 2,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            } else if (json.GetBool("has_proficiency") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            } else if (json.GetBool("has_half_proficiency") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 2,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            }
+        }
+
+        return new() {
+            dependency = dependency,
+            nextPhase = null,
+            stepCompleted = dependency is null,
+        };
+    }
+
+    public SubeventState.StateData AddProficiencyStepInverted(RPGLContext context) {
+        if (json.GetBool("has_expertise") == true || json.GetBool("has_proficiency") == true || json.GetBool("has_half_proficiency") == true) {
+            if (dependency is null) {
+                dependency = new(new CalculateProficiencyBonus()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetTarget())
+                    .SetTarget(GetSource()));
+            } else if (json.GetBool("has_expertise") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 2,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            } else if (json.GetBool("has_proficiency") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 1,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            } else if (json.GetBool("has_half_proficiency") == true) {
+                AddBonus(new JsonObject().LoadFromString($$"""
+                    {
+                        "bonus": {{(dependency.subevent as CalculateProficiencyBonus).Get()}},
+                        "dice": [ ],
+                        "scale": {
+                            "numerator": 1,
+                            "denominator": 2,
+                            "round_up": false
+                        }
+                    }
+                    """));
+                dependency = null;
+            }
+        }
+
+        return new() {
+            dependency = dependency,
+            nextPhase = null,
+            stepCompleted = dependency is null,
+        };
+    }
+
     public override RollSubevent Prepare(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
         base.Prepare(context, originPoint, invokingEffect);
         json.PutIfAbsent("determined", new JsonArray());
@@ -29,12 +143,27 @@ public abstract class RollSubevent : CalculationSubevent {
         return this;
     }
 
-    public virtual RollSubevent GrantAdvantage() {
+    public RollSubevent GrantExpertise() {
+        json.PutBool("has_expertise", true);
+        return this;
+    }
+
+    public RollSubevent GrantProficiency() {
+        json.PutBool("has_proficiency", true);
+        return this;
+    }
+
+    public RollSubevent GrantHalfProficiency() {
+        json.PutBool("has_half_proficiency", true);
+        return this;
+    }
+
+    public RollSubevent GrantAdvantage() {
         json.PutBool("has_advantage", true);
         return this;
     }
 
-    public virtual RollSubevent GrantDisadvantage() {
+    public RollSubevent GrantDisadvantage() {
         json.PutBool("has_disadvantage", true);
         return this;
     }

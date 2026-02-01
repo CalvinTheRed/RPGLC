@@ -61,6 +61,9 @@ namespace com.rpglc.subevent;
 ///     <item>SetMinimum</item>
 ///     <item>GrantAdvantage</item>
 ///     <item>GrantDisadvantage</item>
+///     <item>GrantRollExpertise</item>
+///     <item>GrantRollHalfProficiency</item>
+///     <item>GrantRollProficiency</item>
 ///     <item>AddVampirism</item>
 ///   </list>
 ///   
@@ -120,6 +123,7 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
                     stepCompleted = true,
                 };
             },
+            AddProficiencyStepInverted,
             (context) => {
                 dependency = new(new CalculateCriticalHitThreshold()
                     .SetOriginItem(GetOriginItem())
@@ -490,14 +494,6 @@ public class AttackRoll : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override AttackRoll SetTarget(RPGLObject target) {
         return (AttackRoll) base.SetTarget(target);
-    }
-
-    public override AttackRoll GrantAdvantage() {
-        return (AttackRoll) base.GrantAdvantage();
-    }
-
-    public override AttackRoll GrantDisadvantage() {
-        return (AttackRoll) base.GrantDisadvantage();
     }
 
     public string GetAbility(RPGLContext context) {

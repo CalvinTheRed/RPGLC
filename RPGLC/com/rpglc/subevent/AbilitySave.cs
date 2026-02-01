@@ -41,6 +41,19 @@ namespace com.rpglc.subevent;
 ///     <item>"fail" is an optional field and it will default to a value of [ ] if left unspecified. This field contains a list of subevents that will be invoked if the target fails the save.</item>
 ///   </list>
 ///   
+///   <b>Special Functions</b>
+///   <list type="bullet">
+///     <item>AddBonus</item>
+///     <item>SetBase</item>
+///     <item>SetMinimum</item>
+///     <item>GrantRollExpertise</item>
+///     <item>GrantRollHalfProficiency</item>
+///     <item>GrantRollProficiency</item>
+///     <item>GrantAdvantage</item>
+///     <item>GrantDisadvantage</item>
+///     <item>AddVampirism</item>
+///   </list>
+///   
 /// </summary>
 public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
@@ -52,6 +65,9 @@ public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             // pre-targeting steps
             //
             (context) => {
+                json.PutIfAbsent("has_expertise", false);
+                json.PutIfAbsent("has_proficiency", false);
+                json.PutIfAbsent("has_half_proficiency", false);
                 json.PutIfAbsent("damage", new JsonArray());
                 json.PutIfAbsent("use_origin_difficulty_class_ability", false);
                 json.PutIfAbsent("pass", new JsonArray());
@@ -141,6 +157,7 @@ public class AbilitySave : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             //
             // post-targeting steps
             //
+            AddProficiencyStep,
             (context) => {
                 RPGLObject rpglObject = GetTarget();
                 dependency = new(new CalculateAbilityScore()

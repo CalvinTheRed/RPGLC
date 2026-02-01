@@ -62,6 +62,9 @@ namespace com.rpglc.subevent;
 ///     <item>SetMinimum</item>
 ///     <item>GrantAdvantage</item>
 ///     <item>GrantDisadvantage</item>
+///     <item>GrantRollExpertise</item>
+///     <item>GrantRollHalfProficiency</item>
+///     <item>GrantRollProficiency</item>
 ///     <item>AddVampirism</item>
 ///   </list>
 ///   
@@ -165,6 +168,7 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
             //
             // post-targeting steps
             //
+            AddProficiencyStep,
             (context) => {
                 RPGLObject rpglObject = GetTarget();
                 dependency = new(new CalculateAbilityScore()
@@ -446,14 +450,6 @@ public class SavingThrow : RollSubevent, IAbilitySubevent, IVampiricSubevent {
 
     public override SavingThrow SetTarget(RPGLObject target) {
         return (SavingThrow) base.SetTarget(target);
-    }
-
-    public override SavingThrow GrantAdvantage() {
-        return (SavingThrow) base.GrantAdvantage();
-    }
-
-    public override SavingThrow GrantDisadvantage() {
-        return (SavingThrow) base.GrantDisadvantage();
     }
 
     public string GetAbility(RPGLContext context) {

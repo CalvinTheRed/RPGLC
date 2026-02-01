@@ -120,14 +120,6 @@ public class AbilityCheck : RollSubevent, IAbilitySubevent {
         return (AbilityCheck) base.SetTarget(target);
     }
 
-    public override AbilityCheck GrantAdvantage() {
-        return (AbilityCheck) base.GrantAdvantage();
-    }
-
-    public override AbilityCheck GrantDisadvantage() {
-        return (AbilityCheck) base.GrantDisadvantage();
-    }
-
     private bool GetExpertise() {
         return (bool) json.GetBool("has_expertise");
     }

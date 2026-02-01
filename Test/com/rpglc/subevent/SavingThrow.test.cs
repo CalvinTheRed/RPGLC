@@ -214,6 +214,9 @@ public class SavingThrowTest {
         subevent.SetTargets([rpglObject]);
 
         result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
         Assert.False(result.completed);
 
@@ -326,6 +329,9 @@ public class SavingThrowTest {
         Assert.Equal(new() { subevent = null, completed = false }, result);
         Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
         subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
 
         result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
@@ -442,6 +448,9 @@ public class SavingThrowTest {
         subevent.SetTargets([rpglObject]);
 
         result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
         Assert.False(result.completed);
 
@@ -553,6 +562,9 @@ public class SavingThrowTest {
         Assert.Equal(new() { subevent = null, completed = false }, result);
         Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
         subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
 
         result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
@@ -668,6 +680,9 @@ public class SavingThrowTest {
         Assert.Equal(new() { subevent = null, completed = false }, result);
         Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
         subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
 
         result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
@@ -789,6 +804,9 @@ public class SavingThrowTest {
         subevent.SetTargets([rpglObject]);
 
         result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
+
+        result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
         Assert.False(result.completed);
 
@@ -906,6 +924,9 @@ public class SavingThrowTest {
         Assert.Equal(new() { subevent = null, completed = false }, result);
         Assert.Equal(SubeventState.Phase.Targeting, subevent.phase);
         subevent.SetTargets([rpglObject]);
+
+        result = subevent.Advance(context);
+        Assert.Equal(new() { subevent = null, completed = false }, result);
 
         result = subevent.Advance(context);
         Assert.True(result.subevent.subevent is CalculateAbilityScore);
