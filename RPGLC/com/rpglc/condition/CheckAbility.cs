@@ -20,7 +20,6 @@ namespace com.rpglc.condition;
 ///   
 ///   <b>Compatible Subevents</b>
 ///   <list type="bullet">
-///     <item>AbilityCheck</item>
 ///     <item>AbilitySave</item>
 ///     <item>AttackRoll</item>
 ///     <item>CalculateAbilityScore</item>

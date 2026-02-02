@@ -15,7 +15,7 @@ namespace com.rpglc.function;
 ///   
 ///   <b>Compatible Subevents</b>
 ///   <list type="bullet">
-///     <item>AbilityCheck</item>
+///     <item>AbilitySave</item>
 ///     <item>AttackRoll</item>
 ///     <item>SavingThrow</item>
 ///   </list>

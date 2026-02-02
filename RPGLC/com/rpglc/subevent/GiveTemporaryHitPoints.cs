@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -30,7 +31,124 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class GiveTemporaryHitPoints : Subevent {
 
-    public GiveTemporaryHitPoints() : base("give_temporary_hit_points") { }
+    public GiveTemporaryHitPoints() : base("give_temporary_hit_points") {
+        subeventSteps.AddRange([
+            //
+            // pre-targeting steps
+            //
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new TemporaryHitPointCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "temporary_hit_points": {{json.GetJsonArray("temporary_hit_points")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_temporary_hit_point_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLObject rpglObject = GetSource();
+                dependency = new(new TemporaryHitPointRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(rpglObject)
+                    .SetTarget(rpglObject)
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "temporary_hit_points": {{(dependency.subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("base_temporary_hit_point_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.PutJsonArray("temporary_hit_points", (dependency.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints());
+
+                dependency = null;
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            //
+            // post-targeting steps
+            //
+            (context) => {
+                dependency = new(new TemporaryHitPointCollection()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_temporary_hit_point_collection"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                dependency = new(new TemporaryHitPointRoll()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "temporary_hit_points": {{(dependency.subevent as TemporaryHitPointCollection).GetTemporaryHitPointCollection()}},
+                            "tags": {{GetTags()}}
+                        }
+                        """))
+                    .AddTag("target_temporary_hit_point_roll"));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                json.GetJsonArray("temporary_hit_points").AsList().AddRange((dependency.subevent as TemporaryHitPointRoll).GetTemporaryHitPoints().AsList());
+
+                dependency = new(new TemporaryHitPointDelivery()
+                    .SetOriginItem(GetOriginItem())
+                    .SetSource(GetSource())
+                    .SetTarget(GetTarget())
+                    .JoinSubeventData(new JsonObject().LoadFromString($$"""
+                        {
+                            "temporary_hit_points": {{json.GetJsonArray("temporary_hit_points")}},
+                            "tags": {{GetTags()}}
+                        }
+                        """)));
+
+                return new() {
+                    dependency = dependency,
+                    nextPhase = null,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new GiveTemporaryHitPoints();

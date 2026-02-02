@@ -369,25 +369,6 @@ public class AbilitySave : RollSubevent, IVampiricSubevent {
     }
 
     public override AbilitySave Run(RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
-        AbilityCheck abilityCheck = new AbilityCheck()
-            .JoinSubeventData(new JsonObject().LoadFromString($$"""
-                {
-                    "ability": "{{json.GetString("ability")}}",
-                    "skill": "{{GetSkill()}}",
-                    "tags": {{GetTags()}},
-                    "determined": {{json.GetJsonArray("determined")}}
-                }
-                """))
-            .SetSource(GetTarget())
-            .Prepare(context, originPoint, invokingEffect)
-            .SetTarget(GetSource())
-            .Invoke(context, originPoint, invokingEffect);
-
-        if (abilityCheck.Get() < GetDifficultyClass()) {
-            ResolveNestedSubevents("fail", context, originPoint, invokingEffect);
-        } else {
-            ResolveNestedSubevents("pass", context, originPoint, invokingEffect);
-        }
         return this;
     }
 
@@ -427,26 +408,12 @@ public class AbilitySave : RollSubevent, IVampiricSubevent {
         json.PutLong("difficulty_class", calculateDifficultyClass.Get());
     }
 
-    private void ResolveNestedSubevents(string resolution, RPGLContext context, JsonArray originPoint, RPGLEffect? invokingEffect = null) {
-        JsonArray? subeventJsonArray = json.GetJsonArray(resolution);
-        if (!subeventJsonArray.IsEmpty()) {
-            for (int i = 0; i < subeventJsonArray.Count(); i++) {
-                JsonObject subeventJson = subeventJsonArray.GetJsonObject(i);
-                Subevent subevent = Subevent.Subevents[subeventJson.GetString("subevent")]
-                    .Clone(subeventJson)
-                    .SetSource(GetSource())
-                    .Prepare(context, originPoint, invokingEffect)
-                    .SetTarget(GetTarget())
-                    .Invoke(context, originPoint, invokingEffect);
-            }
-        }
-    }
-
     private long? GetDifficultyClass() {
         return json.GetLong("difficulty_class");
     }
 
-    private string? GetSkill() {
+    public string? GetSkill() {
         return json.GetString("skill");
     }
+
 }

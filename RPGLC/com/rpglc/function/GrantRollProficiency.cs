@@ -15,7 +15,6 @@ namespace com.rpglc.function;
 ///   
 ///   <b>Compatible Subevents</b>
 ///   <list type="bullet">
-///     <item>AbilityCheck</item>
 ///     <item>AbilitySave</item>
 ///     <item>AttackRoll</item>
 ///     <item>SavingThrow</item>
@@ -45,8 +44,8 @@ public class GrantRollProficiency: Function {
     }
 
     public override void Run(RPGLEffect? rpglEffect, Subevent subevent, JsonObject functionJson, RPGLContext context, JsonArray originPoint) {
-        if (subevent is AbilityCheck abilityCheck) {
-            abilityCheck.GrantProficiency();
+        if (subevent is AbilitySave abilitySave) {
+            abilitySave.GrantProficiency();
         }
     }
 

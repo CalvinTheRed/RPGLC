@@ -20,7 +20,7 @@ namespace com.rpglc.condition;
 ///   
 ///   <b>Compatible Subevents</b>
 ///   <list type="bullet">
-///     <item>AbilityCheck</item>
+///     <item>AbilitySave</item>
 ///   </list>
 ///   
 /// </summary>
@@ -29,8 +29,8 @@ public class CheckSkill: Condition {
     public CheckSkill() : base("check_skill") {
         conditionSteps.AddRange([
             (rpglEffect, subevent, conditionJson, context) => {
-                if (subevent is AbilityCheck abilityCheck) {
-                    evaluation = Equals(conditionJson.GetString("skill"), abilityCheck.GetSkill());
+                if (subevent is AbilitySave abilitySave) {
+                    evaluation = Equals(conditionJson.GetString("skill"), abilitySave.GetSkill());
                 }
 
                 return new() {
@@ -47,8 +47,8 @@ public class CheckSkill: Condition {
     }
 
     public override bool Run(RPGLEffect rpglEffect, Subevent subevent, JsonObject conditionJson, RPGLContext context, JsonArray originPoint) {
-        if (subevent is AbilityCheck abilityCheck) {
-            return Equals(abilityCheck.GetSkill(), conditionJson.GetString("skill"));
+        if (subevent is AbilitySave abilitySave) {
+            return Equals(abilitySave.GetSkill(), conditionJson.GetString("skill"));
         }
         return false;
     }

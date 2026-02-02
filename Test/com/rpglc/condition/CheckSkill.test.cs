@@ -9,11 +9,11 @@ namespace com.rpglc.condition;
 [Collection("Serial")]
 public class CheckSkillTest {
 
-    [Fact(DisplayName = "ability check does use skill")]
-    public void AbilityCheckDoesUseSkill() {
+    [Fact(DisplayName = "ability save does use skill")]
+    public void AbilitySaveDoesUseSkill() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
-        Subevent subevent = new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
+        Subevent subevent = new AbilitySave().JoinSubeventData(new JsonObject().LoadFromString("""
             {
                 "skill": "athletics"
             }
@@ -36,11 +36,11 @@ public class CheckSkillTest {
         Assert.True(condition.evaluation);
     }
 
-    [Fact(DisplayName = "ability check does not use skill")]
-    public void AbilityCheckDoesNotUseSkill() {
+    [Fact(DisplayName = "ability save does not use skill")]
+    public void AbilitySaveDoesNotUseSkill() {
         RPGLContext context = new DummyContext();
         RPGLEffect rpglEffect = new();
-        Subevent subevent = new AbilityCheck().JoinSubeventData(new JsonObject().LoadFromString("""
+        Subevent subevent = new AbilitySave().JoinSubeventData(new JsonObject().LoadFromString("""
             {
                 "skill": "athletics"
             }
