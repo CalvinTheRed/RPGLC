@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -18,7 +19,30 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class GiveEffect : Subevent {
     
-    public GiveEffect() : base("give_effect") { }
+    public GiveEffect() : base("give_effect") {
+        subeventSteps.AddRange([
+            (context) => {
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                RPGLEffect? rpglEffect = RPGLFactory.NewEffect(json.GetString("effect"), GetSource().GetUuid());
+                GetTarget().AddEffect(rpglEffect);
+                if (rpglEffect.GetTarget() is null) {
+                    RPGL.RemoveRPGLEffect(rpglEffect);
+                }
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new GiveEffect();

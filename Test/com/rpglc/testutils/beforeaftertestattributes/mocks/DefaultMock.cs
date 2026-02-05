@@ -19,7 +19,7 @@ public class DefaultMock : BeforeAfterTestAttribute {
                 "name": "Dummy Effect",
                 "description": "This effect has no features.",
                 "datapack_id": "test:dummy",
-                "allow_duplicates": true,
+                "allow_duplicates": false,
                 "optional": false,
                 "tags": [ ],
                 "inherited_effects": [ ],
