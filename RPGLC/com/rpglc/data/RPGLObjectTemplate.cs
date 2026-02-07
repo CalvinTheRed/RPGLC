@@ -33,7 +33,7 @@ public class RPGLObjectTemplate : RPGLTemplate {
                 effectList.GetString(i),
                 rpglObject.GetUuid(),
                 rpglObject.GetUuid()
-            );
+            ).SetIntrinsic(true);
         }
     }
 

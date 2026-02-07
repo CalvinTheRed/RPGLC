@@ -7,6 +7,7 @@ public class RPGLEffectTemplateTO : TaggableContentTO {
     public List<object>? InheritedEffects { get; set; }
     public bool? AllowDuplicates { get; set; }
     public bool? Optional { get; set; }
+    public bool? Intrinsic { get; set; }
 
     public RPGLEffectTemplate ToTemplate() {
         RPGLEffectTemplate template = new();
@@ -14,6 +15,7 @@ public class RPGLEffectTemplateTO : TaggableContentTO {
         template.PutJsonArray("inherited_effects", new JsonArray(InheritedEffects ?? []));
         template.PutBool("allow_duplicates", AllowDuplicates);
         template.PutBool("optional", Optional);
+        template.PutBool("intrinsic", Intrinsic);
 
         ApplyToTemplate(template);
         return template;

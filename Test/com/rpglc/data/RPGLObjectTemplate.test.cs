@@ -63,9 +63,10 @@ public class RPGLObjectTemplateTest {
 
         List<RPGLEffect> effects = rpglObject.GetEffectObjects();
         Assert.Equal(2, effects.Count);
-        Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:dummy"));
-        Assert.NotNull(effects.Find(x => x.GetDatapackId() == "test:complex_effect"));
         Assert.Equal("test:dummy", effects[0].GetDatapackId());
+        Assert.True(effects[0].GetIntrinsic());
+        Assert.Equal("test:complex_effect", effects[1].GetDatapackId());
+        Assert.False(effects[1].GetIntrinsic());
     }
 
     [ClearRPGLAfterTest]

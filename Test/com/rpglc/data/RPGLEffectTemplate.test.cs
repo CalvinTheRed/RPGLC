@@ -26,6 +26,7 @@ public class RPGLEffectTemplateTest {
         Assert.Equal("""{}""", rpglEffect.GetSubeventFilters().ToString());
         Assert.False(rpglEffect.GetAllowDuplicates());
         Assert.False(rpglEffect.GetOptional());
+        Assert.False(rpglEffect.GetIntrinsic());
     }
 
     [ClearRPGLAfterTest]

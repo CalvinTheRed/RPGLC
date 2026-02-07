@@ -9,6 +9,7 @@ public class RPGLEffectTO : TaggableContentTO {
     public string? Target { get; set; }
     public bool? AllowDuplicates { get; set; }
     public bool? Optional { get; set; }
+    public bool? Intrinsic { get; set; }
 
     public RPGLEffect ToRPGLEffect() {
         return (RPGLEffect) new RPGLEffect()
@@ -18,6 +19,7 @@ public class RPGLEffectTO : TaggableContentTO {
             .SetTarget(Target)
             .SetAllowDuplicates(AllowDuplicates)
             .SetOptional(Optional)
+            .SetIntrinsic(Intrinsic)
             .SetTags(new(Tags))
             .SetUuid(Uuid)
             .SetMetadata(new(Metadata))

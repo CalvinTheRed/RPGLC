@@ -61,6 +61,15 @@ public class RPGLEffect : TaggableContent {
         return this;
     }
 
+    public bool GetIntrinsic() {
+        return GetBool("intrinsic") ?? false;
+    }
+
+    public RPGLEffect SetIntrinsic(bool? intrinsic) {
+        PutBool("intrinsic", intrinsic);
+        return this;
+    }
+
     // =====================================================================
     // Utility methods.
     // =====================================================================
