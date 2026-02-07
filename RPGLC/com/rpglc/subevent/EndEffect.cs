@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -26,7 +27,43 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class EndEffect : Subevent {
     
-    public EndEffect() : base("end_effect") { }
+    public EndEffect() : base("end_effect") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("effect", "*");
+                json.PutIfAbsent("effect_tags", new JsonArray());
+                json.PutIfAbsent("effect_source", new JsonObject());
+                json.PutIfAbsent("effect_target", new JsonObject());
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Targeting,
+                    stepCompleted = true,
+                };
+            },
+            (context) => {
+                string effectId = json.GetString("effect");
+                List<object> effectTags = json.GetJsonArray("effect_tags").AsList();
+                string effectSource = RPGLEffect.GetObject(null, this, json.GetJsonObject("effect_source"))?.GetUuid() ?? "*";
+                string effectTarget = RPGLEffect.GetObject(null, this, json.GetJsonObject("effect_target"))?.GetUuid() ?? "*";
+
+                // TODO ensure subevent cannot remove intrinsic effects
+                RPGL.GetRPGLEffects().FindAll(e =>
+                    e.GetTags().ContainsAll(effectTags)
+                    && !e.GetIntrinsic()
+                    && (effectId == "*" || effectId == e.GetDatapackId())
+                    && (effectSource == "*" || effectSource == e.GetSource())
+                    && (effectTarget == "*" || effectTarget == e.GetTarget())
+                ).ForEach(e => RPGL.RemoveRPGLEffect(e));
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new EndEffect();
