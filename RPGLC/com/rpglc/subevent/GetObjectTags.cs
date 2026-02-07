@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -17,8 +18,20 @@ namespace com.rpglc.subevent;
 ///   
 /// </summary>
 public class GetObjectTags : Subevent {
-    
-    public GetObjectTags() : base("get_object_tags") { }
+
+    public GetObjectTags() : base("get_object_tags") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutJsonArray("object_tags", GetTarget().GetTags().DeepClone());
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new GetObjectTags();
