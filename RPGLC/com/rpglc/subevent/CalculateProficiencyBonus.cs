@@ -23,7 +23,7 @@ public class CalculateProficiencyBonus : CalculationSubevent {
     public CalculateProficiencyBonus() : base("calculate_proficiency_bonus") {
         subeventSteps.AddRange([
             (context) => {
-                SetBase(GetTarget().GetProficiencyBonus() ?? GetSource().GetProficiencyBonusByLevel());
+                SetBase(GetTarget().GetProficiencyBonus() ?? GetTarget().GetProficiencyBonusByLevel());
 
                 return new() {
                     dependency = dependency,

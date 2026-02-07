@@ -1,5 +1,6 @@
 ﻿using com.rpglc.core;
 using com.rpglc.json;
+using com.rpglc.runtime;
 
 namespace com.rpglc.subevent;
 
@@ -18,7 +19,19 @@ namespace com.rpglc.subevent;
 /// </summary>
 public class GetEvents : Subevent {
 
-    public GetEvents() : base("get_events") { }
+    public GetEvents() : base("get_events") {
+        subeventSteps.AddRange([
+            (context) => {
+                json.PutIfAbsent("events", new JsonArray());
+
+                return new() {
+                    dependency = null,
+                    nextPhase = SubeventState.Phase.Completed,
+                    stepCompleted = true,
+                };
+            },
+        ]);
+    }
 
     public override Subevent Clone() {
         Subevent clone = new GetEvents();
